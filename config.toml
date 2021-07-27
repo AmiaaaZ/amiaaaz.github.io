@@ -1,0 +1,70 @@
+baseURL = "http://amiaaaz.github.io/"
+author = "Amelia"
+languageCode = "en-us"
+hasCJKLanguage = true
+enableInlineShortcodes = true
+footnoteReturnLinkContents = "^"
+title = "AmiaaaZ's Site"
+theme = "hugo-theme-tokiwa"
+
+[markup]
+[markup.highlight]
+style = "monokailight"
+
+[markup.goldmark.renderer]
+unsafe = true
+
+[params]
+description = """
+Hi, happy to see you here ~
+"""
+fuse = true # for searchbox. "JSON" must added to output contents. See [outputs].
+math = true # for introducing $KaTEX$
+useChineseFonts = true
+
+[permalinks]
+posts = "/:year/:month/:day/:slug/"
+
+[menu]
+# Shown in the side menu.
+[[menu.main]]
+identifier = "posts"
+name = "Posts"
+url = "/posts/"
+weight = 1
+[[menu.main]]
+name = "Tags"
+url = "/tags/"
+weight = 2
+[[menu.main]]
+name = "Categories"
+url = "/categories/"
+weight = 2
+[[menu.main]]
+identifier = "series"
+name = "Series"
+url = "/series/"
+weight = 3
+[[menu.main]]
+identifier = "about"
+name = "About"
+url = "/about/"
+weight = 4
+[[menu.main]]
+identifier = "friends"
+name = "Friends"
+url = "/friends/"
+weight = 5
+
+[taxonomies]
+category = "categories"
+series = "series"
+tag = "tags"
+
+[social]
+github = "https://github.com/AmiaaaZ"
+mail = "vickyckyky@foxmail.com"
+zhihu = "https://www.zhihu.com/people/lan-shan-86-69"
+
+[outputs]
+home = ["HTML", "RSS", "JSON"]
