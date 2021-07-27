@@ -1,4 +1,4 @@
-baseURL = "http://amiaaaz.github.io/"
+baseURL = "https://amiaaaz.github.io/"
 author = "Amelia"
 languageCode = "en-us"
 hasCJKLanguage = true
