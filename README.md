@@ -1,0 +1,3 @@
+# smth about my blog site
+
+......
