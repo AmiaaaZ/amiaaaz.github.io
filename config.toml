@@ -4,6 +4,8 @@ languageCode = "en-us"
 hasCJKLanguage = true
 enableInlineShortcodes = true
 footnoteReturnLinkContents = "^"
+googleAnalytics = "UA-203328343-1"
+disqusShortname = "amiaaaz"
 title = "AmiaaaZ's Site"
 theme = "hugo-theme-tokiwa"
 
@@ -18,6 +20,7 @@ unsafe = true
 description = """
 Hi, happy to see you here ~
 """
+env = "production"
 fuse = true # for searchbox. "JSON" must added to output contents. See [outputs].
 math = true # for introducing $KaTEX$
 useChineseFonts = true
