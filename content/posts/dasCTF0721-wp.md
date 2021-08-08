@@ -5,7 +5,7 @@ description: "不菜的，就是有点菜；只有web题 别的不会"
 date: 2021-08-05T23:15:47+08:00
 categories: ["CTF"]
 series: []
-tags: ["wp", "participate"]
+tags: ["wp"]
 draft: false
 toc: true
 ---

@@ -27,6 +27,7 @@ useChineseFonts = true
 
 [permalinks]
 posts = "/:year/:month/:day/:slug/"
+secrets = "/:year/:month/:day/:slug/"
 
 [menu]
 # Shown in the side menu.

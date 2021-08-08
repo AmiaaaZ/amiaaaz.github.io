@@ -5,7 +5,7 @@ description: "依旧是签到水平，一些简单的misc+web+network"
 date: 2021-07-29T17:02:12+08:00
 categories: ["CTF"]
 series: []
-tags: ["wp", "participate"]
+tags: ["wp"]
 draft: false
 toc: true
 ---
