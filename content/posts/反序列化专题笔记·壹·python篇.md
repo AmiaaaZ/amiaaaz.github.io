@@ -774,7 +774,7 @@ b"cstructs\n__dict__\np0\n0cstructs\n__builtins__\np1\n0cstructs\n__getattribute
 ```
 {{% /spoiler %}}
 
-### 禁止b'R'
+### 禁止`b'R'`操作码
 
 也就相当于不可以用`__reduce__`，有以下几种应对方法（以下方法同样可以单独使用鸭！！！），变量覆盖（无直接代码执行）或利用`b'i'`，`b'i'`，`b'b'`这些操作码来rce。
 
