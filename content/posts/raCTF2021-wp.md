@@ -10,6 +10,8 @@ draft: false
 toc: true
 ---
 
+https://2021.ractf.co.uk/
+
 https://github.com/ractf/challenges/tree/master/2021
 
 https://github.com/404dcd/RACTF-challenges
@@ -409,6 +411,8 @@ while True:
 之后尝试读源码（我没爆出来目录），之后的看wp了，我太菜
 
 ![image-20210818170117432](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210818170117432.png)
+
+`ractf{l4ws_0f_phys1cs_c4n_tak3_a_h1ke}`
 
 参考：[wp](https://github.com/TheBadGod/ractf2021/blob/main/im_a_fan.md)
 
