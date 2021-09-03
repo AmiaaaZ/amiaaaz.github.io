@@ -5,7 +5,7 @@ description: "对于反序列化的认识总是不深刻，所以有了这一系
 date: 2021-08-12T11:48:05+08:00
 categories: ["NOTES&SUMMARY"]
 series: ["反序列化"]
-tags: ["python"]
+tags: ["python", "unserialize"]
 draft: false
 toc: true
 ---
