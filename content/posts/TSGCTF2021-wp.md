@@ -1,7 +1,7 @@
 ---
 title: "TSGCTF2021 Wp"
 slug: "tsgctf2021-wp"
-description: "其实完全不算是wp 看着wp的菜鸡复现而已"
+description: "其实完全不算是wp 只是看着wp的菜鸡复现而已"
 date: 2021-10-04T16:44:41+08:00
 categories: ["CTF"]
 series: []
