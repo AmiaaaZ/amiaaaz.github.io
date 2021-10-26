@@ -460,7 +460,7 @@
 &lt;span style="color:#75715e"># b&amp;#34;(I0\niguess_game.Ticket\nTicket\np0\n0cguess_game\ngame\np1\n0g1\n(N(S&amp;#39;curr_ticket&amp;#39;\ng0\ndtbg0\n.&amp;#34;&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;/details>
 &lt;h3 id="--仅可以引入builtins模块">&amp;ndash;&amp;raquo;仅可以引入&lt;code>builtins&lt;/code>模块&lt;/h3>
-&lt;p>&lt;img src="http://blog.nsfocus.net/wp-content/uploads/2019/04/9a07ed4bd4c85ec67bcc780dae379984.png" alt="9a07ed4bd4c85ec67bcc780dae379984.png">&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/9a07ed4bd4c85ec67bcc780dae379984.png" alt="img">&lt;/p>
 &lt;p>更多知识参考：&lt;a href="https://blog.51cto.com/xpleaf/1764849">深入理解Python中的&lt;code>__builtin__&lt;/code>和&lt;code>__builtins__&lt;/code>&lt;/a> | [Python 的内建对象](&lt;a href="https://www.jianshu.com/p/645e973">https://www.jianshu.com/p/645e973&lt;/a> 83c1f) | &lt;a href="https://zhuanlan.zhihu.com/p/125693125">&lt;code>__builtins__&lt;/code> 与 &lt;code>__builtin__&lt;/code>（builtins）&lt;/a>&lt;/p>
 &lt;details>
 &lt;summary>
@@ -532,7 +532,6 @@
 &lt;span style="color:#111">tR&lt;/span>&lt;span style="color:#f92672">.&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210809172045469.png" alt="image-20210809172045469">&lt;/p>
 &lt;p>成功执行代码（注意运行时不仅需要引入pickle 也要引入builtins才可以！）&lt;/p>
-&lt;p>理解opcode时需要注意&lt;/p>
 &lt;p>————用pker&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#111">getattr&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">GLOBAL&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;builtins&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;getattr&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
 &lt;span style="color:#111">dict&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">GLOBAL&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;builtins&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;dict&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
