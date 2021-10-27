@@ -2,13 +2,11 @@
 <head>
 <meta charset=utf-8>
 <meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
-<title>AmiaaaZ's Site | NOTES&SUMMARY</title>
+<title>AmiaaaZ's Site | pwn环境配置</title>
 <meta name=viewport content="width=device-width,minimum-scale=1">
 <meta name=generator content="Hugo 0.88.1">
 <meta name=ROBOTS content="INDEX, FOLLOW">
 <link href=/dist/app.css rel=stylesheet>
-<link rel=alternate href=/categories/notessummary/index.xml type=application/rss+xml title="AmiaaaZ's Site">
-<link rel=feed href=/categories/notessummary/index.xml type=application/rss+xml title="AmiaaaZ's Site">
 <script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-203328343-1','auto'),ga('send','pageview'))</script>
 <script async src=https://www.google-analytics.com/analytics.js></script>
 <link rel=stylesheet href=https://amiaaaz.github.io/lib/katex.min.css integrity=sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq crossorigin=anonymous>
@@ -22,11 +20,105 @@
 <div class="p-6 sm:p-10 md:p-16 flex flex-wrap">
 <header class="w-full md:w-2/5 xl:w-1/2 md:pr-12 lg:pr-20 xl:pr-24 order-1 md:order-1 max-w-2xl">
 <div class="z-50 bg-gray-100 bg-opacity-75 bg-opacity-custom lg:min-w-0.7 max-w-xl md:float-right md:text-right leading-loose tracking-tight md:sticky md:top-0 pt-2">
-<div class=pb-4>
-<h1>
+<div>
+<h2>
 <a href=https://amiaaaz.github.io/ title="AmiaaaZ's Site" class="heading font-cursive icon">AmiaaaZ's Site</a>
-</h1>
+</h2>
 </div>
+<h1 class=pt-2>pwn环境配置</h1>
+<h3 class="text-java-700 font-normal leading-relaxed pt-2">稍微横向点一点技能树，不管学成什么样子，环境先给搭好（</h3>
+<div class="flex flex-wrap justify-end pt-2"><div class="md:flex-grow-0 font-light">
+<a class="post-taxonomy-category text-medium-red-violet-600 hover:text-medium-red-violet-400" href=/categories/notessummary>NOTES&SUMMARY</a>
+&nbsp;&nbsp;
+<a class="post-taxonomy-tag text-eucalyptus-500" href=/tags/pwn>pwn</a>
+</div><time class="text-eucalyptus-500 md:text-right md:flex-grow font-light pl-4" datetime=2021-10-28T00:41:15+08:00>2021-10-28 00:41</time>
+</div>
+<details class=toc open>
+<summary>
+<hr>
+</summary>
+<div class="inline toc-content">
+<nav id=TableOfContents></nav>
+</div>
+</details>
+<hr>
+</div>
+</header>
+<main role=main class="w-full md:w-3/5 xl:w-1/2 max-w-3xl order-2 md:order-2 min-h-70vh pt-2 pb-4">
+<article>
+<section class="mx-auto content">
+<div class=c-rich-text><p>以下为Ubutun16.04&py2的安装过程，其他版本命令几乎相同的~（Ubuntu20&py3的我也装了一个，毕竟py3是主流，技术总是向前发展的嘛~）</p>
+<p>安装pip2&pip3&ipython</p>
+<pre tabindex=0><code>curl https://bootstrap.pypa.io/pip/2.7/get-pip.py -o get-pip.py
+sudo python get-pip.py
+# sudo apt-get install python3-pip
+curl https://bootstrap.pypa.io/pip/3.5/get-pip.py -o get-pip.py
+sudo python3 get-pip.py
+sudo apt-get install ipython
+</code></pre><p>安装py2的pwntools</p>
+<pre tabindex=0><code>pip2 install pathlib2   # py3无需此条
+pip2 install pwntools
+</code></pre><p>安装GDB&插件</p>
+<pre tabindex=0><code>sudo apt-get install git
+git clone https://github.com/pwndbg/pwndbg.git
+./setup.sh
+</code></pre><pre tabindex=0><code># 使用peda-heap
+git clone https://github.com/Mipu94/peda-heap.git
+echo &quot;source ~/peda-heap/peda.py&quot; &gt; ~/.gdbinit
+# 使用peda
+git clone https://github.com/longld/peda.git
+echo &quot;source ~/GDB-Plugins/peda/peda.py&quot; &gt; ~/.gdbinit
+# 使用gef
+git clone https://github.com/hugsy/gef.git
+echo &quot;source ~/gef/gef.py&quot; &gt; ~/.gdbinit
+# 使用pwndbg
+echo &quot;source ~/pwndbg/gdbinit.py&quot; &gt; ~/.gdbinit
+# 自动切换脚本 https://blog.csdn.net/aptx4869_li/article/details/81566541
+</code></pre><p>安装one_gadget</p>
+<pre tabindex=0><code>sudo apt-add-repository ppa:brightbox/ruby-ng
+sudo apt-get update
+sudo apt-get install ruby2.7 ruby2.7-dev
+sudo apt-get install gem
+sudo gem install one_gadget
+</code></pre><p>安装32位库</p>
+<pre tabindex=0><code>sudo apt-get install lib32ncurses5
+sudo apt-get install lib32z1
+</code></pre><p>安装checksec</p>
+<pre tabindex=0><code>sudo apt instal checksec
+</code></pre><p>安装seccomp-tools</p>
+<pre tabindex=0><code>sudo gem install seccomp-tools
+</code></pre><p>安装zshell&插件</p>
+<pre tabindex=0><code>sudo apt-get install zsh
+sh -c &quot;$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)&quot;
+# zsh-syntax-highlighting
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git
+echo &quot;source ${(q-)PWD}/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh&quot; &gt;&gt; ${ZDOTDIR:-$HOME}/.zshrc
+source ./zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# zsh-autosuggestions
+git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions
+source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+</code></pre><pre tabindex=0><code># 如遇报错 error: RPC failed; result=35, HTTP code=0; fatal: The remote end hung up unexpectedly
+# 将git clone https://xxxx/xxxx.git 换为git clone git://xxxx/xxxx.git
+</code></pre><p>安装virtualbox增强功能</p>
+<pre tabindex=0><code># 遇报错 unable to access “VBox_GAS_6.0.0 iso9660”
+sudo apt-get install --reinstall linux-image-$(uname -r)
+</code></pre><p>最后结果</p>
+<p>ubuntu20+py3+zsh（应该能看出来我更喜欢这个x</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211028002711973.png alt=image-20211028002711973></p>
+<p>ubuntu16+py2</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211028003012735.png alt=image-20211028003012735></p>
+<hr>
+<p>第一次装的时候直接卡在了pwntools上，后来发现原因是pip2版本过低且无法直接通过<code>pip -m pip install --upgrade pip</code>进行升级，只能手动下载get-pip.py后通过py2运行来安装</p>
+<p>这次配完之后最大的感触就是该换个大一点的硬盘了，512G属实绷不住我搞这么多虚拟机……</p>
+<p>之后可能会抽空学一下pwn，属于是web狗卷不动了要给自己找个后路（虽然百分之九十九的概率是两个都很菜，xs），卷起来卷起来！！！</p>
+</div>
+</section>
+</article>
+</main>
+<div class="w-full h-0 flex-none order-3"></div>
+<aside role=contentinfo class="w-full md:w-2/5 xl:w-1/2 md:pr-12 lg:pr-20 xl:pr-24 order-4 md:order-3 md:sticky md:bottom-0 self-end max-w-2xl">
+<div class="md:float-right md:text-right leading-loose tracking-tight md:mb-2">
+<div class="md:max-w-xs flex flex-col md:items-end">
 <ul class="font-serif flex-grow-0 flex justify-between flex-wrap md:flex-col">
 <li class="px-1 md:px-0">
 <a href=/posts/ title="Posts page">
@@ -34,7 +126,7 @@ Posts
 </a>
 </li>
 <li class="px-1 md:px-0">
-<a href=/categories/ title="Categories page" class="font-medium text-medium-red-violet-600 hover:text-medium-red-violet-400">
+<a href=/categories/ title="Categories page">
 Categories
 </a>
 </li>
@@ -58,9 +150,6 @@ About
 Friends
 </a>
 </li>
-<li>
-<a href=/categories/notessummary/index.xml>RSS</a>
-</li>
 <div id=fastSearch class=m-0>
 <input id=searchInput type=text size=10 class="bg-gray-100 focus:outline-none border-b border-gray-100 focus:border-eucalyptus-300 md:text-right
 placeholder-java-500 min-w-0 max-w-xxxs" placeholder=search>
@@ -68,73 +157,6 @@ placeholder-java-500 min-w-0 max-w-xxxs" placeholder=search>
 </ul>
 </div>
 </ul>
-</div>
-</header>
-<main role=main class="w-full md:w-3/5 xl:w-1/2 max-w-3xl order-2 md:order-2 min-h-70vh pt-2 pb-4">
-<h1 class=pb-4>
-NOTES&SUMMARY
-</h1>
-<div>
-<section>
-<div>
-<div class=pb-8>
-<div class="font-serif font-medium text-xl">
-<a href=https://amiaaaz.github.io/2021/10/28/pwn-env-init/>
-pwn环境配置
-</a>
-</div>
-<div class="font-serif text-gray-600 font-light pt-1">
-稍微横向点一点技能树，不管学成什么样子，环境先给搭好（</div>
-<div class="flex flex-wrap justify-between pt-1"><div class="md:flex-grow-0 font-light">
-<a class="post-taxonomy-category text-medium-red-violet-600 hover:text-medium-red-violet-400" href=/categories/notessummary>NOTES&SUMMARY</a>
-&nbsp;&nbsp;
-<a class="post-taxonomy-tag text-eucalyptus-500" href=/tags/pwn>pwn</a>
-</div><time class="text-eucalyptus-500 md:text-right md:flex-grow font-light" datetime=2021-10-28T00:41:15+08:00>2021-10-28 00:41</time>
-</div>
-</div>
-</div>
-<div>
-<div class=pb-8>
-<div class="font-serif font-medium text-xl">
-<a href=https://amiaaaz.github.io/2021/09/03/graphql-study-notes/>
-GraphQL学习笔记
-</a>
-</div>
-<div class="font-serif text-gray-600 font-light pt-1">
-做题中遇到了，拿来整体的学习一下</div>
-<div class="flex flex-wrap justify-between pt-1"><div class="md:flex-grow-0 font-light">
-<a class="post-taxonomy-category text-medium-red-violet-600 hover:text-medium-red-violet-400" href=/categories/notessummary>NOTES&SUMMARY</a>
-&nbsp;&nbsp;
-<a class="post-taxonomy-tag text-eucalyptus-500" href=/tags/graphql>GraphQL</a>
-</div><time class="text-eucalyptus-500 md:text-right md:flex-grow font-light" datetime=2021-09-03T20:56:54+08:00>2021-9-3 20:56</time>
-</div>
-</div>
-</div>
-<div>
-<div class=pb-8>
-<div class="font-serif font-medium text-xl">
-<a href=https://amiaaaz.github.io/2021/08/12/python-unserialize-notes-01-python/>
-反序列化专题笔记·壹·python篇
-</a>
-</div>
-<div class="font-serif text-gray-600 font-light pt-1">
-对于反序列化的认识总是不深刻，所以有了这一系列总结。这是反序列化专题的第一篇，也是python的第一篇。</div>
-<div class="flex flex-wrap justify-between pt-1"><div class="md:flex-grow-0 font-light">
-<a class="post-taxonomy-category text-medium-red-violet-600 hover:text-medium-red-violet-400" href=/categories/notessummary>NOTES&SUMMARY</a>
-&nbsp;&nbsp;
-<a class="post-taxonomy-tag text-eucalyptus-500" href=/tags/python>python</a>&nbsp;/
-<a class="post-taxonomy-tag text-eucalyptus-500" href=/tags/unserialize>unserialize</a>
-</div><time class="text-eucalyptus-500 md:text-right md:flex-grow font-light" datetime=2021-08-12T11:48:05+08:00>2021-8-12 11:48</time>
-</div>
-</div>
-</div>
-</section>
-</div>
-</main>
-<div class="w-full h-0 flex-none order-3"></div>
-<aside role=contentinfo class="w-full md:w-2/5 xl:w-1/2 md:pr-12 lg:pr-20 xl:pr-24 order-4 md:order-3 md:sticky md:bottom-0 self-end max-w-2xl">
-<div class="md:float-right md:text-right leading-loose tracking-tight md:mb-2">
-<div class="md:max-w-xs flex flex-col md:items-end pt-2">
 <div class="flex flex-wrap-reverse md:justify-end content-end md:content-start justify-start items-start md:flex-col max-h-16">
 <a href=https://space.bilibili.com/1651059195 target=_blank class="bilibili icon pl-1 text-eucalyptus-400 hover:text-java-400" title="bilibili link" rel=noopener aria-label="follow on bilibili——Opens in a new window">
 <div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path d="M7.172 2.757 10.414 6h3.171l3.243-3.242a1 1 0 011.415 1.415L16.414 6H18.5A3.5 3.5.0 0122 9.5v8A3.5 3.5.0 0118.5 21h-13A3.5 3.5.0 012 17.5v-8A3.5 3.5.0 015.5 6h2.085L5.757 4.171a1 1 0 011.415-1.415zM18.5 8h-13A1.5 1.5.0 004.007 9.356L4 9.5v8a1.5 1.5.0 001.356 1.493L5.5 19h13a1.5 1.5.0 001.493-1.356L20 17.5v-8A1.5 1.5.0 0018.5 8zM8 11a1 1 0 011 1v2a1 1 0 01-2 0v-2a1 1 0 011-1zm8 0a1 1 0 011 1v2a1 1 0 01-2 0v-2a1 1 0 011-1z"/></g></svg>
@@ -169,16 +191,30 @@ GraphQL学习笔记
 </div>
 </a>
 </div>
-<div class="a-gray text-sm text-gray-500 leading-tight">
+<div class="text-sm text-gray-500 leading-tight a-gray">
 <br>
-Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>.
-<br>
-33 pages, 57600 words in total.
+Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>. 690 words in this page.
 </div>
 </div>
 </div>
 </aside>
 <footer class="w-full md:w-3/5 xl:w-1/2 order-3 max-w-3xl md:order-4 pt-2">
+<hr class=double-line>
+<div class="flex flex-wrap justify-between pb-2 leading-loose font-serif">
+<a class=flex-grow-0 href=/2021/10/26/qwnt2021-wp/><svg class="fill-current inline-block h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M7.828 11H20v2H7.828l5.364 5.364-1.414 1.414L4 12l7.778-7.778 1.414 1.414z"/></svg>
+2021强网拟态 Wp
+</a>
+</div>
+<div>
+</div>
+<hr>
+<div class=pb-2>
+<div id=disqus_thread></div>
+<script type=application/javascript>var disqus_config=function(){};(function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById('disqus_thread').innerHTML='Disqus comments not available by default when the website is previewed locally.';return}var b=document,a=b.createElement('script');a.async=!0,a.src='//amiaaaz.disqus.com/embed.js',a.setAttribute('data-timestamp',+new Date),(b.head||b.body).appendChild(a)})()</script>
+<noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript>
+<a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a>
+</div>
+<hr>
 </footer>
 <script src=/dist/app.js></script>
 <script src=/lib/fuse.min.js></script>

