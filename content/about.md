@@ -26,3 +26,17 @@ ctf web方向的看题选手（别问为什么只是看题 问就是签到题都
 虽然现在只有一些含水量很高、技术力很低的互联网干垃圾，但未来这里一定会有自己的原创产出；虽然现在小站门可罗雀，但希望有一天可以为更多的人带来帮助；希望在学安全的道路上一直走下去
 
 stay hungry, stay foolish.
+
+------
+
+> *I wanna be defined by the things that I love*
+>
+> *Not the things I hate*
+>
+> *Not the things I'm afraid of, I'm afraid of*
+>
+> *Or the things that haunt me in the middle of the night*
+>
+> *I, I just think that*
+>
+> ***You are what you love***

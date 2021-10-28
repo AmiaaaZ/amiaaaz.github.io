@@ -7,10 +7,12 @@ categories: ["NOTES&SUMMARY"]
 series: ["PWN-从入门到入坟"]
 tags: ["pwn"]
 draft: false
-toc: true
+toc: false
 ---
 
 以下为Ubutun16.04&py2的安装过程，其他版本命令几乎相同的~（Ubuntu20&py3的我也装了一个，毕竟py3是主流，技术总是向前发展的嘛~）
+
+————毕竟我是以初学者的视角来准备pwn的环境，肯定还有很多不全面&想不到的地方，之后用到了会回来补上的~
 
 安装pip2&pip3&ipython
 

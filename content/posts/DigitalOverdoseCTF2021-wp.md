@@ -22,7 +22,7 @@ emmmm 联系这个题目 访问一下.git看看有没有备份文件泄露
 
 用GitHacker下载泄露的git文件，有一个index.php
 
-```php+HTML
+```php
 <?php
 
 /**
@@ -103,11 +103,6 @@ $enc = crypto::encrypt($flag, $privatekey);
 echo $enc;
 
 ?>
-
-<html>
-    <br>
-    Only if you could see the source code.
-</html>
 ```
 
 包含了解密的模块，所以用它解密一下即可
