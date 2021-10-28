@@ -290,79 +290,75 @@ POST: wuhu=phpinfo();
 &lt;p>emmmm 联系这个题目 访问一下.git看看有没有备份文件泄露&lt;/p>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211019214445911.png" alt="image-20211019214445911">&lt;/p>
 &lt;p>用GitHacker下载泄露的git文件，有一个index.php&lt;/p>
-&lt;pre tabindex="0">&lt;code class="language-php+HTML" data-lang="php+HTML">&amp;lt;?php
-/**
-* Simple sodium crypto class for PHP &amp;gt;= 7.2
-* @author MRK
-*/
-class crypto {
-/**
-*
-* @return type
-*/
-static public function create_encryption_key() {
-return base64_encode(sodium_crypto_secretbox_keygen());
-}
-/**
-* Encrypt a message
-*
-* @param string $message - message to encrypt
-* @param string $key - encryption key created using create_encryption_key()
-* @return string
-*/
-static function encrypt($message, $key) {
-$key_decoded = base64_decode($key);
-$nonce = random_bytes(
-SODIUM_CRYPTO_SECRETBOX_NONCEBYTES
-);
-$cipher = base64_encode(
-$nonce .
-sodium_crypto_secretbox(
-$message, $nonce, $key_decoded
-)
-);
-sodium_memzero($message);
-sodium_memzero($key_decoded);
-return $cipher;
-}
-/**
-* Decrypt a message
-* @param string $encrypted - message encrypted with safeEncrypt()
-* @param string $key - key used for encryption
-* @return string
-*/
-static function decrypt($encrypted, $key) {
-$decoded = base64_decode($encrypted);
-$key_decoded = base64_decode($key);
-if ($decoded === false) {
-throw new Exception('Decryption error : the encoding failed');
-}
-if (mb_strlen($decoded, '8bit') &amp;lt; (SODIUM_CRYPTO_SECRETBOX_NONCEBYTES + SODIUM_CRYPTO_SECRETBOX_MACBYTES)) {
-throw new Exception('Decryption error : the message was truncated');
-}
-$nonce = mb_substr($decoded, 0, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, '8bit');
-$ciphertext = mb_substr($decoded, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, null, '8bit');
-$plain = sodium_crypto_secretbox_open(
-$ciphertext, $nonce, $key_decoded
-);
-if ($plain === false) {
-throw new Exception('Decryption error : the message was tampered with in transit');
-}
-sodium_memzero($ciphertext);
-sodium_memzero($key_decoded);
-return $plain;
-}
-}
-$privatekey = &amp;quot;mRHpcEckKATdwDC/CwpRinDTiAYrn9lzWpTo277omKs=&amp;quot;;
-$flag = file_get_contents('../flag.txt');
-$enc = crypto::encrypt($flag, $privatekey);
-echo $enc;
-?&amp;gt;
-&amp;lt;html&amp;gt;
-&amp;lt;br&amp;gt;
-Only if you could see the source code.
-&amp;lt;/html&amp;gt;
-&lt;/code>&lt;/pre>&lt;p>包含了解密的模块，所以用它解密一下即可&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-php" data-lang="php">&lt;span style="color:#f92672">&amp;lt;?&lt;/span>&lt;span style="color:#75af00">php&lt;/span>
+&lt;span style="color:#d88200">/**
+&lt;/span>&lt;span style="color:#d88200"> * Simple sodium crypto class for PHP &amp;gt;= 7.2
+&lt;/span>&lt;span style="color:#d88200"> * @author MRK
+&lt;/span>&lt;span style="color:#d88200"> */&lt;/span>
+&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">crypto&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#d88200">/**
+&lt;/span>&lt;span style="color:#d88200"> *
+&lt;/span>&lt;span style="color:#d88200"> * @return type
+&lt;/span>&lt;span style="color:#d88200"> */&lt;/span>
+&lt;span style="color:#00a8c8">static&lt;/span> &lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#75af00">create_encryption_key&lt;/span>&lt;span style="color:#111">()&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#75af00">base64_encode&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">sodium_crypto_secretbox_keygen&lt;/span>&lt;span style="color:#111">());&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#d88200">/**
+&lt;/span>&lt;span style="color:#d88200"> * Encrypt a message
+&lt;/span>&lt;span style="color:#d88200"> *
+&lt;/span>&lt;span style="color:#d88200"> * @param string $message - message to encrypt
+&lt;/span>&lt;span style="color:#d88200"> * @param string $key - encryption key created using create_encryption_key()
+&lt;/span>&lt;span style="color:#d88200"> * @return string
+&lt;/span>&lt;span style="color:#d88200"> */&lt;/span>
+&lt;span style="color:#00a8c8">static&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#75af00">encrypt&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$message&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$key&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#111">$key_decoded&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">base64_decode&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$key&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">$nonce&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">random_bytes&lt;/span>&lt;span style="color:#111">(&lt;/span>
+&lt;span style="color:#75af00">SODIUM_CRYPTO_SECRETBOX_NONCEBYTES&lt;/span>
+&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">$cipher&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">base64_encode&lt;/span>&lt;span style="color:#111">(&lt;/span>
+&lt;span style="color:#111">$nonce&lt;/span> &lt;span style="color:#f92672">.&lt;/span>
+&lt;span style="color:#75af00">sodium_crypto_secretbox&lt;/span>&lt;span style="color:#111">(&lt;/span>
+&lt;span style="color:#111">$message&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$nonce&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$key_decoded&lt;/span>
+&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#75af00">sodium_memzero&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$message&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#75af00">sodium_memzero&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$key_decoded&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">$cipher&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#d88200">/**
+&lt;/span>&lt;span style="color:#d88200"> * Decrypt a message
+&lt;/span>&lt;span style="color:#d88200"> * @param string $encrypted - message encrypted with safeEncrypt()
+&lt;/span>&lt;span style="color:#d88200"> * @param string $key - key used for encryption
+&lt;/span>&lt;span style="color:#d88200"> * @return string
+&lt;/span>&lt;span style="color:#d88200"> */&lt;/span>
+&lt;span style="color:#00a8c8">static&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#75af00">decrypt&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$encrypted&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$key&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#111">$decoded&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">base64_decode&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$encrypted&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">$key_decoded&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">base64_decode&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$key&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$decoded&lt;/span> &lt;span style="color:#f92672">===&lt;/span> &lt;span style="color:#00a8c8">false&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">throw&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Exception&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;Decryption error : the encoding failed&amp;#39;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">mb_strlen&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$decoded&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;8bit&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#f92672">&amp;lt;&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">SODIUM_CRYPTO_SECRETBOX_NONCEBYTES&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#75af00">SODIUM_CRYPTO_SECRETBOX_MACBYTES&lt;/span>&lt;span style="color:#111">))&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">throw&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Exception&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;Decryption error : the message was truncated&amp;#39;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">$nonce&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">mb_substr&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$decoded&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75af00">SODIUM_CRYPTO_SECRETBOX_NONCEBYTES&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;8bit&amp;#39;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">$ciphertext&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">mb_substr&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$decoded&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75af00">SODIUM_CRYPTO_SECRETBOX_NONCEBYTES&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#00a8c8">null&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;8bit&amp;#39;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">$plain&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">sodium_crypto_secretbox_open&lt;/span>&lt;span style="color:#111">(&lt;/span>
+&lt;span style="color:#111">$ciphertext&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$nonce&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$key_decoded&lt;/span>
+&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$plain&lt;/span> &lt;span style="color:#f92672">===&lt;/span> &lt;span style="color:#00a8c8">false&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">throw&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Exception&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;Decryption error : the message was tampered with in transit&amp;#39;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#75af00">sodium_memzero&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$ciphertext&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#75af00">sodium_memzero&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$key_decoded&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">$plain&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">$privatekey&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#34;mRHpcEckKATdwDC/CwpRinDTiAYrn9lzWpTo277omKs=&amp;#34;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">$flag&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">file_get_contents&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;../flag.txt&amp;#39;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">$enc&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">crypto&lt;/span>&lt;span style="color:#f92672">::&lt;/span>&lt;span style="color:#75af00">encrypt&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$flag&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$privatekey&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#111">$enc&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#75715e">?&amp;gt;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>包含了解密的模块，所以用它解密一下即可&lt;/p>
 &lt;p>————这里我的本地php一直出问题 版本7.3.4和7.4.21都报错&lt;/p>
 &lt;h2 id="webnotrequired">Web/notrequired&lt;/h2>
 &lt;blockquote>
