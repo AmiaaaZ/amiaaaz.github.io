@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>beautify on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/series/beautify/</link><description>Recent content in beautify on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 28 Oct 2021 13:42:14 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/series/beautify/index.xml" rel="self" type="application/rss+xml"/><item><title>生产力提(mei)高(hua)之路</title><link>https://amiaaaz.github.io/relax/beautify-my-pc/</link><pubDate>Thu, 28 Oct 2021 13:42:14 +0800</pubDate><guid>https://amiaaaz.github.io/relax/beautify-my-pc/</guid><description>&lt;h2 id="写在前面">写在前面&lt;/h2>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>beautify on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/series/beautify/</link><description>Recent content in beautify on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 28 Oct 2021 13:42:14 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/series/beautify/index.xml" rel="self" type="application/rss+xml"/><item><title>生产力提(mei)高(hua)之路</title><link>https://amiaaaz.github.io/2021/10/28/beautify-my-pc/</link><pubDate>Thu, 28 Oct 2021 13:42:14 +0800</pubDate><guid>https://amiaaaz.github.io/2021/10/28/beautify-my-pc/</guid><description>&lt;h2 id="写在前面">写在前面&lt;/h2>
 &lt;p>这将肯定是个长期更新的系列了……&lt;/p>
 &lt;p>我对于“美化xx”总有一种痴迷的爱好，小学的时候就折腾过雨滴桌面（现在翻qq邮箱 还能找到14年的远古邮件）虽然可惜的是当时的截图没有保留下来，但印象中是很漂亮很漂亮的&lt;/p>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210729235145113.png" alt="image-20210729235145113">&lt;/p>
@@ -61,7 +61,7 @@
 &lt;p>此处的shell主题是ys（对没看错 就是zsh下很火的那个），背景图&lt;a href="https://www.pixiv.net/artworks/89393158">id=89393158&lt;/a>，配色方案是&lt;a href="https://github.com/mbadolato/iTerm2-Color-Schemes/blob/master/windowsterminal/ayu_light.json">ayu_light&lt;/a>，字体是12号&lt;a href="https://github.com/microsoft/cascadia-code">Cascadia Code PL&lt;/a>；加载了posh-git和oh-my-posh模块，并设置了&lt;a href="https://docs.microsoft.com/zh-cn/powershell/module/psreadline/about/about_psreadline?view=powershell-7.1">PSReadLine&lt;/a>&lt;/p>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211028170400211.png" alt="image-20211028170400211">&lt;/p>
 &lt;p>这样一来我们的pwsh也有了根据历史记录自动补全、tab选择目录这样的功能（更多的功能可以参照官方文档自行设置）&lt;/p>
-&lt;p>同时win+`这个快捷键可以呼出临时停靠窗口“焦点终端”&lt;/p>
+&lt;p>同时**win+`**这个快捷键可以呼出临时停靠窗口“焦点终端”&lt;/p>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211028143336429.png" alt="image-20211028143336429">&lt;/p>
 &lt;p>对临时想要执行个脚本、连以下vps、查个东西什么的简直不能更方便！&lt;/p>
 &lt;p>同时它还支持通过json来添加配置文件，可以将自己的vps直接加进来&lt;/p>
