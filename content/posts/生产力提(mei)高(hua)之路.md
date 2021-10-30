@@ -129,7 +129,7 @@ win自带的cmd和powershell，只能说懂得都懂——一个是大黑框一�
 
 这样一来我们的pwsh也有了根据历史记录自动补全、tab选择目录这样的功能（更多的功能可以参照官方文档自行设置）
 
-同时win+`这个快捷键可以呼出临时停靠窗口“焦点终端”
+同时**win+`**这个快捷键可以呼出临时停靠窗口“焦点终端”
 
 ![image-20211028143336429](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211028143336429.png)
 
