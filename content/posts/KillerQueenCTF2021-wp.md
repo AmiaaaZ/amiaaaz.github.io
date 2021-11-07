@@ -1,8 +1,8 @@
 ---
 title: "KillerQueenCTF2021 Wp"
 slug: "killerqueenctf2021-wp"
-description: "water ,water, water..."
-date: 2021-11-07T14:39:15+08:00
+description: "water, water, water..."
+date: 2021-10-30T16:39:15+08:00
 categories: ["CTF"]
 series: []
 tags: ["wp"]
@@ -129,4 +129,3 @@ notewrite=%3C%3C%3C%3C%3F%3F%3F%3Fphp+%40eval%28%24_POST%5B%27wuhu%27%5D%29%3B
 ![image-20211107144316344](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211107144316344.png)
 
 `flag{dancingqueen}`
-

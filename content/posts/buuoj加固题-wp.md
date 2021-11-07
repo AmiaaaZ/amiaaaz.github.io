@@ -34,7 +34,7 @@ buuoj新上了加固题这个分类，也就是线下awdp中fix的部分，只�
 
 PDO预处理属于是通防了，能有效地应对sqli特别是堆叠注入，208行的设置项意为禁用模拟预处理
 
-## [CISCN2021 总赛]babypython
+## [CISCN2021 总决赛]babypython
 
 ### FIX
 
@@ -54,13 +54,13 @@ ssh连上后看下目录结构
 
 ### 关于本题
 
-是个原题，还是个有了包浆的原题，参见**[[HCTF 2018]Hideandseek](https://buuoj.cn/challenges#[HCTF%202018]Hideandseek)**  |  **[[SWPU2019]Web3](https://buuoj.cn/challenges#[SWPU2019]Web3)**，做过的就知道这他妈真的就一模一样hhhhhhhh
+是个原题，还是个有了包浆的原题，参见->**[[HCTF 2018]Hideandseek](https://buuoj.cn/challenges#[HCTF%202018]Hideandseek)**  |  **[[SWPU2019]Web3](https://buuoj.cn/challenges#[SWPU2019]Web3)**，做过的就知道这他妈真的就一模一样hhhhhhhh
 
-考点在于linux软链接+uuid+flask-session伪造，后者还经常单独出题，比如**[[CISCN2019 华东南赛区]Web4](https://buuoj.cn/challenges#[CISCN2019%20%E5%8D%8E%E4%B8%9C%E5%8D%97%E8%B5%9B%E5%8C%BA]Web4)**，都快烤烂了
+考点在于linux软链接+uuid+flask-session伪造，后者还经常单独出题，比如 **[[CISCN2019 华东南赛区]Web4](https://buuoj.cn/challenges#[CISCN2019%20%E5%8D%8E%E4%B8%9C%E5%8D%97%E8%B5%9B%E5%8C%BA]Web4)**，都快烤烂了
 
 ### 考点一 · uuid&SECRET_KEY
 
-SECRET_KEY通过uuid+伪随机数的方式生成，这个考点可以参考，其中app.py是这样写的
+SECRET_KEY通过uuid+伪随机数的方式生成，这个考点可以参考 **[[CISCN2019 华东南赛区]Web4](https://buuoj.cn/challenges#[CISCN2019%20%E5%8D%8E%E4%B8%9C%E5%8D%97%E8%B5%9B%E5%8C%BA]Web4)**，其中app.py是这样写的
 
 ![image-20211106212834438](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211106212834438.png)
 
