@@ -2,13 +2,11 @@
 <head>
 <meta charset=utf-8>
 <meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
-<title>AmiaaaZ's Site </title>
+<title>AmiaaaZ's Site | DasCTF1021 Wp</title>
 <meta name=viewport content="width=device-width,minimum-scale=1">
 <meta name=generator content="Hugo 0.89.1">
 <meta name=ROBOTS content="INDEX, FOLLOW">
 <link href=/dist/app.css rel=stylesheet>
-<link rel=alternate href=/posts/index.xml type=application/rss+xml title="AmiaaaZ's Site">
-<link rel=feed href=/posts/index.xml type=application/rss+xml title="AmiaaaZ's Site">
 <script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-203328343-1','auto'),ga('send','pageview'))</script>
 <script async src=https://www.google-analytics.com/analytics.js></script>
 <link rel=stylesheet href=https://amiaaaz.github.io/lib/katex.min.css integrity=sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq crossorigin=anonymous>
@@ -22,14 +20,93 @@
 <div class="p-6 sm:p-10 md:p-16 flex flex-wrap">
 <header class="w-full md:w-2/5 xl:w-1/2 md:pr-12 lg:pr-20 xl:pr-24 order-1 md:order-1 max-w-2xl">
 <div class="z-50 bg-gray-100 bg-opacity-75 bg-opacity-custom lg:min-w-0.7 max-w-xl md:float-right md:text-right leading-loose tracking-tight md:sticky md:top-0 pt-2">
-<div class=pb-4>
-<h1>
+<div>
+<h2>
 <a href=https://amiaaaz.github.io/ title="AmiaaaZ's Site" class="heading font-cursive icon">AmiaaaZ's Site</a>
-</h1>
+</h2>
 </div>
+<h1 class=pt-2>DasCTF1021 Wp</h1>
+<h3 class="text-java-700 font-normal leading-relaxed pt-2">misc杯，web狗润了</h3>
+<div class="flex flex-wrap justify-end pt-2"><div class="md:flex-grow-0 font-light">
+<a class="post-taxonomy-category text-medium-red-violet-600 hover:text-medium-red-violet-400" href=/categories/ctf>CTF</a>
+&nbsp;&nbsp;
+<a class="post-taxonomy-tag text-eucalyptus-500" href=/tags/wp>wp</a>
+</div><time class="text-eucalyptus-500 md:text-right md:flex-grow font-light pl-4" datetime=2021-10-24T16:47:40+08:00>2021-10-24 16:47</time>
+</div>
+<details class=toc open>
+<summary>
+<hr>
+</summary>
+<div class="inline toc-content">
+<nav id=TableOfContents>
+<ul>
+<li><a href=#web迷路的魔法少女>Web/迷路的魔法少女</a></li>
+<li><a href=#miscwelcome-dasctfxjlenu>Misc/WELCOME DASCTFxJlenu</a></li>
+</ul>
+</nav>
+</div>
+</details>
+<hr>
+</div>
+</header>
+<main role=main class="w-full md:w-3/5 xl:w-1/2 max-w-3xl order-2 md:order-2 min-h-70vh pt-2 pb-4">
+<article>
+<section class="mx-auto content">
+<div class=c-rich-text><h2 id=web迷路的魔法少女>Web/迷路的魔法少女</h2>
+<blockquote>
+<p>魔法少女迷失在了代码空间 请寻找她现在在哪</p>
+</blockquote>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-php data-lang=php><span style=color:#f92672>&lt;?</span><span style=color:#75af00>php</span>
+<span style=color:#75af00>highlight_file</span><span style=color:#111>(</span><span style=color:#d88200>&#39;index.php&#39;</span><span style=color:#111>);</span>
+
+<span style=color:#75af00>extract</span><span style=color:#111>(</span><span style=color:#111>$_GET</span><span style=color:#111>);</span>
+<span style=color:#75af00>error_reporting</span><span style=color:#111>(</span><span style=color:#ae81ff>0</span><span style=color:#111>);</span>
+<span style=color:#00a8c8>function</span> <span style=color:#75af00>String2Array</span><span style=color:#111>(</span><span style=color:#111>$data</span><span style=color:#111>)</span>
+<span style=color:#111>{</span>
+    <span style=color:#00a8c8>if</span><span style=color:#111>(</span><span style=color:#111>$data</span> <span style=color:#f92672>==</span> <span style=color:#d88200>&#39;&#39;</span><span style=color:#111>)</span> <span style=color:#00a8c8>return</span> <span style=color:#00a8c8>array</span><span style=color:#111>();</span>
+    <span style=color:#f92672>@</span><span style=color:#00a8c8>eval</span><span style=color:#111>(</span><span style=color:#d88200>&#34;</span><span style=color:#8045ff>\$</span><span style=color:#d88200>array = </span><span style=color:#d88200>$data</span><span style=color:#d88200>;&#34;</span><span style=color:#111>);</span>
+    <span style=color:#00a8c8>return</span> <span style=color:#111>$array</span><span style=color:#111>;</span>
+<span style=color:#111>}</span>
+
+
+<span style=color:#00a8c8>if</span><span style=color:#111>(</span><span style=color:#75af00>is_array</span><span style=color:#111>(</span><span style=color:#111>$attrid</span><span style=color:#111>)</span> <span style=color:#f92672>&amp;&amp;</span> <span style=color:#75af00>is_array</span><span style=color:#111>(</span><span style=color:#111>$attrvalue</span><span style=color:#111>))</span>
+<span style=color:#111>{</span>
+        <span style=color:#111>$attrstr</span> <span style=color:#f92672>.=</span> <span style=color:#d88200>&#39;array(&#39;</span><span style=color:#111>;</span>
+        <span style=color:#111>$attrids</span> <span style=color:#f92672>=</span> <span style=color:#75af00>count</span><span style=color:#111>(</span><span style=color:#111>$attrid</span><span style=color:#111>);</span>
+        <span style=color:#00a8c8>for</span><span style=color:#111>(</span><span style=color:#111>$i</span><span style=color:#f92672>=</span><span style=color:#ae81ff>0</span><span style=color:#111>;</span> <span style=color:#111>$i</span><span style=color:#f92672>&lt;</span><span style=color:#111>$attrids</span><span style=color:#111>;</span> <span style=color:#111>$i</span><span style=color:#f92672>++</span><span style=color:#111>)</span>
+        <span style=color:#111>{</span>
+            <span style=color:#111>$attrstr</span> <span style=color:#f92672>.=</span> <span style=color:#d88200>&#39;&#34;&#39;</span><span style=color:#f92672>.</span><span style=color:#75af00>intval</span><span style=color:#111>(</span><span style=color:#111>$attrid</span><span style=color:#111>[</span><span style=color:#111>$i</span><span style=color:#111>])</span><span style=color:#f92672>.</span><span style=color:#d88200>&#39;&#34;=&gt;&#39;</span><span style=color:#f92672>.</span><span style=color:#d88200>&#39;&#34;&#39;</span><span style=color:#f92672>.</span><span style=color:#111>$attrvalue</span><span style=color:#111>[</span><span style=color:#111>$i</span><span style=color:#111>]</span><span style=color:#f92672>.</span><span style=color:#d88200>&#39;&#34;&#39;</span><span style=color:#111>;</span>
+            <span style=color:#00a8c8>if</span><span style=color:#111>(</span><span style=color:#111>$i</span> <span style=color:#f92672>&lt;</span> <span style=color:#111>$attrids</span><span style=color:#f92672>-</span><span style=color:#ae81ff>1</span><span style=color:#111>)</span>
+            <span style=color:#111>{</span>
+                <span style=color:#111>$attrstr</span> <span style=color:#f92672>.=</span> <span style=color:#d88200>&#39;,&#39;</span><span style=color:#111>;</span>
+            <span style=color:#111>}</span>
+        <span style=color:#111>}</span>
+        <span style=color:#111>$attrstr</span> <span style=color:#f92672>.=</span> <span style=color:#d88200>&#39;);&#39;</span><span style=color:#111>;</span>
+<span style=color:#111>}</span>
+
+<span style=color:#75af00>String2Array</span><span style=color:#111>(</span><span style=color:#111>$attrstr</span><span style=color:#111>);</span>
+
+</code></pre></div><pre tabindex=0><code>/?attrid[]=&amp;attrvalue[]=&quot;);phpinfo();//
+</code></pre><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024120107148.png alt=image-20211024120107148></p>
+<p>参考：<a href=https://blog.csdn.net/zz_Caleb/article/details/88671071>CG-CTF 变量覆盖(PHP extract函数利用)</a> | <a href=https://lddp.github.io/2018/11/28/CTF-PHP%E9%BB%91%E9%AD%94%E6%B3%95/>CTF-PHP黑魔法</a></p>
+<h2 id=miscwelcome-dasctfxjlenu>Misc/WELCOME DASCTFxJlenu</h2>
+<blockquote>
+<p>欢迎来到魔法的世界（签到）</p>
+</blockquote>
+<p>可是有几层包浆的原题了属于是，之前绝对做过一次</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024105141498.png alt=image-20211024105141498></p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024105144295.png alt=image-20211024105144295></p>
+</div>
+</section>
+</article>
+</main>
+<div class="w-full h-0 flex-none order-3"></div>
+<aside role=contentinfo class="w-full md:w-2/5 xl:w-1/2 md:pr-12 lg:pr-20 xl:pr-24 order-4 md:order-3 md:sticky md:bottom-0 self-end max-w-2xl">
+<div class="md:float-right md:text-right leading-loose tracking-tight md:mb-2">
+<div class="md:max-w-xs flex flex-col md:items-end">
 <ul class="font-serif flex-grow-0 flex justify-between flex-wrap md:flex-col">
 <li class="px-1 md:px-0">
-<a href=/posts/ title="Posts page" class="font-medium text-medium-red-violet-600 hover:text-medium-red-violet-400">
+<a href=/posts/ title="Posts page">
 Posts
 </a>
 </li>
@@ -63,9 +140,6 @@ About
 Friends
 </a>
 </li>
-<li>
-<a href=/posts/index.xml>RSS</a>
-</li>
 <div id=fastSearch class=m-0>
 <input id=searchInput type=text size=10 class="bg-gray-100 focus:outline-none border-b border-gray-100 focus:border-eucalyptus-300 md:text-right
 placeholder-java-500 min-w-0 max-w-xxxs" placeholder=search>
@@ -73,198 +147,6 @@ placeholder-java-500 min-w-0 max-w-xxxs" placeholder=search>
 </ul>
 </div>
 </ul>
-</div>
-</header>
-<main role=main class="w-full md:w-3/5 xl:w-1/2 max-w-3xl order-2 md:order-2 min-h-70vh pt-2 pb-4">
-<article>
-<section></section>
-<section>
-<hr class="p-0 pt-4 m-0">
-<section class="flex flex-col md:flex-row items-start items-baseline">
-<div class="md:pl-4 pb-2 md:sticky top-0 order-1 pr-6">
-<h2 class=text-eucalyptus-600>2021</h2>
-</div>
-<ul class="order-2 flex-grow">
-<div class="py-2 flex">
-<span class="font-serif pr-4 flex-shrink-0">11-07</span>
-<div class="font-serif font-medium">
-<a href=https://amiaaaz.github.io/2021/11/07/killerqueenctf2021-wp/>
-KillerQueenCTF2021 Wp
-</a>
-<div class="pl-4 text-gray-600 font-light">water ,water, water...</div>
-</div>
-</div>
-<div class="py-2 flex">
-<span class="font-serif pr-4 flex-shrink-0">11-07</span>
-<div class="font-serif font-medium">
-<a href=https://amiaaaz.github.io/2021/11/07/buuoj-fixchalls-wp/>
-buuoj加固题 Wp
-</a>
-<div class="pl-4 text-gray-600 font-light">合集合集，长期更新~</div>
-</div>
-</div>
-<div class="py-2 flex">
-<span class="font-serif pr-4 flex-shrink-0">10-30</span>
-<div class="font-serif font-medium">
-<a href=https://amiaaaz.github.io/2021/10/30/deconstructf2021-wp/>
-DeconstruCTF2021 Wp
-</a>
-<div class="pl-4 text-gray-600 font-light">水，就摁水，摁复现</div>
-</div>
-</div>
-<div class="py-2 flex">
-<span class="font-serif pr-4 flex-shrink-0">10-28</span>
-<div class="font-serif font-medium">
-<a href=https://amiaaaz.github.io/2021/10/28/beautify-my-pc/>
-生产力提(mei)高(hua)之路
-</a>
-<div class="pl-4 text-gray-600 font-light">就爱瞎折腾，喜欢好看的页面和好看的主题</div>
-</div>
-</div>
-<div class="py-2 flex">
-<span class="font-serif pr-4 flex-shrink-0">10-28</span>
-<div class="font-serif font-medium">
-<a href=https://amiaaaz.github.io/2021/10/28/pwn-env-init/>
-pwn环境配置
-</a>
-<div class="pl-4 text-gray-600 font-light">稍微横向点一点技能树，不管学成什么样子，环境先给搭好（</div>
-</div>
-</div>
-<div class="py-2 flex">
-<span class="font-serif pr-4 flex-shrink-0">10-26</span>
-<div class="font-serif font-medium">
-<a href=https://amiaaaz.github.io/2021/10/26/qwnt2021-wp/>
-2021强网拟态 Wp
-</a>
-<div class="pl-4 text-gray-600 font-light">没啥可描述的，就是一份普普通通的wp~</div>
-</div>
-</div>
-<div class="py-2 flex">
-<span class="font-serif pr-4 flex-shrink-0">10-24</span>
-<div class="font-serif font-medium">
-<a href=https://amiaaaz.github.io/2021/10/24/dasctf1021-wp/>
-DasCTF1021 Wp
-</a>
-<div class="pl-4 text-gray-600 font-light">misc杯，web狗润了</div>
-</div>
-</div>
-<div class="py-2 flex">
-<span class="font-serif pr-4 flex-shrink-0">10-22</span>
-<div class="font-serif font-medium">
-<a href=https://amiaaaz.github.io/2021/10/22/digitaloverdosectf2021-wp/>
-DigitalOverdoseCTF2021 Wp
-</a>
-<div class="pl-4 text-gray-600 font-light">只会做简单的题，别骂了</div>
-</div>
-</div>
-<div class="py-2 flex">
-<span class="font-serif pr-4 flex-shrink-0">10-18</span>
-<div class="font-serif font-medium">
-<a href=https://amiaaaz.github.io/2021/10/18/2021-qwbqss-a-short-diary/>
-2021强网杯青少赛线下赛参赛记录
-</a>
-<div class="pl-4 text-gray-600 font-light">16 17号到郑州打了强网杯青少赛的线下，简单记录一下</div>
-</div>
-</div>
-<div class="py-2 flex">
-<span class="font-serif pr-4 flex-shrink-0">10-04</span>
-<div class="font-serif font-medium">
-<a href=https://amiaaaz.github.io/2021/10/04/tsgctf2021-wp/>
-TSGCTF2021 Wp
-</a>
-<div class="pl-4 text-gray-600 font-light">其实完全不算是wp 只是看着wp的菜鸡复现而已</div>
-</div>
-</div>
-<div class="py-2 flex">
-<span class="font-serif pr-4 flex-shrink-0">09-13</span>
-<div class="font-serif font-medium">
-<a href=https://amiaaaz.github.io/2021/09/13/tsuku2021-wp/>
-TsukuCTF2021 Wp
-</a>
-<div class="pl-4 text-gray-600 font-light">水一下，题不太难，但也学到一些新东西</div>
-</div>
-</div>
-<div class="py-2 flex">
-<span class="font-serif pr-4 flex-shrink-0">09-07</span>
-<div class="font-serif font-medium">
-<a href=https://amiaaaz.github.io/2021/09/07/grabconctf2021-wp/>
-GrabCONCTF2021 Wp
-</a>
-<div class="pl-4 text-gray-600 font-light">唔 简单的wp 水一水</div>
-</div>
-</div>
-<div class="py-2 flex">
-<span class="font-serif pr-4 flex-shrink-0">09-05</span>
-<div class="font-serif font-medium">
-<a href=https://amiaaaz.github.io/2021/09/05/ssctf2021-wp/>
-SSCTF2021 Wp
-</a>
-<div class="pl-4 text-gray-600 font-light">时隔大半个月之后的复现 总之就是非常非常菜</div>
-</div>
-</div>
-<div class="py-2 flex">
-<span class="font-serif pr-4 flex-shrink-0">09-03</span>
-<div class="font-serif font-medium">
-<a href=https://amiaaaz.github.io/2021/09/03/graphql-study-notes/>
-GraphQL学习笔记
-</a>
-<div class="pl-4 text-gray-600 font-light">做题中遇到了，拿来整体的学习一下</div>
-</div>
-</div>
-<div class="py-2 flex">
-<span class="font-serif pr-4 flex-shrink-0">08-18</span>
-<div class="font-serif font-medium">
-<a href=https://amiaaaz.github.io/2021/08/18/ractf2021-wp/>
-RACTF2021 Wp
-</a>
-<div class="pl-4 text-gray-600 font-light">难啊难啊，基本都是赛后复现</div>
-</div>
-</div>
-<div class="py-2 flex">
-<span class="font-serif pr-4 flex-shrink-0">08-12</span>
-<div class="font-serif font-medium">
-<a href=https://amiaaaz.github.io/2021/08/12/python-unserialize-notes-01-python/>
-反序列化专题笔记·壹·python篇
-</a>
-<div class="pl-4 text-gray-600 font-light">对于反序列化的认识总是不深刻，所以有了这一系列总结。这是反序列化专题的第一篇，也是python的第一篇。</div>
-</div>
-</div>
-<div class="py-2 flex">
-<span class="font-serif pr-4 flex-shrink-0">08-08</span>
-<div class="font-serif font-medium">
-<a href=https://amiaaaz.github.io/2021/08/08/redpwn2021-wp/>
-RedpwnCTF2021 Wp
-</a>
-<div class="pl-4 text-gray-600 font-light">算是第一个自己报名的ctf叭？还挺好玩的，打星号的是没复现的，之后我必回来鞭尸</div>
-</div>
-</div>
-<div class="py-2 flex">
-<span class="font-serif pr-4 flex-shrink-0">08-05</span>
-<div class="font-serif font-medium">
-<a href=https://amiaaaz.github.io/2021/08/05/dasctf0721-wp/>
-DasCTF0721 Wp
-</a>
-<div class="pl-4 text-gray-600 font-light">不菜的，就是有点菜；只有web题 别的不会</div>
-</div>
-</div>
-<div class="py-2 flex">
-<span class="font-serif pr-4 flex-shrink-0">07-29</span>
-<div class="font-serif font-medium">
-<a href=https://amiaaaz.github.io/2021/07/29/cybricsctf2021-wp/>
-CybricsCTF2021 Wp
-</a>
-<div class="pl-4 text-gray-600 font-light">依旧是签到水平，一些简单的misc+web+network</div>
-</div>
-</div>
-</ul>
-</section>
-</section>
-</article>
-</main>
-<div class="w-full h-0 flex-none order-3"></div>
-<aside role=contentinfo class="w-full md:w-2/5 xl:w-1/2 md:pr-12 lg:pr-20 xl:pr-24 order-4 md:order-3 md:sticky md:bottom-0 self-end max-w-2xl">
-<div class="md:float-right md:text-right leading-loose tracking-tight md:mb-2">
-<div class="md:max-w-xs flex flex-col md:items-end pt-2">
 <div class="flex flex-wrap-reverse md:justify-end content-end md:content-start justify-start items-start md:flex-col max-h-16">
 <a href=https://space.bilibili.com/1651059195 target=_blank class="bilibili icon pl-1 text-eucalyptus-400 hover:text-java-400" title="bilibili link" rel=noopener aria-label="follow on bilibili——Opens in a new window">
 <div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path d="M7.172 2.757 10.414 6h3.171l3.243-3.242a1 1 0 011.415 1.415L16.414 6H18.5A3.5 3.5.0 0122 9.5v8A3.5 3.5.0 0118.5 21h-13A3.5 3.5.0 012 17.5v-8A3.5 3.5.0 015.5 6h2.085L5.757 4.171a1 1 0 011.415-1.415zM18.5 8h-13A1.5 1.5.0 004.007 9.356L4 9.5v8a1.5 1.5.0 001.356 1.493L5.5 19h13a1.5 1.5.0 001.493-1.356L20 17.5v-8A1.5 1.5.0 0018.5 8zM8 11a1 1 0 011 1v2a1 1 0 01-2 0v-2a1 1 0 011-1zm8 0a1 1 0 011 1v2a1 1 0 01-2 0v-2a1 1 0 011-1z"/></g></svg>
@@ -299,16 +181,47 @@ CybricsCTF2021 Wp
 </div>
 </a>
 </div>
-<div class="a-gray text-sm text-gray-500 leading-tight">
+<div class="text-sm text-gray-500 leading-tight a-gray">
 <br>
-Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>.
-<br>
-40 pages, 64907 words in total.
+Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>. 159 words in this page.
 </div>
 </div>
 </div>
 </aside>
 <footer class="w-full md:w-3/5 xl:w-1/2 order-3 max-w-3xl md:order-4 pt-2">
+<hr class=double-line>
+<div class="flex flex-wrap justify-between pb-2 leading-loose font-serif">
+<a class=flex-grow-0 href=/2021/10/22/digitaloverdosectf2021-wp/><svg class="fill-current inline-block h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M7.828 11H20v2H7.828l5.364 5.364-1.414 1.414L4 12l7.778-7.778 1.414 1.414z"/></svg>
+DigitalOverdoseCTF2021 Wp
+</a>
+<a class=flex-grow-0 href=/2021/10/26/qwnt2021-wp/>
+2021强网拟态 Wp
+<svg class="fill-current inline-block h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"/></svg></a>
+</div>
+<div>
+<div class="font-serif pb-2 flex align-start leading-loose">
+<span class="heading pr-6 leading-loose">Related</span>
+<span>
+<a href=/2021/10/22/digitaloverdosectf2021-wp/>DigitalOverdoseCTF2021 Wp</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/10/04/tsgctf2021-wp/>TSGCTF2021 Wp</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/09/13/tsuku2021-wp/>TsukuCTF2021 Wp</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/09/07/grabconctf2021-wp/>GrabCONCTF2021 Wp</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/09/05/ssctf2021-wp/>SSCTF2021 Wp</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/08/18/ractf2021-wp/>RACTF2021 Wp</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/08/08/redpwn2021-wp/>RedpwnCTF2021 Wp</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/08/05/dasctf0721-wp/>DasCTF0721 Wp</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/07/29/cybricsctf2021-wp/>CybricsCTF2021 Wp</a>
+</span>
+</div>
+</div>
+<hr>
+<div class=pb-2>
+<div id=disqus_thread></div>
+<script type=application/javascript>var disqus_config=function(){};(function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById('disqus_thread').innerHTML='Disqus comments not available by default when the website is previewed locally.';return}var b=document,a=b.createElement('script');a.async=!0,a.src='//amiaaaz.disqus.com/embed.js',a.setAttribute('data-timestamp',+new Date),(b.head||b.body).appendChild(a)})()</script>
+<noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript>
+<a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a>
+</div>
+<hr>
 </footer>
 <script src=/dist/app.js></script>
 <script src=/lib/fuse.min.js></script>

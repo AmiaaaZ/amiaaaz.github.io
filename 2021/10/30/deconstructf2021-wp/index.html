@@ -4,7 +4,7 @@
 <meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
 <title>AmiaaaZ's Site | DeconstruCTF2021 Wp</title>
 <meta name=viewport content="width=device-width,minimum-scale=1">
-<meta name=generator content="Hugo 0.88.1">
+<meta name=generator content="Hugo 0.89.1">
 <meta name=ROBOTS content="INDEX, FOLLOW">
 <link href=/dist/app.css rel=stylesheet>
 <script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-203328343-1','auto'),ga('send','pageview'))</script>
@@ -207,7 +207,7 @@ python sqlmap.py -r &quot;/home/amelia/sh4r3/post.txt&quot; -p lisence_plate -T 
 <p>之后回显<em>JFATHER, JMOTHER, JDAUGHTER, ____?</em>，提示把content-type改为json</p>
 <p>回显*{&lsquo;error&rsquo;: &lsquo;json data missing&rsquo;}*，添加一点data</p>
 <pre tabindex=0><code>curl -i -X POST -H &quot;Referer: https://www.google.com&quot; -H &quot;Host: https://www.dscvit.com&quot; -H &quot;Content-Type: application/json&quot; --cookie &quot;user=root&quot; -d '{&quot;foo&quot;:&quot;bar&quot;}' http://overly.uniquename.xyz:2095/
-</code></pre><p>回显*{&lsquo;error&rsquo;: {&lsquo;messi&rsquo;: &lsquo;required&rsquo;}}*，将foo改为bar，回显*{&lsquo;error&rsquo;: {&lsquo;messi&rsquo;: &lsquo;which club am i at?'}}*</p>
+</code></pre><p>回显*{&lsquo;error&rsquo;: {&lsquo;messi&rsquo;: &lsquo;required&rsquo;}}<em>，将foo改为bar，回显</em>{&lsquo;error&rsquo;: {&lsquo;messi&rsquo;: &lsquo;which club am i at?'}}*</p>
 <p>*不太懂为啥这就能知道把bar赋值为PSG？？？</p>
 <pre tabindex=0><code>curl -i -X POST -H &quot;Referer: https://www.google.com&quot; -H &quot;Host: https://www.dscvit.com&quot; -H &quot;Content-Type: application/json&quot; --cookie &quot;user=root&quot; -d '{&quot;messi&quot;:&quot;psg&quot;}' http://overly.uniquename.xyz:2095/
 </code></pre><p>得到flag <code>dsc{th15_15_w4y_t00_much_w0rk}</code></p>
@@ -315,7 +315,7 @@ placeholder-java-500 min-w-0 max-w-xxxs" placeholder=search>
 </div>
 <div class="text-sm text-gray-500 leading-tight a-gray">
 <br>
-Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>. 1862 words in this page.
+Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>. 1860 words in this page.
 </div>
 </div>
 </div>
@@ -326,12 +326,16 @@ Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiw
 <a class=flex-grow-0 href=/relax/><svg class="fill-current inline-block h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M7.828 11H20v2H7.828l5.364 5.364-1.414 1.414L4 12l7.778-7.778 1.414 1.414z"/></svg>
 Just Relax here......
 </a>
+<a class=flex-grow-0 href=/2021/11/07/buuoj-fixchalls-wp/>
+buuoj加固题 Wp
+<svg class="fill-current inline-block h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"/></svg></a>
 </div>
 <div>
 <div class="font-serif pb-2 flex align-start leading-loose">
 <span class="heading pr-6 leading-loose">Related</span>
 <span>
 <a href=/2021/10/26/qwnt2021-wp/>2021强网拟态 Wp</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/10/24/dasctf1021-wp/>DasCTF1021 Wp</a>&nbsp;&nbsp;/&nbsp;
 <a href=/2021/10/22/digitaloverdosectf2021-wp/>DigitalOverdoseCTF2021 Wp</a>&nbsp;&nbsp;/&nbsp;
 <a href=/2021/10/04/tsgctf2021-wp/>TSGCTF2021 Wp</a>&nbsp;&nbsp;/&nbsp;
 <a href=/2021/09/13/tsuku2021-wp/>TsukuCTF2021 Wp</a>&nbsp;&nbsp;/&nbsp;
