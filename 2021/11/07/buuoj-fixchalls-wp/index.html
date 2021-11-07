@@ -47,7 +47,7 @@
 <li><a href=#pdo预处理>PDO预处理</a></li>
 </ul>
 </li>
-<li><a href=#ciscn2021-总赛babypython>[CISCN2021 总赛]babypython</a>
+<li><a href=#ciscn2021-总决赛babypython>[CISCN2021 总决赛]babypython</a>
 <ul>
 <li><a href=#fix-1>FIX</a></li>
 <li><a href=#关于本题>关于本题</a></li>
@@ -80,7 +80,7 @@
 <h3 id=pdo预处理>PDO预处理</h3>
 <p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211107084309239.png alt=image-20211107084309239></p>
 <p>PDO预处理属于是通防了，能有效地应对sqli特别是堆叠注入，208行的设置项意为禁用模拟预处理</p>
-<h2 id=ciscn2021-总赛babypython>[CISCN2021 总赛]babypython</h2>
+<h2 id=ciscn2021-总决赛babypython>[CISCN2021 总决赛]babypython</h2>
 <h3 id=fix-1>FIX</h3>
 <p>ssh连上后看下目录结构</p>
 <p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211106212456961.png alt=image-20211106212456961></p>
@@ -92,10 +92,10 @@
 <p>————碎碎念：这里修复的时候可能看脸？我在几天前试的时候用的一模一样的方法，但是怎么都不能过check，今天试了一次就可以了，但是在写wp的时候再复盘就又不可以了……emmm 可能还是哪里的细节出了错但是我没有注意到？给我整不会了属于是</p>
 </blockquote>
 <h3 id=关于本题>关于本题</h3>
-<p>是个原题，还是个有了包浆的原题，参见**<a href=https://buuoj.cn/challenges#%5BHCTF%202018%5DHideandseek>[HCTF 2018]Hideandseek</a>** | <strong><a href=https://buuoj.cn/challenges#%5BSWPU2019%5DWeb3>[SWPU2019]Web3</a></strong>，做过的就知道这他妈真的就一模一样hhhhhhhh</p>
-<p>考点在于linux软链接+uuid+flask-session伪造，后者还经常单独出题，比如**<a href=https://buuoj.cn/challenges#%5BCISCN2019%20%E5%8D%8E%E4%B8%9C%E5%8D%97%E8%B5%9B%E5%8C%BA%5DWeb4>[CISCN2019 华东南赛区]Web4</a>**，都快烤烂了</p>
+<p>是个原题，还是个有了包浆的原题，参见-><strong><a href=https://buuoj.cn/challenges#%5BHCTF%202018%5DHideandseek>[HCTF 2018]Hideandseek</a></strong> | <strong><a href=https://buuoj.cn/challenges#%5BSWPU2019%5DWeb3>[SWPU2019]Web3</a></strong>，做过的就知道这他妈真的就一模一样hhhhhhhh</p>
+<p>考点在于linux软链接+uuid+flask-session伪造，后者还经常单独出题，比如 <strong><a href=https://buuoj.cn/challenges#%5BCISCN2019%20%E5%8D%8E%E4%B8%9C%E5%8D%97%E8%B5%9B%E5%8C%BA%5DWeb4>[CISCN2019 华东南赛区]Web4</a></strong>，都快烤烂了</p>
 <h3 id=考点一--uuidsecret_key>考点一 · uuid&SECRET_KEY</h3>
-<p>SECRET_KEY通过uuid+伪随机数的方式生成，这个考点可以参考，其中app.py是这样写的</p>
+<p>SECRET_KEY通过uuid+伪随机数的方式生成，这个考点可以参考 <strong><a href=https://buuoj.cn/challenges#%5BCISCN2019%20%E5%8D%8E%E4%B8%9C%E5%8D%97%E8%B5%9B%E5%8C%BA%5DWeb4>[CISCN2019 华东南赛区]Web4</a></strong>，其中app.py是这样写的</p>
 <p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211106212834438.png alt=image-20211106212834438></p>
 <p><code>uuid.getnode()</code>会以48位二进制长度的正整数形式返回mac地址，linux下mac地址的位置在<code>/sys/class/net/eth0/address</code>，读出mac地址后我们也来生成一波伪随机数</p>
 <p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210707204313712.png alt=image-20210707204313712></p>
@@ -256,7 +256,7 @@ placeholder-java-500 min-w-0 max-w-xxxs" placeholder=search>
 </div>
 <div class="text-sm text-gray-500 leading-tight a-gray">
 <br>
-Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>. 1756 words in this page.
+Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>. 1758 words in this page.
 </div>
 </div>
 </div>
@@ -264,17 +264,15 @@ Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiw
 <footer class="w-full md:w-3/5 xl:w-1/2 order-3 max-w-3xl md:order-4 pt-2">
 <hr class=double-line>
 <div class="flex flex-wrap justify-between pb-2 leading-loose font-serif">
-<a class=flex-grow-0 href=/2021/10/30/deconstructf2021-wp/><svg class="fill-current inline-block h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M7.828 11H20v2H7.828l5.364 5.364-1.414 1.414L4 12l7.778-7.778 1.414 1.414z"/></svg>
-DeconstruCTF2021 Wp
-</a>
-<a class=flex-grow-0 href=/2021/11/07/killerqueenctf2021-wp/>
+<a class=flex-grow-0 href=/2021/10/30/killerqueenctf2021-wp/><svg class="fill-current inline-block h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M7.828 11H20v2H7.828l5.364 5.364-1.414 1.414L4 12l7.778-7.778 1.414 1.414z"/></svg>
 KillerQueenCTF2021 Wp
-<svg class="fill-current inline-block h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"/></svg></a>
+</a>
 </div>
 <div>
 <div class="font-serif pb-2 flex align-start leading-loose">
 <span class="heading pr-6 leading-loose">Related</span>
 <span>
+<a href=/2021/10/30/killerqueenctf2021-wp/>KillerQueenCTF2021 Wp</a>&nbsp;&nbsp;/&nbsp;
 <a href=/2021/10/30/deconstructf2021-wp/>DeconstruCTF2021 Wp</a>&nbsp;&nbsp;/&nbsp;
 <a href=/2021/10/26/qwnt2021-wp/>2021强网拟态 Wp</a>&nbsp;&nbsp;/&nbsp;
 <a href=/2021/10/24/dasctf1021-wp/>DasCTF1021 Wp</a>&nbsp;&nbsp;/&nbsp;

