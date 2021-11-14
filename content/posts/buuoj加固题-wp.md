@@ -82,13 +82,15 @@ ln -s是linux中的软链接命令，我们可以制作对应文件的绝对路�
 ln -s /proc/self/cwd/flag/flag/.jpg qwe
 ```
 
-或者通过`/proc/self/environ`文件里包含进程的环境变量，可以从中获取flask的绝对路径，再制作软链接（关于/proc的更多信息可以参见->[/proc目录的妙用](/proc目录的妙用)  |  [LFItoRCE利用总结](https://bbs.zkaq.cn/t/3639.html)，题->[网鼎杯 2020 白虎组]PicDown
+或者通过`/proc/self/environ`文件里包含进程的环境变量，可以从中获取flask的绝对路径，再制作软链接（关于/proc的更多信息可以参见->[/proc目录的妙用](/proc目录的妙用)  |  [LFItoRCE利用总结](https://bbs.zkaq.cn/t/3639.html)，题->[[网鼎杯 2020 白虎组]PicDown](https://buuoj.cn/challenges#[%E7%BD%91%E9%BC%8E%E6%9D%AF%202020%20%E7%99%BD%E8%99%8E%E7%BB%84]PicDown)
 
 ```bash
 ln -s /proc/self/environ qwe
 ```
 
-而对于目录内文件的列举也是有方法的（参考->[34C3 CTF Web题 extract0r Writeup](https://blog.csdn.net/keyball123/article/details/105169946)
+而对于目录内文件的列举也是有方法的，参见->[34C3 CTF Web题 extract0r Writeup](https://blog.csdn.net/keyball123/article/details/105169946)
+
+甚至也可以写入shell，参见->[[深育杯 2021]Zipzip](https://mp.weixin.qq.com/s/NvItuko9ZAUNTJaSzBpNKw)
 
 制作好的软链接通过zip打包
 
@@ -128,10 +130,10 @@ os.system('rm -rf exp.zip')
 ```
 
 ```bash
-python3 /proc/self/environ
+python3 exp.py /proc/self/environ
 python3 exp.py /app/y0u_found_it.ini
-python3 /app/y0u_found_it/y0u_found_it_main.py
-python3 /sys/class/net/eth0/address
+python3 exp.py /app/y0u_found_it/y0u_found_it_main.py
+python3 exp.py /sys/class/net/eth0/address
 ```
 
 ![image-20211106234837193](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211106234837193.png)
