@@ -3,7 +3,7 @@ title: "buuoj加固题 Wp"
 slug: "buuoj-fixchalls-wp"
 description: "合集合集，长期更新~"
 date: 2021-11-07T08:57:29+08:00
-categories: ["CTF"]
+categories: ["CTF", "LTS"]
 series: []
 tags: ["wp"]
 draft: false

