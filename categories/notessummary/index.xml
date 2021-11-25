@@ -634,71 +634,7 @@ POST: name={%25set%20r=request.args%25}&amp;amp;rank=1&amp;amp;speech={{(config|
 &lt;p>Django是一个python的web框架，相比flask比较庞大一点点；p牛的这篇文章-&amp;gt;&lt;a href="https://www.leavesongs.com/PENETRATION/python-string-format-vulnerability.html">Python 格式化字符串漏洞（Django为例）&lt;/a>指出了一种利用思路，通过Django默认的admin的model来获取settings对象，进而获取数据库账号密码、web加密密钥等信息&lt;/p>
 &lt;hr>
 &lt;p>两周之前基本总结过了，但是前两天遇到要构造的具体场景还是打不穿，于是又捋了一遍利用的思路，把笔记整理出来了&lt;/p>
-&lt;p>这个故事告诉我们学东西要扎实，更扎实一点，不然会很蛋疼&lt;/p></description></item><item><title>pwn环境配置</title><link>https://amiaaaz.github.io/2021/10/28/pwn-env-init/</link><pubDate>Thu, 28 Oct 2021 00:41:15 +0800</pubDate><guid>https://amiaaaz.github.io/2021/10/28/pwn-env-init/</guid><description>&lt;p>以下为Ubutun16.04&amp;amp;py2的安装过程，其他版本命令几乎相同的~（Ubuntu20&amp;amp;py3的我也装了一个，毕竟py3是主流，技术总是向前发展的嘛~）&lt;/p>
-&lt;p>————毕竟我是以初学者的视角来准备pwn的环境，肯定还有很多不全面&amp;amp;想不到的地方，之后用到了会回来补上的~&lt;/p>
-&lt;p>安装pip2&amp;amp;pip3&amp;amp;ipython&lt;/p>
-&lt;pre tabindex="0">&lt;code>curl https://bootstrap.pypa.io/pip/2.7/get-pip.py -o get-pip.py
-sudo python get-pip.py
-# sudo apt-get install python3-pip
-curl https://bootstrap.pypa.io/pip/3.5/get-pip.py -o get-pip.py
-sudo python3 get-pip.py
-sudo apt-get install ipython
-&lt;/code>&lt;/pre>&lt;p>安装py2的pwntools&lt;/p>
-&lt;pre tabindex="0">&lt;code>pip2 install pathlib2 # py3无需此条
-pip2 install pwntools
-&lt;/code>&lt;/pre>&lt;p>安装GDB&amp;amp;插件&lt;/p>
-&lt;pre tabindex="0">&lt;code>sudo apt-get install git
-git clone https://github.com/pwndbg/pwndbg.git
-./setup.sh
-&lt;/code>&lt;/pre>&lt;pre tabindex="0">&lt;code># 使用peda-heap
-git clone https://github.com/Mipu94/peda-heap.git
-echo &amp;quot;source ~/peda-heap/peda.py&amp;quot; &amp;gt; ~/.gdbinit
-# 使用peda
-git clone https://github.com/longld/peda.git
-echo &amp;quot;source ~/GDB-Plugins/peda/peda.py&amp;quot; &amp;gt; ~/.gdbinit
-# 使用gef
-git clone https://github.com/hugsy/gef.git
-echo &amp;quot;source ~/gef/gef.py&amp;quot; &amp;gt; ~/.gdbinit
-# 使用pwndbg
-echo &amp;quot;source ~/pwndbg/gdbinit.py&amp;quot; &amp;gt; ~/.gdbinit
-# 自动切换脚本 https://blog.csdn.net/aptx4869_li/article/details/81566541
-&lt;/code>&lt;/pre>&lt;p>安装one_gadget&lt;/p>
-&lt;pre tabindex="0">&lt;code>sudo apt-add-repository ppa:brightbox/ruby-ng
-sudo apt-get update
-sudo apt-get install ruby2.7 ruby2.7-dev
-sudo apt-get install gem
-sudo gem install one_gadget
-&lt;/code>&lt;/pre>&lt;p>安装32位库&lt;/p>
-&lt;pre tabindex="0">&lt;code>sudo apt-get install lib32ncurses5
-sudo apt-get install lib32z1
-&lt;/code>&lt;/pre>&lt;p>安装checksec&lt;/p>
-&lt;pre tabindex="0">&lt;code>sudo apt instal checksec
-&lt;/code>&lt;/pre>&lt;p>安装seccomp-tools&lt;/p>
-&lt;pre tabindex="0">&lt;code>sudo gem install seccomp-tools
-&lt;/code>&lt;/pre>&lt;p>安装zshell&amp;amp;插件&lt;/p>
-&lt;pre tabindex="0">&lt;code>sudo apt-get install zsh
-sh -c &amp;quot;$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)&amp;quot;
-# zsh-syntax-highlighting
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git
-echo &amp;quot;source ${(q-)PWD}/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh&amp;quot; &amp;gt;&amp;gt; ${ZDOTDIR:-$HOME}/.zshrc
-source ./zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-# zsh-autosuggestions
-git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions
-source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
-&lt;/code>&lt;/pre>&lt;pre tabindex="0">&lt;code># 如遇报错 error: RPC failed; result=35, HTTP code=0; fatal: The remote end hung up unexpectedly
-# 将git clone https://xxxx/xxxx.git 换为git clone git://xxxx/xxxx.git
-&lt;/code>&lt;/pre>&lt;p>安装virtualbox增强功能&lt;/p>
-&lt;pre tabindex="0">&lt;code># 遇报错 unable to access “VBox_GAS_6.0.0 iso9660”
-sudo apt-get install --reinstall linux-image-$(uname -r)
-&lt;/code>&lt;/pre>&lt;p>最后结果&lt;/p>
-&lt;p>ubuntu20+py3+zsh（应该能看出来我更喜欢这个x&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211028002711973.png" alt="image-20211028002711973">&lt;/p>
-&lt;p>ubuntu16+py2&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211028003012735.png" alt="image-20211028003012735">&lt;/p>
-&lt;hr>
-&lt;p>第一次装的时候直接卡在了pwntools上，后来发现原因是pip2版本过低且无法直接通过&lt;code>pip -m pip install --upgrade pip&lt;/code>进行升级，只能手动下载get-pip.py后通过py2运行来安装&lt;/p>
-&lt;p>这次配完之后最大的感触就是该换个大一点的硬盘了，512G属实绷不住我搞这么多虚拟机……&lt;/p>
-&lt;p>之后可能会抽空学一下pwn，属于是web狗卷不动了要给自己找个后路（虽然百分之九十九的概率是两个都很菜，xs），卷起来卷起来！！！&lt;/p></description></item><item><title>GraphQL学习笔记</title><link>https://amiaaaz.github.io/2021/09/03/graphql-study-notes/</link><pubDate>Fri, 03 Sep 2021 20:56:54 +0800</pubDate><guid>https://amiaaaz.github.io/2021/09/03/graphql-study-notes/</guid><description>&lt;h2 id="graphql简述">GraphQL简述&lt;/h2>
+&lt;p>这个故事告诉我们学东西要扎实，更扎实一点，不然会很蛋疼&lt;/p></description></item><item><title>GraphQL学习笔记</title><link>https://amiaaaz.github.io/2021/09/03/graphql-study-notes/</link><pubDate>Fri, 03 Sep 2021 20:56:54 +0800</pubDate><guid>https://amiaaaz.github.io/2021/09/03/graphql-study-notes/</guid><description>&lt;h2 id="graphql简述">GraphQL简述&lt;/h2>
 &lt;p>GraphQL是一种针对Graph（图状数据）查询很有优势的Query Language（查询语言），而涉及到存储时可以选择NoSQL, SQL或其它任意存储方式（例如文本文件、存内存里等）；这是一门便于前后端交互的语言，而不是便于后端和数据库交互的语言。&lt;/p>
 &lt;p>应用GraphQL的一个很重要的前提是后端数据已经以图的结构进行保存，（并且一定情况下已经设置好基于隐私的访问控制 授权与鉴权，否则会直接被攻击者执行高危操作）。每次查询或更新都有自己的根节点，得到的数据是树状结构；如果希望以图的形式展示则前端不能简单的对其进行缓存，那必须使用相应的存储数据库，通过顶点的ID把不同节点之间的某些边重新连接起来。&lt;/p>
 &lt;p>并不是所有场景都需要迁移到GraphQL，如果RESTful API已经能满足需求的话。&lt;/p>

@@ -1,4 +1,98 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>PHP on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/tags/php/</link><description>Recent content in PHP on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 18 Nov 2021 00:03:25 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/tags/php/index.xml" rel="self" type="application/rss+xml"/><item><title>攻击PHP-FPM学习笔记</title><link>https://amiaaaz.github.io/2021/11/18/attack-php-fpm-study-notes/</link><pubDate>Thu, 18 Nov 2021 00:03:25 +0800</pubDate><guid>https://amiaaaz.github.io/2021/11/18/attack-php-fpm-study-notes/</guid><description>&lt;p>之前做题总是会见到，但并不是很懂实际的原理，有点云里雾里的，好像懂了但又没有完全懂，是时候专门来学一下咯！&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>PHP on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/tags/php/</link><description>Recent content in PHP on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 25 Nov 2021 18:44:34 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/tags/php/index.xml" rel="self" type="application/rss+xml"/><item><title>PHP远程debug环境配置</title><link>https://amiaaaz.github.io/2021/11/25/php-remote-debug-env-init/</link><pubDate>Thu, 25 Nov 2021 18:44:34 +0800</pubDate><guid>https://amiaaaz.github.io/2021/11/25/php-remote-debug-env-init/</guid><description>&lt;p>首先，这里的情况与一般的本地调试localhost不同，是本地debug远程主机的docke内的php项目，也就是这里的laravel；可能有的人觉得多此一举，直接在本地搭建项目、运行、debug一气呵成，速度还快，何必到远程跑一通？那我只能说too young，年轻人还是要有点长远的打算（&lt;/p>
+&lt;p>一切的起因是我想复现cve-2021-3129，顺便亲自动手跟一跟&amp;amp;挖一挖laravel框架反序列化的链子，结果代码审计之前先被环境配置困住了；被这个糟心的调试从周二下午折磨到周四的凌晨，几乎是把能踩的坑踩了个遍（痛苦面具），直到现在的解决方案也不能算是最优解，不过是能正常稳定的跑起来了，次优解；感谢portainer让我能轻松创建docker&lt;/p>
+&lt;p>把详细的步骤记录到这篇博客里，希望可以帮助到看到的人~~~~欢迎友好交流！&lt;/p>
+&lt;hr>
+&lt;p>先说下本次配置的环境整体需求吧：&lt;/p>
+&lt;ul>
+&lt;li>远程vps的docker(FROM php:7.4-apache): 需开放web页面端口 + ssh端口（无需挂载目录&lt;/li>
+&lt;li>laravel 8.4.2, laravel/framework 8.22.1, facade/ignition 2.5.1&lt;/li>
+&lt;li>本地ide: PHPStorm + 一个映射到公网ip的供调试连接使用的端口（后面会解释原因）&lt;/li>
+&lt;/ul>
+&lt;p>除了最后的laravel之外就都是调php的通用流程啦，让我们开始吧~&lt;/p>
+&lt;h2 id="远程dockerlaravel的环境搭建">远程docker&amp;amp;laravel的环境搭建&lt;/h2>
+&lt;p>以php:7.4-apache镜像作为基础进行创建，我这里用的是portainer（别问为什么不写dockerfile，问就是还在学着怎么写（一定不鸽 近期会更新到这里的&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211125164513693.png" alt="image-20211125164513693">&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">apt update
+apt-get install -y ssh git unzip
+vim /etc/ssh/sshd_config &lt;span style="color:#75715e"># 开启对应选项 比如允许root连接什么的 不用我细嗦 各位带手子们都应该懂&lt;/span>
+pecl install xdebug
+touch /var/log/php/xdebug_remote.log &lt;span style="color:#75715e"># 如果需要log的话要提前创建好噢&lt;/span>
+vim /usr/local/etc/php/php.ini &lt;span style="color:#75715e"># 将下面框中内容粘到末尾即可&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-ini" data-lang="ini">&lt;span style="color:#00a8c8">[Xdebug]&lt;/span>
+&lt;span style="color:#75715e">; 这一项安装好之后会有提示&lt;/span>
+&lt;span style="color:#75af00">zend_extension&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;/usr/local/lib/php/extensions/no-debug-non-zts-20190902/xdebug.so&amp;#34;&lt;/span>
+&lt;span style="color:#75af00">xdebug.mode&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">debug&lt;/span>
+&lt;span style="color:#75af00">xdebug.client_host&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">your_vps&lt;/span>
+&lt;span style="color:#75af00">xdebug.client_port&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">port&lt;/span>
+&lt;span style="color:#75af00">xdebug.idekey&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">laravel&lt;/span>
+&lt;span style="color:#75af00">xdebug.remote_handler&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;dbgp&amp;#34;&lt;/span>
+&lt;span style="color:#75af00">xdebug.log&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;/var/log/php/xdebug_remote.log&amp;#34;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>此处安装版本为xdebug3，与xdebug2的配置语法有一些出入，具体更新的内容详见&lt;a href="https://xdebug.org/docs/upgrade_guide">更新文档&lt;/a>，安装好xdebug后执行&lt;code>php -v&lt;/code>命令会有显示版本&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211125164949111.png" alt="image-20211125164949111">&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">wget https://github.com/composer/composer/releases/download/2.1.12/composer.phar
+mv composer.phar /usr/local/bin/composer
+chmod +x /usr/local/bin/composer
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#111">cd&lt;/span> /var/www
+composer create-project laravel/laravel . &lt;span style="color:#d88200">&amp;#34;v8.4.2&amp;#34;&lt;/span>
+vim composer.json &lt;span style="color:#75715e"># 修改内容见下&lt;/span>
+composer update
+mv public html
+chmod -R &lt;span style="color:#ae81ff">777&lt;/span> /var/www
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-ini" data-lang="ini">&lt;span style="color:#75af00">&amp;#34;laravel/framework&amp;#34;: &amp;#34;8.22.1&amp;#34;&lt;/span>
+&lt;span style="color:#75af00">&amp;#34;facade/ignition&amp;#34;: &amp;#34;2.5.1&amp;#34;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>一个坑点：即使指定了&lt;a href="laravel/laravel">laravel/laravel&lt;/a>版本，composer创建默认会使用最新的&lt;a href="laravel/framework">laravel/framework&lt;/a>版本&amp;amp;相关组件依赖（比如现在是8.73.2），由于我们需要复现的cve有特殊的laravel组件版本需求，，所以我们需要单独对composer.json进行修改，然后执行&lt;code>composer update&lt;/code>进行更新&lt;/p>
+&lt;p>一切顺利的话访问web页面就可以看到laravel啦&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211125165355843.png" alt="image-20211125165355843">&lt;/p>
+&lt;h2 id="与本地的phpstorm连接起来进行debug">与本地的PHPStorm连接起来进行debug&lt;/h2>
+&lt;p>开始之前先自问自答一下：为什么调试要一个能映射到公网的端口？&lt;/p>
+&lt;p>PHPStorm中集成了遵循DBGp协议的Xdebug插件，当开启监听时会监听本地指定端口，当访问指定server的web页面并带有含有ide_key的特定cookie参数之后，Xdebug会接收到这个参数并开启debug，通过DBGp协议向php.ini中指定的ip&amp;amp;port发送请求，当这个port指向我们ide在监听的端口时，就会建立起Xdebug和ide的连接（使用DBGp协议通讯），随后它们之间进行数据交互，如此反复；更详细的内容请参见-&amp;gt;&lt;a href="https://xdebug.org/docs/dbgp#id32">6.3 IDE to debugger engine communications&lt;/a>&lt;/p>
+&lt;p>这下就好理解了叭？也就是说，需要一个与远程代码运行环境处在同一个网段下的端口（公网的更好）；接下来就是配置啦&lt;/p>
+&lt;h3 id="内网穿透">内网穿透&lt;/h3>
+&lt;p>内网穿透我使用的是nps，配置过程可以参考&lt;a href="https://ehang-io.github.io/nps/#/run">官方文档&lt;/a>，由于我这里配的比较早 这部分跳过&lt;/p>
+&lt;h3 id="phpstorm的设置有一堆">PHPStorm的设置有一堆&lt;/h3>
+&lt;p>把docker中/www目录打包拖下来，用PHPStorm打开&lt;/p>
+&lt;h4 id="设置debug">设置Debug&lt;/h4>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211125172830540.png" alt="image-20211125172830540">&lt;/p>
+&lt;p>20007是本地端口，被映射到公网ip&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211125172903465.png" alt="image-20211125172903465">&lt;/p>
+&lt;p>这里的20007是公网端口，代理本地的20007&lt;/p>
+&lt;p>如果我讲清楚前面原理的话，大家应该能理解这两个地方的端口设置二选一即可&lt;/p>
+&lt;h4 id="设置deployment">设置Deployment&lt;/h4>
+&lt;p>用SFTP与docker进行ssh连接，文件映射&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211125174439189.png" alt="image-20211125174439189">&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211125174449223.png" alt="image-20211125174449223">&lt;/p>
+&lt;h4 id="设置远程php解释器">设置远程php解释器&lt;/h4>
+&lt;p>选择ssh模式，配一下账号密码端口就行（至于为什么不用docker/docker-compose，之后会说），这里的Path mappings直接就是Deployment中配好的，可以单独再加，但是没必要&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211125173731219.png" alt="image-20211125173731219">&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211125174004041.png" alt="image-20211125174004041">&lt;/p>
+&lt;h4 id="设置server">设置Server&lt;/h4>
+&lt;p>注意高亮地方的设置，是web页面的端口，也要设置好本地的路径映射&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211125173454167.png" alt="image-20211125173454167">&lt;/p>
+&lt;h3 id="验证一下联通情况">验证一下联通情况&lt;/h3>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211125175835232.png" alt="image-20211125175835232">&lt;/p>
+&lt;p>好耶~&lt;/p>
+&lt;h3 id="浏览器插件xdebug-helper">浏览器插件Xdebug helper&lt;/h3>
+&lt;p>设置Debug Configuration，选PHP Remote Debug模式&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211125175154353.png" alt="image-20211125175154353">&lt;/p>
+&lt;p>安装插件，设置ide_key，开启小虫子&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211125180035074.png" alt="image-20211125180035074">&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211125180424620.png" alt="image-20211125180424620">&lt;/p>
+&lt;h2 id="终于完了">终于完了&lt;/h2>
+&lt;p>随便打个断点，开启本地监听&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211125180223037.png" alt="image-20211125180223037">&lt;/p>
+&lt;p>刷新页面&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211125180453865.png" alt="image-20211125180453865">&lt;/p>
+&lt;p>芜湖起飞！&lt;/p>
+&lt;h2 id="待完善的地方">***待完善的地方&lt;/h2>
+&lt;ul>
+&lt;li>配置远程php解释器可以使用docker/docker-compose，这两个都需要单独挂载关键目录出来，配置上与ssh的区别还是有点大的，也需要注意docker-compose文件的编写，先扔一个参考资料-&amp;gt;&lt;a href="https://www.pascallandau.com/blog/setup-phpstorm-with-xdebug-on-docker/#setup-the-docker-containers">Setting up PhpStorm with Xdebug for local development on Docker &amp;hellip; natively and via Deployment Configuration.&lt;/a>&lt;/li>
+&lt;li>关于dockerfile/docker-compose文件的编写，我还不是很熟练，跟不用说这样的php项目了，同样先扔一个参考资料-&amp;gt;&lt;a href="https://www.pascallandau.com/blog/structuring-the-docker-setup-for-php-projects/">Structuring the Docker setup for PHP Projects &amp;hellip; folder structure, Dockerfile templates and general fundamentals&lt;/a>&lt;/li>
+&lt;li>PHPStorm有内置的docker管理功能，可以创建镜像-&amp;gt;配置debug一步到位&lt;/li>
+&lt;/ul>
+&lt;hr>
+&lt;p>虽然踩了很多坑，但是也学到了不少东西，希望能多少帮助一些人少走弯路（&lt;/p>
+&lt;p>限于篇幅原因，代码审计的部分就放到后面啦~&lt;/p>
+&lt;p>最近更新的不太勤快，我先自我批评TAT，已经很菜了不能再不努力啊啊啊啊啊啊啊啊&lt;/p></description></item><item><title>攻击PHP-FPM学习笔记</title><link>https://amiaaaz.github.io/2021/11/18/attack-php-fpm-study-notes/</link><pubDate>Thu, 18 Nov 2021 00:03:25 +0800</pubDate><guid>https://amiaaaz.github.io/2021/11/18/attack-php-fpm-study-notes/</guid><description>&lt;p>之前做题总是会见到，但并不是很懂实际的原理，有点云里雾里的，好像懂了但又没有完全懂，是时候专门来学一下咯！&lt;/p>
 &lt;p>没有什么新鲜的东西，只不过把师傅们已有的文章进行一个整合&amp;amp;重新整理，参考链接放到最后啦w&lt;/p>
 &lt;h2 id="前置知识">前置知识&lt;/h2>
 &lt;h3 id="cgifastcgi">CGI/FastCGI&lt;/h3>
