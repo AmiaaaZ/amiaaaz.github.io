@@ -8,8 +8,11 @@ tags: []
 draft: false
 ---
 
-好像还是空空如也....(´_ゝ`)
-
 欢迎互换友链！！欢迎扩列吹水！！!
 
 ᕕ(ᐛ)ᕗ
+
+------
+
+- [eeee](https://eeeeeeeeeeeeeeeea.cn/) - V&N知名男酮 - pwn
+- [deebato](http://d33b4t0.com/) - crypto

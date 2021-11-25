@@ -3,7 +3,7 @@ title: "pwn环境配置"
 slug: "pwn-env-init"
 description: "稍微横向点一点技能树，不管学成什么样子，环境先给搭好（"
 date: 2021-10-28T00:41:15+08:00
-categories: ["NOTES&SUMMARY"]
+categories: ["环境配置"]
 series: ["PWN-从入门到入坟"]
 tags: ["pwn"]
 draft: false
