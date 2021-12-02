@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>环境配置 on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/categories/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/</link><description>Recent content in 环境配置 on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 25 Nov 2021 18:44:34 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/categories/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/index.xml" rel="self" type="application/rss+xml"/><item><title>PHP远程debug环境配置</title><link>https://amiaaaz.github.io/2021/11/25/php-remote-debug-env-init/</link><pubDate>Thu, 25 Nov 2021 18:44:34 +0800</pubDate><guid>https://amiaaaz.github.io/2021/11/25/php-remote-debug-env-init/</guid><description>&lt;p>首先，这里的情况与一般的本地调试localhost不同，是本地debug远程主机的docke内的php项目，也就是这里的laravel；可能有的人觉得多此一举，直接在本地搭建项目、运行、debug一气呵成，速度还快，何必到远程跑一通？那我只能说too young，年轻人还是要有点长远的打算（&lt;/p>
 &lt;p>一切的起因是我想复现cve-2021-3129，顺便亲自动手跟一跟&amp;amp;挖一挖laravel框架反序列化的链子，结果代码审计之前先被环境配置困住了；被这个糟心的调试从周二下午折磨到周四的凌晨，几乎是把能踩的坑踩了个遍（痛苦面具），直到现在的解决方案也不能算是最优解，不过是能正常稳定的跑起来了，次优解；感谢portainer让我能轻松创建docker&lt;/p>
-&lt;p>把详细的步骤记录到这篇博客里，希望可以帮助到看到的人~~~~欢迎友好交流！&lt;/p>
+&lt;p>把详细的步骤记录到这篇博客里，希望可以帮助到看到的人~欢迎友好交流！&lt;/p>
 &lt;hr>
 &lt;p>先说下本次配置的环境整体需求吧：&lt;/p>
 &lt;ul>

@@ -104,7 +104,7 @@ return
 </code></pre></div><p>传参的时候记得再urlencode一下~~~</p>
 <p>————之前我的<a href=https://amiaaaz.github.io/2021/08/12/python-unserialize-notes-01-python/>总结笔记</a>已经相当全面了 <del>可以出CTF教科书了233333</del></p>
 <h2 id=jack-shiro>Jack-Shiro</h2>
-<p>属于是原题了属于是属于是属于是烤烂了已经，参见 <a href=https://www.zhaoj.in/read-6859.html#WEB1_javaweb>[红明谷CTF 2021] JavaWeb</a> | <a href=https://www.huamang.xyz/index.php/archives/99/>[天翼杯 2021] jackson</a> | <a href=https://www.moonback.xyz/2020/01/16/buuctf%E5%88%B7%E9%A2%98-Java%E7%AF%87/#NPUCTF2020-EzShiro>[NPUCTF2020] EzShiro</a><del>（虽然我自己根本没发现 实在是做过的题太少了 java更是不会 我的</del></p>
+<p>属于是原题了属于是属于是属于是烤烂了已经，参见 <a href=https://www.zhaoj.in/read-6859.html#WEB1_javaweb>[红明谷CTF 2021] JavaWeb</a> | <a href=https://www.huamang.xyz/index.php/archives/99/>[天翼杯 2021] jackson</a> | <a href=https://www.moonback.xyz/2020/01/16/buuctf%E5%88%B7%E9%A2%98-Java%E7%AF%87/#NPUCTF2020-EzShiro>[NPUCTF2020] EzShiro</a> <del>（虽然我自己根本没发现 实在是做过的题太少了 java更是不会 我的</del></p>
 <p>/login下有个登录，回显/json，返回的cookie有个rememberMe=deleteMe，可以知道是shiro</p>
 <p>访问/json，后面会带一堆get请求的参数，用/;/json绕过（cve-2020-11989）</p>
 <p>上工具<a href=https://github.com/welk1n/JNDI-Injection-Exploit/releases/tag/v1.0>JNDI-Injection-Exploit</a>一把梭（问题出在我vps上没有java环境 端口转发又处了亿点点问题…… 所以没有带出来flag），是cve-2020-36188</p>
@@ -194,7 +194,7 @@ docker run -p 8426:8080 -p 8001:1456 3eefd8918689 /bin/sh -c 'java -jar -agentli
 <p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211026190414964.png alt=image-20211026190414964></p>
 <p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211026190401468.png alt=image-20211026190401468></p>
 <p>可以看到，对于"/admin/*&ldquo;需要鉴权，"/admin/{name}&ldquo;返回admin page，而对于&rdquo;/admin/&ldquo;却没有设置权限</p>
-<p>从上面的调试中我们知道shiro得到的是&rdquo;/admin/"（先decode再去除&rdquo;;"），被认作可以访问；而spring得到的是"/admin/;page"）先去除";&ldquo;再decode），与&rdquo;/admin/{name}&ldquo;的样式匹配，最后返回admin page~~（简直太完美了也~~</p>
+<p>从上面的调试中我们知道shiro得到的是&rdquo;/admin/"（先decode再去除&rdquo;;"），被认作可以访问；而spring得到的是"/admin/;page"）先去除";&ldquo;再decode），与&rdquo;/admin/{name}&ldquo;的样式匹配，最后返回admin page <del>（简直太完美了也</del></p>
 <h4 id=临时修复>*临时修复</h4>
 <p>（本地暂时还未复现</p>
 <pre tabindex=0><code>map.put(&quot;/admin/**&quot;, &quot;authc&quot;);
@@ -449,7 +449,7 @@ placeholder-java-500 min-w-0 max-w-xxxs" placeholder=search>
 </div>
 <div class="text-sm text-gray-500 leading-tight a-gray">
 <br>
-Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>. 7216 words in this page.
+Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>. 7203 words in this page.
 </div>
 </div>
 </div>

