@@ -214,6 +214,26 @@ a:1:{s:1:"a";s:20:"=O:8:"stdClass":0:{}";}
 
 在具体应用时，可控的点除了get/post的参数之外，还可以接着构造文件上传的表单，除了`PHPSESSID`之外的废物文件的文件名就可以当此大任，记得序列化字符前面要加上`|`，内部的双引号要用`\`进行转义
 
+### [HarekazeCTF2019]Easy Notes
+
+这个题得审[源码](https://github.dev/TeamHarekaze/HarekazeCTF2019-challenges/tree/master/easy_notes/server/public)
+
+有添加note 导出note的功能，但是却不是常见的xss（因为是php写的嘛），会检测session中的admin是不是true
+
+我们的突破口在导出.zip这个功能上
+
+![image-20211203112810148](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211203112810148.png)
+
+![image-20211203113735250](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211203113735250.png)
+
+我们可以手动伪造一个session文件，之后将PHPSESSID设为生成的值即可，内容呢 就是admin=1
+
+```
+xxxx|N;admin|b:1;xxxxxx
+```
+
+用`xxxx|N;`闭合前面脏数据，编辑到title中，将session的PHPSESSID设置好就可以getflag了
+
 ### [XCTF final 2018]bestphp
 
 [这里是docker环境](https://github.com/shimmeris/CTF-Web-Challenges/tree/master/File-Inclusion/XCTF-Final-2018-Bestphp)（注意设置暴露端口 另外首页的index.php的submit要改一下

