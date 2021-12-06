@@ -197,8 +197,7 @@
 以下是本文中涉及到的 和我学习时看过的所有文章的链接🔗 每日感谢互联网的丰富资源（
 &lt;/h4>
 &lt;/summary>
-&lt;p>&lt;a href="https://hachp1.github.io/posts/Web%E5%AE%89%E5%85%A8/20190906-laravel_pop1.html#%E5%A4%8D%E7%8E%B0-1">Laravel POP链简析 &lt;/a>
-&lt;a href="https://xz.aliyun.com/t/5911">Laravel5.8.x反序列化POP链&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://hachp1.github.io/posts/Web%E5%AE%89%E5%85%A8/20190906-laravel_pop1.html#%E5%A4%8D%E7%8E%B0-1">Laravel POP链简析 &lt;/a> | &lt;a href="https://xz.aliyun.com/t/5911">Laravel5.8.x反序列化POP链&lt;/a>&lt;/p>
 &lt;/details></description></item><item><title>FFI绕过disable_functions</title><link>https://amiaaaz.github.io/2021/12/03/use-ffi-bypass-disable-functions/</link><pubDate>Fri, 03 Dec 2021 00:01:07 +0800</pubDate><guid>https://amiaaaz.github.io/2021/12/03/use-ffi-bypass-disable-functions/</guid><description>&lt;p>废话不多说，直接进入正题；文中参考链接统一扔后面了&lt;/p>
 &lt;h2 id="preloading">Preloading&lt;/h2>
 &lt;ul>
