@@ -287,7 +287,6 @@ pop链杀我！！！看代码有种目害的感觉了
 
 {{% spoiler "以下是本文中涉及到的 和我学习时看过的所有文章的链接🔗 每日感谢互联网的丰富资源（" %}}
 
-[Laravel POP链简析 ](https://hachp1.github.io/posts/Web%E5%AE%89%E5%85%A8/20190906-laravel_pop1.html#%E5%A4%8D%E7%8E%B0-1)
-[Laravel5.8.x反序列化POP链](https://xz.aliyun.com/t/5911)
+[Laravel POP链简析 ](https://hachp1.github.io/posts/Web%E5%AE%89%E5%85%A8/20190906-laravel_pop1.html#%E5%A4%8D%E7%8E%B0-1)  |  [Laravel5.8.x反序列化POP链](https://xz.aliyun.com/t/5911)
 
 {{% /spoiler %}}
