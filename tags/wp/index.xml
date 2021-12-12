@@ -1,4 +1,93 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>wp on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/tags/wp/</link><description>Recent content in wp on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 17 Nov 2021 19:11:38 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/tags/wp/index.xml" rel="self" type="application/rss+xml"/><item><title>深育杯2021 Wp</title><link>https://amiaaaz.github.io/2021/11/17/jueyucup-2021-wp/</link><pubDate>Wed, 17 Nov 2021 19:11:38 +0800</pubDate><guid>https://amiaaaz.github.io/2021/11/17/jueyucup-2021-wp/</guid><description>&lt;h2 id="fakewget">FakeWget&lt;/h2>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>wp on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/tags/wp/</link><description>Recent content in wp on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 12 Dec 2021 23:12:52 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/tags/wp/index.xml" rel="self" type="application/rss+xml"/><item><title>niteCTF2021 Wp</title><link>https://amiaaaz.github.io/2021/12/12/nitectf2021-wp/</link><pubDate>Sun, 12 Dec 2021 23:12:52 +0800</pubDate><guid>https://amiaaaz.github.io/2021/12/12/nitectf2021-wp/</guid><description>&lt;p>&lt;a href="http://ctf.cryptonite.team/challenges">http://ctf.cryptonite.team/challenges&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://ctftime.org/event/1449">https://ctftime.org/event/1449&lt;/a>&lt;/p>
+&lt;h2 id="webwelcome-to-nitectf">Web/welcome to niteCTF&lt;/h2>
+&lt;blockquote>
+&lt;p>&lt;strong>welcome&lt;/strong> &lt;strong>baby&lt;/strong>&lt;/p>
+&lt;p>Go to the &lt;a href="https://capturetheflag.cryptonite.team/">https://capturetheflag.cryptonite.team&lt;/a> and copy the flag, it&amp;rsquo;s that simple!&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211212205533558.png" alt="image-20211212205533558">&lt;/p>
+&lt;p>f12给整了个b64，解码之后是Cryptonite，很遗憾它并不是flag&lt;/p>
+&lt;p>抓包后看到有jsfuck&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211212205758869.png" alt="image-20211212205758869">&lt;/p>
+&lt;p>&amp;lsquo;Organized by Cryptonite Manipal&amp;rsquo;&lt;/p>
+&lt;p>也不是flag，就很鸡贼，在另一个js文件中&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211212210259142.png" alt="image-20211212210259142">&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211212210245571.png" alt="image-20211212210245571">&lt;/p>
+&lt;h2 id="webbatchest">Web/BATCHEST&lt;/h2>
+&lt;blockquote>
+&lt;p>My friend just opened a new zoo, so I made him a site to check if his zoo has those animals. &lt;a href="https://blindsqli-web.chall.cryptonite.team/">https://blindsqli-web.chall.cryptonite.team/&lt;/a>&lt;/p>
+&lt;p>Author: SPEED&lt;/p>
+&lt;/blockquote>
+&lt;p>把盲注的提示写到url中了&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211212213444605.png" alt="image-20211212213444605">&lt;/p>
+&lt;p>它的回显只有有和没有两种，所以需要char-by-char类型的盲注&lt;/p>
+&lt;p>不过这里要注意&lt;code>lion'or '1' #&lt;/code>返回了500，而&lt;code>lion'or '1' -- &lt;/code>返回正常，说明这里的数据库是sqlite，用的是&lt;code>sqlite_master&lt;/code>来获取信息&lt;/p>
+&lt;pre tabindex="0">&lt;code># 脚本我之后完善一下
+# 之前写了一个通用的char-by-char-sqli的模板
+# 但是发现耦合性太高了
+# 还是按功能分开函数写比较好
+# 待完善中XD
+# 然后看到了一个截图
+# 对哦 他妈的为什么盲注这种东西不直接用burp-intruder呢？？？？？？？
+# ？？？？
+# 突然发现了一个华点
+# 还写个p的脚本 用burp
+# 开玩笑的 各有各的应用场景
+&lt;/code>&lt;/pre>&lt;h2 id="webjwt">Web/JWT&lt;/h2>
+&lt;blockquote>
+&lt;p>Jason likes cookies but he is diabetic. So his mom stored them away somewhere safe. Can you help him find the path that leads to the solution for his hungry desires?&lt;/p>
+&lt;p>&lt;a href="https://jwt-web.challenge.cryptonite.team/">https://jwt-web.challenge.cryptonite.team&lt;/a> http://35.201.116.81/&lt;/p>
+&lt;p>Author: LatinArceus&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211212011510158.png" alt="image-20211212011510158">&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211212011548007.png" alt="image-20211212011548007">&lt;/p>
+&lt;p>我们得伪造一个&lt;code>&amp;quot;admin_cap&amp;quot;:&amp;quot;true&amp;quot;&lt;/code>的cookie，注意到这里的&lt;code>kid&lt;/code>指向的是服务器本地的secret.txt，那我们只需要把它指向我们自己的secret.txt就好了&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211212205136265.png" alt="image-20211212205136265">&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211212205200492.png" alt="image-20211212205200492">&lt;/p>
+&lt;p>&lt;code>nite{R3diR3ct10n_c4n_b3_4_vuLn_t0O}&lt;/code>&lt;/p>
+&lt;h2 id="misclets-be-artistic">Misc/Let&amp;rsquo;s be Artistic&lt;/h2>
+&lt;blockquote>
+&lt;p>We have received some encoded message from an art gallery. Can you trace it back to the flag? The flag is all uppercase. Wrap it in flag format nite{}&lt;/p>
+&lt;/blockquote>
+&lt;pre tabindex="0">&lt;code>87yhnmkj 5rfvbnju76 5rfvbnju76 tyjnbg tyjnbg 5rfc6ygn cft6yhn efvgyjmko 9ikm xdr5thnji9 87yhnmkj
+&lt;/code>&lt;/pre>&lt;p>键盘打字的轨迹 &lt;del>（在键盘上撒把米 鸡跑的路线&lt;/del>&lt;/p>
+&lt;p>&lt;code>nite{GOODDRAWING}&lt;/code>&lt;/p>
+&lt;h2 id="miscslow-passwords">Misc/Slow Passwords&lt;/h2>
+&lt;blockquote>
+&lt;p>We made ourselves super secure by a random password authentication every time the connection is established. Is it really that secure?&lt;/p>
+&lt;p>&lt;code>nc slow-passwords.challenge.cryptonite.team 1337&lt;/code>&lt;/p>
+&lt;/blockquote>
+&lt;p>刚开始都没明白啥意思，看了wp知道了&lt;/p>
+&lt;p>每次连接服务器生成不同的passwd，允许每次1个字符输3次，但是输入不同字符的响应时间是不同的，有的长有的短，我们可以找个参照字符（比如&lt;code>'a'&lt;/code>），通过响应时间跟&lt;code>'a'&lt;/code>所花的时间的偏移量来判断是否正确（相当于一种变相的时间盲注了），从而计算出下一个该输入的字符&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#f92672">from&lt;/span> &lt;span style="color:#111">pwn&lt;/span> &lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#f92672">*&lt;/span>
+&lt;span style="color:#f92672">from&lt;/span> &lt;span style="color:#111">time&lt;/span> &lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">time&lt;/span>
+&lt;span style="color:#111">p&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">remote&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;slow-passwords.challenge.cryptonite.team&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#ae81ff">1337&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">print&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">p&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">recvlines&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#ae81ff">5&lt;/span>&lt;span style="color:#111">))&lt;/span>
+&lt;span style="color:#111">curr&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">p&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">recvline&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;span style="color:#111">print&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;start:&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">curr&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">count&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>
+&lt;span style="color:#00a8c8">while&lt;/span> &lt;span style="color:#111">count&lt;/span> &lt;span style="color:#f92672">&amp;lt;&lt;/span> &lt;span style="color:#ae81ff">11&lt;/span>&lt;span style="color:#111">:&lt;/span>
+&lt;span style="color:#111">curr&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#39;a&amp;#39;&lt;/span>
+&lt;span style="color:#111">p&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">sendline&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">b&lt;/span>&lt;span style="color:#d88200">&amp;#39;a&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">print&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">p&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">recvline&lt;/span>&lt;span style="color:#111">())&lt;/span>
+&lt;span style="color:#111">start&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">time&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;span style="color:#111">print&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">p&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">recvline&lt;/span>&lt;span style="color:#111">())&lt;/span>
+&lt;span style="color:#111">end&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">time&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;span style="color:#111">offset&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">round&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">end&lt;/span> &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#111">start&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">print&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;offset:&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">offset&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">next&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">bytes&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">chr&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">ord&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;a&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#111">offset&lt;/span>&lt;span style="color:#111">),&lt;/span> &lt;span style="color:#d88200">&amp;#39;utf-8&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">p&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">sendline&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">next&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">print&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">p&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">recvline&lt;/span>&lt;span style="color:#111">())&lt;/span>
+&lt;span style="color:#111">print&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">p&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">recvline&lt;/span>&lt;span style="color:#111">())&lt;/span>
+&lt;span style="color:#111">count&lt;/span> &lt;span style="color:#f92672">+=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>
+&lt;span style="color:#111">p&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">close&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211212213101123.png" alt="image-20211212213101123">&lt;/p>
+&lt;p>很巧妙的用法！这个故事告诉我们char-by-char类型的盲注真的是在以各种各样的形式四处开花，在很多场合都能用的上&lt;/p>
+&lt;p>参考：&lt;a href="https://github.com/jontay999/CTF-writeups/tree/master/niteCTF/Misc/slow_passwords">wp&lt;/a>&lt;/p>
+&lt;hr>
+&lt;p>最近刷题到buuoj第7页了，学校也到第15周的教学周了，这周还有四级，整个人，有点难顶的&lt;/p>
+&lt;p>所以！我选择当一只鸵鸟，本着：车到山前必有路，船到桥头自然直的态度迎来寒假前这段时间！&lt;/p>
+&lt;p>太多的flag就不立了，立心里了&lt;/p></description></item><item><title>深育杯2021 Wp</title><link>https://amiaaaz.github.io/2021/11/17/jueyucup-2021-wp/</link><pubDate>Wed, 17 Nov 2021 19:11:38 +0800</pubDate><guid>https://amiaaaz.github.io/2021/11/17/jueyucup-2021-wp/</guid><description>&lt;h2 id="fakewget">FakeWget&lt;/h2>
 &lt;blockquote>
 &lt;p>利用sh下grep命令正则缺陷绕过正则检查&lt;/p>
 &lt;/blockquote>
