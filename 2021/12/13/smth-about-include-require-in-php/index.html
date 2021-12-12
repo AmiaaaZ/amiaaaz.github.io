@@ -2,13 +2,11 @@
 <head>
 <meta charset=utf-8>
 <meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
-<title>AmiaaaZ's Site | FFI</title>
+<title>AmiaaaZ's Site | 关于include/require(_once)的易混淆点</title>
 <meta name=viewport content="width=device-width,minimum-scale=1">
 <meta name=generator content="Hugo 0.90.1">
 <meta name=ROBOTS content="INDEX, FOLLOW">
 <link href=/dist/app.css rel=stylesheet>
-<link rel=alternate href=/tags/ffi/index.xml type=application/rss+xml title="AmiaaaZ's Site">
-<link rel=feed href=/tags/ffi/index.xml type=application/rss+xml title="AmiaaaZ's Site">
 <script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-203328343-1','auto'),ga('send','pageview'))</script>
 <script async src=https://www.google-analytics.com/analytics.js></script>
 <link rel=stylesheet href=https://amiaaaz.github.io/lib/katex.min.css integrity=sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq crossorigin=anonymous>
@@ -22,11 +20,91 @@
 <div class="p-6 sm:p-10 md:p-16 flex flex-wrap">
 <header class="w-full md:w-2/5 xl:w-1/2 md:pr-12 lg:pr-20 xl:pr-24 order-1 md:order-1 max-w-2xl">
 <div class="z-50 bg-gray-100 bg-opacity-75 bg-opacity-custom lg:min-w-0.7 max-w-xl md:float-right md:text-right leading-loose tracking-tight md:sticky md:top-0 pt-2">
-<div class=pb-4>
-<h1>
+<div>
+<h2>
 <a href=https://amiaaaz.github.io/ title="AmiaaaZ's Site" class="heading font-cursive icon">AmiaaaZ's Site</a>
-</h1>
+</h2>
 </div>
+<h1 class=pt-2>关于include/require(_once)的易混淆点</h1>
+<h3 class="text-java-700 font-normal leading-relaxed pt-2">感觉是一个易混淆的地方，很适合出题</h3>
+<div class="flex flex-wrap justify-end pt-2"><div class="md:flex-grow-0 font-light">
+<a class="post-taxonomy-category text-medium-red-violet-600 hover:text-medium-red-violet-400" href=/categories/notessummary>NOTES&SUMMARY</a>
+&nbsp;&nbsp;
+<a class="post-taxonomy-tag text-eucalyptus-500" href=/tags/php>PHP</a>&nbsp;/
+<a class="post-taxonomy-tag text-eucalyptus-500" href=/tags/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB>文件包含</a>
+</div><time class="text-eucalyptus-500 md:text-right md:flex-grow font-light pl-4" datetime=2021-12-13T01:12:22+08:00>2021-12-13 01:12</time>
+</div>
+<details class=toc open>
+<summary>
+<hr>
+</summary>
+<div class="inline toc-content">
+<nav id=TableOfContents>
+<ul>
+<li><a href=#关于includerequire_once>关于<code>include/require(_once)()</code></a></li>
+<li><a href=#几个好玩的小栗子>几个好玩的小栗子</a></li>
+<li><a href=#使用注意>使用注意</a></li>
+</ul>
+</nav>
+</div>
+</details>
+<hr>
+</div>
+</header>
+<main role=main class="w-full md:w-3/5 xl:w-1/2 max-w-3xl order-2 md:order-2 min-h-70vh pt-2 pb-4">
+<article>
+<section class="mx-auto content">
+<div class=c-rich-text><p>之前做题遇到后查了一下相关文章，觉得很适合出题，但是感觉不能为了考而考，也就失去了CTF的意义，所以还不如先发出来这一篇</p>
+<p><del>（别骂了 就是懒</del></p>
+<h2 id=关于includerequire_once>关于<code>include/require(_once)()</code></h2>
+<p>这几个函数应该都不陌生（还应该再加上include_path），干的是文件包含的事；先按照给定参数寻找路径（当定义了路径则会完全忽略include_path），如果只有文件名则按照include_path的指定目录寻找，如果还没找到则会在调用脚本文件所在的目录和当前工作目录下寻找；下面说几个小点</p>
+<p>首先是require和include的区别在于require在出错时会产生E_COMPILE_ERROR级别的错误，脚本将中止运行，而include只会产生警告E_WARNING，不影响继续顶着错误继续执行脚本（做题很常见这个 无数的报错下面有正常的回显）</p>
+<p>另一个区别在于require是无条件包含函数，即程序执行前就会将文件内容以文本替换的形式引入（所以这份文件只被处理一次），让它变为php脚本的一部分（所以通常放在php文件的最前面）；include则是有条件包含函数，用到时才被加载，且每次执行文件时都要进行读取和评估</p>
+<p>当php遇到require/include(_once)函数时，如果给定的参数是个绝对路径则直接引入，但如果给的是相对路径，则要进入另外的逻辑（经过多次调用，宏展开后进入_php_stream_fopen_with_path）寻找此文件；在_php_stream_fopen_with_path会根据include_path和当前执行文件的path组成一个待选的目录列表，然后从列表头部开始根据DEFAULT_DIR_SEPARATOR（linux下默认为<code>:</code> win为<code>;</code>）取出路径，然后拼上文件名，如果成功则返回，失败则继续下一个待选择路径（<u>所以如果有重名的就好玩了</u>）</p>
+<h2 id=几个好玩的小栗子>几个好玩的小栗子</h2>
+<p>这里举一个小栗子，文件结构和内容如下（注意这里include_path的写法!!!不仅有path_to_subdir还有<code>:</code>分隔符前面代表的current_dir!!!）</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024095717109.png alt=image-20211024095717109></p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024095830345.png alt=image-20211024095830345></p>
+<p>在不同的情况下运行看看效果</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024100007587.png alt=image-20211024100007587></p>
+<p>在root目录下执行时，直接根据1.php的include_path寻找2.php，而2.php中并没有设置include_path，那么路径就变成了列表中第一个待选择路径 即<code>"."</code>，而当前工作目录是root，所以就是/root/3.php的输出</p>
+<p>换到subdir目录下执行1.php时，列表中第一个待选择路径<code>"."</code>变为了subdir，自然输出变为了/root/subdir/3.php的输出</p>
+<p>现在我们把include_path仅保留path_to_subdir，继续上面的指令运行一下</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024190934131.png alt=image-20211024190934131></p>
+<p>那不管当前路径是什么都会得到subdir的输出</p>
+<p>再进一步，在2.php中半道清空include_path会怎么样呢</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024191919122.png alt=image-20211024191919122></p>
+<p>我们发现跟上面结果一样，但是这里的逻辑却有差异：2.php中清空include_path后再包含文件将会自动变为current_path的路径，而2.php在/root/subdir下，所以回显和2.php的路径保持一致</p>
+<p>再再进一步</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024192931075.png alt=image-20211024192931075></p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024193020147.png alt=image-20211024193020147></p>
+<p>诶，可以看到由于这里两次都用到了相对目录的<code>"./"</code>进行引用，所以在/root目录下运行很顺畅，而/root/subdir目录下由于不会再存在./subdir/2.php，所以报错退出</p>
+<h2 id=使用注意>使用注意</h2>
+<ul>
+<li>在使用include_path和相对路径时会影响性能，所以最好用绝对路径</li>
+<li>目录相对路径的basedir永远是当前工作路径</li>
+<li>可以通过<code>__DIR__</code>来获得绝对路径</li>
+<li>建议少使用<code>include/require_once</code></li>
+</ul>
+<hr>
+<p>*写的不全面，还有一部分需要补充 先鸽了，遇到题或者具体的应用场景我补充上来</p>
+<hr>
+<details>
+<summary>
+<h4 class=inline>
+以下是本文中涉及到的 和我学习时看过的所有文章的链接🔗 每日感谢互联网的丰富资源（
+</h4>
+</summary>
+<p><a href=https://www.laruence.com/2010/05/04/1450.html>深入理解PHP之require/include顺序</a></p>
+</details>
+</div>
+</section>
+</article>
+</main>
+<div class="w-full h-0 flex-none order-3"></div>
+<aside role=contentinfo class="w-full md:w-2/5 xl:w-1/2 md:pr-12 lg:pr-20 xl:pr-24 order-4 md:order-3 md:sticky md:bottom-0 self-end max-w-2xl">
+<div class="md:float-right md:text-right leading-loose tracking-tight md:mb-2">
+<div class="md:max-w-xs flex flex-col md:items-end">
 <ul class="font-serif flex-grow-0 flex justify-between flex-wrap md:flex-col">
 <li class="px-1 md:px-0">
 <a href=/posts/ title="Posts page">
@@ -44,7 +122,7 @@ Categories
 </a>
 </li>
 <li class="px-1 md:px-0">
-<a href=/tags/ title="Tags page" class="font-medium text-medium-red-violet-600 hover:text-medium-red-violet-400">
+<a href=/tags/ title="Tags page">
 Tags
 </a>
 </li>
@@ -63,9 +141,6 @@ About
 Friends
 </a>
 </li>
-<li>
-<a href=/tags/ffi/index.xml>RSS</a>
-</li>
 <div id=fastSearch class=m-0>
 <input id=searchInput type=text size=10 class="bg-gray-100 focus:outline-none border-b border-gray-100 focus:border-eucalyptus-300 md:text-right
 placeholder-java-500 min-w-0 max-w-xxxs" placeholder=search>
@@ -73,41 +148,6 @@ placeholder-java-500 min-w-0 max-w-xxxs" placeholder=search>
 </ul>
 </div>
 </ul>
-</div>
-</header>
-<main role=main class="w-full md:w-3/5 xl:w-1/2 max-w-3xl order-2 md:order-2 min-h-70vh pt-2 pb-4">
-<h1 class=pb-4>
-FFI
-</h1>
-<div>
-<section>
-<div>
-<div class=pb-8>
-<div class="font-serif font-medium text-xl">
-<a href=https://amiaaaz.github.io/2021/12/03/use-ffi-bypass-disable-functions/>
-FFI绕过disable_functions
-</a>
-</div>
-<div class="font-serif text-gray-600 font-light pt-1">
-三个主人公: Preloading&FFI&Serializable</div>
-<div class="flex flex-wrap justify-between pt-1"><div class="md:flex-grow-0 font-light">
-<a class="post-taxonomy-category text-medium-red-violet-600 hover:text-medium-red-violet-400" href=/categories/notessummary>NOTES&SUMMARY</a>
-&nbsp;&nbsp;
-<a class="post-taxonomy-tag text-eucalyptus-500" href=/tags/php>PHP</a>&nbsp;/
-<a class="post-taxonomy-tag text-eucalyptus-500" href=/tags/unserialize>unserialize</a>&nbsp;/
-<a class="post-taxonomy-tag text-eucalyptus-500" href=/tags/ffi>FFI</a>&nbsp;/
-<a class="post-taxonomy-tag text-eucalyptus-500" href=/tags/bypass_disable_functions>bypass_disable_functions</a>
-</div><time class="text-eucalyptus-500 md:text-right md:flex-grow font-light" datetime=2021-12-03T00:01:07+08:00>2021-12-3 00:01</time>
-</div>
-</div>
-</div>
-</section>
-</div>
-</main>
-<div class="w-full h-0 flex-none order-3"></div>
-<aside role=contentinfo class="w-full md:w-2/5 xl:w-1/2 md:pr-12 lg:pr-20 xl:pr-24 order-4 md:order-3 md:sticky md:bottom-0 self-end max-w-2xl">
-<div class="md:float-right md:text-right leading-loose tracking-tight md:mb-2">
-<div class="md:max-w-xs flex flex-col md:items-end pt-2">
 <div class="flex flex-wrap-reverse md:justify-end content-end md:content-start justify-start items-start md:flex-col max-h-16">
 <a href=https://space.bilibili.com/1651059195 target=_blank class="bilibili icon pl-1 text-eucalyptus-400 hover:text-java-400" title="bilibili link" rel=noopener aria-label="follow on bilibili——Opens in a new window">
 <div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path d="M7.172 2.757 10.414 6h3.171l3.243-3.242a1 1 0 011.415 1.415L16.414 6H18.5A3.5 3.5.0 0122 9.5v8A3.5 3.5.0 0118.5 21h-13A3.5 3.5.0 012 17.5v-8A3.5 3.5.0 015.5 6h2.085L5.757 4.171a1 1 0 011.415-1.415zM18.5 8h-13A1.5 1.5.0 004.007 9.356L4 9.5v8a1.5 1.5.0 001.356 1.493L5.5 19h13a1.5 1.5.0 001.493-1.356L20 17.5v-8A1.5 1.5.0 0018.5 8zM8 11a1 1 0 011 1v2a1 1 0 01-2 0v-2a1 1 0 011-1zm8 0a1 1 0 011 1v2a1 1 0 01-2 0v-2a1 1 0 011-1z"/></g></svg>
@@ -142,16 +182,40 @@ FFI绕过disable_functions
 </div>
 </a>
 </div>
-<div class="a-gray text-sm text-gray-500 leading-tight">
+<div class="text-sm text-gray-500 leading-tight a-gray">
 <br>
-Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>.
-<br>
-72 pages, 101836 words in total.
+Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>. 1629 words in this page.
 </div>
 </div>
 </div>
 </aside>
 <footer class="w-full md:w-3/5 xl:w-1/2 order-3 max-w-3xl md:order-4 pt-2">
+<hr class=double-line>
+<div class="flex flex-wrap justify-between pb-2 leading-loose font-serif">
+<a class=flex-grow-0 href=/2021/12/12/nitectf2021-wp/><svg class="fill-current inline-block h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M7.828 11H20v2H7.828l5.364 5.364-1.414 1.414L4 12l7.778-7.778 1.414 1.414z"/></svg>
+niteCTF2021 Wp
+</a>
+</div>
+<div>
+<div class="font-serif pb-2 flex align-start leading-loose">
+<span class="heading pr-6 leading-loose">Related</span>
+<span>
+<a href=/2021/12/04/laravel-5.8.x-pop-gadgets/>Laravel-5.8.x反序列化pop链学习</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/12/03/use-ffi-bypass-disable-functions/>FFI绕过disable_functions</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/11/29/php-session-study-notes/>PHP_Session学习笔记</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/11/25/php-remote-debug-env-init/>PHP远程debug环境配置</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/11/18/attack-php-fpm-study-notes/>攻击PHP-FPM学习笔记</a>
+</span>
+</div>
+</div>
+<hr>
+<div class=pb-2>
+<div id=disqus_thread></div>
+<script type=application/javascript>var disqus_config=function(){};(function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById('disqus_thread').innerHTML='Disqus comments not available by default when the website is previewed locally.';return}var b=document,a=b.createElement('script');a.async=!0,a.src='//amiaaaz.disqus.com/embed.js',a.setAttribute('data-timestamp',+new Date),(b.head||b.body).appendChild(a)})()</script>
+<noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript>
+<a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a>
+</div>
+<hr>
 </footer>
 <script src=/dist/app.js></script>
 <script src=/lib/fuse.min.js></script>

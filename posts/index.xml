@@ -1,4 +1,46 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/posts/</link><description>Recent content in Posts on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 12 Dec 2021 23:12:52 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>niteCTF2021 Wp</title><link>https://amiaaaz.github.io/2021/12/12/nitectf2021-wp/</link><pubDate>Sun, 12 Dec 2021 23:12:52 +0800</pubDate><guid>https://amiaaaz.github.io/2021/12/12/nitectf2021-wp/</guid><description>&lt;p>&lt;a href="http://ctf.cryptonite.team/challenges">http://ctf.cryptonite.team/challenges&lt;/a>&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/posts/</link><description>Recent content in Posts on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Mon, 13 Dec 2021 01:12:22 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>关于include/require(_once)的易混淆点</title><link>https://amiaaaz.github.io/2021/12/13/smth-about-include-require-in-php/</link><pubDate>Mon, 13 Dec 2021 01:12:22 +0800</pubDate><guid>https://amiaaaz.github.io/2021/12/13/smth-about-include-require-in-php/</guid><description>&lt;p>之前做题遇到后查了一下相关文章，觉得很适合出题，但是感觉不能为了考而考，也就失去了CTF的意义，所以还不如先发出来这一篇&lt;/p>
+&lt;p>&lt;del>（别骂了 就是懒&lt;/del>&lt;/p>
+&lt;h2 id="关于includerequire_once">关于&lt;code>include/require(_once)()&lt;/code>&lt;/h2>
+&lt;p>这几个函数应该都不陌生（还应该再加上include_path），干的是文件包含的事；先按照给定参数寻找路径（当定义了路径则会完全忽略include_path），如果只有文件名则按照include_path的指定目录寻找，如果还没找到则会在调用脚本文件所在的目录和当前工作目录下寻找；下面说几个小点&lt;/p>
+&lt;p>首先是require和include的区别在于require在出错时会产生E_COMPILE_ERROR级别的错误，脚本将中止运行，而include只会产生警告E_WARNING，不影响继续顶着错误继续执行脚本（做题很常见这个 无数的报错下面有正常的回显）&lt;/p>
+&lt;p>另一个区别在于require是无条件包含函数，即程序执行前就会将文件内容以文本替换的形式引入（所以这份文件只被处理一次），让它变为php脚本的一部分（所以通常放在php文件的最前面）；include则是有条件包含函数，用到时才被加载，且每次执行文件时都要进行读取和评估&lt;/p>
+&lt;p>当php遇到require/include(_once)函数时，如果给定的参数是个绝对路径则直接引入，但如果给的是相对路径，则要进入另外的逻辑（经过多次调用，宏展开后进入_php_stream_fopen_with_path）寻找此文件；在_php_stream_fopen_with_path会根据include_path和当前执行文件的path组成一个待选的目录列表，然后从列表头部开始根据DEFAULT_DIR_SEPARATOR（linux下默认为&lt;code>:&lt;/code> win为&lt;code>;&lt;/code>）取出路径，然后拼上文件名，如果成功则返回，失败则继续下一个待选择路径（&lt;u>所以如果有重名的就好玩了&lt;/u>）&lt;/p>
+&lt;h2 id="几个好玩的小栗子">几个好玩的小栗子&lt;/h2>
+&lt;p>这里举一个小栗子，文件结构和内容如下（注意这里include_path的写法!!!不仅有path_to_subdir还有&lt;code>:&lt;/code>分隔符前面代表的current_dir!!!）&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024095717109.png" alt="image-20211024095717109">&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024095830345.png" alt="image-20211024095830345">&lt;/p>
+&lt;p>在不同的情况下运行看看效果&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024100007587.png" alt="image-20211024100007587">&lt;/p>
+&lt;p>在root目录下执行时，直接根据1.php的include_path寻找2.php，而2.php中并没有设置include_path，那么路径就变成了列表中第一个待选择路径 即&lt;code>&amp;quot;.&amp;quot;&lt;/code>，而当前工作目录是root，所以就是/root/3.php的输出&lt;/p>
+&lt;p>换到subdir目录下执行1.php时，列表中第一个待选择路径&lt;code>&amp;quot;.&amp;quot;&lt;/code>变为了subdir，自然输出变为了/root/subdir/3.php的输出&lt;/p>
+&lt;p>现在我们把include_path仅保留path_to_subdir，继续上面的指令运行一下&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024190934131.png" alt="image-20211024190934131">&lt;/p>
+&lt;p>那不管当前路径是什么都会得到subdir的输出&lt;/p>
+&lt;p>再进一步，在2.php中半道清空include_path会怎么样呢&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024191919122.png" alt="image-20211024191919122">&lt;/p>
+&lt;p>我们发现跟上面结果一样，但是这里的逻辑却有差异：2.php中清空include_path后再包含文件将会自动变为current_path的路径，而2.php在/root/subdir下，所以回显和2.php的路径保持一致&lt;/p>
+&lt;p>再再进一步&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024192931075.png" alt="image-20211024192931075">&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211024193020147.png" alt="image-20211024193020147">&lt;/p>
+&lt;p>诶，可以看到由于这里两次都用到了相对目录的&lt;code>&amp;quot;./&amp;quot;&lt;/code>进行引用，所以在/root目录下运行很顺畅，而/root/subdir目录下由于不会再存在./subdir/2.php，所以报错退出&lt;/p>
+&lt;h2 id="使用注意">使用注意&lt;/h2>
+&lt;ul>
+&lt;li>在使用include_path和相对路径时会影响性能，所以最好用绝对路径&lt;/li>
+&lt;li>目录相对路径的basedir永远是当前工作路径&lt;/li>
+&lt;li>可以通过&lt;code>__DIR__&lt;/code>来获得绝对路径&lt;/li>
+&lt;li>建议少使用&lt;code>include/require_once&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;hr>
+&lt;p>*写的不全面，还有一部分需要补充 先鸽了，遇到题或者具体的应用场景我补充上来&lt;/p>
+&lt;hr>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+以下是本文中涉及到的 和我学习时看过的所有文章的链接🔗 每日感谢互联网的丰富资源（
+&lt;/h4>
+&lt;/summary>
+&lt;p>&lt;a href="https://www.laruence.com/2010/05/04/1450.html">深入理解PHP之require/include顺序&lt;/a>&lt;/p>
+&lt;/details></description></item><item><title>niteCTF2021 Wp</title><link>https://amiaaaz.github.io/2021/12/12/nitectf2021-wp/</link><pubDate>Sun, 12 Dec 2021 23:12:52 +0800</pubDate><guid>https://amiaaaz.github.io/2021/12/12/nitectf2021-wp/</guid><description>&lt;p>&lt;a href="http://ctf.cryptonite.team/challenges">http://ctf.cryptonite.team/challenges&lt;/a>&lt;/p>
 &lt;p>&lt;a href="https://ctftime.org/event/1449">https://ctftime.org/event/1449&lt;/a>&lt;/p>
 &lt;h2 id="webwelcome-to-nitectf">Web/welcome to niteCTF&lt;/h2>
 &lt;blockquote>
