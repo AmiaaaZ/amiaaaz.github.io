@@ -4,7 +4,7 @@
 <meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
 <title>AmiaaaZ's Site | hxpCTF2021 Wp</title>
 <meta name=viewport content="width=device-width,minimum-scale=1">
-<meta name=generator content="Hugo 0.91.0">
+<meta name=generator content="Hugo 0.91.1">
 <meta name=ROBOTS content="INDEX, FOLLOW">
 <link href=/dist/app.css rel=stylesheet>
 <script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-203328343-1','auto'),ga('send','pageview'))</script>
@@ -26,7 +26,7 @@
 </h2>
 </div>
 <h1 class=pt-2>hxpCTF2021 Wp</h1>
-<h3 class="text-java-700 font-normal leading-relaxed pt-2">太菜了，纯复现流做题</h3>
+<h3 class="text-java-700 font-normal leading-relaxed pt-2">纯菜狗，纯复现流做题，别骂了别骂了</h3>
 <div class="flex flex-wrap justify-end pt-2"><div class="md:flex-grow-0 font-light">
 <a class="post-taxonomy-category text-medium-red-violet-600 hover:text-medium-red-violet-400" href=/categories/ctf>CTF</a>
 &nbsp;&nbsp;
@@ -43,7 +43,7 @@
 <li><a href=#log-4-sanity-check>Log 4 sanity check</a></li>
 <li><a href=#unzipper>unzipper</a></li>
 <li><a href=#shitty-blog>shitty blog</a></li>
-<li><a href=#counter>**counter</a></li>
+<li><a href=#counter>***counter</a></li>
 <li><a href=#includers-revenge>***includer&rsquo;s revenge</a></li>
 </ul>
 </nav>
@@ -278,7 +278,7 @@ foreach($entries as $key =&gt; $entry) {
 <p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211220182536863.png alt=image-20211220182536863></p>
 <p><code>hxp{dynamically_typed_statically_typed_php_c_I_hate_you_all_equally__at_least_its_not_node_lol_:(}</code></p>
 <p>参考：<a href=https://wachter-space.de/2021/12/19/hxp_21>wp</a></p>
-<h2 id=counter>**counter</h2>
+<h2 id=counter>***counter</h2>
 <blockquote>
 <p>Please check out our minimal view counter. I think it’s secure. Anyway please no hacks.</p>
 <p>http://49.12.232.139:8008/</p>
@@ -298,14 +298,17 @@ foreach($entries as $key =&gt; $entry) {
 <span style=color:#75af00>file_put_contents</span><span style=color:#111>(</span><span style=color:#111>$page</span><span style=color:#111>,</span> <span style=color:#75af00>file_get_contents</span><span style=color:#111>(</span><span style=color:#111>$page</span><span style=color:#111>)</span> <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span><span style=color:#111>);</span>
 <span style=color:#00a8c8>include_once</span><span style=color:#111>(</span><span style=color:#111>$page</span><span style=color:#111>);</span>
 
-</code></pre></div><p>条件竞争包含</p>
-<p><a href=https://gist.github.com/parrot409/3919a4e6ab1eae76d051c5a4d4cfa737>https://gist.github.com/parrot409/3919a4e6ab1eae76d051c5a4d4cfa737</a></p>
+</code></pre></div><p><a href=https://gist.github.com/parrot409/3919a4e6ab1eae76d051c5a4d4cfa737>https://gist.github.com/parrot409/3919a4e6ab1eae76d051c5a4d4cfa737</a></p>
+<p><a href=https://tttang.com/archive/1384/#toc_0x03-counter-nginx-request-body-temp-lfi>https://tttang.com/archive/1384/#toc_0x03-counter-nginx-request-body-temp-lfi</a></p>
 <h2 id=includers-revenge>***includer&rsquo;s revenge</h2>
 <blockquote>
 <p>Just sitting here and waiting for PHP 8.1 (lolphp).</p>
 <p>http://65.108.176.254:8088/</p>
 </blockquote>
-<p>不会，摆了</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-php data-lang=php><span style=color:#f92672>&lt;?</span><span style=color:#75af00>php</span> <span style=color:#111>(</span><span style=color:#111>$_GET</span><span style=color:#111>[</span><span style=color:#d88200>&#39;action&#39;</span><span style=color:#111>]</span> <span style=color:#f92672>??</span> <span style=color:#d88200>&#39;read&#39;</span> <span style=color:#111>)</span> <span style=color:#f92672>===</span> <span style=color:#d88200>&#39;read&#39;</span> <span style=color:#f92672>?</span> <span style=color:#75af00>readfile</span><span style=color:#111>(</span><span style=color:#111>$_GET</span><span style=color:#111>[</span><span style=color:#d88200>&#39;file&#39;</span><span style=color:#111>]</span> <span style=color:#f92672>??</span> <span style=color:#d88200>&#39;index.php&#39;</span><span style=color:#111>)</span> <span style=color:#f92672>:</span> <span style=color:#00a8c8>include_once</span><span style=color:#111>(</span><span style=color:#111>$_GET</span><span style=color:#111>[</span><span style=color:#d88200>&#39;file&#39;</span><span style=color:#111>]</span> <span style=color:#f92672>??</span> <span style=color:#d88200>&#39;index.php&#39;</span><span style=color:#111>);</span>
+</code></pre></div><p>一句话php，不会，摆了</p>
+<p>Zedd师傅这篇太强了，深入分析Nginx->https://tttang.com/archive/1384/</p>
+<p>作为一名web纯菜狗，太佩服出题人了，是真的强，好厉害啊啊啊啊啊啊啊</p>
 </div>
 </section>
 </article>
@@ -393,7 +396,7 @@ placeholder-java-500 min-w-0 max-w-xxxs" placeholder=search>
 </div>
 <div class="text-sm text-gray-500 leading-tight a-gray">
 <br>
-Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>. 2206 words in this page.
+Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>. 2315 words in this page.
 </div>
 </div>
 </div>

