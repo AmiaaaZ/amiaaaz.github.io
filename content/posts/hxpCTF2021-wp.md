@@ -1,7 +1,7 @@
 ---
 title: "hxpCTF2021 Wp"
 slug: "hxpctf2021-wp"
-description: "太菜了，纯复现流做题"
+description: "纯菜狗，纯复现流做题，别骂了别骂了"
 date: 2021-12-20T23:45:08+08:00
 categories: ["CTF"]
 series: []
@@ -303,7 +303,7 @@ print(cookies)
 
 参考：[wp](https://wachter-space.de/2021/12/19/hxp_21)
 
-## **counter
+## ***counter
 
 > Please check out our minimal view counter. I think it’s secure. Anyway please no hacks.
 >
@@ -327,9 +327,9 @@ include_once($page);
 
 ```
 
-条件竞争包含
-
 https://gist.github.com/parrot409/3919a4e6ab1eae76d051c5a4d4cfa737
+
+https://tttang.com/archive/1384/#toc_0x03-counter-nginx-request-body-temp-lfi
 
 ## ***includer's revenge
 
@@ -337,4 +337,15 @@ https://gist.github.com/parrot409/3919a4e6ab1eae76d051c5a4d4cfa737
 >
 > http://65.108.176.254:8088/
 
-不会，摆了
+```php
+<?php ($_GET['action'] ?? 'read' ) === 'read' ? readfile($_GET['file'] ?? 'index.php') : include_once($_GET['file'] ?? 'index.php');
+```
+
+一句话php，不会，摆了
+
+Zedd师傅这篇太强了，深入分析Nginx->https://tttang.com/archive/1384/
+
+作为一名web纯菜狗，太佩服出题人了，是真的强，好厉害啊啊啊啊啊啊啊
+
+
+

