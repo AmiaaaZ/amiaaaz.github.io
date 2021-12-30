@@ -1,5 +1,5 @@
 ---
-title: "CTFshow1221击剑杯 Wp"
+title: "CTFshow1221摆烂杯 Wp"
 slug: "ctfshow-1221-bailancup-wp"
 description: "桥洞底下盖小被，java，狗都不学"
 date: 2021-12-28T20:06:48+08:00
