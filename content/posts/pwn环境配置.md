@@ -43,15 +43,15 @@ git clone https://github.com/pwndbg/pwndbg.git
 ```
 # 使用peda-heap
 git clone https://github.com/Mipu94/peda-heap.git
-echo "source ~/peda-heap/peda.py" > ~/.gdbinit
+echo "source ~/GDB-Plugins/peda-heap/peda.py" > ~/.gdbinit
 # 使用peda
 git clone https://github.com/longld/peda.git
 echo "source ~/GDB-Plugins/peda/peda.py" > ~/.gdbinit
 # 使用gef
 git clone https://github.com/hugsy/gef.git
-echo "source ~/gef/gef.py" > ~/.gdbinit
+echo "source ~/GDB-Plugins/gef/gef.py" > ~/.gdbinit
 # 使用pwndbg
-echo "source ~/pwndbg/gdbinit.py" > ~/.gdbinit
+echo "source ~/GDB-Plugins/pwndbg/gdbinit.py" > ~/.gdbinit
 # 自动切换脚本 https://blog.csdn.net/aptx4869_li/article/details/81566541
 ```
 
@@ -69,6 +69,7 @@ sudo gem install one_gadget
 
 ```
 sudo apt-get install lib32ncurses5
+sudo apt install libc6-dev-i386
 sudo apt-get install lib32z1
 ```
 
