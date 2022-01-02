@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AmiaaaZ's Site</title><link>https://amiaaaz.github.io/</link><description>Recent content on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 30 Dec 2021 13:09:58 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>数据结构作业——链栈&amp;迷宫求解</title><link>https://amiaaaz.github.io/2021/12/30/linkstack-in-maze-question/</link><pubDate>Thu, 30 Dec 2021 13:09:58 +0800</pubDate><guid>https://amiaaaz.github.io/2021/12/30/linkstack-in-maze-question/</guid><description>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-c" data-lang="c">&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;stdio.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AmiaaaZ's Site</title><link>https://amiaaaz.github.io/</link><description>Recent content on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 02 Jan 2022 20:08:38 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>2021小结</title><link>https://amiaaaz.github.io/2022/01/02/2021-short-summary/</link><pubDate>Sun, 02 Jan 2022 20:08:38 +0800</pubDate><guid>https://amiaaaz.github.io/2022/01/02/2021-short-summary/</guid><description>&lt;p>期末考试让人崩溃&lt;/p></description></item><item><title>数据结构作业——链栈&amp;迷宫求解</title><link>https://amiaaaz.github.io/2021/12/30/linkstack-in-maze-question/</link><pubDate>Thu, 30 Dec 2021 13:09:58 +0800</pubDate><guid>https://amiaaaz.github.io/2021/12/30/linkstack-in-maze-question/</guid><description>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-c" data-lang="c">&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;stdio.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
 &lt;/span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;stdbool.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
 &lt;/span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;stdlib.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
 &lt;/span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;windows.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
@@ -5284,15 +5284,15 @@ git clone https://github.com/pwndbg/pwndbg.git
 ./setup.sh
 &lt;/code>&lt;/pre>&lt;pre tabindex="0">&lt;code># 使用peda-heap
 git clone https://github.com/Mipu94/peda-heap.git
-echo &amp;quot;source ~/peda-heap/peda.py&amp;quot; &amp;gt; ~/.gdbinit
+echo &amp;quot;source ~/GDB-Plugins/peda-heap/peda.py&amp;quot; &amp;gt; ~/.gdbinit
 # 使用peda
 git clone https://github.com/longld/peda.git
 echo &amp;quot;source ~/GDB-Plugins/peda/peda.py&amp;quot; &amp;gt; ~/.gdbinit
 # 使用gef
 git clone https://github.com/hugsy/gef.git
-echo &amp;quot;source ~/gef/gef.py&amp;quot; &amp;gt; ~/.gdbinit
+echo &amp;quot;source ~/GDB-Plugins/gef/gef.py&amp;quot; &amp;gt; ~/.gdbinit
 # 使用pwndbg
-echo &amp;quot;source ~/pwndbg/gdbinit.py&amp;quot; &amp;gt; ~/.gdbinit
+echo &amp;quot;source ~/GDB-Plugins/pwndbg/gdbinit.py&amp;quot; &amp;gt; ~/.gdbinit
 # 自动切换脚本 https://blog.csdn.net/aptx4869_li/article/details/81566541
 &lt;/code>&lt;/pre>&lt;p>安装one_gadget&lt;/p>
 &lt;pre tabindex="0">&lt;code>sudo apt-add-repository ppa:brightbox/ruby-ng
@@ -5302,6 +5302,7 @@ sudo apt-get install gem
 sudo gem install one_gadget
 &lt;/code>&lt;/pre>&lt;p>安装32位库&lt;/p>
 &lt;pre tabindex="0">&lt;code>sudo apt-get install lib32ncurses5
+sudo apt install libc6-dev-i386
 sudo apt-get install lib32z1
 &lt;/code>&lt;/pre>&lt;p>安装checksec&lt;/p>
 &lt;pre tabindex="0">&lt;code>sudo apt instal checksec

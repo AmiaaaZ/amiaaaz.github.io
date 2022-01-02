@@ -16,15 +16,15 @@ git clone https://github.com/pwndbg/pwndbg.git
 ./setup.sh
 &lt;/code>&lt;/pre>&lt;pre tabindex="0">&lt;code># 使用peda-heap
 git clone https://github.com/Mipu94/peda-heap.git
-echo &amp;quot;source ~/peda-heap/peda.py&amp;quot; &amp;gt; ~/.gdbinit
+echo &amp;quot;source ~/GDB-Plugins/peda-heap/peda.py&amp;quot; &amp;gt; ~/.gdbinit
 # 使用peda
 git clone https://github.com/longld/peda.git
 echo &amp;quot;source ~/GDB-Plugins/peda/peda.py&amp;quot; &amp;gt; ~/.gdbinit
 # 使用gef
 git clone https://github.com/hugsy/gef.git
-echo &amp;quot;source ~/gef/gef.py&amp;quot; &amp;gt; ~/.gdbinit
+echo &amp;quot;source ~/GDB-Plugins/gef/gef.py&amp;quot; &amp;gt; ~/.gdbinit
 # 使用pwndbg
-echo &amp;quot;source ~/pwndbg/gdbinit.py&amp;quot; &amp;gt; ~/.gdbinit
+echo &amp;quot;source ~/GDB-Plugins/pwndbg/gdbinit.py&amp;quot; &amp;gt; ~/.gdbinit
 # 自动切换脚本 https://blog.csdn.net/aptx4869_li/article/details/81566541
 &lt;/code>&lt;/pre>&lt;p>安装one_gadget&lt;/p>
 &lt;pre tabindex="0">&lt;code>sudo apt-add-repository ppa:brightbox/ruby-ng
@@ -34,6 +34,7 @@ sudo apt-get install gem
 sudo gem install one_gadget
 &lt;/code>&lt;/pre>&lt;p>安装32位库&lt;/p>
 &lt;pre tabindex="0">&lt;code>sudo apt-get install lib32ncurses5
+sudo apt install libc6-dev-i386
 sudo apt-get install lib32z1
 &lt;/code>&lt;/pre>&lt;p>安装checksec&lt;/p>
 &lt;pre tabindex="0">&lt;code>sudo apt instal checksec

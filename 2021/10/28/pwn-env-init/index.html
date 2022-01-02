@@ -57,15 +57,15 @@ git clone https://github.com/pwndbg/pwndbg.git
 ./setup.sh
 </code></pre><pre tabindex=0><code># 使用peda-heap
 git clone https://github.com/Mipu94/peda-heap.git
-echo &quot;source ~/peda-heap/peda.py&quot; &gt; ~/.gdbinit
+echo &quot;source ~/GDB-Plugins/peda-heap/peda.py&quot; &gt; ~/.gdbinit
 # 使用peda
 git clone https://github.com/longld/peda.git
 echo &quot;source ~/GDB-Plugins/peda/peda.py&quot; &gt; ~/.gdbinit
 # 使用gef
 git clone https://github.com/hugsy/gef.git
-echo &quot;source ~/gef/gef.py&quot; &gt; ~/.gdbinit
+echo &quot;source ~/GDB-Plugins/gef/gef.py&quot; &gt; ~/.gdbinit
 # 使用pwndbg
-echo &quot;source ~/pwndbg/gdbinit.py&quot; &gt; ~/.gdbinit
+echo &quot;source ~/GDB-Plugins/pwndbg/gdbinit.py&quot; &gt; ~/.gdbinit
 # 自动切换脚本 https://blog.csdn.net/aptx4869_li/article/details/81566541
 </code></pre><p>安装one_gadget</p>
 <pre tabindex=0><code>sudo apt-add-repository ppa:brightbox/ruby-ng
@@ -75,6 +75,7 @@ sudo apt-get install gem
 sudo gem install one_gadget
 </code></pre><p>安装32位库</p>
 <pre tabindex=0><code>sudo apt-get install lib32ncurses5
+sudo apt install libc6-dev-i386
 sudo apt-get install lib32z1
 </code></pre><p>安装checksec</p>
 <pre tabindex=0><code>sudo apt instal checksec
@@ -191,7 +192,7 @@ placeholder-java-500 min-w-0 max-w-xxxs" placeholder=search>
 </div>
 <div class="text-sm text-gray-500 leading-tight a-gray">
 <br>
-Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>. 748 words in this page.
+Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>. 752 words in this page.
 </div>
 </div>
 </div>
