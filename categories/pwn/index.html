@@ -2,11 +2,13 @@
 <head>
 <meta charset=utf-8>
 <meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
-<title>AmiaaaZ's Site | 无题</title>
+<title>AmiaaaZ's Site | pwn</title>
 <meta name=viewport content="width=device-width,minimum-scale=1">
-<meta name=generator content="Hugo 0.91.2">
+<meta name=generator content="Hugo 0.92.0">
 <meta name=ROBOTS content="INDEX, FOLLOW">
 <link href=/dist/app.css rel=stylesheet>
+<link rel=alternate href=/categories/pwn/index.xml type=application/rss+xml title="AmiaaaZ's Site">
+<link rel=feed href=/categories/pwn/index.xml type=application/rss+xml title="AmiaaaZ's Site">
 <script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-203328343-1','auto'),ga('send','pageview'))</script>
 <script async src=https://www.google-analytics.com/analytics.js></script>
 <link rel=stylesheet href=https://amiaaaz.github.io/lib/katex.min.css integrity=sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq crossorigin=anonymous>
@@ -20,77 +22,11 @@
 <div class="p-6 sm:p-10 md:p-16 flex flex-wrap">
 <header class="w-full md:w-2/5 xl:w-1/2 md:pr-12 lg:pr-20 xl:pr-24 order-1 md:order-1 max-w-2xl">
 <div class="z-50 bg-gray-100 bg-opacity-75 bg-opacity-custom lg:min-w-0.7 max-w-xl md:float-right md:text-right leading-loose tracking-tight md:sticky md:top-0 pt-2">
-<div>
-<h2>
+<div class=pb-4>
+<h1>
 <a href=https://amiaaaz.github.io/ title="AmiaaaZ's Site" class="heading font-cursive icon">AmiaaaZ's Site</a>
-</h2>
+</h1>
 </div>
-<h1 class=pt-2>无题</h1>
-<h3 class="text-java-700 font-normal leading-relaxed pt-2">个人在配一些环境时遇到的报错以及相关解决办法，可能不是很通用&相当基础，但是顺手记录一下，帮助有缘人</h3>
-<div class="flex flex-wrap justify-end pt-2"><div class="md:flex-grow-0 font-light">
-<a class="post-taxonomy-category text-medium-red-violet-600 hover:text-medium-red-violet-400" href=/categories/lts>LTS</a>&nbsp;/
-<a class="post-taxonomy-category text-medium-red-violet-600 hover:text-medium-red-violet-400" href=/categories/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE>环境配置</a>
-&nbsp;&nbsp;
-</div><time class="text-eucalyptus-500 md:text-right md:flex-grow font-light pl-4" datetime=2021-11-14T18:10:01+08:00>2021-11-14 18:10</time>
-</div>
-<hr>
-</div>
-</header>
-<main role=main class="w-full md:w-3/5 xl:w-1/2 max-w-3xl order-2 md:order-2 min-h-70vh pt-2 pb-4">
-<article>
-<section class="mx-auto content">
-<div class=c-rich-text><details>
-<summary>
-<h4 class=inline>
-本地搭建Visual Regexp
-</h4>
-</summary>
-<p>搭建原因大家应该都懂吧，一个是正则可视化实在是很香很必要，其次线下没网的话没有个离线工具就很容易gg，同类工具还有<a href=https://github.com/gchq/CyberChef/releases/tag/v9.32.3>cyberchef</a>等</p>
-<p><a href=https://wangwl.net/static/projects/visualRegex/#>Visual Regexp在线地址</a> | <a href=https://github.com/relax-code-relax-life/visualRegexPage>github仓库</a></p>
-<p>在<code>git clone</code>之后首先肯定是<code>npm install</code>，出现vulnerabilities很正常，直接<code>npm audit fix --force</code>，一次不行就两次</p>
-<p>奇葩的是作者自己的visual-regex包一直是以快捷方式的形式被安装（后来发现是整个项目的package.json编写的问题）</p>
-<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211114182010887.png alt=image-20211114182010887></p>
-<p>解决方法：删除快捷方式，单独安装<code>npm i visual-regex</code>，用everything查找到该包具体存在的位置，复制到node_modules目录下</p>
-<p>之后到build目录下<code>node .\build.js</code></p>
-<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211114182307150.png alt=image-20211114182307150></p>
-<p>报错hightlight.js并没有引入./lib/highlight，查看\highlight.js\package.json的exports部分，发现第90行的引用是"."，将其改为"./lib/highlight"</p>
-<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/JQW8B657%60%241JG%5BFOWY1I%7BBW.png alt=img></p>
-<p>再次build提示*&lsquo;NODE_ENV&rsquo; is not recognized as an internal or external command, operable program or batch file.*（此处截图走丢了），解决方法<code>npm install -g win-node-env</code></p>
-<p>之后<code>node .\build.js</code>即可成功build，在devlist文件夹下的index.html即可正常使用相关功能</p>
-</details>
-<details>
-<summary>
-<h4 class=inline>
-无法打开jar包应用
-</h4>
-</summary>
-<p>这个应该属于常见问题了，一般原因是java版本不对</p>
-<p>很多人选择设置不同名字的环境变量，比如java8，java11，我的话是只有java11是环境变量，在有些jar需要java8的环境时直接用everything搜索java.exe，复制路径之后<code>xxx\java.exe -jar xyz.jar</code>这样来运行</p>
-<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211117132839594.png alt=image-20211117132839594></p>
-</details>
-<details>
-<summary>
-<h4 class=inline>
-远程调试Node.js
-</h4>
-</summary>
-<p>场景：用vulhub或其它已经打包好的docker环境复现cve需要远程调试</p>
-<p>首先修改对应的docker文件：package.json的"scripts"字段的"start"部分增加<code>--inspect=0.0.0.0:port</code>，指名调试时的监听端口</p>
-<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211117160017724.png alt=image-20211117160017724></p>
-<p>docker-compose.yml中增加监听端口"8000:9229"，之后正常<code>docker-compose up -d</code></p>
-<p>本地先下载好一样的文件，用vscode生成一个调试文档lauch.json</p>
-<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211117155743006.png alt=image-20211117155743006></p>
-<p>需要改的配置有address（远程ip），port（远程监听端口），localRoot（本地路径），remote（远程路径），之后即可打断点调试</p>
-<p>出现unbound breakpoint正常，大概率是你的交互就没执行到打断点的地方，所以没什么反应</p>
-</details>
-</div>
-</section>
-</article>
-</main>
-<div class="w-full h-0 flex-none order-3"></div>
-<aside role=contentinfo class="w-full md:w-2/5 xl:w-1/2 md:pr-12 lg:pr-20 xl:pr-24 order-4 md:order-3 md:sticky md:bottom-0 self-end max-w-2xl">
-<div class="md:float-right md:text-right leading-loose tracking-tight md:mb-2">
-<div class="md:max-w-xs flex flex-col md:items-end">
 <ul class="font-serif flex-grow-0 flex justify-between flex-wrap md:flex-col">
 <li class="px-1 md:px-0">
 <a href=/posts/ title="Posts page">
@@ -103,7 +39,7 @@ Relaxxx
 </a>
 </li>
 <li class="px-1 md:px-0">
-<a href=/categories/ title="Categories page">
+<a href=/categories/ title="Categories page" class="font-medium text-medium-red-violet-600 hover:text-medium-red-violet-400">
 Categories
 </a>
 </li>
@@ -127,6 +63,9 @@ About
 Friends
 </a>
 </li>
+<li>
+<a href=/categories/pwn/index.xml>RSS</a>
+</li>
 <div id=fastSearch class=m-0>
 <input id=searchInput type=text size=10 class="bg-gray-100 focus:outline-none border-b border-gray-100 focus:border-eucalyptus-300 md:text-right
 placeholder-java-500 min-w-0 max-w-xxxs" placeholder=search>
@@ -134,6 +73,38 @@ placeholder-java-500 min-w-0 max-w-xxxs" placeholder=search>
 </ul>
 </div>
 </ul>
+</div>
+</header>
+<main role=main class="w-full md:w-3/5 xl:w-1/2 max-w-3xl order-2 md:order-2 min-h-70vh pt-2 pb-4">
+<h1 class=pb-4>
+pwn
+</h1>
+<div>
+<section>
+<div>
+<div class=pb-8>
+<div class="font-serif font-medium text-xl">
+<a href=https://amiaaaz.github.io/2022/01/18/pwn-rop-study-notes/>
+pwn rop入门-学习笔记
+</a>
+</div>
+<div class="font-serif text-gray-600 font-light pt-1">
+在学了在学了</div>
+<div class="flex flex-wrap justify-between pt-1"><div class="md:flex-grow-0 font-light">
+<a class="post-taxonomy-category text-medium-red-violet-600 hover:text-medium-red-violet-400" href=/categories/pwn>pwn</a>
+&nbsp;&nbsp;
+<a class="post-taxonomy-tag text-eucalyptus-500" href=/tags/pwn>pwn</a>
+</div><time class="text-eucalyptus-500 md:text-right md:flex-grow font-light" datetime=2022-01-18T00:00:14+08:00>2022-1-18 00:00</time>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<div class="w-full h-0 flex-none order-3"></div>
+<aside role=contentinfo class="w-full md:w-2/5 xl:w-1/2 md:pr-12 lg:pr-20 xl:pr-24 order-4 md:order-3 md:sticky md:bottom-0 self-end max-w-2xl">
+<div class="md:float-right md:text-right leading-loose tracking-tight md:mb-2">
+<div class="md:max-w-xs flex flex-col md:items-end pt-2">
 <div class="flex flex-wrap-reverse md:justify-end content-end md:content-start justify-start items-start md:flex-col max-h-16">
 <a href=https://space.bilibili.com/1651059195 target=_blank class="bilibili icon pl-1 text-eucalyptus-400 hover:text-java-400" title="bilibili link" rel=noopener aria-label="follow on bilibili——Opens in a new window">
 <div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path d="M7.172 2.757 10.414 6h3.171l3.243-3.242a1 1 0 011.415 1.415L16.414 6H18.5A3.5 3.5.0 0122 9.5v8A3.5 3.5.0 0118.5 21h-13A3.5 3.5.0 012 17.5v-8A3.5 3.5.0 015.5 6h2.085L5.757 4.171a1 1 0 011.415-1.415zM18.5 8h-13A1.5 1.5.0 004.007 9.356L4 9.5v8a1.5 1.5.0 001.356 1.493L5.5 19h13a1.5 1.5.0 001.493-1.356L20 17.5v-8A1.5 1.5.0 0018.5 8zM8 11a1 1 0 011 1v2a1 1 0 01-2 0v-2a1 1 0 011-1zm8 0a1 1 0 011 1v2a1 1 0 01-2 0v-2a1 1 0 011-1z"/></g></svg>
@@ -168,33 +139,16 @@ placeholder-java-500 min-w-0 max-w-xxxs" placeholder=search>
 </div>
 </a>
 </div>
-<div class="text-sm text-gray-500 leading-tight a-gray">
+<div class="a-gray text-sm text-gray-500 leading-tight">
 <br>
-Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>. 1120 words in this page.
+Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>.
+<br>
+83 pages, 119936 words in total.
 </div>
 </div>
 </div>
 </aside>
 <footer class="w-full md:w-3/5 xl:w-1/2 order-3 max-w-3xl md:order-4 pt-2">
-<hr class=double-line>
-<div class="flex flex-wrap justify-between pb-2 leading-loose font-serif">
-<a class=flex-grow-0 href=/2021/11/08/ssti-study-notes/><svg class="fill-current inline-block h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M7.828 11H20v2H7.828l5.364 5.364-1.414 1.414L4 12l7.778-7.778 1.414 1.414z"/></svg>
-SSTI学习笔记
-</a>
-<a class=flex-grow-0 href=/2021/11/14/bilibili-sec1024-wp/>
-Bilibili 1024安全攻防 Wp
-<svg class="fill-current inline-block h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"/></svg></a>
-</div>
-<div>
-</div>
-<hr>
-<div class=pb-2>
-<div id=disqus_thread></div>
-<script type=application/javascript>var disqus_config=function(){};(function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById('disqus_thread').innerHTML='Disqus comments not available by default when the website is previewed locally.';return}var b=document,a=b.createElement('script');a.async=!0,a.src='//amiaaaz.disqus.com/embed.js',a.setAttribute('data-timestamp',+new Date),(b.head||b.body).appendChild(a)})()</script>
-<noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript>
-<a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a>
-</div>
-<hr>
 </footer>
 <script src=/dist/app.js></script>
 <script src=/lib/fuse.min.js></script>
