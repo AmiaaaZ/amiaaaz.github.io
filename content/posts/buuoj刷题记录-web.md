@@ -20,7 +20,7 @@ toc: true
 
 ## page 01
 
-{{% spoiler "[极客大挑战 2019]EasySQL" %}}
+{{% spoiler "[极客大挑战 2019]EasySQL  |  sqli 弱口令" %}}
 
 弱口令登入
 
@@ -28,7 +28,7 @@ toc: true
 
 {{% /spoiler %}}
 
-{{% spoiler "[HCTF 2018]WarmUp" %}}
+{{% spoiler "[HCTF 2018]WarmUp  |  mb_substr" %}}
 
 查看页面源码提示source.php
 
@@ -123,7 +123,7 @@ payload
 
 {{% /spoiler %}}
 
-{{% spoiler "[ACTF2020 新生赛]Include" %}}
+{{% spoiler "[ACTF2020 新生赛]Include  |  LFI" %}}
 
 首页提示/?file=flag.php，文件包含点；尝试/etc/passwd，成功，/flag失败，尝试php伪协议
 
@@ -133,7 +133,7 @@ payload
 
 {{% /spoiler %}}
 
-{{% spoiler "[强网杯 2019]随便注" %}}
+{{% spoiler "[强网杯 2019]随便注  |  sqli 堆叠注入" %}}
 
 ```
 1'
@@ -182,7 +182,7 @@ strstr($inject, "set") && strstr($inject, "prepare")
 
 {{% /spoiler %}}
 
-{{% spoiler "[SUCTF 2019]EasySQL" %}}
+{{% spoiler "[SUCTF 2019]EasySQL  |  sqli 堆叠注入" %}}
 
 ```
 1;show tables;	# Flag
@@ -214,7 +214,7 @@ flag{4032c605-fa39-448d-aa2d-f35fca8d3fa9}
 
 {{% /spoiler %}}
 
-{{% spoiler "[ACTF2020 新生赛]Exec" %}}
+{{% spoiler "[ACTF2020 新生赛]Exec  |  rce" %}}
 
 payload
 
@@ -226,7 +226,7 @@ flag{f8c12653-ce6e-4eef-8f69-9433506d5adc}
 
 {{% /spoiler %}}
 
-{{% spoiler "[极客大挑战 2019]Secret File" %}}
+{{% spoiler "[极客大挑战 2019]Secret File  |  LFI" %}}
 
 页面源码提示/Archive_room.php，/end.php，/secr3t.php看到文件包含点，用伪协议
 
@@ -240,7 +240,7 @@ flag{7719d9f9-6f2f-46f7-bc78-a82cfc52d470}
 
 {{% /spoiler %}}
 
-{{% spoiler "[极客大挑战 2019]LoveSQL" %}}
+{{% spoiler "[极客大挑战 2019]LoveSQL  |  sqli 联合注入" %}}
 
 万能密码登入，得到密码是bd798bc32e819b4f57d4e1523d5834c6
 
@@ -258,7 +258,7 @@ flag{e210152f-fc19-4139-9d2a-dcbb6c4c6268}
 
 {{% /spoiler %}}
 
-{{% spoiler "[GXYCTF2019]Ping Ping Ping" %}}
+{{% spoiler "[GXYCTF2019]Ping Ping Ping  |  rce 空格绕过" %}}
 
 ```
 127.0.0.1;ls	# index.php, flag.php
@@ -281,7 +281,7 @@ flag{95a76aa0-58b5-4494-bb49-7f11ce00774d}
 
 {{% /spoiler %}}
 
-{{% spoiler "[极客大挑战 2019]Http" %}}
+{{% spoiler "[极客大挑战 2019]Http  |  请求头" %}}
 
 页面源码提示/Secret.php，跟着提示一直修改请求头
 
@@ -295,7 +295,7 @@ flag{614f3098-1c0f-480b-97f7-9caa49025e83}
 
 {{% /spoiler %}}
 
-{{% spoiler "[极客大挑战 2019]Upload" %}}
+{{% spoiler "[极客大挑战 2019]Upload  |  upload" %}}
 
 过滤了几个常规的php后缀，用.php7绕过，同时抓包修改MIME为image/png
 
@@ -314,7 +314,7 @@ flag{23be575a-679e-4f7c-b75b-6e033d10bfca}
 
 {{% /spoiler %}}
 
-{{% spoiler "[ACTF2020 新生赛]Upload" %}}
+{{% spoiler "[ACTF2020 新生赛]Upload  |  upload" %}}
 
 前端限制后缀白名单jpg, png, gif，删审查元素会删不掉已经注册了的回调函数，所以直接改后缀名上传，然后抓包改一下
 
@@ -331,7 +331,7 @@ flag{a8ff29f2-5197-4599-a1c4-1e8b5f390a8c}
 
 {{% /spoiler %}}
 
-{{% spoiler "[RoarCTF 2019]Easy Calc" %}}
+{{% spoiler "[RoarCTF 2019]Easy Calc  |  php-shell" %}}
 
 页面源码：I've set up WAF to ensure security.
 
@@ -362,7 +362,7 @@ Syc{dog_dog_dog_dog}
 
 {{% /spoiler %}}
 
-{{% spoiler "[极客大挑战 2019]BabySQL" %}}
+{{% spoiler "[极客大挑战 2019]BabySQL  |  sqli 联合注入 双写绕过" %}}
 
 把union, select双写即可
 
@@ -380,7 +380,7 @@ flag{b6848383-f7d0-4cad-ad7d-98ab54790bbe}
 
 {{% /spoiler %}}
 
-{{% spoiler "[ACTF2020 新生赛]BackupFile" %}}
+{{% spoiler "[ACTF2020 新生赛]BackupFile  |  弱比较" %}}
 
 /index.php.bak
 
@@ -418,7 +418,7 @@ flag{758691a1-017b-4033-899a-bd78281fbcc1}
 
 {{% /spoiler %}}
 
-{{% spoiler "[护网杯 2018]easy_tornado" %}}
+{{% spoiler "[护网杯 2018]easy_tornado  |  ssti" %}}
 
 /hint.txt：md5(cookie_secret+md5(filename))
 
@@ -440,7 +440,7 @@ flag{5756e16a-885e-4009-83e1-653a4818a39a}
 
 {{% /spoiler %}}
 
-{{% spoiler "[极客大挑战 2019]BuyFlag" %}}
+{{% spoiler "[极客大挑战 2019]BuyFlag  |  is_numeric" %}}
 
 /pay.php，页面源码
 
@@ -467,7 +467,7 @@ flag{a3cd1620-d3f7-45a9-8b3d-ace1ed21e7fb}
 
 {{% /spoiler %}}
 
-{{% spoiler "[HCTF 2018]admin" %}}
+{{% spoiler "[HCTF 2018]admin  |  unicode欺骗 flask-session" %}}
 
 ————非预期：admin: 123弱口令
 
@@ -485,7 +485,7 @@ flag{f479cd5d-4bc7-47a6-b6b2-be84ff250880}
 
 {{% /spoiler %}}
 
-{{% spoiler "[BJDCTF2020]Easy MD5" %}}
+{{% spoiler "[BJDCTF2020]Easy MD5  |  sqli raw-md5永真 md5绕过" %}}
 
 响应头有Hint: select * from 'admin' where password=md5($pass,true)
 
@@ -566,7 +566,7 @@ flag{78df171e-faa3-4c31-922f-a1f532e06dac}
 
 {{% /spoiler %}}
 
-{{% spoiler "[ZJCTF 2019]NiZhuanSiWei" %}}
+{{% spoiler "[ZJCTF 2019]NiZhuanSiWei  |  反序列化 LFI" %}}
 
 ```
 <?php
@@ -631,7 +631,7 @@ flag{0e255178-c131-4073-beb9-5821c29c0c3c}
 
 {{% /spoiler %}}
 
-{{% spoiler "[SUCTF 2019]CheckIn" %}}
+{{% spoiler "[SUCTF 2019]CheckIn  |  upload" %}}
 
 传pure.phtml，对后缀检测，jpg会检测文件内容，考虑上传.user.ini
 
@@ -655,7 +655,7 @@ uploads/cc551ab005b2e60fbdc88de809b2c4b1
 
 {{% /spoiler %}}
 
-{{% spoiler "[极客大挑战 2019]HardSQL" %}}
+{{% spoiler "[极客大挑战 2019]HardSQL  |  sqli 报错注入" %}}
 
 之前几个分别用了万能密码，联合查询，双写，这次轮到报错注入了
 
@@ -681,7 +681,7 @@ flag{64053c33-96f3-4bea-8e94-02fb81e48236}
 
 {{% /spoiler %}}
 
-{{% spoiler "[MRCTF2020]你传你🐎呢" %}}
+{{% spoiler "[MRCTF2020]你传你🐎呢  |  upload" %}}
 
 传.htaccess
 
@@ -707,7 +707,7 @@ flag{0188a589-fefe-4939-95d1-cbcc433fc9b2}
 
 {{% /spoiler %}}
 
-{{% spoiler "[MRCTF2020]Ez_bypass" %}}
+{{% spoiler "[MRCTF2020]Ez_bypass  |  is_numeric" %}}
 
 排版问题，看页面源码
 
@@ -765,7 +765,7 @@ flag{2d5c5d49-f8a2-471e-b3f0-8861a85e34a8}
 
 {{% /spoiler %}}
 
-{{% spoiler "[网鼎杯 2020 青龙组]AreUSerialz" %}}
+{{% spoiler "[网鼎杯 2020 青龙组]AreUSerialz  |  反序列化 private-func" %}}
 
 ```
 <?php
@@ -872,7 +872,7 @@ flag{0138599e-6ac8-4573-b448-e15635135f63}
 
 {{% /spoiler %}}
 
-{{% spoiler "[GXYCTF2019]BabySQli" %}}
+{{% spoiler "[GXYCTF2019]BabySQli  |  sqli 联合查询创建临时数据" %}}
 
 页面源码提示：select * from user where username = '$name'；这说了跟没说一样，没告诉waf是啥
 
@@ -894,7 +894,7 @@ flag{a544cd1d-4676-41d2-8110-837020cf11e5}
 
 {{% /spoiler %}}
 
-{{% spoiler "[GYCTF2020]Blacklist" %}}
+{{% spoiler "[GYCTF2020]Blacklist  |  sqli 堆叠注入 handler" %}}
 
 跟qwb的随便注非常像，拿payload来试试
 
@@ -926,7 +926,7 @@ flag{9ba3c903-1a8c-4a40-b32a-f9752251269c}
 
 {{% /spoiler %}}
 
-{{% spoiler "[CISCN2019 华北赛区 Day2 Web1]Hack World" %}}
+{{% spoiler "[CISCN2019 华北赛区 Day2 Web1]Hack World  |  sqli 联合查询 盲注" %}}
 
 长得跟前面的随便注和Blacklist很像，直接给出了flag在flag表flag列
 
@@ -960,7 +960,7 @@ for i in range(1, 40):
 
 {{% /spoiler %}}
 
-{{% spoiler "[网鼎杯 2018]Fakebook" %}}
+{{% spoiler "[网鼎杯 2018]Fakebook  |  反序列化 sqli load_file" %}}
 
 /robots.txt提示/user.php.bak
 
@@ -1043,7 +1043,7 @@ O:8:"UserInfo":3:{s:4:"name";s:4:"amiz";s:3:"age";i:18;s:4:"blog";s:29:"file:///
 
 ## page 03
 
-{{% spoiler "[网鼎杯 2018]Comment" %}}
+{{% spoiler "[网鼎杯 2018]Comment  |  git泄露  sqli 二次注入 load_file" %}}
 
 发帖会先要求登录，提示`zhangwei: zhangwei***`，盲猜666，登入
 
@@ -1153,7 +1153,7 @@ comment: content=*/#
 
 ## page 07
 
-{{% spoiler "[FireshellCTF2020]URL TO PDF" %}}
+{{% spoiler "[FireshellCTF2020]URL TO PDF  |  ssrf" %}}
 
 会访问给出的网址，并把结果转为pdf呈现出来
 
@@ -1188,7 +1188,7 @@ cat *|grep flag
 
 {{% /spoiler %}}
 
-{{% spoiler "[FireshellCTF2020]ScreenShooter" %}}
+{{% spoiler "[FireshellCTF2020]ScreenShooter  |  cve-2019-17221 LFI" %}}
 
 跟上面那个前端一样，不过区别是会返回拍的照片
 
@@ -1221,7 +1221,7 @@ cat *|grep flag
 
 {{% /spoiler %}}
 
-{{% spoiler "[De1CTF 2019]ShellShellShell" %}}
+{{% spoiler "[De1CTF 2019]ShellShellShell  |  sqli 时间盲注 soap反序列化 内网 upload" %}}
 
 ![image-20211209165342209](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211209165342209.png)
 
@@ -1439,7 +1439,7 @@ if ($err) {
 
 {{% /spoiler %}}
 
-{{% spoiler "[WMCTF2020]Web Check in 2.0" %}}
+{{% spoiler "[WMCTF2020]Web Check in 2.0  |  LFI rce" %}}
 
 本来下午2点就该开始做的，但是下午去试学校站的log4j2了，结果这个洞没试出来 拿了一些弱口令，无心插柳了属于是
 
@@ -1495,7 +1495,7 @@ php://filter/zlib.deflate|string.tolower|zlib.inflate|?><?php%0deval($_GET[1]);?
 
 {{% /spoiler %}}
 
-{{% spoiler "***[CISCN2019 总决赛 Day1 Web3]Flask Message Board" %}}
+{{% spoiler "***[CISCN2019 总决赛 Day1 Web3]Flask Message Board  |  ssti flask-session tensorflow" %}}
 
 flask，页面有三个输入框，还有标志性的session，Author输入框处存在SSTI，尝试获取key来伪造session
 
@@ -1723,7 +1723,7 @@ def get_source_broken():
 
 {{% /spoiler %}}
 
-{{% spoiler "[红明谷CTF 2021]EasyTP" %}}
+{{% spoiler "[红明谷CTF 2021]EasyTP  |  tp3.2 反序列化 mysql伪服务端 sqli 报错注入 堆叠注入 脱库" %}}
 
 tp3.2.3，有一个现成的链子：[ThinkPHP v3.2.* （SQL注入&文件读取）反序列化POP链](https://f5.pm/go-53579.html)
 
@@ -1773,7 +1773,7 @@ www/ThinkPHP/Library/Think/Db/Driver.class.php
 
 - 通过某处泄露得到目标的WEB目录（如DEBUG页面
 - 开启MySQL伪服务端，读取目标的数据库配置文件
-- 出发反序列化
+- 触发反序列化
 - 触发PDO连接部分
 - 获取到目标的数据库配置文件
 
@@ -2003,7 +2003,7 @@ namespace {
 
 {{% /spoiler %}}
 
-{{% spoiler "PyCalX 1&2" %}}
+{{% spoiler "PyCalX 1&2  |  " %}}
 
 首先是1
 
@@ -3866,7 +3866,7 @@ win下有磁盘流创建目录的方式
 
 {{% /spoiler %}}
 
-{{% spoiler "*[RCTF2019]calcalcalc" %}}
+{{% spoiler "*[RCTF2019]calcalcalc  |  char-by-char-sqli" %}}
 
 给了源码，离谱，有3个语言的后端，pho nodejs python........
 
@@ -3942,7 +3942,7 @@ for a in range(0,60):
 
 {{% /spoiler %}}
 
-{{% spoiler "[QWB2021 Quals]托纳多" %}}
+{{% spoiler "[QWB2021 Quals]托纳多  |  sqli processlist表 ssti " %}}
 
 注册账号登入，但是只有admin才有flag，那肯定得要sqli了，在登录的地方注了半天，结果发现注入点在注册的页面（尴尬），直接单引号就可以闭合
 
@@ -4172,7 +4172,7 @@ flag{79d863ac-1fc6-42f6-951a-d3b6f0468b7f}
 
 {{% /spoiler %}}
 
-{{% spoiler "[PWNHUB 公开赛 2018]傻 fufu 的工作日" %}}
+{{% spoiler "[PWNHUB 公开赛 2018]傻 fufu 的工作日  |  upload" %}}
 
 /UploadFile.class.php.bak, /index.php.bak 有备份文件泄露，使用phpjiami进行加密，我们用脚本进行解密
 
@@ -4331,7 +4331,7 @@ flag_9bc85242c9f1a7663e6806778e8a8558
 
 {{% /spoiler %}}
 
-{{% spoiler "*ctf473831530_2018_web_virink_web" %}}
+{{% spoiler "*ctf473831530_2018_web_virink_web  |  php-shell" %}}
 
 ```
 <?php
@@ -4391,7 +4391,7 @@ if __name__ == '__main__':
 
 ## page 08
 
-{{% spoiler "[HFCTF 2021 Final]tinypng" %}}
+{{% spoiler "[HFCTF 2021 Final]tinypng  |  laravel反序列化 phar" %}}
 
 是laravel框架，给了很详细的源码，但是主要的也就是这些
 
