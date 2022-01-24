@@ -63,7 +63,7 @@
 <details>
 <summary>
 <h4 class=inline>
-[极客大挑战 2019]EasySQL
+[极客大挑战 2019]EasySQL | sqli 弱口令
 </h4>
 </summary>
 <p>弱口令登入</p>
@@ -72,7 +72,7 @@
 <details>
 <summary>
 <h4 class=inline>
-[HCTF 2018]WarmUp
+[HCTF 2018]WarmUp | mb_substr
 </h4>
 </summary>
 <p>查看页面源码提示source.php</p>
@@ -152,7 +152,7 @@
 <details>
 <summary>
 <h4 class=inline>
-[ACTF2020 新生赛]Include
+[ACTF2020 新生赛]Include | LFI
 </h4>
 </summary>
 <p>首页提示/?file=flag.php，文件包含点；尝试/etc/passwd，成功，/flag失败，尝试php伪协议</p>
@@ -161,7 +161,7 @@
 <details>
 <summary>
 <h4 class=inline>
-[强网杯 2019]随便注
+[强网杯 2019]随便注 | sqli 堆叠注入
 </h4>
 </summary>
 <pre tabindex=0><code>1'
@@ -186,7 +186,7 @@
 <details>
 <summary>
 <h4 class=inline>
-[SUCTF 2019]EasySQL
+[SUCTF 2019]EasySQL | sqli 堆叠注入
 </h4>
 </summary>
 <pre tabindex=0><code>1;show tables;	# Flag
@@ -204,7 +204,7 @@
 <details>
 <summary>
 <h4 class=inline>
-[ACTF2020 新生赛]Exec
+[ACTF2020 新生赛]Exec | rce
 </h4>
 </summary>
 <p>payload</p>
@@ -214,7 +214,7 @@
 <details>
 <summary>
 <h4 class=inline>
-[极客大挑战 2019]Secret File
+[极客大挑战 2019]Secret File | LFI
 </h4>
 </summary>
 <p>页面源码提示/Archive_room.php，/end.php，/secr3t.php看到文件包含点，用伪协议</p>
@@ -225,7 +225,7 @@
 <details>
 <summary>
 <h4 class=inline>
-[极客大挑战 2019]LoveSQL
+[极客大挑战 2019]LoveSQL | sqli 联合注入
 </h4>
 </summary>
 <p>万能密码登入，得到密码是bd798bc32e819b4f57d4e1523d5834c6</p>
@@ -240,7 +240,7 @@
 <details>
 <summary>
 <h4 class=inline>
-[GXYCTF2019]Ping Ping Ping
+[GXYCTF2019]Ping Ping Ping | rce 空格绕过
 </h4>
 </summary>
 <pre tabindex=0><code>127.0.0.1;ls	# index.php, flag.php
@@ -263,7 +263,7 @@
 <details>
 <summary>
 <h4 class=inline>
-[极客大挑战 2019]Http
+[极客大挑战 2019]Http | 请求头
 </h4>
 </summary>
 <p>页面源码提示/Secret.php，跟着提示一直修改请求头</p>
@@ -275,7 +275,7 @@ X-Forwarded-For: 127.0.0.1
 <details>
 <summary>
 <h4 class=inline>
-[极客大挑战 2019]Upload
+[极客大挑战 2019]Upload | upload
 </h4>
 </summary>
 <p>过滤了几个常规的php后缀，用.php7绕过，同时抓包修改MIME为image/png</p>
@@ -289,7 +289,7 @@ X-Forwarded-For: 127.0.0.1
 <details>
 <summary>
 <h4 class=inline>
-[ACTF2020 新生赛]Upload
+[ACTF2020 新生赛]Upload | upload
 </h4>
 </summary>
 <p>前端限制后缀白名单jpg, png, gif，删审查元素会删不掉已经注册了的回调函数，所以直接改后缀名上传，然后抓包改一下</p>
@@ -302,7 +302,7 @@ X-Forwarded-For: 127.0.0.1
 <details>
 <summary>
 <h4 class=inline>
-[RoarCTF 2019]Easy Calc
+[RoarCTF 2019]Easy Calc | php-shell
 </h4>
 </summary>
 <p>页面源码：I&rsquo;ve set up WAF to ensure security.</p>
@@ -328,7 +328,7 @@ X-Forwarded-For: 127.0.0.1
 <details>
 <summary>
 <h4 class=inline>
-[极客大挑战 2019]BabySQL
+[极客大挑战 2019]BabySQL | sqli 联合注入 双写绕过
 </h4>
 </summary>
 <p>把union, select双写即可</p>
@@ -343,7 +343,7 @@ X-Forwarded-For: 127.0.0.1
 <details>
 <summary>
 <h4 class=inline>
-[ACTF2020 新生赛]BackupFile
+[ACTF2020 新生赛]BackupFile | 弱比较
 </h4>
 </summary>
 <p>/index.php.bak</p>
@@ -374,7 +374,7 @@ X-Forwarded-For: 127.0.0.1
 <details>
 <summary>
 <h4 class=inline>
-[护网杯 2018]easy_tornado
+[护网杯 2018]easy_tornado | ssti
 </h4>
 </summary>
 <p>/hint.txt：md5(cookie_secret+md5(filename))</p>
@@ -388,7 +388,7 @@ X-Forwarded-For: 127.0.0.1
 <details>
 <summary>
 <h4 class=inline>
-[极客大挑战 2019]BuyFlag
+[极客大挑战 2019]BuyFlag | is_numeric
 </h4>
 </summary>
 <p>/pay.php，页面源码</p>
@@ -409,7 +409,7 @@ Cookie: user=1
 <details>
 <summary>
 <h4 class=inline>
-[HCTF 2018]admin
+[HCTF 2018]admin | unicode欺骗 flask-session
 </h4>
 </summary>
 <p>————非预期：admin: 123弱口令</p>
@@ -422,7 +422,7 @@ Cookie: user=1
 <details>
 <summary>
 <h4 class=inline>
-[BJDCTF2020]Easy MD5
+[BJDCTF2020]Easy MD5 | sqli raw-md5永真 md5绕过
 </h4>
 </summary>
 <p>响应头有Hint: select * from &lsquo;admin&rsquo; where password=md5($pass,true)</p>
@@ -473,7 +473,7 @@ param1[]=1&amp;param2[]=2
 <details>
 <summary>
 <h4 class=inline>
-[ZJCTF 2019]NiZhuanSiWei
+[ZJCTF 2019]NiZhuanSiWei | 反序列化 LFI
 </h4>
 </summary>
 <pre tabindex=0><code>&lt;?php
@@ -522,7 +522,7 @@ echo serialize($a);
 <details>
 <summary>
 <h4 class=inline>
-[SUCTF 2019]CheckIn
+[SUCTF 2019]CheckIn | upload
 </h4>
 </summary>
 <p>传pure.phtml，对后缀检测，jpg会检测文件内容，考虑上传.user.ini</p>
@@ -538,7 +538,7 @@ auto_prepend_file=pure2.gif
 <details>
 <summary>
 <h4 class=inline>
-[极客大挑战 2019]HardSQL
+[极客大挑战 2019]HardSQL | sqli 报错注入
 </h4>
 </summary>
 <p>之前几个分别用了万能密码，联合查询，双写，这次轮到报错注入了</p>
@@ -552,7 +552,7 @@ auto_prepend_file=pure2.gif
 <details>
 <summary>
 <h4 class=inline>
-[MRCTF2020]你传你🐎呢
+[MRCTF2020]你传你🐎呢 | upload
 </h4>
 </summary>
 <p>传.htaccess</p>
@@ -569,7 +569,7 @@ auto_prepend_file=pure2.gif
 <details>
 <summary>
 <h4 class=inline>
-[MRCTF2020]Ez_bypass
+[MRCTF2020]Ez_bypass | is_numeric
 </h4>
 </summary>
 <p>排版问题，看页面源码</p>
@@ -621,7 +621,7 @@ POST: passwd=1234567%20
 <details>
 <summary>
 <h4 class=inline>
-[网鼎杯 2020 青龙组]AreUSerialz
+[网鼎杯 2020 青龙组]AreUSerialz | 反序列化 private-func
 </h4>
 </summary>
 <pre tabindex=0><code>&lt;?php
@@ -718,7 +718,7 @@ echo serialize($obj);
 <details>
 <summary>
 <h4 class=inline>
-[GXYCTF2019]BabySQli
+[GXYCTF2019]BabySQli | sqli 联合查询创建临时数据
 </h4>
 </summary>
 <p>页面源码提示：select * from user where username = &lsquo;$name&rsquo;；这说了跟没说一样，没告诉waf是啥</p>
@@ -733,7 +733,7 @@ echo serialize($obj);
 <details>
 <summary>
 <h4 class=inline>
-[GYCTF2020]Blacklist
+[GYCTF2020]Blacklist | sqli 堆叠注入 handler
 </h4>
 </summary>
 <p>跟qwb的随便注非常像，拿payload来试试</p>
@@ -751,7 +751,7 @@ echo serialize($obj);
 <details>
 <summary>
 <h4 class=inline>
-[CISCN2019 华北赛区 Day2 Web1]Hack World
+[CISCN2019 华北赛区 Day2 Web1]Hack World | sqli 联合查询 盲注
 </h4>
 </summary>
 <p>长得跟前面的随便注和Blacklist很像，直接给出了flag在flag表flag列</p>
@@ -782,7 +782,7 @@ for i in range(1, 40):
 <details>
 <summary>
 <h4 class=inline>
-[网鼎杯 2018]Fakebook
+[网鼎杯 2018]Fakebook | 反序列化 sqli load_file
 </h4>
 </summary>
 <p>/robots.txt提示/user.php.bak</p>
@@ -847,7 +847,7 @@ echo serialize($a);
 <details>
 <summary>
 <h4 class=inline>
-[网鼎杯 2018]Comment
+[网鼎杯 2018]Comment | git泄露 sqli 二次注入 load_file
 </h4>
 </summary>
 <p>发帖会先要求登录，提示<code>zhangwei: zhangwei***</code>，盲猜666，登入</p>
@@ -924,7 +924,7 @@ comment: content=*/#
 <details>
 <summary>
 <h4 class=inline>
-[FireshellCTF2020]URL TO PDF
+[FireshellCTF2020]URL TO PDF | ssrf
 </h4>
 </summary>
 <p>会访问给出的网址，并把结果转为pdf呈现出来</p>
@@ -944,7 +944,7 @@ cat *<span style=color:#111>|</span>grep flag
 <details>
 <summary>
 <h4 class=inline>
-[FireshellCTF2020]ScreenShooter
+[FireshellCTF2020]ScreenShooter | cve-2019-17221 LFI
 </h4>
 </summary>
 <p>跟上面那个前端一样，不过区别是会返回拍的照片</p>
@@ -973,7 +973,7 @@ cat *<span style=color:#111>|</span>grep flag
 <details>
 <summary>
 <h4 class=inline>
-[De1CTF 2019]ShellShellShell
+[De1CTF 2019]ShellShellShell | sqli 时间盲注 soap反序列化 内网 upload
 </h4>
 </summary>
 <p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211209165342209.png alt=image-20211209165342209></p>
@@ -1138,7 +1138,7 @@ cat *<span style=color:#111>|</span>grep flag
 <details>
 <summary>
 <h4 class=inline>
-[WMCTF2020]Web Check in 2.0
+[WMCTF2020]Web Check in 2.0 | LFI rce
 </h4>
 </summary>
 <p>本来下午2点就该开始做的，但是下午去试学校站的log4j2了，结果这个洞没试出来 拿了一些弱口令，无心插柳了属于是</p>
@@ -1181,7 +1181,7 @@ cat *<span style=color:#111>|</span>grep flag
 <details>
 <summary>
 <h4 class=inline>
-***[CISCN2019 总决赛 Day1 Web3]Flask Message Board
+***[CISCN2019 总决赛 Day1 Web3]Flask Message Board | ssti flask-session tensorflow
 </h4>
 </summary>
 <p>flask，页面有三个输入框，还有标志性的session，Author输入框处存在SSTI，尝试获取key来伪造session</p>
@@ -1387,7 +1387,7 @@ print(source)
 <details>
 <summary>
 <h4 class=inline>
-[红明谷CTF 2021]EasyTP
+[红明谷CTF 2021]EasyTP | tp3.2 反序列化 mysql伪服务端 sqli 报错注入 堆叠注入 脱库
 </h4>
 </summary>
 <p>tp3.2.3，有一个现成的链子：<a href=https://f5.pm/go-53579.html>ThinkPHP v3.2.* （SQL注入&文件读取）反序列化POP链</a></p>
@@ -1416,7 +1416,7 @@ print(source)
 <ul>
 <li>通过某处泄露得到目标的WEB目录（如DEBUG页面</li>
 <li>开启MySQL伪服务端，读取目标的数据库配置文件</li>
-<li>出发反序列化</li>
+<li>触发反序列化</li>
 <li>触发PDO连接部分</li>
 <li>获取到目标的数据库配置文件</li>
 </ul>
@@ -1627,7 +1627,7 @@ print(source)
 <details>
 <summary>
 <h4 class=inline>
-PyCalX 1&2
+PyCalX 1&2 |
 </h4>
 </summary>
 <p>首先是1</p>
@@ -3135,7 +3135,7 @@ Referer: http://acdb618d-67d7-416b-a534-23a858dbe1e4.node4.buuoj.cn:81/admin.php
 <details>
 <summary>
 <h4 class=inline>
-*[RCTF2019]calcalcalc
+*[RCTF2019]calcalcalc | char-by-char-sqli
 </h4>
 </summary>
 <p>给了源码，离谱，有3个语言的后端，pho nodejs python&mldr;&mldr;..</p>
@@ -3189,7 +3189,7 @@ for a in range(0,60):
 <details>
 <summary>
 <h4 class=inline>
-[QWB2021 Quals]托纳多
+[QWB2021 Quals]托纳多 | sqli processlist表 ssti
 </h4>
 </summary>
 <p>注册账号登入，但是只有admin才有flag，那肯定得要sqli了，在登录的地方注了半天，结果发现注入点在注册的页面（尴尬），直接单引号就可以闭合</p>
@@ -3398,7 +3398,7 @@ if __name__ == '__main__':
 <details>
 <summary>
 <h4 class=inline>
-[PWNHUB 公开赛 2018]傻 fufu 的工作日
+[PWNHUB 公开赛 2018]傻 fufu 的工作日 | upload
 </h4>
 </summary>
 <p>/UploadFile.class.php.bak, /index.php.bak 有备份文件泄露，使用phpjiami进行加密，我们用脚本进行解密</p>
@@ -3543,7 +3543,7 @@ $target_fullpath = $this-&gt;dist_path . DIRECTORY_SEPARATOR . $new_name;
 <details>
 <summary>
 <h4 class=inline>
-*ctf473831530_2018_web_virink_web
+*ctf473831530_2018_web_virink_web | php-shell
 </h4>
 </summary>
 <pre tabindex=0><code>&lt;?php
@@ -3596,7 +3596,7 @@ $target_fullpath = $this-&gt;dist_path . DIRECTORY_SEPARATOR . $new_name;
 <details>
 <summary>
 <h4 class=inline>
-[HFCTF 2021 Final]tinypng
+[HFCTF 2021 Final]tinypng | laravel反序列化 phar
 </h4>
 </summary>
 <p>是laravel框架，给了很详细的源码，但是主要的也就是这些</p>
@@ -3814,7 +3814,7 @@ placeholder-java-500 min-w-0 max-w-xxxs" placeholder=search>
 </div>
 <div class="text-sm text-gray-500 leading-tight a-gray">
 <br>
-Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>. 25089 words in this page.
+Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>. 25341 words in this page.
 </div>
 </div>
 </div>
@@ -3825,6 +3825,9 @@ Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiw
 <a class=flex-grow-0 href=/2022/01/18/pwn-rop-study-notes/><svg class="fill-current inline-block h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M7.828 11H20v2H7.828l5.364 5.364-1.414 1.414L4 12l7.778-7.778 1.414 1.414z"/></svg>
 pwn rop入门-学习笔记
 </a>
+<a class=flex-grow-0 href=/2022/01/24/knightctf2022-wp/>
+KnightCTF2022 Wp
+<svg class="fill-current inline-block h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"/></svg></a>
 </div>
 <div>
 <div class="font-serif pb-2 flex align-start leading-loose">
