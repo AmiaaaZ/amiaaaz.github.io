@@ -1,7 +1,7 @@
 ---
 title: "Java学习笔记Ⅰ"
 slug: "java-study-notes-01"
-description: "记录向，6小时速通Java基础(大概"
+description: "记录向，6小时速通Java基础(上)"
 date: 2022-02-27T01:28:17+08:00
 categories: ["NOTES&SUMMARY"]
 series: ["Java学习笔记"]
