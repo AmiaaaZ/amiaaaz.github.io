@@ -1,65 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>环境配置 on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/categories/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/</link><description>Recent content in 环境配置 on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 13 Jan 2022 10:58:56 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/categories/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/index.xml" rel="self" type="application/rss+xml"/><item><title>无题</title><link>https://amiaaaz.github.io/2022/01/13/maybe-help-someone/</link><pubDate>Thu, 13 Jan 2022 10:58:56 +0800</pubDate><guid>https://amiaaaz.github.io/2022/01/13/maybe-help-someone/</guid><description>&lt;details>
-&lt;summary>
-&lt;h4 class="inline">
-本地搭建Visual Regexp
-&lt;/h4>
-&lt;/summary>
-&lt;p>搭建原因大家应该都懂吧，一个是正则可视化实在是很香很必要，其次线下没网的话没有个离线工具就很容易gg，同类工具还有&lt;a href="https://github.com/gchq/CyberChef/releases/tag/v9.32.3">cyberchef&lt;/a>等&lt;/p>
-&lt;p>&lt;a href="https://wangwl.net/static/projects/visualRegex/#">Visual Regexp在线地址&lt;/a> | &lt;a href="https://github.com/relax-code-relax-life/visualRegexPage">github仓库&lt;/a>&lt;/p>
-&lt;p>在&lt;code>git clone&lt;/code>之后首先肯定是&lt;code>npm install&lt;/code>，出现vulnerabilities很正常，直接&lt;code>npm audit fix --force&lt;/code>，一次不行就两次&lt;/p>
-&lt;p>奇葩的是作者自己的visual-regex包一直是以快捷方式的形式被安装（后来发现是整个项目的package.json编写的问题）&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211114182010887.png" alt="image-20211114182010887">&lt;/p>
-&lt;p>解决方法：删除快捷方式，单独安装&lt;code>npm i visual-regex&lt;/code>，用everything查找到该包具体存在的位置，复制到node_modules目录下&lt;/p>
-&lt;p>之后到build目录下&lt;code>node .\build.js&lt;/code>&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211114182307150.png" alt="image-20211114182307150">&lt;/p>
-&lt;p>报错hightlight.js并没有引入./lib/highlight，查看\highlight.js\package.json的exports部分，发现第90行的引用是&amp;quot;.&amp;quot;，将其改为&amp;quot;./lib/highlight&amp;quot;&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/JQW8B657%60%241JG%5BFOWY1I%7BBW.png" alt="img">&lt;/p>
-&lt;p>再次build提示*&amp;lsquo;NODE_ENV&amp;rsquo; is not recognized as an internal or external command, operable program or batch file.*（此处截图走丢了），解决方法&lt;code>npm install -g win-node-env&lt;/code>&lt;/p>
-&lt;p>之后&lt;code>node .\build.js&lt;/code>即可成功build，在devlist文件夹下的index.html即可正常使用相关功能&lt;/p>
-&lt;/details>
-&lt;details>
-&lt;summary>
-&lt;h4 class="inline">
-无法打开jar包应用
-&lt;/h4>
-&lt;/summary>
-&lt;p>这个应该属于常见问题了，一般原因是java版本不对&lt;/p>
-&lt;p>很多人选择设置不同名字的环境变量，比如java8，java11，我的话是只有java11是环境变量，在有些jar需要java8的环境时直接用everything搜索java.exe，复制路径之后&lt;code>xxx\java.exe -jar xyz.jar&lt;/code>这样来运行&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211117132839594.png" alt="image-20211117132839594">&lt;/p>
-&lt;/details>
-&lt;details>
-&lt;summary>
-&lt;h4 class="inline">
-远程调试Node.js
-&lt;/h4>
-&lt;/summary>
-&lt;p>场景：用vulhub或其它已经打包好的docker环境复现cve需要远程调试&lt;/p>
-&lt;p>首先修改对应的docker文件：package.json的&amp;quot;scripts&amp;quot;字段的&amp;quot;start&amp;quot;部分增加&lt;code>--inspect=0.0.0.0:port&lt;/code>，指名调试时的监听端口&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211117160017724.png" alt="image-20211117160017724">&lt;/p>
-&lt;p>docker-compose.yml中增加监听端口&amp;quot;8000:9229&amp;quot;，之后正常&lt;code>docker-compose up -d&lt;/code>&lt;/p>
-&lt;p>本地先下载好一样的文件，用vscode生成一个调试文档lauch.json&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211117155743006.png" alt="image-20211117155743006">&lt;/p>
-&lt;p>需要改的配置有address（远程ip），port（远程监听端口），localRoot（本地路径），remote（远程路径），之后即可打断点调试&lt;/p>
-&lt;p>出现unbound breakpoint正常，大概率是你的交互就没执行到打断点的地方，所以没什么反应&lt;/p>
-&lt;/details>
-&lt;details>
-&lt;summary>
-&lt;h4 class="inline">
-VirtualBox给虚拟机磁盘扩容
-&lt;/h4>
-&lt;/summary>
-&lt;p>当初给kali只分配了16G（无奈啊，谁让我主机也就512，得省着用），导致今天pip一个包都失败&lt;/p>
-&lt;p>之后我直接用自带的主机介质管理器增加盘片的大小&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220113110156096.png" alt="image-20220113110156096">&lt;/p>
-&lt;p>当我把下面显示大小的条滑到24G的时候我觉得稳了，这还能不够用？？？于是自信开机&lt;/p>
-&lt;p>笑死，GParted没识别出来，&lt;code>df -h&lt;/code>也完全没变化，我就又多分配了4G，结果裂开，还是没识别&lt;/p>
-&lt;p>然后我发现问题在于快照的存储是单独有一个uuid的vdi的，而扩容时我选择在最上层的kali.vdi扩容，导致不会同步到下面的快照的存储信息&lt;/p>
-&lt;p>解决方法就是把前面所有的快照删除掉，之后再开机就可以识别了&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220113112010762.png" alt="image-20220113112010762">&lt;/p>
-&lt;p>由于未分配和/dev/sda1之间隔着扩展分区和swap，所以先删除这两个，扩容后再新建加回来&lt;/p>
-&lt;p>应用修改之后自信开机，发现怎么kali的龙半天都不蓝…… 一番排错，之后发现是因为swap分区的uuid发生改变导致swap没有正常挂载（&lt;code>swapon --show&lt;/code>回显为空）&lt;/p>
-&lt;p>输入&lt;code>blkid&lt;/code>复制/dev/sda5的uuid，将其复制粘贴到/etc/fstab的对应位置，就好啦&lt;/p>
-&lt;/details></description></item><item><title>PHP远程debug环境配置</title><link>https://amiaaaz.github.io/2021/11/25/php-remote-debug-env-init/</link><pubDate>Thu, 25 Nov 2021 18:44:34 +0800</pubDate><guid>https://amiaaaz.github.io/2021/11/25/php-remote-debug-env-init/</guid><description>&lt;p>首先，这里的情况与一般的本地调试localhost不同，是本地debug远程主机的docke内的php项目，也就是这里的laravel；可能有的人觉得多此一举，直接在本地搭建项目、运行、debug一气呵成，速度还快，何必到远程跑一通？那我只能说too young，年轻人还是要有点长远的打算（&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>环境配置 on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/categories/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/</link><description>Recent content in 环境配置 on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 25 Nov 2021 18:44:34 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/categories/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/index.xml" rel="self" type="application/rss+xml"/><item><title>PHP远程debug环境配置</title><link>https://amiaaaz.github.io/2021/11/25/php-remote-debug-env-init/</link><pubDate>Thu, 25 Nov 2021 18:44:34 +0800</pubDate><guid>https://amiaaaz.github.io/2021/11/25/php-remote-debug-env-init/</guid><description>&lt;p>首先，这里的情况与一般的本地调试localhost不同，是本地debug远程主机的docke内的php项目，也就是这里的laravel；可能有的人觉得多此一举，直接在本地搭建项目、运行、debug一气呵成，速度还快，何必到远程跑一通？那我只能说too young，年轻人还是要有点长远的打算（&lt;/p>
 &lt;p>一切的起因是我想复现cve-2021-3129，顺便亲自动手跟一跟&amp;amp;挖一挖laravel框架反序列化的链子，结果代码审计之前先被环境配置困住了；被这个糟心的调试从周二下午折磨到周四的凌晨，几乎是把能踩的坑踩了个遍（痛苦面具），直到现在的解决方案也不能算是最优解，不过是能正常稳定的跑起来了，次优解；感谢portainer让我能轻松创建docker&lt;/p>
 &lt;p>把详细的步骤记录到这篇博客里，希望可以帮助到看到的人~欢迎友好交流！&lt;/p>
 &lt;hr>
@@ -73,35 +12,35 @@ VirtualBox给虚拟机磁盘扩容
 &lt;h2 id="远程dockerlaravel的环境搭建">远程docker&amp;amp;laravel的环境搭建&lt;/h2>
 &lt;p>以php:7.4-apache镜像作为基础进行创建，我这里用的是portainer（别问为什么不写dockerfile，问就是还在学着怎么写（一定不鸽 近期会更新到这里的&lt;/p>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211125164513693.png" alt="image-20211125164513693">&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">apt update
-apt-get install -y ssh git unzip
-vim /etc/ssh/sshd_config &lt;span style="color:#75715e"># 开启对应选项 比如允许root连接什么的 不用我细嗦 各位带手子们都应该懂&lt;/span>
-pecl install xdebug
-touch /var/log/php/xdebug_remote.log &lt;span style="color:#75715e"># 如果需要log的话要提前创建好噢&lt;/span>
-vim /usr/local/etc/php/php.ini &lt;span style="color:#75715e"># 将下面框中内容粘到末尾即可&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-ini" data-lang="ini">&lt;span style="color:#00a8c8">[Xdebug]&lt;/span>
-&lt;span style="color:#75715e">; 这一项安装好之后会有提示&lt;/span>
-&lt;span style="color:#75af00">zend_extension&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;/usr/local/lib/php/extensions/no-debug-non-zts-20190902/xdebug.so&amp;#34;&lt;/span>
-&lt;span style="color:#75af00">xdebug.mode&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">debug&lt;/span>
-&lt;span style="color:#75af00">xdebug.client_host&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">your_vps&lt;/span>
-&lt;span style="color:#75af00">xdebug.client_port&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">port&lt;/span>
-&lt;span style="color:#75af00">xdebug.idekey&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">laravel&lt;/span>
-&lt;span style="color:#75af00">xdebug.remote_handler&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;dbgp&amp;#34;&lt;/span>
-&lt;span style="color:#75af00">xdebug.log&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;/var/log/php/xdebug_remote.log&amp;#34;&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>此处安装版本为xdebug3，与xdebug2的配置语法有一些出入，具体更新的内容详见&lt;a href="https://xdebug.org/docs/upgrade_guide">更新文档&lt;/a>，安装好xdebug后执行&lt;code>php -v&lt;/code>命令会有显示版本&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>apt update
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>apt-get install -y ssh git unzip
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>vim /etc/ssh/sshd_config &lt;span style="color:#75715e"># 开启对应选项 比如允许root连接什么的 不用我细嗦 各位带手子们都应该懂&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>pecl install xdebug
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>touch /var/log/php/xdebug_remote.log &lt;span style="color:#75715e"># 如果需要log的话要提前创建好噢&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>vim /usr/local/etc/php/php.ini &lt;span style="color:#75715e"># 将下面框中内容粘到末尾即可&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-ini" data-lang="ini">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">[Xdebug]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">; 这一项安装好之后会有提示&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">zend_extension&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;/usr/local/lib/php/extensions/no-debug-non-zts-20190902/xdebug.so&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">xdebug.mode&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">debug&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">xdebug.client_host&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">your_vps&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">xdebug.client_port&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">port&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">xdebug.idekey&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">laravel&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">xdebug.remote_handler&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;dbgp&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">xdebug.log&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;/var/log/php/xdebug_remote.log&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>此处安装版本为xdebug3，与xdebug2的配置语法有一些出入，具体更新的内容详见&lt;a href="https://xdebug.org/docs/upgrade_guide">更新文档&lt;/a>，安装好xdebug后执行&lt;code>php -v&lt;/code>命令会有显示版本&lt;/p>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211125164949111.png" alt="image-20211125164949111">&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">wget https://github.com/composer/composer/releases/download/2.1.12/composer.phar
-mv composer.phar /usr/local/bin/composer
-chmod +x /usr/local/bin/composer
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#111">cd&lt;/span> /var/www
-composer create-project laravel/laravel . &lt;span style="color:#d88200">&amp;#34;v8.4.2&amp;#34;&lt;/span>
-vim composer.json &lt;span style="color:#75715e"># 修改内容见下&lt;/span>
-composer update
-mv public html
-chmod -R &lt;span style="color:#ae81ff">777&lt;/span> /var/www
-&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-ini" data-lang="ini">&lt;span style="color:#75af00">&amp;#34;laravel/framework&amp;#34;: &amp;#34;8.22.1&amp;#34;&lt;/span>
-&lt;span style="color:#75af00">&amp;#34;facade/ignition&amp;#34;: &amp;#34;2.5.1&amp;#34;&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>一个坑点：即使指定了&lt;a href="laravel/laravel">laravel/laravel&lt;/a>版本，composer创建默认会使用最新的&lt;a href="laravel/framework">laravel/framework&lt;/a>版本&amp;amp;相关组件依赖（比如现在是8.73.2），由于我们需要复现的cve有特殊的laravel组件版本需求，，所以我们需要单独对composer.json进行修改，然后执行&lt;code>composer update&lt;/code>进行更新&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>wget https://github.com/composer/composer/releases/download/2.1.12/composer.phar
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>mv composer.phar /usr/local/bin/composer
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>chmod +x /usr/local/bin/composer
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">cd&lt;/span> /var/www
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>composer create-project laravel/laravel . &lt;span style="color:#d88200">&amp;#34;v8.4.2&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>vim composer.json &lt;span style="color:#75715e"># 修改内容见下&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>composer update
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>mv public html
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>chmod -R &lt;span style="color:#ae81ff">777&lt;/span> /var/www
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-ini" data-lang="ini">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">&amp;#34;laravel/framework&amp;#34;: &amp;#34;8.22.1&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">&amp;#34;facade/ignition&amp;#34;: &amp;#34;2.5.1&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>一个坑点：即使指定了&lt;a href="laravel/laravel">laravel/laravel&lt;/a>版本，composer创建默认会使用最新的&lt;a href="laravel/framework">laravel/framework&lt;/a>版本&amp;amp;相关组件依赖（比如现在是8.73.2），由于我们需要复现的cve有特殊的laravel组件版本需求，，所以我们需要单独对composer.json进行修改，然后执行&lt;code>composer update&lt;/code>进行更新&lt;/p>
 &lt;p>一切顺利的话访问web页面就可以看到laravel啦&lt;/p>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211125165355843.png" alt="image-20211125165355843">&lt;/p>
 &lt;h2 id="与本地的phpstorm连接起来进行debug">与本地的PHPStorm连接起来进行debug&lt;/h2>
@@ -171,15 +110,15 @@ git clone https://github.com/pwndbg/pwndbg.git
 ./setup.sh
 &lt;/code>&lt;/pre>&lt;pre tabindex="0">&lt;code># 使用peda-heap
 git clone https://github.com/Mipu94/peda-heap.git
-echo &amp;quot;source ~/GDB-Plugins/peda-heap/peda.py&amp;quot; &amp;gt; ~/.gdbinit
+echo &amp;#34;source ~/GDB-Plugins/peda-heap/peda.py&amp;#34; &amp;gt; ~/.gdbinit
 # 使用peda
 git clone https://github.com/longld/peda.git
-echo &amp;quot;source ~/GDB-Plugins/peda/peda.py&amp;quot; &amp;gt; ~/.gdbinit
+echo &amp;#34;source ~/GDB-Plugins/peda/peda.py&amp;#34; &amp;gt; ~/.gdbinit
 # 使用gef
 git clone https://github.com/hugsy/gef.git
-echo &amp;quot;source ~/GDB-Plugins/gef/gef.py&amp;quot; &amp;gt; ~/.gdbinit
+echo &amp;#34;source ~/GDB-Plugins/gef/gef.py&amp;#34; &amp;gt; ~/.gdbinit
 # 使用pwndbg
-echo &amp;quot;source ~/GDB-Plugins/pwndbg/gdbinit.py&amp;quot; &amp;gt; ~/.gdbinit
+echo &amp;#34;source ~/GDB-Plugins/pwndbg/gdbinit.py&amp;#34; &amp;gt; ~/.gdbinit
 # 自动切换脚本 https://blog.csdn.net/aptx4869_li/article/details/81566541
 &lt;/code>&lt;/pre>&lt;p>安装one_gadget&lt;/p>
 &lt;pre tabindex="0">&lt;code>sudo apt-add-repository ppa:brightbox/ruby-ng
@@ -197,10 +136,10 @@ sudo apt-get install lib32z1
 &lt;pre tabindex="0">&lt;code>sudo gem install seccomp-tools
 &lt;/code>&lt;/pre>&lt;p>安装zshell&amp;amp;插件&lt;/p>
 &lt;pre tabindex="0">&lt;code>sudo apt-get install zsh
-sh -c &amp;quot;$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)&amp;quot;
+sh -c &amp;#34;$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)&amp;#34;
 # zsh-syntax-highlighting
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git
-echo &amp;quot;source ${(q-)PWD}/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh&amp;quot; &amp;gt;&amp;gt; ${ZDOTDIR:-$HOME}/.zshrc
+echo &amp;#34;source ${(q-)PWD}/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh&amp;#34; &amp;gt;&amp;gt; ${ZDOTDIR:-$HOME}/.zshrc
 source ./zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 # zsh-autosuggestions
 git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions

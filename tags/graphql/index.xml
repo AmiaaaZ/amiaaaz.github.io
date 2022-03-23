@@ -46,19 +46,19 @@ token: String
 }
 }
 &lt;/code>&lt;/pre>&lt;p>在resolver中提供登录逻辑&lt;/p>
-&lt;pre tabindex="0">&lt;code>import bcrypt from 'bcrptjs';
-import jsonwebtoken from 'jsonwebtoken';
+&lt;pre tabindex="0">&lt;code>import bcrypt from &amp;#39;bcrptjs&amp;#39;;
+import jsonwebtoken from &amp;#39;jsonwebtoken&amp;#39;;
 export const login = async(_, args, context) =&amp;gt; {
 const db = await context.getDb();
 const{username, password} = args;
-const user = await db.collection('User').findOne({username: username});
+const user = await db.collection(&amp;#39;User&amp;#39;).findOne({username: username});
 if(await bcyrpt.compare(password, user.password)){
 return{
-message: 'Login success',
+message: &amp;#39;Login success&amp;#39;,
 token: jsonwebtoken.sign({
 user: user,
 exp: Math.floor(Date.now() / 1000) + (60 * 60),
-}, 'your secret'),
+}, &amp;#39;your secret&amp;#39;),
 };
 }
 }
@@ -67,7 +67,7 @@ exp: Math.floor(Date.now() / 1000) + (60 * 60),
 typeDefs: schemaText,
 resolvers: resolverMap,
 context: ({ ctx }) =&amp;gt; {
-const token = ctx.req.headers.authorization || '';
+const token = ctx.req.headers.authorization || &amp;#39;&amp;#39;;
 const user = getUser(token);
 return{
 ...user,
@@ -79,7 +79,7 @@ return{
 &lt;/code>&lt;/pre>&lt;p>实现getUser函数&lt;/p>
 &lt;pre tabindex="0">&lt;code>const getUser = (token) =&amp;gt; {
 let user = null;
-const parts = token.split(' ');
+const parts = token.split(&amp;#39; &amp;#39;);
 if(parts.length === 2){
 const scheme = parts[0];
 const credentials = parts[1];
@@ -96,20 +96,20 @@ console.log(e);
 return user
 }
 &lt;/code>&lt;/pre>&lt;p>配置好ApolloServer后，在resolver中校验user&lt;/p>
-&lt;pre tabindex="0">&lt;code>import {ApolloError, ForbiddenError, AuthenticationError} from 'apollo-server';
+&lt;pre tabindex="0">&lt;code>import {ApolloError, ForbiddenError, AuthenticationError} from &amp;#39;apollo-server&amp;#39;;
 export const blogs = async(_, args, context) =&amp;gt; {
 const db = await context.getDb();
 const user = context.user;
 if(!user){
-throw new AuthenticationError('You must be logged in to see blogs');
+throw new AuthenticationError(&amp;#39;You must be logged in to see blogs&amp;#39;);
 }
 const {blogId} = args;
 const cursor = {}；
 if(blogId){
-cursor['_id'] = blogId;
+cursor[&amp;#39;_id&amp;#39;] = blogId;
 }
 const blogs = await db
-.collection('blogs')
+.collection(&amp;#39;blogs&amp;#39;)
 .find(cursor)
 .sort({publishedAt: -1})
 .toArray();
@@ -132,7 +132,7 @@ return blogs;
 &lt;li>无关框架&lt;/li>
 &lt;/ul>
 &lt;h3 id="express-graphql-endpoint-csrf漏洞">Express-GraphQL Endpoint CSRF漏洞&lt;/h3>
-&lt;pre tabindex="0">&lt;code>{&amp;quot;query&amp;quot;:&amp;quot;mutation {\n editProfile(name:\&amp;quot;hacker\&amp;quot;, age: 5) {\n name\n age\n }\n}&amp;quot;,&amp;quot;variables&amp;quot;:null}
+&lt;pre tabindex="0">&lt;code>{&amp;#34;query&amp;#34;:&amp;#34;mutation {\n editProfile(name:\&amp;#34;hacker\&amp;#34;, age: 5) {\n name\n age\n }\n}&amp;#34;,&amp;#34;variables&amp;#34;:null}
 &lt;/code>&lt;/pre>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210902205831949.png" alt="image-20210902205831949">&lt;/p>
 &lt;p>将Content-Type修改为application/x-www-form-urlencode，仍可成功执行&lt;/p>
 &lt;pre tabindex="0">&lt;code>query=mutation%20%7B%0A%20%20editProfile(name%3A%22hacker%22%2C%20age%3A%20
@@ -242,15 +242,15 @@ publishedAt
 }
 &lt;/code>&lt;/pre>&lt;p>解决这个问题我们需要在GraphQL服务器上限制查询深度，同时设计GraphQL接口时尽量避免出现此类问题，以Node.js为例，graphql-depth-limit就可以解决这样的问题&lt;/p>
 &lt;pre tabindex="0">&lt;code>// ...
-import depthLimit from 'graphql-depth-limit';
+import depthLimit from &amp;#39;graphql-depth-limit&amp;#39;;
 // ...
 const server = new ApolloServer({
 typeDefs: schemaText,
 resolvers: resolverMap,
 context: ({ ctx }) =&amp;gt; {
-const token = ctx.req.headers.authorization || '';
+const token = ctx.req.headers.authorization || &amp;#39;&amp;#39;;
 const user = getUser(token);
-console.log('user', user)
+console.log(&amp;#39;user&amp;#39;, user)
 return{
 ...user,
 ...ctx,
