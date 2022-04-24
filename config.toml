@@ -3,6 +3,7 @@ author = "Amelia"
 languageCode = "en-us"
 hasCJKLanguage = true
 enableInlineShortcodes = true
+enableEmoji = true
 footnoteReturnLinkContents = "^"
 googleAnalytics = "UA-203328343-1"
 disqusShortname = "amiaaaz"
@@ -37,18 +38,23 @@ name = "Posts"
 url = "/posts/"
 weight = 1
 [[menu.main]]
+identifier = "life"
+name = "Fuc!k life"
+url = "/life/"
+weight = 2
+[[menu.main]]
 identifier = "relax"
 name = "Relaxxx"
 url = "/relax/"
-weight = 1
+weight = 2
 [[menu.main]]
 name = "Tags"
 url = "/tags/"
-weight = 2
+weight = 3
 [[menu.main]]
 name = "Categories"
 url = "/categories/"
-weight = 2
+weight = 3
 [[menu.main]]
 identifier = "series"
 name = "Series"
