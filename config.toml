@@ -39,7 +39,7 @@ url = "/posts/"
 weight = 1
 [[menu.main]]
 identifier = "life"
-name = "Fuc!k life"
+name = "Fuc!king life"
 url = "/life/"
 weight = 2
 [[menu.main]]
