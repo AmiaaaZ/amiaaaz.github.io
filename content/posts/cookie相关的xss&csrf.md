@@ -1,7 +1,7 @@
 ---
 title: "cookie相关的xss&csrf"
 slug: "xss-csrf-study-notes"
-description: "很菜，很基础"
+description: "xss中比较有代表性的一类题目了，总结一手"
 date: 2022-04-24T21:58:17+08:00
 categories: ["NOTES&SUMMARY"]
 series: ["前端安全"]

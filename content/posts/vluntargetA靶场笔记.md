@@ -1,7 +1,7 @@
 ---
 title: "vluntargetA靶场笔记"
 slug: "vulntarget-A-notes"
-description: "很小白，很基础，很菜，别骂了"
+description: "事一个简单的靶场"
 date: 2022-04-24T22:08:10+08:00
 categories: ["PENTEST"]
 series: ["vulntarget"]
