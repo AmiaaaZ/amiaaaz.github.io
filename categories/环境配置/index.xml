@@ -1,4 +1,177 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>环境配置 on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/categories/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/</link><description>Recent content in 环境配置 on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 25 Nov 2021 18:44:34 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/categories/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/index.xml" rel="self" type="application/rss+xml"/><item><title>PHP远程debug环境配置</title><link>https://amiaaaz.github.io/2021/11/25/php-remote-debug-env-init/</link><pubDate>Thu, 25 Nov 2021 18:44:34 +0800</pubDate><guid>https://amiaaaz.github.io/2021/11/25/php-remote-debug-env-init/</guid><description>&lt;p>首先，这里的情况与一般的本地调试localhost不同，是本地debug远程主机的docke内的php项目，也就是这里的laravel；可能有的人觉得多此一举，直接在本地搭建项目、运行、debug一气呵成，速度还快，何必到远程跑一通？那我只能说too young，年轻人还是要有点长远的打算（&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>环境配置 on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/categories/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/</link><description>Recent content in 环境配置 on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 17 Mar 2022 10:58:56 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/categories/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/index.xml" rel="self" type="application/rss+xml"/><item><title>环境配置&amp;相关问题解决</title><link>https://amiaaaz.github.io/2022/03/17/maybe-help-someone/</link><pubDate>Thu, 17 Mar 2022 10:58:56 +0800</pubDate><guid>https://amiaaaz.github.io/2022/03/17/maybe-help-someone/</guid><description>&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+本地搭建Visual Regexp
+&lt;/h4>
+&lt;/summary>
+&lt;p>搭建原因大家应该都懂吧，一个是正则可视化实在是很香很必要，其次线下没网的话没有个离线工具就很容易gg，同类工具还有&lt;a href="https://github.com/gchq/CyberChef/releases/tag/v9.32.3">cyberchef&lt;/a>等&lt;/p>
+&lt;p>&lt;a href="https://wangwl.net/static/projects/visualRegex/#">Visual Regexp在线地址&lt;/a> | &lt;a href="https://github.com/relax-code-relax-life/visualRegexPage">github仓库&lt;/a>&lt;/p>
+&lt;p>在&lt;code>git clone&lt;/code>之后首先肯定是&lt;code>npm install&lt;/code>，出现vulnerabilities很正常，直接&lt;code>npm audit fix --force&lt;/code>，一次不行就两次&lt;/p>
+&lt;p>奇葩的是作者自己的visual-regex包一直是以快捷方式的形式被安装（后来发现是整个项目的package.json编写的问题）&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211114182010887.png" alt="image-20211114182010887">&lt;/p>
+&lt;p>解决方法：删除快捷方式，单独安装&lt;code>npm i visual-regex&lt;/code>，用everything查找到该包具体存在的位置，复制到node_modules目录下&lt;/p>
+&lt;p>之后到build目录下&lt;code>node .\build.js&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211114182307150.png" alt="image-20211114182307150">&lt;/p>
+&lt;p>报错hightlight.js并没有引入./lib/highlight，查看\highlight.js\package.json的exports部分，发现第90行的引用是&amp;quot;.&amp;quot;，将其改为&amp;quot;./lib/highlight&amp;quot;&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/JQW8B657%60%241JG%5BFOWY1I%7BBW.png" alt="img">&lt;/p>
+&lt;p>再次build提示*&amp;lsquo;NODE_ENV&amp;rsquo; is not recognized as an internal or external command, operable program or batch file.*（此处截图走丢了），解决方法&lt;code>npm install -g win-node-env&lt;/code>&lt;/p>
+&lt;p>之后&lt;code>node .\build.js&lt;/code>即可成功build，在devlist文件夹下的index.html即可正常使用相关功能&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+无法打开jar包应用
+&lt;/h4>
+&lt;/summary>
+&lt;p>这个应该属于常见问题了，一般原因是java版本不对&lt;/p>
+&lt;p>很多人选择设置不同名字的环境变量，比如java8，java11，我的话是只有java11是环境变量，在有些jar需要java8的环境时直接用everything搜索java.exe，复制路径之后&lt;code>xxx\java.exe -jar xyz.jar&lt;/code>这样来运行&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211117132839594.png" alt="image-20211117132839594">&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+远程调试Node.js
+&lt;/h4>
+&lt;/summary>
+&lt;p>场景：用vulhub或其它已经打包好的docker环境复现cve需要远程调试&lt;/p>
+&lt;p>首先修改对应的docker文件：package.json的&amp;quot;scripts&amp;quot;字段的&amp;quot;start&amp;quot;部分增加&lt;code>--inspect=0.0.0.0:port&lt;/code>，指名调试时的监听端口&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211117160017724.png" alt="image-20211117160017724">&lt;/p>
+&lt;p>docker-compose.yml中增加监听端口&amp;quot;8000:9229&amp;quot;，之后正常&lt;code>docker-compose up -d&lt;/code>&lt;/p>
+&lt;p>本地先下载好一样的文件，用vscode生成一个调试文档lauch.json&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211117155743006.png" alt="image-20211117155743006">&lt;/p>
+&lt;p>需要改的配置有address（远程ip），port（远程监听端口），localRoot（本地路径），remote（远程路径），之后即可打断点调试&lt;/p>
+&lt;p>出现unbound breakpoint正常，大概率是你的交互就没执行到打断点的地方，所以没什么反应&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+VirtualBox给虚拟机磁盘扩容
+&lt;/h4>
+&lt;/summary>
+&lt;p>当初给kali只分配了16G（无奈啊，谁让我主机也就512，得省着用），导致今天pip一个包都失败&lt;/p>
+&lt;p>之后我直接用自带的主机介质管理器增加盘片的大小&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220113110156096.png" alt="image-20220113110156096">&lt;/p>
+&lt;p>当我把下面显示大小的条滑到24G的时候我觉得稳了，这还能不够用？？？于是自信开机&lt;/p>
+&lt;p>笑死，GParted没识别出来，&lt;code>df -h&lt;/code>也完全没变化，我就又多分配了4G，结果裂开，还是没识别&lt;/p>
+&lt;p>然后我发现问题在于快照的存储是单独有一个uuid的vdi的，而扩容时我选择在最上层的kali.vdi扩容，导致不会同步到下面的快照的存储信息&lt;/p>
+&lt;p>解决方法就是把前面所有的快照删除掉，之后再开机就可以识别了&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220113112010762.png" alt="image-20220113112010762">&lt;/p>
+&lt;p>由于未分配和/dev/sda1之间隔着扩展分区和swap，所以先删除这两个，扩容后再新建加回来&lt;/p>
+&lt;p>应用修改之后自信开机，发现怎么kali的龙半天都不蓝…… 一番排错，之后发现是因为swap分区的uuid发生改变导致swap没有正常挂载（&lt;code>swapon --show&lt;/code>回显为空）&lt;/p>
+&lt;p>输入&lt;code>blkid&lt;/code>复制/dev/sda5的uuid，将其复制粘贴到/etc/fstab的对应位置，就好啦&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+usage of api documented as @since xxx
+&lt;/h4>
+&lt;/summary>
+&lt;p>idea-&amp;gt;Project Structure-&amp;gt;Project Settings-&amp;gt;Language level&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+tomcat&amp;amp;部署war包
+&lt;/h4>
+&lt;/summary>
+&lt;p>傻逼Java，总是一堆问题&lt;/p>
+&lt;p>首先是打war包，用Maven&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220301201126717.png" alt="image-20220301201126717">&lt;/p>
+&lt;p>将会导出war到target目录下，将它复制到tomcat/webapps目录下，启动，结果直接来了404&lt;/p>
+&lt;ul>
+&lt;li>org.apache.catalina.core.StandardContext.startInternal 一个或多个listeners启动失败，更多详细信息查看对应的容器日志文件&lt;/li>
+&lt;/ul>
+&lt;p>在tomcat下的logs目录查看localhost.year-month-day.log，发现详细报错为org.apache.catalina.core.StandardContext.listenerStart 配置应用程序监听器[org.apache.shiro.web.env.EnvironmentLoaderListener]错误&lt;/p>
+&lt;p>于是考虑是打包时没有带上依赖，查看war打包时的lib文件夹发现都不缺&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220301200217537.png" alt="image-20220301200217537">&lt;/p>
+&lt;p>再回看完整报错，在最后有Caused by: java.lang.ClassNotFoundException: javax.servlet.ServletContextListener，发现问题和我们打包无关 而是&lt;a href="https://tomcat.apache.org/whichversion.html">tomcat版本&lt;/a>的问题&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/SX27EU%24RC%7EG_%5DQ%60%24%5DWM5M0I.png" alt="img">&lt;/p>
+&lt;p>通过下载tomcat9版本来解决报错，&lt;a href="https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.59/bin/apache-tomcat-9.0.59.tar.gz">此处&lt;/a>是下载链接，直接解压&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>./bin/catalina.sh run
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 用这个命令为了让简短报错直接打印在console&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220301200041360.png" alt="image-20220301200041360">&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+idea远程调试java web项目(jar/tomcat)
+&lt;/h4>
+&lt;/summary>
+&lt;ul>
+&lt;li>java -jar方式启动&lt;/li>
+&lt;/ul>
+&lt;p>以复现CVE-2020-13933为例，这里java项目直接-jar即可启动，无需依赖tomcat作web服务器&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>docker pull jackey0/cve-2020-11989
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>docker cp &amp;lt;container-id&amp;gt;:/springboot-shiro-0.0.1-SNAPSHOT.jar /home/name/t3mp/
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 8426对外web端口, 8001对外调试端口&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>docker run -p 8426:8080 -p 8001:1456 &amp;lt;image-id&amp;gt; /bin/sh -c &lt;span style="color:#d88200">&amp;#39;java -jar -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=1456 /springboot-shiro-0.0.1-SNAPSHOT.jar&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20211026033544920.png" alt="image-20211026033544920">&lt;/p>
+&lt;p>此处添加参数与docker的相同&lt;/p>
+&lt;ul>
+&lt;li>tomcat加载war包方式&lt;/li>
+&lt;/ul>
+&lt;p>编辑tomcat目录下./bin/catalina.sh，搜索&lt;code>JPDA_ADDRESS&lt;/code>，修改&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">JPDA_ADDRESS&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;0.0.0.0:8000&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后idea设置与上面相同，tomcat启动&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>./catalina.sh jpda run
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>idea的远程看着花哨，有一堆设置可以选，但是那个看起来方便的tomcat remote server调试实际远不如这样，垃圾&lt;/p>
+&lt;p>之后打断点调试即可，熟练掌握右键-&amp;gt;add as a library的方式调试核心jar&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+idea打jar包（非maven）
+&lt;/h4>
+&lt;/summary>
+&lt;p>maven的话相当简单，直接用右侧maven工具栏即可完成build&lt;/p>
+&lt;p>非maven下，以通达OA综合利用工具为例&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220325175858329.png" alt="image-20220325175858329">&lt;/p>
+&lt;p>注意到根目录下就有.idea文件夹，但是直接idea打开并build并不会得到编译好的jar，排错后发现manifest file指定的com.xxx主类有问题，是项目的module没有设置好&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220325180109708.png" alt="image-20220325180109708">&lt;/p>
+&lt;p>需要在这里设置Content Root，这样才可以在Artifacts处正确读取到Manifest File（不然是不正常的），并且module sdk也要设置好（不然为空）&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220325180213012.png" alt="image-20220325180213012">&lt;/p>
+&lt;p>之后勾选Include in project build，再build就正常了&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+idea在build项目时报错 internal java compiler error
+&lt;/h4>
+&lt;/summary>
+&lt;p>有以下几个需要排错的地方&lt;/p>
+&lt;ul>
+&lt;li>Project Structure&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220401113924920.png" alt="image-20220401113924920">&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220401113939224.png" alt="image-20220401113939224">&lt;/p>
+&lt;ul>
+&lt;li>Settings&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220401114013043.png" alt="image-20220401114013043">&lt;/p>
+&lt;ul>
+&lt;li>pom.xml&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220401114103768.png" alt="image-20220401114103768">&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+java rmi调试报错解决
+&lt;/h4>
+&lt;/summary>
+&lt;p>亲测用&lt;code>-D&lt;/code>方式添加参数没用（可能是我本地环境太垃圾了 破win10）&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">System&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#75af00">setProperty&lt;/span>&lt;span style="color:#f92672">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;java.rmi.server.useCodebaseOnly&amp;#34;&lt;/span>&lt;span style="color:#f92672">,&lt;/span>&lt;span style="color:#d88200">&amp;#34;false&amp;#34;&lt;/span>&lt;span style="color:#f92672">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">System&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#75af00">setProperty&lt;/span>&lt;span style="color:#f92672">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;java.security.policy&amp;#34;&lt;/span>&lt;span style="color:#f92672">,&lt;/span>&lt;span style="color:#d88200">&amp;#34;E:\\client.policy&amp;#34;&lt;/span>&lt;span style="color:#f92672">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">System&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#75af00">setProperty&lt;/span>&lt;span style="color:#f92672">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;java.rmi.server.codebase&amp;#34;&lt;/span>&lt;span style="color:#f92672">,&lt;/span>&lt;span style="color:#d88200">&amp;#34;http://nxo90f9obuj1boi0bzbdanmca3gt4i.burpcollaborator.net/&amp;#34;&lt;/span>&lt;span style="color:#f92672">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">if&lt;/span>&lt;span style="color:#f92672">(&lt;/span>&lt;span style="color:#111">System&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#75af00">getSecurityManager&lt;/span>&lt;span style="color:#f92672">()&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#00a8c8">null&lt;/span>&lt;span style="color:#f92672">){&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">System&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#75af00">out&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#75af00">println&lt;/span>&lt;span style="color:#f92672">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;Setup SecurityManager...&amp;#34;&lt;/span>&lt;span style="color:#f92672">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">System&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#75af00">setSecurityManager&lt;/span>&lt;span style="color:#f92672">(&lt;/span>&lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#111">SecurityManager&lt;/span>&lt;span style="color:#f92672">());&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;pre tabindex="0">&lt;code>grant {
+permission java.security.AllPermission;
+};
+&lt;/code>&lt;/pre>&lt;p>参考：https://coderanch.com/t/654168/java/java-security-AccessControlException-access-denied&lt;/p>
+&lt;/details></description></item><item><title>PHP远程debug环境配置</title><link>https://amiaaaz.github.io/2021/11/25/php-remote-debug-env-init/</link><pubDate>Thu, 25 Nov 2021 18:44:34 +0800</pubDate><guid>https://amiaaaz.github.io/2021/11/25/php-remote-debug-env-init/</guid><description>&lt;p>首先，这里的情况与一般的本地调试localhost不同，是本地debug远程主机的docke内的php项目，也就是这里的laravel；可能有的人觉得多此一举，直接在本地搭建项目、运行、debug一气呵成，速度还快，何必到远程跑一通？那我只能说too young，年轻人还是要有点长远的打算（&lt;/p>
 &lt;p>一切的起因是我想复现cve-2021-3129，顺便亲自动手跟一跟&amp;amp;挖一挖laravel框架反序列化的链子，结果代码审计之前先被环境配置困住了；被这个糟心的调试从周二下午折磨到周四的凌晨，几乎是把能踩的坑踩了个遍（痛苦面具），直到现在的解决方案也不能算是最优解，不过是能正常稳定的跑起来了，次优解；感谢portainer让我能轻松创建docker&lt;/p>
 &lt;p>把详细的步骤记录到这篇博客里，希望可以帮助到看到的人~欢迎友好交流！&lt;/p>
 &lt;hr>
