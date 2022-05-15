@@ -171,6 +171,43 @@ java rmi调试报错解决
 permission java.security.AllPermission;
 };
 &lt;/code>&lt;/pre>&lt;p>参考：https://coderanch.com/t/654168/java/java-security-AccessControlException-access-denied&lt;/p>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+windows&amp;#43;vscode使用gmp库(静态库)
+&lt;/h4>
+&lt;/summary>
+&lt;p>下载&lt;a href="https://gmplib.org/">gmp&lt;/a>，&lt;a href="https://mirrors.tuna.tsinghua.edu.cn/msys2/distrib/x86_64/">msys2&lt;/a>，修改msys的pacman的&lt;a href="https://mirror.tuna.tsinghua.edu.cn/help/msys2/">源&lt;/a>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># msys2.exe&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>pacman -Sy &lt;span style="color:#75715e"># 刷新软件包数据&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>pacman -S mingw-w64-x86_64-toolchain &lt;span style="color:#75715e"># 安装64位mingw&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># mingw64.exe&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>pacman -Ss msys/gcc
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>pacman -Ss msys/make
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">cd&lt;/span> D:/gmp &lt;span style="color:#75715e"># 以下步骤并不会特别耗时 半个小时内应该就可&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>./configure
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>make
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>make check
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>make install
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>生成的静态库文件在gmp内的&lt;code>.libs&lt;/code>目录下，使用时&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;D:/gmp-6.2.1/gmp.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>在vscode的tasks.json中添加这样的参数&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220506013507059.png" alt="image-20220506013507059">&lt;/p>
+&lt;pre tabindex="0">&lt;code>&amp;#34;-I&amp;#34;,
+&amp;#34;D:\\gmp-6.2.1&amp;#34;, // gmp.h所在文件夹
+&amp;#34;-L&amp;#34;,
+&amp;#34;D:\\gmp-6.2.1\\.libs&amp;#34;, // .libs文件夹路径 静态库所在处
+&amp;#34;-l&amp;#34;,
+&amp;#34;gmp&amp;#34; // 表示libgmp.a库
+&lt;/code>&lt;/pre>&lt;p>继续f5即可（因为我是把f5当编译用的 runcode不行 f5行（（（&lt;/p>
+&lt;p>————最后吐槽一下windows上编译c程序的繁琐问题（仅针对vscode 没用过vc）。最开始学c的时候顺着python用vscode的习惯就想着用vscode写c，然后根据&lt;a href="https://www.zhihu.com/question/30315894/answer/154979413">教程&lt;/a>配好了环境：下载MinGW、配置.vscode的调试信息、下载vscode的相关插件，终于写出了hello word，但是之后问题也没断过，比如大家都清楚的控制台gbk和utf-8，以及chcp 65001和chcp 936的永恒之争，最后我妥协的方式是把所有的c文件编码格式设为gbk，同时将调试参数改为&lt;code>-finput-charset=GBK -fexec-charset=GBK&lt;/code>；第二个问题就是MinGW64这个坑货了，当时安装时我完全没注意到还有很多选项，直接zip解压的&lt;/p>
+&lt;pre tabindex="0">&lt;code>gcc version 8.1.0 (x86_64-posix-seh-rev0, Built by MinGW-W64 project)
+&lt;/code>&lt;/pre>&lt;p>后来做免杀发现寄了，这个&lt;code>seh&lt;/code>的版本不能编译32位的文件，即使加了&lt;code>-m32&lt;/code>也不行，草，妈的。我当时不想再破坏主机的环境，所以在虚拟机装了&lt;code>sjlj&lt;/code>版的，终于可以用&lt;code>-m32&lt;/code>了&lt;/p>
+&lt;p>再然后就是现在，为了用gmp库我还得借助msys，用它的make，那你MinGW的cmake是干什么吃的？？？？？&lt;/p>
+&lt;p>而且，而且，mysys下通过pacman安装的MinGW64也无法正确编译32位程序&lt;/p>
+&lt;p>最后的解决方法是把sjlj版的直接覆盖掉我用不到的MinGW32文件夹里，然后实现了顺滑的&lt;code>-m32&lt;/code>&lt;/p>
+&lt;p>总之。还是。非常无语。&lt;/p>
 &lt;/details></description></item><item><title>PHP远程debug环境配置</title><link>https://amiaaaz.github.io/2021/11/25/php-remote-debug-env-init/</link><pubDate>Thu, 25 Nov 2021 18:44:34 +0800</pubDate><guid>https://amiaaaz.github.io/2021/11/25/php-remote-debug-env-init/</guid><description>&lt;p>首先，这里的情况与一般的本地调试localhost不同，是本地debug远程主机的docke内的php项目，也就是这里的laravel；可能有的人觉得多此一举，直接在本地搭建项目、运行、debug一气呵成，速度还快，何必到远程跑一通？那我只能说too young，年轻人还是要有点长远的打算（&lt;/p>
 &lt;p>一切的起因是我想复现cve-2021-3129，顺便亲自动手跟一跟&amp;amp;挖一挖laravel框架反序列化的链子，结果代码审计之前先被环境配置困住了；被这个糟心的调试从周二下午折磨到周四的凌晨，几乎是把能踩的坑踩了个遍（痛苦面具），直到现在的解决方案也不能算是最优解，不过是能正常稳定的跑起来了，次优解；感谢portainer让我能轻松创建docker&lt;/p>
 &lt;p>把详细的步骤记录到这篇博客里，希望可以帮助到看到的人~欢迎友好交流！&lt;/p>
