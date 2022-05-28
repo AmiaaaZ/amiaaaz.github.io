@@ -14,8 +14,9 @@ draft: false
 
 ------
 
-- [scr1pt](https://scr1pt-kid.github.io/) - misc/reverse - 呜呜呜是全栈爷
+- [scr1pt](https://scr1pt-kid.github.io/) - V&N - misc/reverse - 呜呜呜是全栈爷
 - [T1p3](https://t1pe.github.io/) - web/misc
-- [eeee](https://eeeeeeeeeeeeeeeea.cn/) - V&N知名男酮 - pwn
-- [deebato](http://d33b4t0.com/) - crypto
-- [PoZeep](http://ppppz.net/) - reverse
+- [D3n13d](https://d3n13d.github.io/) - web
+- [eeee](https://eeeeeeeeeeeeeeeea.cn/) - V&N - pwn - 知名男酮
+- [deebato](http://d33b4t0.com/) - V&N - crypto
+- [PoZeep](http://ppppz.net/) - V&N - reverse
