@@ -135,6 +135,32 @@ idea打jar包（非maven）
 &lt;details>
 &lt;summary>
 &lt;h4 class="inline">
+idea打jar包（maven）
+&lt;/h4>
+&lt;/summary>
+&lt;p>以冰蝎3.0.11为例，下载github上已经反编译好的源码（感谢带佬的反编译）&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>git clone https://github.com/MountCloud/BehinderClientSource.git
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>idea打开，首先把项目sdk之类的改成jdk8，然后就是排错之路：&lt;/p>
+&lt;ul>
+&lt;li>pom.xml的com.sun的systemPath改为绝对路径&lt;/li>
+&lt;/ul>
+&lt;p>默认是取用系统环境变量，我本机主要还是java11，而com.sun的那个包在java8下面，所以我改成了绝对路径&lt;/p>
+&lt;ul>
+&lt;li>idea虽然可以自动解决maven依赖缺失问题，但是可能会由于烂网导致某个依赖下载一半留下一堆sha1, part文件却没有主体jar，只需要把这个依赖的主文件夹删掉，再maven reload即可重新下载&lt;/li>
+&lt;/ul>
+&lt;p>其它问题就没有了，直接maven package即可得到目标jar&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>还有部分包的问题，可以省事都改成&lt;code>&amp;lt;scope&amp;gt;provided&amp;lt;/scope&amp;gt;&lt;/code>，有依赖会好些&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>net.rebeyond.behinder.dao.ShellManager#ShellManager()的DB_PATH修改为&lt;code>./data.db&lt;/code>，把资源文件中的data.db放入target下 和最后的jar包同目录即可&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/details>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
 idea在build项目时报错 internal java compiler error
 &lt;/h4>
 &lt;/summary>
