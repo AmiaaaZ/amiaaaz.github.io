@@ -1,7 +1,7 @@
 ---
 title: "Java学习笔记Ⅳ"
 slug: "java-study-notes-04"
-description: "反射&RMI安全相关"
+description: "反射&RMI安全相关 | *有大量修正未同步，请勿参考本文学习"
 date: 2022-05-04T16:03:58+08:00
 categories: ["NOTES&SUMMARY"]
 series: ["Java学习笔记"]

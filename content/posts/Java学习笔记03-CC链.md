@@ -1,7 +1,7 @@
 ---
 title: "Java学习笔记Ⅲ"
 slug: "java-study-notes-03"
-description: "记录向，p牛的java安全漫谈学习笔记 CC&CB&Shiro"
+description: "记录向，CC&CB&Shiro | *有大量修正未同步，请勿参考本文学习"
 date: 2022-03-23T18:40:31+08:00
 categories: ["NOTES&SUMMARY"]
 series: ["Java学习笔记", "反序列化"]
