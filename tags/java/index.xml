@@ -10,7 +10,8 @@
 &lt;h2 id="jsp文件落地">jsp&amp;amp;文件落地&lt;/h2>
 &lt;p>可能很多人会觉得：都内存马了怎么还能文件落地？？？&lt;/p>
 &lt;p>有一说一，确实，但逻辑不是这样讲的：应该是内存马可以做到文件不落地——也就是说删除上马时凭借的.java .jsp .class文件后一样可以运行于内存中并执行命令（除非单独kill），而上马的过程中根据使用手段的不同会产生一定程度的文件落地&lt;/p>
-&lt;p>对于jsp来说，一定会在初次请求时被tomcat自动生成对应的.java和.class文件并放在临时目录中，毕竟jsp本质就是一个Servlet；我们来看一些例子（以下均为动态注册Servlet型内存马）&lt;/p>
+&lt;p>对于jsp来说，&lt;strong>一定&lt;/strong>会在初次请求时被tomcat自动生成对应的.java和.class文件并放在临时目录中，毕竟jsp本质就是一个Servlet，基于此，所有的jsp webshell都会产生文件落地（除非自删除 参见后面的三级标题）&lt;/p>
+&lt;p>而jsp webshell，三梦师傅的&lt;a href="https://threedr3am.github.io/2020/06/12/%E9%83%BD0202%E5%B9%B4%E4%BA%86%E8%80%81%E5%97%A8%E8%BF%98%E5%9C%A8%E7%94%A8%E7%9A%84%20-%20%E5%90%84%E7%A7%8D%E5%A7%BF%E5%8A%BFjsp%20webshell/">都0202年了老嗨还在用的 - 各种姿势jsp webshell&lt;/a>已经杀死了比赛，下面我们重点来看内存马&lt;/p>
 &lt;h3 id="虚假的jsp">虚假的jsp&lt;/h3>
 &lt;p>代码参考自&lt;a href="https://xz.aliyun.com/t/11003">JAVA内存马的“一生”&lt;/a>&lt;/p>
 &lt;pre tabindex="0">&lt;code class="language-jsp" data-lang="jsp">&amp;lt;%@ page import=&amp;#34;org.apache.catalina.core.ApplicationContext&amp;#34; %&amp;gt;
@@ -850,12 +851,22 @@ file.delete();
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>测试效果&lt;/p>
 &lt;p>&lt;img src="https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20220602221346197.png" alt="image-20220602221346197">&lt;/p>
 &lt;p>成功达到预期效果&lt;/p>
+&lt;h3 id="注意">注意&lt;/h3>
+&lt;ol>
+&lt;li>
+&lt;p>我们通过反序列化接入的冰蝎和哥斯拉是作为添加的Filter的一部分，所以一旦Filter被kill了，冰蝎和哥斯拉也将会连不上&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>x&lt;/p>
+&lt;/li>
+&lt;/ol>
 &lt;details>
 &lt;summary>
 &lt;h4 class="inline">
 以下是本文中涉及到的 和我学习时看过的所有文章的链接🔗 每日感谢互联网的丰富资源（
 &lt;/h4>
 &lt;/summary>
+&lt;p>&lt;a href="https://threedr3am.github.io/2020/06/12/%E9%83%BD0202%E5%B9%B4%E4%BA%86%E8%80%81%E5%97%A8%E8%BF%98%E5%9C%A8%E7%94%A8%E7%9A%84%20-%20%E5%90%84%E7%A7%8D%E5%A7%BF%E5%8A%BFjsp%20webshell/">都0202年了老嗨还在用的 - 各种姿势jsp webshell&lt;/a>&lt;/p>
 &lt;p>&lt;a href="https://xz.aliyun.com/t/11003">JAVA内存马的“一生”&lt;/a>&lt;/p>
 &lt;p>&lt;a href="https://www.anquanke.com/post/id/224698">Tomcat容器攻防笔记之JSP金蝉脱壳&lt;/a>&lt;/p>
 &lt;p>&lt;a href="https://y4er.com/post/java-deserialization-inject-behinder-memshell-note/">Java反序列化注入冰蝎内存马相关踩坑笔记&lt;/a>&lt;/p>
