@@ -30,7 +30,9 @@ toc: true
 
 有一说一，确实，但逻辑不是这样讲的：应该是内存马可以做到文件不落地——也就是说删除上马时凭借的.java .jsp .class文件后一样可以运行于内存中并执行命令（除非单独kill），而上马的过程中根据使用手段的不同会产生一定程度的文件落地
 
-对于jsp来说，一定会在初次请求时被tomcat自动生成对应的.java和.class文件并放在临时目录中，毕竟jsp本质就是一个Servlet；我们来看一些例子（以下均为动态注册Servlet型内存马）
+对于jsp来说，**一定**会在初次请求时被tomcat自动生成对应的.java和.class文件并放在临时目录中，毕竟jsp本质就是一个Servlet，基于此，所有的jsp webshell都会产生文件落地（除非自删除 参见后面的三级标题）
+
+而jsp webshell，三梦师傅的[都0202年了老嗨还在用的 - 各种姿势jsp webshell](https://threedr3am.github.io/2020/06/12/%E9%83%BD0202%E5%B9%B4%E4%BA%86%E8%80%81%E5%97%A8%E8%BF%98%E5%9C%A8%E7%94%A8%E7%9A%84%20-%20%E5%90%84%E7%A7%8D%E5%A7%BF%E5%8A%BFjsp%20webshell/)已经杀死了比赛，下面我们重点来看内存马
 
 ### 虚假的jsp
 
@@ -950,8 +952,15 @@ public byte[] x(byte[] s, boolean m, String xc) {
 
 成功达到预期效果
 
+### 注意
+
+1. 我们通过反序列化接入的冰蝎和哥斯拉是作为添加的Filter的一部分，所以一旦Filter被kill了，冰蝎和哥斯拉也将会连不上
+
+2. x
 
 {{% spoiler "以下是本文中涉及到的 和我学习时看过的所有文章的链接🔗 每日感谢互联网的丰富资源（" %}}
+
+[都0202年了老嗨还在用的 - 各种姿势jsp webshell](https://threedr3am.github.io/2020/06/12/%E9%83%BD0202%E5%B9%B4%E4%BA%86%E8%80%81%E5%97%A8%E8%BF%98%E5%9C%A8%E7%94%A8%E7%9A%84%20-%20%E5%90%84%E7%A7%8D%E5%A7%BF%E5%8A%BFjsp%20webshell/)
 
 [JAVA内存马的“一生”](https://xz.aliyun.com/t/11003)
 
