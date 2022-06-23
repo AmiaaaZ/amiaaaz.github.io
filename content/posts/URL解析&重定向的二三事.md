@@ -723,6 +723,67 @@ Django < 2.0.8
 
 如果url以`//`开头，对第二个`/`进行urlencode，如果上面的payload访问，实际为`/%2fbaidu.com`，就不是绝对路径了
 
+## Go
+
+### url.URL
+
+Go语言中URL的定义如下，可以当URI来理解
+
+```go
+type URL struct {
+	Scheme      string    // 协议
+	Opaque      string    // 如果是opaque格式，那么此字段存储有值
+	User        *Userinfo // 用户和密码信息
+	Host        string    // 主机地址[:端口]
+	Path        string    // 路径
+	RawPath     string    // 如果Path是从转移后的路径解析的，那么RawPath会存储原始值，否则为空，见后面详解
+	ForceQuery  bool      // 即便RawQuery为空，path结尾也有?符号
+	RawQuery    string    // ?后面query内容
+	Fragment    string    // #后面锚点信息
+	RawFragment string    // 与RawPath含义一致
+}
+
+type Userinfo struct {
+	username    string
+	password    string
+	passwordSet bool
+}
+```
+
+示例：
+
+```go
+uStr := "http://root:password@localhost:28080/home/login?id=1&name=foo#fragment"
+u, _ := url.Parse(uStr)
+```
+
+解析结果
+
+```json
+{
+ "Scheme": "http",
+ "Opaque": "",
+ "User": {},
+ "Host": "localhost:28080",
+ "Path": "/home/login",
+ "RawPath": "/home%2flogin",
+ "ForceQuery": false,
+ "RawQuery": "id=1\u0026name=foo",
+ "Fragment": "fragment",
+ "RawFragment": ""
+}
+```
+
+- Opaque
+
+为空，因为这个url是一个分层类型，只有当URL类型为不透明类型时才有意义
+
+- RawPath
+
+此时RawPath有值，为Path原始值 而Path存储的是将原始值反转义后的值
+
+只有在原始`path`中包含了转移字符时才会有值，所以Go推荐我们使用`URL`的`EscapedPath`方法而不是直接使用`RawPath`字段
+
 ## Javascript
 
 - new URL("http://xxx/javascript:alert(1)").pathname
@@ -1157,5 +1218,7 @@ https://xx.xxx.com/User/Login?redirect=http://xxx.com/
 [浅析渗透实战中url跳转漏洞](https://xz.aliyun.com/t/5189)
 
 [Make Redirection Evil Again: URL Parser Issues in OAuth](https://tttang.com/archive/1290/)
+
+[认识GO语言url.URL结构体](https://www.ipeapea.cn/post/go-url/)
 
 {{% /spoiler %}}

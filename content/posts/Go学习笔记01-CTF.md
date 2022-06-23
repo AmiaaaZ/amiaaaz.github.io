@@ -2,13 +2,15 @@
 title: "Go学习笔记Ⅰ"
 slug: "go-study-notes-01"
 description: "ctf中常见的Go安全问题，持续更新"
-date: 2022-02-26T15:58:41+08:00
+date: 2022-06-23T18:41:10+08:00
 categories: ["NOTES&SUMMARY", "LTS"]
 series: ["Go学习笔记"]
 tags: ["Go"]
 draft: false
 toc: true
 ---
+
+2022.06.23更新第二次
 
 ## array&slice 变量覆盖
 
@@ -390,11 +392,11 @@ func main() {
 
 参考：[wp](https://annevi.cn/2020/08/14/wmctf2020-gogogo-writeup/)
 
-## uint32整数溢出
-
-uint32的范围是0~4294967295
+## 整数溢出
 
 ### [羊城杯2021]Checkin_Go
+
+uint32的范围是0~4294967295
 
 ```
 u1, err1 := strconv.ParseUint(nowMoney,10,32)
@@ -406,6 +408,17 @@ newMoney = uint32(u1) + uint32(u2)
 flag price是uint32，以admin身份（伪造cookie）加到溢出，变小，就可以买了
 
 参考：[wp](https://yyz9.cn/2021/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AF2021-checkin_go%E8%AF%A6%E7%BB%86%E9%A2%98%E8%A7%A3/)
+
+### [TStar 2022]不眠之夜
+
+有购买的地方，付钱时的amount用了ParseInt，只有33和34满足条件
+
+```
+int8 : -128 to 127
+int16 : -32768 to 32767
+```
+
+1000\*33或1000*34正好\> 32767 实现溢出，再大就库存不足了。
 
 ## gin框架伪造cookie
 
@@ -494,3 +507,547 @@ https://github.com/go/go/issues/30794
 
 参考：[wp](https://annevi.cn/2020/08/14/wmctf2020-gogogo-writeup/)
 
+## http.Dir&.IsDir的技巧
+
+### [JMCTF 2021]GoOSS
+
+```go
+package main
+
+import (
+   "bytes"
+   "crypto/md5"
+   "encoding/hex"
+   "github.com/gin-gonic/gin"
+   "io"
+   "io/ioutil"
+   "net/http"
+   "os"
+   "strings"
+   "time"
+)
+
+type File struct {
+   Content string `json:"content" binding:"required"`
+   Name    string `json:"name" binding:"required"`
+}
+type Url struct {
+   Url string `json:"url" binding:"required"`
+}
+
+func md5sum(data string) string {
+   s := md5.Sum([]byte(data))
+   return hex.EncodeToString(s[:])
+}
+
+func fileMidderware(c *gin.Context) { // 作中间件
+   fileSystem := http.Dir("./files/")
+   if c.Request.URL.String() == "/" {
+      c.Next()
+      return
+   }
+   f, err := fileSystem.Open(c.Request.URL.String()) // 打开与url同名的文件 当参数为`/xxx/...`表示打开fileSystem对应的文件夹自身 其中`xxx`部分任意
+   if f == nil {
+      c.Next()
+   }
+   //
+   if err != nil {
+      c.Next()
+      return
+   }
+   defer f.Close()
+   fi, err := f.Stat()
+   if err != nil {
+      c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+      return
+   }
+
+   if fi.IsDir() {
+
+      if !strings.HasSuffix(c.Request.URL.String(), "/") { //
+         c.Redirect(302, c.Request.URL.String()+"/") // 跳转到80端口的php服务
+      } else {
+         files := make([]string, 0)
+         l, _ := f.Readdir(0)
+         for _, i := range l {
+            files = append(files, i.Name())
+         }
+
+         c.JSON(http.StatusOK, gin.H{
+            "files": files,
+         })
+      }
+
+   } else {
+      data, _ := ioutil.ReadAll(f)
+      c.Header("content-disposition", `attachment; filename=`+fi.Name())
+      c.Data(200, "text/plain", data)
+   }
+
+}
+
+func uploadController(c *gin.Context) {
+   var file File
+   if err := c.ShouldBindJSON(&file); err != nil {
+      c.JSON(500, gin.H{"msg": err})
+      return
+   }
+
+   dir := md5sum(file.Name)
+
+   _, err := http.Dir("./files").Open(dir)
+   if err != nil {
+      e := os.Mkdir("./files/"+dir, os.ModePerm)
+      _, _ = http.Dir("./files").Open(dir)
+      if e != nil {
+         c.JSON(http.StatusInternalServerError, gin.H{"error": e.Error()})
+         return
+
+      }
+
+   }
+   filename := md5sum(file.Content)
+   path := "./files/" + dir + "/" + filename
+   err = ioutil.WriteFile(path, []byte(file.Content), os.ModePerm)
+   if err != nil {
+      c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+      return
+   }
+
+   c.JSON(200, gin.H{
+      "message": "file upload succ, path: " + dir + "/" + filename,
+   })
+}
+func vulController(c *gin.Context) {
+
+   var url Url
+   if err := c.ShouldBindJSON(&url); err != nil {
+      c.JSON(500, gin.H{"msg": err})
+      return
+   }
+
+   if !strings.HasPrefix(url.Url, "http://127.0.0.1:1234/") { // 必须以这个开头
+      c.JSON(403, gin.H{"msg": "url forbidden"})
+      return
+   }
+   client := &http.Client{Timeout: 2 * time.Second}
+
+   resp, err := client.Get(url.Url) // 访问url
+   if err != nil {
+      c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+      return
+   }
+   defer resp.Body.Close()
+   var buffer [512]byte
+   result := bytes.NewBuffer(nil)
+   for {
+      n, err := resp.Body.Read(buffer[0:])
+      result.Write(buffer[0:n])
+      if err != nil && err == io.EOF {
+
+         break
+      } else if err != nil {
+         c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+         return
+      }
+   }
+   c.JSON(http.StatusOK, gin.H{"data": result.String()})
+}
+func main() {
+   r := gin.Default()
+   r.Use(fileMidderware)
+   r.POST("/vul", vulController)
+   r.POST("/upload", uploadController)
+   r.GET("/", func(c *gin.Context) {
+      c.JSON(200, gin.H{
+         "message": "pong",
+      })
+   })
+   _ = r.Run(":1234") // listen and serve on 0.0.0.0:8080
+}
+```
+
+```php
+<?php
+// php in localhost port 80
+readfile($_GET['file']);    // 任意文件读取
+?>
+```
+
+有两个端口的服务，默认是1234的Go，我们利用trick跳转到80端口的php 任意文件读取
+
+## SSTI
+
+[Doc: template](https://pkg.go.dev/text/template)  |  [Go SSTI初探](https://tyskill.github.io/posts/gossti/)  |  [Golang中的SSTI](https://blog.thekingofduck.com/post/ssti-in-golnag/)
+
+语法类似jinja2，大差不差
+
+- 基础语法
+
+1. 模板的占位符为`{{语法}}`，这里的`语法`官方称之为`Action`，其内部不能有换行，但可以写注释，注释里可以有换行。
+2. 特殊的`Action`：`{{.}}`，中间的点表示当前作用域的当前对象，类似`JAVA`中的`this`关键字。
+3. `Action`中支持定义变量，命名以`$`开头,如`$var = "test"`，有一个比较特殊的变量`$`，代表全局作用域的全局变量，即在调用模板引擎的`Execute()`方法时定义的值，如`{{$}}`在上面的题目中获取到的值就是`Intigriti`
+4. `Action`中内置了一些基础语法,如常见的语法,如判断`if else`,或且非`or and not`，二元比较`eq ne`,输出`print printf println`等等，除此之外还有一些常用的编码函数，如`urlescaper,attrescaper,htmlescaper`。
+5. `Action`中支持类似`unix`下的管道符用法，`|`前面的命令会将运算结果(或返回值)传递给后一个命令的最后一个位置。
+
+- 普通的信息泄露
+
+模板支持`{{.Passwd}}`这样格式的内容来获得结构体Passwd字段的值
+
+```jinja2
+# 获得源码
+{{printf "%+v" .}}
+{{.}}
+```
+
+警惕直接的内容拼接
+
+```go
+// tpl := fmt.Sprintf(`<h1>Hi, ` + arg + `</h1> Your name is {{ .Name }}`)	// 哒咩
+tpl := `<h1>Hi, {{ .arg }}</h1><br>Your name is {{ .Name }}`	// 可
+data := map[string]string{
+	"arg":  arg,
+	"Name": user.Name,
+}
+html := template.Must(template.New("login").Parse(tpl))
+html.Execute(w, data)
+```
+
+- XSS
+
+Go的模板可以直接进行字符串打印，输出XSS语句
+
+```jinja2
+{{"<script>alert(/xss/)</script>"}}
+{{print "<script>alert(/xss/)</script>"}}
+```
+
+修复：`text/template`内置html函数来转义特殊字符，js函数转义js代码
+
+```jinja2
+{{html "<script>alert(/xss/)</script>"}}
+{{js "js代码"}}
+```
+
+这个包在模板处理阶段还有`template.HTMLEscapeString`等转义函数，也可以使用另一个模板包`html/template` 自带转义效果
+
+- RCE / LFI
+
+通过模板语法可知可以像`{{ .Name }}`一样调用对象方法，模板内部并不存在可以RCE的函数，所以除非有人为渲染对象定义了RCE或文件读取的方法，不然这个问题是不存在的
+
+```go
+func (u *User) System(cmd string, arg ...string) string {
+	out, _ := exec.Command(cmd, arg...).CombinedOutput()
+	return string(out)
+}
+
+func (u *User) FileRead(File string) string {
+	data, err := ioutil.ReadFile(File)
+	if err != nil {
+		fmt.Print("File read error")
+	}
+	return string(data)
+}
+```
+
+如果定义了就可以通过`{{.System "whoami"}}`和`{{.FileRead "filepath"}}`执行
+
+### 某不知名题
+
+```go
+package main
+
+import (
+	"bufio"
+	"html/template"
+	"log"
+	"os"
+	"os/exec"
+)
+
+type Program string
+
+func (p Program) Secret(test string) string {
+	out, _ := exec.Command(test).CombinedOutput() // 目标
+	return string(out)
+}
+
+func (p Program) Label(test string) string {
+	return "This is " + string(test)
+}
+
+func main() {
+	reader := bufio.NewReader(os.Stdin)
+	text, _ := reader.ReadString('\n')
+	tmpl, err := template.New("").Parse(text)
+	if err != nil {
+		log.Fatalf("Parse: %v", err)
+	}
+	tmpl.Execute(os.Stdin, Program("Intigriti"))
+}
+```
+
+简单的模板注入
+
+```jinja2
+{{.Secret "whoami"}}
+{{"whoami"| .Secret}}
+```
+
+### [LineCTF 2022]gotm
+
+```go
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"log"
+	"net/http"
+	"os"
+	"text/template"
+
+	"github.com/golang-jwt/jwt"
+)
+
+type Account struct {
+	id         string
+	pw         string
+	is_admin   bool
+	secret_key string
+}
+
+type AccountClaims struct {
+	Id       string `json:"id"`
+	Is_admin bool   `json:"is_admin"`
+	jwt.StandardClaims
+}
+
+type Resp struct {
+	Status bool   `json:"status"`
+	Msg    string `json:"msg"`
+}
+
+type TokenResp struct {
+	Status bool   `json:"status"`
+	Token  string `json:"token"`
+}
+
+var acc []Account
+var secret_key = os.Getenv("KEY")
+var flag = os.Getenv("FLAG")
+var admin_id = os.Getenv("ADMIN_ID")
+var admin_pw = os.Getenv("ADMIN_PW")
+
+func clear_account() {
+	acc = acc[:1]
+}
+
+func get_account(uid string) Account {
+	for i := range acc {
+		if acc[i].id == uid {
+			return acc[i]
+		}
+	}
+	return Account{}
+}
+
+func jwt_encode(id string, is_admin bool) (string, error) {
+	claims := AccountClaims{
+		id, is_admin, jwt.StandardClaims{},
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	return token.SignedString([]byte(secret_key))
+}
+
+func jwt_decode(s string) (string, bool) {
+	token, err := jwt.ParseWithClaims(s, &AccountClaims{}, func(token *jwt.Token) (interface{}, error) {
+		return []byte(secret_key), nil
+	})
+	if err != nil {
+		fmt.Println(err)
+		return "", false
+	}
+	if claims, ok := token.Claims.(*AccountClaims); ok && token.Valid {
+		return claims.Id, claims.Is_admin
+	}
+	return "", false
+}
+
+func auth_handler(w http.ResponseWriter, r *http.Request) {
+	uid := r.FormValue("id")
+	upw := r.FormValue("pw")
+	if uid == "" || upw == "" {
+		return
+	}
+	if len(acc) > 1024 {
+		clear_account()
+	}
+	user_acc := get_account(uid)
+	if user_acc.id != "" && user_acc.pw == upw {
+		token, err := jwt_encode(user_acc.id, user_acc.is_admin)
+		if err != nil {
+			return
+		}
+		p := TokenResp{true, token}
+		res, err := json.Marshal(p)
+		if err != nil {
+		}
+		w.Write(res)
+		return
+	}
+	w.WriteHeader(http.StatusForbidden)
+	return
+}
+
+func regist_handler(w http.ResponseWriter, r *http.Request) {
+	uid := r.FormValue("id")
+	upw := r.FormValue("pw")
+
+	if uid == "" || upw == "" {
+		return
+	}
+
+	if get_account(uid).id != "" {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
+	if len(acc) > 4 {
+		clear_account()
+	}
+	new_acc := Account{uid, upw, false, secret_key}
+	acc = append(acc, new_acc)
+
+	p := Resp{true, ""}
+	res, err := json.Marshal(p)
+	if err != nil {
+	}
+	w.Write(res)
+	return
+}
+
+func flag_handler(w http.ResponseWriter, r *http.Request) {
+	token := r.Header.Get("X-Token")
+	if token != "" {
+		id, is_admin := jwt_decode(token)
+		if is_admin == true {
+			p := Resp{true, "Hi " + id + ", flag is " + flag}
+			res, err := json.Marshal(p)
+			if err != nil {
+			}
+			w.Write(res)
+			return
+		} else {
+			w.WriteHeader(http.StatusForbidden)
+			return
+		}
+	}
+}
+
+func root_handler(w http.ResponseWriter, r *http.Request) {
+	token := r.Header.Get("X-Token")
+	if token != "" {
+		id, _ := jwt_decode(token)
+		acc := get_account(id)
+		tpl, err := template.New("").Parse("Logged in as " + acc.id)	// 直接拼接 ssti
+		if err != nil {
+		}
+		tpl.Execute(w, &acc)
+	} else {
+
+		return
+	}
+}
+
+func main() {
+	admin := Account{admin_id, admin_pw, true, secret_key}
+	acc = append(acc, admin)
+
+	http.HandleFunc("/", root_handler)
+	http.HandleFunc("/auth", auth_handler)
+	http.HandleFunc("/flag", flag_handler)
+	http.HandleFunc("/regist", regist_handler)
+	log.Fatal(http.ListenAndServe("0.0.0.0:11000", nil))
+}
+```
+
+大致审一下，我们需要一个is_admin==True的jwt即可拿flag
+
+注意到root_handler在处理登录信息时用到了template，尝试ssti
+
+```
+/regist -> /auth -> /
+id={{.}}&pw=ame
+```
+
+得到jwt和key
+
+```
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Int7Ln19IiwiaXNfYWRtaW4iOmZhbHNlfQ.0Lz_3fTyhGxWGwZnw3hM_5TzDfrk0oULzLWF4rRfMss
+```
+
+```
+this_is_f4Ke_key
+# 赵总都没改docker
+```
+
+jwt.io改is_admin为true，到/flag即可拿flag了
+
+## url.URL结构体
+
+https://www.ipeapea.cn/post/go-url/
+
+```go
+type URL struct {
+	Scheme      string    // 协议
+	Opaque      string    // 如果是opaque格式，那么此字段存储有值
+	User        *Userinfo // 用户和密码信息
+	Host        string    // 主机地址[:端口]
+	Path        string    // 路径
+	RawPath     string    // 如果Path是从转移后的路径解析的，那么RawPath会存储原始值，否则为空，见后面详解
+	ForceQuery  bool      // 即便RawQuery为空，path结尾也有?符号
+	RawQuery    string    // ?后面query内容
+	Fragment    string    // #后面锚点信息
+	RawFragment string    // 与RawPath含义一致
+}
+
+type Userinfo struct {
+	username    string
+	password    string
+	passwordSet bool
+}
+```
+
+示例：
+
+```go
+uStr := "http://root:password@localhost:28080/home/login?id=1&name=foo#fragment"
+u, _ := url.Parse(uStr)
+```
+
+解析结果
+
+```json
+{
+ "Scheme": "http",
+ "Opaque": "",
+ "User": {},
+ "Host": "localhost:28080",
+ "Path": "/home/login",
+ "RawPath": "/home%2flogin",
+ "ForceQuery": false,
+ "RawQuery": "id=1\u0026name=foo",
+ "Fragment": "fragment",
+ "RawFragment": ""
+}
+```
+
+- Opaque
+
+为空，因为这个url是一个分层类型，只有当URL类型为不透明类型时才有意义
+
+- RawPath
+
+此时RawPath有值，为Path原始值 而Path存储的是将原始值反转义后的值
+
+只有在原始`path`中包含了转移字符时才会有值，所以Go推荐我们使用`URL`的`EscapedPath`方法而不是直接使用`RawPath`字段
