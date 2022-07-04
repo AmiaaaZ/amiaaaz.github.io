@@ -1,7 +1,7 @@
 ---
 title: "iPad mini6使用体验&上手指南"
 slug: "iPad-mini6-yyds"
-description: "**内含女生自用软件推荐**"
+description: "**内含女生自用软件推荐（开玩笑的（（"
 date: 2022-06-23T10:50:53+08:00
 categories: []
 series: []
