@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Relaxes on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/relax/</link><description>Recent content in Relaxes on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 07 Sep 2022 21:26:18 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/relax/index.xml" rel="self" type="application/rss+xml"/><item><title>地铁阅读记录</title><link>https://amiaaaz.github.io/relax/short-reading-list-on-the-subway/</link><pubDate>Wed, 07 Sep 2022 21:26:18 +0800</pubDate><guid>https://amiaaaz.github.io/relax/short-reading-list-on-the-subway/</guid><description>&lt;p>太早一点的就没有时间记录了，后面的尽量备注时间（总体时间为倒序），也方便自己回看/复习&lt;/p>
 &lt;p>*说是阅读记录，内容其实也都是网安方面啦，cheatSheet占99.999%&lt;/p>
 &lt;ul>
+&lt;li>&lt;a href="https://tttang.com/archive/1597/">HOW DO YOU ACTUALLY FIND BUGS?（译文）&lt;/a> 0913&lt;/li>
 &lt;li>&lt;a href="https://codefol.io/posts/the-forty-year-programmer/">The Forty-Year Programmer&lt;/a> 0909&lt;/li>
 &lt;li>&lt;a href="https://www.freebuf.com/vuls/334032.html">SQL注入Getshell的奇思妙想（上）&lt;/a> 0908&lt;/li>
 &lt;li>&lt;a href="https://infosecwriteups.com/secure-code-review-1-cheat-sheet-for-security-vulnerability-in-python-injection-flaws-15c93b9d754f?source=rss----7b722bfd1b8d---4&amp;amp;gi=4e00c5ec5f78">Secure Code Review -1 | Cheat sheet For Security Vulnerability In Python — Injection Flaws&lt;/a> 0907~0908&lt;/li>
