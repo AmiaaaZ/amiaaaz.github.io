@@ -508,11 +508,10 @@ ServletRequest servletRequest = (ServletRequest) t.get()
 
 [深入理解linux系统下proc文件系统内容](https://www.cnblogs.com/cute/archive/2011/04/20/2022280.html)  |  [linux系统编程之进程（三）：进程复制fork，孤儿进程，僵尸进程 ](https://www.cnblogs.com/mickole/p/3186441.html)
 
-[通杀漏洞利用回显方法-linux平台](https://www.00theway.org/2020/01/17/java-god-s-eye/)  |  [linux下java反序列化通杀回显方法的低配版实现](https://xz.aliyun.com/t/7307)
+[通杀漏洞利用回显方法-linux平台](https://www.00theway.org/2020/01/17/java-god-s-eye/)  |  [linux下java反序列化通杀回显方法的低配版实现](https://xz.aliyun.com/t/7307)  |  [Linux下文件描述符回显构造](http://www.foreversong.cn/archives/1459)
 
 [Tomcat中一种半通用回显方法](https://xz.aliyun.com/t/7348)  |  [基于tomcat的内存 Webshell 无文件攻击技术](https://xz.aliyun.com/t/7388)
 
 [Java反射-修改字段值, 反射修改static final修饰的字段 ](https://www.cnblogs.com/noKing/p/9038234.html)
 
 {{% /spoiler %}}
-
