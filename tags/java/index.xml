@@ -409,7 +409,7 @@
 &lt;/summary>
 &lt;p>&lt;a href="http://www.hackdig.com/?01/hack-146.htm">Linux 系统文件描述符继承带来的危害&lt;/a> | &lt;a href="http://www.phpweblog.net/GaRY/archive/2011/10/09/PHP_Port_Reuse_With_Apache_FD.html">PHP端口复用的利用&lt;/a> (&lt;a href="https://gist.github.com/wofeiwo/66d7e227caa66e448419">code&lt;/a>)&lt;/p>
 &lt;p>&lt;a href="https://www.cnblogs.com/cute/archive/2011/04/20/2022280.html">深入理解linux系统下proc文件系统内容&lt;/a> | &lt;a href="https://www.cnblogs.com/mickole/p/3186441.html">linux系统编程之进程（三）：进程复制fork，孤儿进程，僵尸进程 &lt;/a>&lt;/p>
-&lt;p>&lt;a href="https://www.00theway.org/2020/01/17/java-god-s-eye/">通杀漏洞利用回显方法-linux平台&lt;/a> | &lt;a href="https://xz.aliyun.com/t/7307">linux下java反序列化通杀回显方法的低配版实现&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://www.00theway.org/2020/01/17/java-god-s-eye/">通杀漏洞利用回显方法-linux平台&lt;/a> | &lt;a href="https://xz.aliyun.com/t/7307">linux下java反序列化通杀回显方法的低配版实现&lt;/a> | &lt;a href="http://www.foreversong.cn/archives/1459">Linux下文件描述符回显构造&lt;/a>&lt;/p>
 &lt;p>&lt;a href="https://xz.aliyun.com/t/7348">Tomcat中一种半通用回显方法&lt;/a> | &lt;a href="https://xz.aliyun.com/t/7388">基于tomcat的内存 Webshell 无文件攻击技术&lt;/a>&lt;/p>
 &lt;p>&lt;a href="https://www.cnblogs.com/noKing/p/9038234.html">Java反射-修改字段值, 反射修改static final修饰的字段 &lt;/a>&lt;/p>
 &lt;/details></description></item><item><title>Java学习笔记Ⅹ</title><link>https://amiaaaz.github.io/2022/09/07/java-study-notes-10-ctf/</link><pubDate>Wed, 07 Sep 2022 21:20:56 +0800</pubDate><guid>https://amiaaaz.github.io/2022/09/07/java-study-notes-10-ctf/</guid><description>&lt;h2 id="uiuctf-2022spoink">[UIUCTF 2022]spoink&lt;/h2>

