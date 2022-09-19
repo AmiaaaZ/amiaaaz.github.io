@@ -9,6 +9,8 @@ tags: []
 draft: false
 ---
 
+{{% spoiler "2021.07-2022.08 version 1.0" %}}
+
 你好呀ﾟ∀ﾟ)ノ
 
 这里是葵子，一个信安专业的普通大三学生，V&N划水摸鱼
@@ -40,3 +42,9 @@ stay hungry, stay foolish.
 > *I, I just think that*
 >
 > ***You are what you love***
+
+{{% /spoiler %}}
+
+没啥可介绍的，信安专业的大三老废物，啥都不会，越学越废
+
+叫我葵子就好
