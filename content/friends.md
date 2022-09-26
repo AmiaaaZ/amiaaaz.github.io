@@ -21,3 +21,4 @@ draft: false
 - [deebato](http://d33b4t0.com/) - V&N - crypto
 - [PoZeep](http://ppppz.net/) - V&N - reverse
 - [dem0](https://dem0dem0.top/) - V&N - web
+- [M1sery](http://www.m0x01sery.com/) - V&N - web
