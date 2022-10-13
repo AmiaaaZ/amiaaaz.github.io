@@ -596,3 +596,13 @@ for {
 -  解决一小段时间后就会断链的问题
 
 第三个问题最蛋疼，亲测在linux上不存在这样的问题，windows上就会这样，猜测原因有可能是：webserver超时设置或者前面我改的监听键盘输入逻辑不合理，目前还没有进一步测试（懒狗见谅，不过也就这一两天的事，会尽快做好的
+
+
+
+## idea
+
+SplTempFileObject 用作临时回显的Buffer？默认2M内的SplTempFile会存入内存中 无文件落地？
+
+https://www.php.net/manual/zh/spltempfileobject.construct
+
+php://memory 总是把数据储存在内存中 支持读写和同时读写（流关闭之前）
