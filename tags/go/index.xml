@@ -482,7 +482,11 @@ net/rebeyond/behinder/core/Params.java
 &lt;li>流量加密&lt;/li>
 &lt;li>解决一小段时间后就会断链的问题&lt;/li>
 &lt;/ul>
-&lt;p>第三个问题最蛋疼，亲测在linux上不存在这样的问题，windows上就会这样，猜测原因有可能是：webserver超时设置或者前面我改的监听键盘输入逻辑不合理，目前还没有进一步测试（懒狗见谅，不过也就这一两天的事，会尽快做好的&lt;/p></description></item><item><title>Go学习笔记Ⅰ</title><link>https://amiaaaz.github.io/2022/06/23/go-study-notes-01/</link><pubDate>Thu, 23 Jun 2022 18:41:10 +0800</pubDate><guid>https://amiaaaz.github.io/2022/06/23/go-study-notes-01/</guid><description>&lt;p>2022.06.23更新第二次&lt;/p>
+&lt;p>第三个问题最蛋疼，亲测在linux上不存在这样的问题，windows上就会这样，猜测原因有可能是：webserver超时设置或者前面我改的监听键盘输入逻辑不合理，目前还没有进一步测试（懒狗见谅，不过也就这一两天的事，会尽快做好的&lt;/p>
+&lt;h2 id="idea">idea&lt;/h2>
+&lt;p>SplTempFileObject 用作临时回显的Buffer？默认2M内的SplTempFile会存入内存中 无文件落地？&lt;/p>
+&lt;p>&lt;a href="https://www.php.net/manual/zh/spltempfileobject.construct">https://www.php.net/manual/zh/spltempfileobject.construct&lt;/a>&lt;/p>
+&lt;p>php://memory 总是把数据储存在内存中 支持读写和同时读写（流关闭之前）&lt;/p></description></item><item><title>Go学习笔记Ⅰ</title><link>https://amiaaaz.github.io/2022/06/23/go-study-notes-01/</link><pubDate>Thu, 23 Jun 2022 18:41:10 +0800</pubDate><guid>https://amiaaaz.github.io/2022/06/23/go-study-notes-01/</guid><description>&lt;p>2022.06.23更新第二次&lt;/p>
 &lt;h2 id="arrayslice-变量覆盖">array&amp;amp;slice 变量覆盖&lt;/h2>
 &lt;blockquote>
 &lt;p>A slice is a descriptor of an array segment. It consists of a pointer to the array, the length of the segment, and its capacity (the maximum length of the segment).&lt;/p>
