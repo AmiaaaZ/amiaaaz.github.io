@@ -43,6 +43,11 @@ name = "Relaxxx"
 url = "/relax/"
 weight = 2
 [[menu.main]]
+identifier = "life"
+name = "fxxking life"
+url = "/life/"
+weight = 2
+[[menu.main]]
 name = "Tags"
 url = "/tags/"
 weight = 3
