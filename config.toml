@@ -70,6 +70,11 @@ identifier = "friends"
 name = "Friends"
 url = "/friends/"
 weight = 5
+[[menu.main]]
+identifier = "Travelling"
+name = "[*] Travelling"
+url = "https://travellings.link"
+weight = 5
 
 [taxonomies]
 category = "categories"
@@ -85,8 +90,6 @@ bilibili = "V2VkIDI3IEFwcmlsIDIwMjIgMTE6MzM6MTUgVVRD"
 netease-cloud-music = "TW9uJTIwMTglMjBGZWJydWFyeSUyMDE5ODAlMjAyMTowMjo1NSUyMFVUQw=="
 qq = "2517834528"
 wechat = "Vmlja3lja3lreQ=="
-# wechat-pay = "https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210825023159482.png"
-# alipay = "https://raw.githubusercontent.com/AmiaaaZ/ImageOverCloud/master/wpImg/image-20210825023114386.png"
 
 [outputs]
 home = ["HTML", "RSS", "JSON"]
