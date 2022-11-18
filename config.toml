@@ -72,7 +72,7 @@ url = "/friends/"
 weight = 5
 [[menu.main]]
 identifier = "Travelling"
-name = "[*] Travelling"
+name = "Travelling"
 url = "https://travellings.link"
 weight = 5
 
