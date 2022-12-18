@@ -2,7 +2,7 @@
 title: "Javascript逆向学习笔记"
 slug: "javascript-reverse-study-notes"
 description: "学就完事了. | 更新ing"
-date: 2022-12-18T02:28:34+08:00
+date: 2022-12-19T02:42:43+08:00
 categories: ["NOTES&SUMMARY", "LTS"]
 series: ["前端安全"]
 tags: ["js"]
@@ -752,4 +752,230 @@ if __name__ == '__main__':
 
 ![image-20221218022613304](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20221218022613304.png)
 
-*太困了 早上起来再写
+#### 获取对象的属性字典
+
+观察恢复过字符串的js，我们可以发现函数中通常是这样操作的：
+
+![image-20221218151522895](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20221218151522895.png)
+
+![image-20221218152556874](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20221218152556874.png)
+
+先定义一个对象，再不断添加属性，难搞的是这些属性有的是字符串 有的是函数定义 有的又交叉其它对象的属性，之后再把这个对象赋值给另一个对象，再通过属性名进行引用，中间可能会再间接赋值给一个对象
+
+我们接下来要做的是将这些属性被调用的地方，替换为对应的值/内容（类似之前的变量回复和解密函数回复），我们希望构造一个字典存储这样的映射关系
+
+```python
+property_dict = {
+	'obj1_name': {
+		'property1_name': 'value1',
+		'property2_name': 'value2',
+		....
+	},
+	....
+}
+```
+
+接下来惯例ast中分析结构，最开始属性赋值的部分都属于SequenceExpression，具体赋值的语句属于AssignmentExpression，且左边的类型是Identifier
+
+![image-20221218153009563](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20221218153009563.png)
+
+编写对应代码：
+
+```python
+import json
+import os
+
+property_dict = {}
+object_list = []
+
+
+def getPropertyMapping(node):
+    if type(node) == list:
+        for i in node:
+            getPropertyMapping(i)
+        return
+    elif type(node) != dict:
+        return
+    if node['type'] == 'SequenceExpression':
+        for i in range(- len(node['expressions']), 0, 1):
+            expr = node['expressions'][i]
+            if expr['type'] == 'AssignmentExpression':
+                if expr['left']['type'] == 'Identifier':
+                    if expr['right']['type'] == 'ObjectExpression' and expr['right']['properties'] == []:
+                        property_dict[expr['left']['name']] = {}
+                        object_list.append(expr['left']['name'])
+                        del node['expressions'][i]
+                        continue
+                    elif expr['right']['type'] == 'Identifier':
+                        if expr['right']['name'] in property_dict:
+                            property_dict[expr['left']['name']] = property_dict[expr['right']['name']]
+                            object_list.append(expr['left']['name'])
+                            del node['expressions'][i]
+                            continue
+                elif expr['left']['type'] == 'MemberExpression':
+                    _object = expr['left']['object']['name']
+                    try:
+                        _property_name = expr['left']['property']['value']
+                        property_dict[_object][_property_name] = expr['right']
+                        del node['expressions'][i]
+                        continue
+                    except KeyError:
+                        pass
+            for key in expr.keys():
+                getPropertyMapping(expr[key])
+    for key in node.keys():
+        getPropertyMapping(node[key])
+
+
+if __name__ == '__main__':
+    with open('1_left_concat_string.json', 'r', encoding='utf-8') as f:
+        data = json.loads(f.read())
+    getPropertyMapping(data)
+    with open('1_left_property_delete.json', 'w', encoding='utf-8') as f:
+        f.write(json.dumps(data))
+    os.system('node json2js 1_left_property_delete.json 1_left_property_delete.js')
+```
+
+这一步我们生成了1_left_property_delete.json和1_left_property_delete.js中间文件，其中删除了前面提到的对象赋值的部分
+
+#### 对象调用还原
+
+我们获得了对象->属性->值的映射字典后，需要查找调用这些属性的地方进行还原（上一步我们都做了删除处理）
+
+对象调用有两种方式，一种是函数式调用CallExpression类型的节点，一种是MemberExpression类型 直接返回字符串，而函数式调用的返回值有多种类型，需要进行不同的处理：
+
+1. 返回字符串Literal
+
+```js
+return 'a'
+```
+
+2. 返回对象调用MemberExpression
+
+```js
+return obj['a'](c, d)
+```
+
+3. 返回二元表达式BinaryExpression
+
+```js
+return a*b
+```
+
+4. 返回逻辑计算LogicalExpression
+
+```js
+return a||b
+```
+
+5. 返回函数调用CallExpression
+
+```js
+return a(b)
+```
+
+对于1和2 直接替换内容即可，属于MemberExpression节点，但如果包裹在函数中需要另外考虑；对于3和4，都是由中间的符号和左右的标识组成，只要将调用时的两个参数替换 再将整个节点替换；对于5，可以同时提取形参名和实参节点，以调用对象时传参的顺序为标准 填入临时字典
+
+编写对应代码：
+
+```python
+import copy
+import json
+import os
+
+property_dict = {}
+object_list = []
+
+
+def propertyReload(node):
+    if type(node) == list:
+        for i in node:
+            propertyReload(i)
+        return
+    elif type(node) != dict:
+        return
+
+    if node['type'] == 'MemberExpression':  # 捕获一个属性调用节点
+        try:
+            _obj = node['object']['name']
+            _property = node['property']['value']
+            new_node = property_dict[_obj][_property]
+            if new_node['type'] != 'FunctionExpression':  # 不是函数类型节点直接替换
+                node.clear()
+                node.update(new_node)
+                propertyReload(node)
+        except KeyError:
+            pass
+    try:
+        if node['type'] != 'CallExpression' or node['callee'][
+            'type'] != 'MemberExpression':  # 函数式调用 且子节点callee类型为MemberExpression
+            raise KeyError
+        _obj = node['callee']['object']['name']
+        _property = node['callee']['property']['value']
+        func_node = property_dict[_obj][_property]
+    except KeyError:
+        for key in node.keys():
+            propertyReload(node[key])
+        return
+
+    param_list = [i['name'] for i in func_node['params']]  # 形参
+    arg_list = node['arguments']  # 实参
+    param_arg_dict = dict(zip(param_list, arg_list))  # 形参与实参对应字典
+    ret_node = copy.deepcopy(func_node['body']['body'][0])  # 拷贝一份函数节点的返回值节点
+    if ret_node['type'] != 'ReturnStatement':
+        print(f'有超过一行的函数体：{func_node}')
+        exit()
+
+    if ret_node['argument']['type'] == 'Literal' or ret_node['argument'][
+        'type'] == 'MemberExpression':  # 实参直接替换形参 对应1, 2种情况被包裹在一个函数中再返回时
+        node.clear()
+        node.update(ret_node['argument'])
+    elif ret_node['argument']['type'] == 'BinaryExpression' or ret_node['argument'][
+        'type'] == 'LogicalExpression':  # 对应3, 4种情况
+        if ret_node['argument']['left']['type'] == 'Identifier':
+            ret_node['argument']['left'] = param_arg_dict[ret_node['argument']['left']['name']]
+        if ret_node['argument']['right']['type'] == 'Identifier':
+            ret_node['argument']['right'] = param_arg_dict[ret_node['argument']['right']['name']]
+        node.clear()
+        node.update(ret_node['argument'])
+    elif ret_node['argument']['type'] == 'CallExpression':  # 对应第五种情况
+        if ret_node['argument']['callee']['type'] != 'MemberExpression':
+            func_name = ret_node['argument']['callee']['name']
+            if func_name in param_arg_dict:
+                ret_node['argument']['callee'] = param_arg_dict[func_name]
+        for i in range(len(ret_node['argument']['arguments'])):
+            if ret_node['argument']['callee']['type'] != 'Identifier':
+                arg_name = ret_node['argument']['arguments'][i]['name']
+                ret_node['argument']['arguments'][i] = param_arg_dict[arg_name]
+        node.clear()
+        node.update(ret_node['argument'])
+    else:
+        print(f'意料之外的函数返回值类型：{ret_node}')
+        exit()
+
+    # 递归处理防止遗漏
+    propertyReload(node)
+
+    for key in node.keys():
+        propertyReload(node[key])
+
+
+if __name__ == '__main__':
+    with open('1_left_property_delete.json', 'r', encoding='utf-8') as f:
+        data = json.loads(f.read())
+
+    propertyReload(data)
+    with open('1_left_property_reload.json', 'w', encoding='utf-8') as f:
+        f.write(json.dumps(data))
+    os.system('node json2js 1_left_property_reload.json 1_left_property_reload.js')
+```
+
+最终效果
+
+![image-20221219021808232](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20221219021808232.png)
+
+### 分支流程判断
+
+### 控制流平坦化
+
+*待更新，熬夜看球了，恭喜梅西！
