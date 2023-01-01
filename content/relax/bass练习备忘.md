@@ -2,13 +2,23 @@
 title: "bass练习备忘"
 slug: "bass-practice-memo"
 description: "努力练琴！"
-date: 2022-12-29T18:12:08+08:00
+date: 2023-01-01T18:12:08+08:00
 categories: []
 series: []
 tags: []
 draft: false
 toc: true
 ---
+
+## 010123（日） - 40min
+
+**10min** - 130~150bpm ♫ - 右手速度练习
+
+**15min** - 100bpm ♫ - 爬格子
+
+**15min** - 《365日》第一周1~6条
+
+今天白天都在外面玩，晚上回来先睡了一觉，导致时间很紧张，就没空练其它的了QAQ 明天补上
 
 ## 123022（金） - 40min+
 
