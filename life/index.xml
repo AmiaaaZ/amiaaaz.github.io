@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Lives on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/life/</link><description>Recent content in Lives on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sat, 31 Dec 2022 16:28:51 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/life/index.xml" rel="self" type="application/rss+xml"/><item><title>2022小结</title><link>https://amiaaaz.github.io/life/the-end-of-2022/</link><pubDate>Sat, 31 Dec 2022 16:28:51 +0800</pubDate><guid>https://amiaaaz.github.io/life/the-end-of-2022/</guid><description>&lt;p>过去两年的年度总结都是絮絮叨叨的长文，今年比较特殊，比较重要的几个时间节点上都写了点东西，所以今年份决定按类目分开写；以下各个二级标题重要性不分先后w&lt;/p>
-&lt;p>2023.1.1（日） 10:45am 进行二次修订&lt;/p>
+&lt;p>2023.1.1（日） 10:45 am 进行一次修订&lt;/p>
+&lt;p>2023.1.2（月） 6:56 pm 刷了几篇时间线上其他小伙伴的年终总结，遂进行进行二次修订（嗯 完全不是被打击到了呢w&lt;/p>
 &lt;h2 id="intp">intp&lt;/h2>
 &lt;p>没有悬念的，不出意料的，遵循客观事实的——开摆了，而且很差劲，跟去年相比约等于没有进步&lt;/p>
 &lt;p>木已成舟，不想给自己找太多借口，但我这个intp的性格可能真的容易让我在关键时候掉链子，包括但不限于在ddl之前饶有兴致地研究毫无关系的其它事物、专业的时间浪费大师等。最近一个朋友说他新冠转阴之后感觉人是残血状态，我默默地回了一句：我已经习惯了，一年里我有一半时间都是残血，这方面我是专业的&lt;/p>
@@ -69,11 +70,12 @@
 &lt;ul>
 &lt;li>再见绘梨&lt;/li>
 &lt;/ul>
-&lt;p>已入实体，这是我今年最喜欢的漫画，看完之后久久不能忘怀这一抹“奇幻色彩”&lt;/p>
+&lt;p>已入实体（虽然被预售拖成了二刷），这是我今年最喜欢的漫画，看完之后久久不能忘怀这一抹“奇幻色彩”&lt;/p>
 &lt;p>*还有一些是看过漫画解说，不列在此处；明年会多看一点&lt;/p>
 &lt;h2 id="书籍影视">书籍&amp;amp;影视&lt;/h2>
 &lt;h3 id="书">书&lt;/h3>
-&lt;p>详见&lt;a href="https://amiaaaz.github.io/relax/march-april-reading-list/">此处&lt;/a>&lt;/p>
+&lt;p>详见&lt;a href="https://amiaaaz.github.io/relax/march-april-reading-list/">此处&lt;/a>，再补一本《六个说谎的大学生》，求职+推理的题材，中间夹杂插叙，十分精彩&lt;/p>
+&lt;p>下半年我还订了《读库》，纸质版的寄回家里给母上大人看，我用iPad看电子版的，是很有深度的杂志，五星推荐&lt;/p>
 &lt;h3 id="影">影&lt;/h3>
 &lt;ul>
 &lt;li>开端&lt;/li>
@@ -82,7 +84,7 @@
 &lt;ul>
 &lt;li>重生之门&lt;/li>
 &lt;/ul>
-&lt;p>王俊凯的演技……emm……剧本也凑合&lt;/p>
+&lt;p>王俊凯的演技……emmm……剧本也凑合&lt;/p>
 &lt;ul>
 &lt;li>独行月球&lt;/li>
 &lt;/ul>
@@ -90,7 +92,7 @@
 &lt;ul>
 &lt;li>这个杀手不太冷&lt;/li>
 &lt;/ul>
-&lt;p>跟家人一块看的，合家欢类型，后面反转的时候戳我泪点，我确实不太能看是悲剧内核的喜剧&lt;/p>
+&lt;p>跟家人一块看的，合家欢类型，后面反转的时候戳我泪点，我确实不太能看悲剧内核的喜剧&lt;/p>
 &lt;ul>
 &lt;li>神探大战&lt;/li>
 &lt;/ul>
@@ -100,14 +102,14 @@
 &lt;/ul>
 &lt;p>唉，意难平的完结，挺难受的&lt;/p>
 &lt;h2 id="技术栈">技术栈&lt;/h2>
-&lt;p>很拉跨。。。年初说要学java，学到年末，得到的感悟是：jojo 我不学java啦！&lt;/p>
-&lt;p>ps.这是实话，我真的不喜欢java，我喜欢网络安全，喜欢钻研东西，但我真的不喜欢java，写java代码就是**&lt;/p>
-&lt;p>写了两个小扫描器，平常肾透的时候使，虽然已经开源了，但还很简略，明年会丰富起来的&lt;/p>
+&lt;p>很拉跨。。。年初说要学java，学到年末，得到的感悟是：jojo 我不学java啦！这并非赌气，而是我真的很不喜欢java，我喜欢网络安全，喜欢钻研东西，但我真的不喜欢java，java代码就是***&lt;/p>
+&lt;p>项目方面写了两个小扫描器，平常肾透的时候使，虽然已经开源了，但还非常非常简略，明年会丰富起来的&lt;/p>
 &lt;p>ps.没错 我都是用python写的，此处强烈推荐streamlit这个web框架，简直是造轮子的神&lt;/p>
 &lt;p>pps.以前我以为写安全工具的人都贼几把牛逼，直到我自己开始写，读了很多别人的代码，我发现在座的各位都是**（笑）那代码看的我脑溢血都要犯了，就这还能有那么多star，都瞎眼了吗（）&lt;/p>
-&lt;p>ppps. they are trash, and so am I.&lt;/p>
+&lt;p>ppps. they are trash, and so am I.（笑）&lt;/p>
+&lt;p>下半年把去年听烂尾的南大《软件分析》课重新捡起来了，还剩最后几节就听完了，虽然是以java做例，但意外的很好懂，不过我可能之后不会太深入去学静态分析的东西；年末的时候写一个api fuzz类的扫描器，写完demo之后顺势入坑javascript逆向，学习中ing&lt;/p>
 &lt;h2 id="租房与家">租房与家&lt;/h2>
-&lt;p>在我的心里，家一定是有一个客厅，一个沙发，一条毯子，一台茶几，一套茶具，一个电视，所以我并不认为现在租住的地方是我的“家”，它更像是一个临时居所，不是“家”。并非什么刻板印象，而是这些对我来说代表着我童年的快乐和幸福。晚上下班回来以后窝在沙发上盖着毯子，泡一壶茶，看着电视，练练琴，哪怕 只有我一个人，也会很满足吧&lt;/p>
+&lt;p>在我的心里，家一定会有一个客厅，一个沙发，一条毯子，一台茶几，一套茶具，一个电视，所以我并不认为现在租住的地方是我的“家”，它更像是一个临时居所，不是“家”。并非什么刻板印象，而是这些对我来说代表着我童年的快乐和幸福。晚上下班回来以后窝在沙发上盖着毯子，泡一壶茶，看着电视，练练琴，看看书，哪怕 只有我一个人，也会很满足吧&lt;/p>
 &lt;p>现在租住的地方价格2200/月不含水电物业费，4人合租没有独卫。明年不管工作有没有变化，我都会换一个地方住的，贵一点无妨，我不要再在这个上面妥协了&lt;/p>
 &lt;h2 id="疫情与防疫">疫情与防疫&lt;/h2>
 &lt;p>我不止跟一个朋友强调过这两个词的差异。到底是疫情导致我们生活变得艰难，还是防疫导致我们的生活变得艰难？想必大家心里都有数。那为什么反映到语言上大多数人却下意识地将矛头对准疫情或omicron呢？&lt;/p>
@@ -124,15 +126,22 @@
 &lt;p>感觉所有立的目标都会成为倒掉的flag，但不重要，立！&lt;/p>
 &lt;ul>
 &lt;li>&lt;input disabled="" type="checkbox"> 网安学习加油！&lt;/li>
-&lt;li>&lt;input disabled="" type="checkbox"> 学bass！要学会狂暴slap！&lt;/li>
+&lt;li>&lt;input disabled="" type="checkbox"> 学bass！要学会狂暴slap！中期目标是整一把5弦扇品无头（把low b换成high c），高把位solo才是yyds&lt;/li>
 &lt;li>&lt;input disabled="" type="checkbox"> 对自己的身体好一点&lt;/li>
 &lt;li>&lt;input disabled="" type="checkbox"> 多看书，少吹水&lt;/li>
 &lt;li>&lt;input disabled="" type="checkbox"> 活在当下，不负每一天&lt;/li>
 &lt;li>&lt;input disabled="" type="checkbox"> 学着自律&lt;/li>
+&lt;li>&lt;input disabled="" type="checkbox"> 学会做饭，少吃外卖，多吃水果，少花钱&lt;/li>
 &lt;/ul>
 &lt;p>&lt;del>只要我立的flag够宽泛，就不会倒&lt;/del>&lt;/p>
 &lt;p>感谢这一年里所有对我提供帮助的人，感谢大家包容我的不足和种种缺点&lt;/p>
 &lt;p>2023，还请多多指教w&lt;/p>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+摘一段我很喜欢的歌词
+&lt;/h4>
+&lt;/summary>
 &lt;blockquote>
 &lt;p>拾起这平凡的时间&lt;/p>
 &lt;p>我渺小的挣扎没有人发现&lt;/p>
@@ -163,7 +172,8 @@
 &lt;p>也敬你一杯 因为值得&lt;/p>
 &lt;p>会变好的 明天的事 明天再说&lt;/p>
 &lt;p>跨越过一路坎坷 我们相聚在此刻&lt;/p>
-&lt;/blockquote></description></item><item><title>1122流水账(含1222前半)</title><link>https://amiaaaz.github.io/life/2022-november-diary/</link><pubDate>Sat, 10 Dec 2022 22:08:38 +0800</pubDate><guid>https://amiaaaz.github.io/life/2022-november-diary/</guid><description>&lt;h2 id="动漫">动漫&lt;/h2>
+&lt;/blockquote>
+&lt;/details></description></item><item><title>1122流水账(含1222前半)</title><link>https://amiaaaz.github.io/life/2022-november-diary/</link><pubDate>Sat, 10 Dec 2022 22:08:38 +0800</pubDate><guid>https://amiaaaz.github.io/life/2022-november-diary/</guid><description>&lt;h2 id="动漫">动漫&lt;/h2>
 &lt;ul>
 &lt;li>&lt;strong>秋叶原冥途战争&lt;/strong>&lt;/li>
 &lt;/ul>
