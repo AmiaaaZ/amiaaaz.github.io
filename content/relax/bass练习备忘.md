@@ -2,13 +2,27 @@
 title: "bass练习备忘"
 slug: "bass-practice-memo"
 description: "努力练琴！"
-date: 2023-01-03T18:12:08+08:00
+date: 2023-01-06T18:12:08+08:00
 categories: []
 series: []
 tags: []
 draft: false
 toc: true
 ---
+
+## 010623（金） - 45min
+
+**10min** - 140bpm ♫ - 右手速度练习
+
+**10min** - 110bpm ♫ - 爬格子
+
+**15min** - 《365日》第四周0~2、4条
+
+**10min** - 尝试cover 《不知醉》
+
+又菜又烦……想练slap 但屋子里隔音太差了 击弦打弦都不方便，想cover不知醉 但左手手速跟不上，完全换不过来把位
+
+啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊
 
 ## 010523（木） - 65min
 
