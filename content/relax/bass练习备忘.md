@@ -2,13 +2,25 @@
 title: "bass练习备忘"
 slug: "bass-practice-memo"
 description: "努力练琴！"
-date: 2023-01-06T18:12:08+08:00
+date: 2023-01-08T18:12:08+08:00
 categories: []
 series: []
 tags: []
 draft: false
 toc: true
 ---
+
+## 010823（日） - 105min+
+
+**10min** - 110bpm ♫ - 爬格子
+
+**45min** - slap学习
+
+**50min** - cover《不知醉》intro+主歌1
+
+开心！！！真的能看到进步，最开始尝试cover不知醉的时候连第一小节都弹不利索，现在一小半已经拿下了（虽然是慢速的），开心啊！！！
+
+可惜放假不方便把琴背回去，好可惜QAQ
 
 ## 010623（金） - 45min
 
