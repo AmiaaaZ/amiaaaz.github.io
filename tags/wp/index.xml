@@ -1549,7 +1549,7 @@ setCookie.js
 &lt;details>
 &lt;summary>
 &lt;h4 class="inline">
-exp.js
+exp.py
 &lt;/h4>
 &lt;/summary>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">time&lt;/span>
@@ -4553,7 +4553,7 @@ w.js
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// console.log(getResult(1))
 &lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/details>
 &lt;p>有几个坑点要注意：上面的python代码中并没有和浏览器运行一样每点击一次就把之前的时间戳加上，因为这样的限制存在且仅存在于手动点击中，我们这样爬虫是不需要的；另一点是通过requests发包时直接在url里写参数会过不了风控，而单独加进params里就可以过了（虽然我还不知道是什么原理）&lt;/p>
-&lt;p>最终要的是1，2，3等奖的金额之和，通过前端代码可以直到1等奖是3等奖的15倍，2等奖是3等奖的5倍，加起来就是api请求得到金额的24倍&lt;/p>
+&lt;p>最终要的是1，2，3等奖的金额之和，通过前端代码可知1等奖是3等奖的15倍，2等奖是3等奖的5倍，加起来就是api请求得到金额的24倍&lt;/p>
 &lt;h2 id="猿人学7---动态字体-随风漂移">猿人学7 - 动态字体 随风漂移&lt;/h2>
 &lt;blockquote>
 &lt;p>&lt;a href="https://match.yuanrenxue.com/match/7">https://match.yuanrenxue.com/match/7&lt;/a>&lt;/p>
@@ -4629,8 +4629,7 @@ exp.py
 &lt;p>这个有点难了TAT&lt;/p>
 &lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230105174126795.png" alt="image-20230105174126795">&lt;/p>
 &lt;p>抓包可知api请求返回的是这一整张验证码的图片，用&lt;code>&amp;lt;div&amp;gt;&lt;/code>标签把整个图片划成了30*30的方格，点击时的坐标会作为m参数再发出请求，如果验证成功会有Set-Cookie，带上这个sessionid就可以得到想要的数字了&lt;/p>
-&lt;p>我们一个个解决难点：&lt;/p>
-&lt;p>首先是图片处理，鉴于我不是misc手（）这里的代码是摘自已有wp的，有两种处理方式，纯PIL或cv2+numpy&lt;/p>
+&lt;p>唯一的难点就是图片处理了，鉴于我不是misc手（）这部分的代码是摘自已有wp的，有两种处理方式，纯PIL或cv2+numpy&lt;/p>
 &lt;ul>
 &lt;li>纯PIL&lt;/li>
 &lt;/ul>
@@ -4739,11 +4738,13 @@ exp.py
 以下是本文中涉及到的 和我学习时看过的所有文章的链接 每日感谢互联网的丰富资源（
 &lt;/h4>
 &lt;/summary>
+&lt;p>&lt;a href="https://zhuanlan.zhihu.com/p/424103330">爬虫逆向基础，理解 JavaScript 模块化编程 webpack&lt;/a>&lt;/p>
 &lt;p>&lt;a href="https://www.52pojie.cn/thread-1288315-1-1.html">某网站Web端爬虫攻防大赛题目交流&lt;/a>&lt;/p>
 &lt;p>&lt;a href="https://juejin.cn/post/7073837033206054948">猿人学第二题,手撕OB混淆给你看(Step1-开篇)&lt;/a> | &lt;a href="https://juejin.cn/post/7074076991422464036">猿人学第二题,手撕OB混淆给你看(step2-字符串数字回填)&lt;/a> | &lt;a href="https://juejin.cn/post/7074397764108419102">猿人学第二题,手撕OB混淆给你看(step3-函数调用还原)&lt;/a> | &lt;a href="https://juejin.cn/post/7074768595825197092">猿人学第二题,手撕OB混淆给你看(step4-对象调用还原)&lt;/a> | &lt;a href="https://juejin.cn/post/7075165582949089287">猿人学第二题,手撕OB混淆给你看(step5-分支流程判断)&lt;/a> | &lt;a href="https://juejin.cn/post/7075527384841060383">猿人学第二题,手撕OB混淆给你看(step06-控制流平坦化)&lt;/a>&lt;/p>
 &lt;p>&lt;a href="https://juejin.cn/post/7078321272202985485">猿人学第5题,hook任意cookie被设置的瞬间&lt;/a>&lt;/p>
 &lt;p>&lt;a href="https://syjun.vip/archives/283.html">Python反反爬之动态字体&amp;mdash;随风漂移&lt;/a>&lt;/p>
 &lt;p>&lt;a href="https://syjun.vip/archives/284.html">Python反反爬之图文点击&amp;mdash;生僻字验证码&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://www.52pojie.cn/thread-1340226-1-1.html">【使用AST还原JS混淆代码应用】 猿人学爬虫攻防赛 第九题详解&lt;/a>&lt;/p>
 &lt;/details></description></item><item><title>Java学习笔记Ⅹ</title><link>https://amiaaaz.github.io/2022/09/07/java-study-notes-10-ctf/</link><pubDate>Wed, 07 Sep 2022 21:20:56 +0800</pubDate><guid>https://amiaaaz.github.io/2022/09/07/java-study-notes-10-ctf/</guid><description>&lt;h2 id="uiuctf-2022spoink">[UIUCTF 2022]spoink&lt;/h2>
 &lt;blockquote>
 &lt;p>环境：https://github.com/sigpwny/UIUCTF-2022-Public/tree/main/web/spoink&lt;/p>

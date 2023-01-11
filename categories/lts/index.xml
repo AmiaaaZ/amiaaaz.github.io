@@ -1549,7 +1549,7 @@ setCookie.js
 &lt;details>
 &lt;summary>
 &lt;h4 class="inline">
-exp.js
+exp.py
 &lt;/h4>
 &lt;/summary>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">time&lt;/span>
@@ -4553,7 +4553,7 @@ w.js
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// console.log(getResult(1))
 &lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/details>
 &lt;p>有几个坑点要注意：上面的python代码中并没有和浏览器运行一样每点击一次就把之前的时间戳加上，因为这样的限制存在且仅存在于手动点击中，我们这样爬虫是不需要的；另一点是通过requests发包时直接在url里写参数会过不了风控，而单独加进params里就可以过了（虽然我还不知道是什么原理）&lt;/p>
-&lt;p>最终要的是1，2，3等奖的金额之和，通过前端代码可以直到1等奖是3等奖的15倍，2等奖是3等奖的5倍，加起来就是api请求得到金额的24倍&lt;/p>
+&lt;p>最终要的是1，2，3等奖的金额之和，通过前端代码可知1等奖是3等奖的15倍，2等奖是3等奖的5倍，加起来就是api请求得到金额的24倍&lt;/p>
 &lt;h2 id="猿人学7---动态字体-随风漂移">猿人学7 - 动态字体 随风漂移&lt;/h2>
 &lt;blockquote>
 &lt;p>&lt;a href="https://match.yuanrenxue.com/match/7">https://match.yuanrenxue.com/match/7&lt;/a>&lt;/p>
@@ -4629,8 +4629,7 @@ exp.py
 &lt;p>这个有点难了TAT&lt;/p>
 &lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230105174126795.png" alt="image-20230105174126795">&lt;/p>
 &lt;p>抓包可知api请求返回的是这一整张验证码的图片，用&lt;code>&amp;lt;div&amp;gt;&lt;/code>标签把整个图片划成了30*30的方格，点击时的坐标会作为m参数再发出请求，如果验证成功会有Set-Cookie，带上这个sessionid就可以得到想要的数字了&lt;/p>
-&lt;p>我们一个个解决难点：&lt;/p>
-&lt;p>首先是图片处理，鉴于我不是misc手（）这里的代码是摘自已有wp的，有两种处理方式，纯PIL或cv2+numpy&lt;/p>
+&lt;p>唯一的难点就是图片处理了，鉴于我不是misc手（）这部分的代码是摘自已有wp的，有两种处理方式，纯PIL或cv2+numpy&lt;/p>
 &lt;ul>
 &lt;li>纯PIL&lt;/li>
 &lt;/ul>
@@ -4739,23 +4738,23 @@ exp.py
 以下是本文中涉及到的 和我学习时看过的所有文章的链接 每日感谢互联网的丰富资源（
 &lt;/h4>
 &lt;/summary>
+&lt;p>&lt;a href="https://zhuanlan.zhihu.com/p/424103330">爬虫逆向基础，理解 JavaScript 模块化编程 webpack&lt;/a>&lt;/p>
 &lt;p>&lt;a href="https://www.52pojie.cn/thread-1288315-1-1.html">某网站Web端爬虫攻防大赛题目交流&lt;/a>&lt;/p>
 &lt;p>&lt;a href="https://juejin.cn/post/7073837033206054948">猿人学第二题,手撕OB混淆给你看(Step1-开篇)&lt;/a> | &lt;a href="https://juejin.cn/post/7074076991422464036">猿人学第二题,手撕OB混淆给你看(step2-字符串数字回填)&lt;/a> | &lt;a href="https://juejin.cn/post/7074397764108419102">猿人学第二题,手撕OB混淆给你看(step3-函数调用还原)&lt;/a> | &lt;a href="https://juejin.cn/post/7074768595825197092">猿人学第二题,手撕OB混淆给你看(step4-对象调用还原)&lt;/a> | &lt;a href="https://juejin.cn/post/7075165582949089287">猿人学第二题,手撕OB混淆给你看(step5-分支流程判断)&lt;/a> | &lt;a href="https://juejin.cn/post/7075527384841060383">猿人学第二题,手撕OB混淆给你看(step06-控制流平坦化)&lt;/a>&lt;/p>
 &lt;p>&lt;a href="https://juejin.cn/post/7078321272202985485">猿人学第5题,hook任意cookie被设置的瞬间&lt;/a>&lt;/p>
 &lt;p>&lt;a href="https://syjun.vip/archives/283.html">Python反反爬之动态字体&amp;mdash;随风漂移&lt;/a>&lt;/p>
 &lt;p>&lt;a href="https://syjun.vip/archives/284.html">Python反反爬之图文点击&amp;mdash;生僻字验证码&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://www.52pojie.cn/thread-1340226-1-1.html">【使用AST还原JS混淆代码应用】 猿人学爬虫攻防赛 第九题详解&lt;/a>&lt;/p>
 &lt;/details></description></item><item><title>Javascript逆向学习笔记Ⅰ</title><link>https://amiaaaz.github.io/2023/01/05/javascript-reverse-study-notes-01/</link><pubDate>Thu, 05 Jan 2023 00:44:51 +0800</pubDate><guid>https://amiaaaz.github.io/2023/01/05/javascript-reverse-study-notes-01/</guid><description>&lt;h2 id="绕过反调试">绕过反调试&lt;/h2>
-&lt;ul>
-&lt;li>每xx ms执行一次debugger&lt;/li>
-&lt;/ul>
+&lt;h3 id="每xx-ms执行一次debugger">每xx ms执行一次debugger&lt;/h3>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-js" data-lang="js">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">setInterval&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">()&lt;/span> &lt;span style="color:#111">{&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">debugger&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">},&lt;/span> &lt;span style="color:#ae81ff">500&lt;/span>&lt;span style="color:#111">)&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>在debugger处右键 永不在此处暂停（或：添加条件断点 false）&lt;/p>
+&lt;h3 id="每xx-ms打印一个值-干扰控制台输出">每xx ms打印一个值 干扰控制台输出&lt;/h3>
 &lt;ul>
-&lt;li>每xx ms打印一个值 干扰控制台输出&lt;/li>
+&lt;li>单一js文件形态：&lt;/li>
 &lt;/ul>
-&lt;p>*单一js文件形态：&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-js" data-lang="js">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">setInterval&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">()&lt;/span> &lt;span style="color:#111">{&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">eval&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">toString&lt;/span>&lt;span style="color:#111">()&lt;/span> &lt;span style="color:#f92672">!==&lt;/span> &lt;span style="color:#d88200">&amp;#39;function eval() { [native code] }&amp;#39;&lt;/span>&lt;span style="color:#111">){&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">w&lt;/span>&lt;span style="color:#111">();&lt;/span>
@@ -4774,7 +4773,9 @@ exp.py
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">console&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">error&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;永不言棄,jy&amp;#39;&lt;/span>&lt;span style="color:#111">);&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">},&lt;/span> &lt;span style="color:#ae81ff">500&lt;/span>&lt;span style="color:#111">);&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>控制台处定位到代码，源代码处右键 在网络面板中显示，找到对应条目右键 阻止请求URL&lt;/p>
-&lt;p>*嵌入js中作为函数的形态：&lt;/p>
+&lt;ul>
+&lt;li>嵌入js中作为函数的形态：&lt;/li>
+&lt;/ul>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-js" data-lang="js">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#75af00">oo0O0&lt;/span>&lt;span style="color:#111">(){&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">window&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">a&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#39;xxxxxxxxxxxxxxxxxxxxxxxxxx&amp;#39;&lt;/span> &lt;span style="color:#75715e">// 一堆乱码
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#00a8c8">for&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">var&lt;/span> &lt;span style="color:#75af00">i&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75af00">len&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">window&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">a&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">length&lt;/span>&lt;span style="color:#111">;&lt;/span> &lt;span style="color:#75af00">i&lt;/span> &lt;span style="color:#f92672">&amp;lt;&lt;/span> &lt;span style="color:#75af00">len&lt;/span>&lt;span style="color:#111">;&lt;/span> &lt;span style="color:#75af00">i&lt;/span>&lt;span style="color:#f92672">++&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
@@ -4782,6 +4783,15 @@ exp.py
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>在该函数处下断点，让它在被调用之前就修改掉内部的赋值&lt;/p>
+&lt;ul>
+&lt;li>存在类似以下的函数&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-js" data-lang="js">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">var&lt;/span> &lt;span style="color:#75af00">a&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#34;deb&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">var&lt;/span> &lt;span style="color:#75af00">b&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#34;bugger&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// 拼接执行
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>本地重写a和b，用ReRes插件替换&lt;/p>
+&lt;h3 id="禁止格式化代码正则匹配">禁止格式化代码（正则匹配）&lt;/h3>
+&lt;p>将代码压缩，或者注释掉正则部分的代码&lt;/p>
 &lt;h2 id="obfuscator特征解混淆">obfuscator特征&amp;amp;解混淆&lt;/h2>
 &lt;blockquote>
 &lt;p>ob混淆：&lt;a href="https://obfuscator.io/">JavaScript Obfuscator Tool&lt;/a>&lt;/p>
@@ -4961,6 +4971,82 @@ exp.py
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">});&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">})();&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="浏览器插件">浏览器插件&lt;/h3>
+&lt;p>manifest.json&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-js" data-lang="js">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#34;name&amp;#34;&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#d88200">&amp;#34;Injection&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#34;version&amp;#34;&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#d88200">&amp;#34;1.0&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#34;description&amp;#34;&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#d88200">&amp;#34;RequestHeader钩子&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#34;manifest_version&amp;#34;&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#34;content_scripts&amp;#34;&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#111">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#34;matches&amp;#34;&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#111">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#34;&amp;lt;all_urls&amp;gt;&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#34;js&amp;#34;&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#111">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#34;inject.js&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#34;all_frames&amp;#34;&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#00a8c8">true&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#34;permissions&amp;#34;&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#111">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#34;tabs&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#34;run_at&amp;#34;&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#d88200">&amp;#34;document_start&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>header&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-js" data-lang="js">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">var&lt;/span> &lt;span style="color:#75af00">code&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span>&lt;span style="color:#111">(){&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">var&lt;/span> &lt;span style="color:#75af00">org&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">window&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">XMLHttpRequest&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">prototype&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">setRequestHeader&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">window&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">XMLHttpRequest&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">prototype&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">setRequestHeader&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">key&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#75af00">value&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">if&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">key&lt;/span>&lt;span style="color:#f92672">==&lt;/span>&lt;span style="color:#d88200">&amp;#39;Authorization&amp;#39;&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">debugger&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#75af00">org&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">apply&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">this&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#75af00">arguments&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">var&lt;/span> &lt;span style="color:#75af00">script&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">document&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">createElement&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;script&amp;#39;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">script&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">textContent&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#39;(&amp;#39;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#75af00">code&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#d88200">&amp;#39;)()&amp;#39;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">document&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">head&lt;/span>&lt;span style="color:#f92672">||&lt;/span>&lt;span style="color:#111">document&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">documentElement&lt;/span>&lt;span style="color:#111">).&lt;/span>&lt;span style="color:#75af00">appendChild&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">script&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">script&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">parentNode&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">removeChild&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">script&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>cookie&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-js" data-lang="js">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">var&lt;/span> &lt;span style="color:#75af00">code&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span>&lt;span style="color:#111">(){&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">var&lt;/span> &lt;span style="color:#75af00">org&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">document&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">cookie&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">__lookupSetter__&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;cookie&amp;#39;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">document&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">__defineSetter__&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;cookie&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#00a8c8">function&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">cookie&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">if&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">cookie&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">indexOf&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;abcdefghijk&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>&lt;span style="color:#f92672">&amp;gt;-&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">debugger&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">org&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">cookie&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">});&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">document&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">__defineGetter__&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;cookie&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>&lt;span style="color:#00a8c8">function&lt;/span>&lt;span style="color:#111">(){&lt;/span>&lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#75af00">org&lt;/span>&lt;span style="color:#111">;});&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">var&lt;/span> &lt;span style="color:#75af00">script&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">document&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">createElement&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;script&amp;#39;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">script&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">textContent&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#39;(&amp;#39;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#75af00">code&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#d88200">&amp;#39;)()&amp;#39;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">document&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">head&lt;/span>&lt;span style="color:#f92672">||&lt;/span>&lt;span style="color:#111">document&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">documentElement&lt;/span>&lt;span style="color:#111">).&lt;/span>&lt;span style="color:#75af00">appendChild&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">script&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">script&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">parentNode&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">removeChild&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">script&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>url参数&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-js" data-lang="js">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">var&lt;/span> &lt;span style="color:#75af00">code&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span>&lt;span style="color:#111">(){&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">var&lt;/span> &lt;span style="color:#75af00">open&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">window&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">XMLHttpRequest&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">prototype&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">open&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">window&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">XMLHttpRequest&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">prototype&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">open&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">method&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75af00">url&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#00a8c8">async&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">url&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">indexOf&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;AbCdE&amp;#34;&lt;/span>&lt;span style="color:#111">)&lt;/span>&lt;span style="color:#f92672">&amp;gt;-&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">debugger&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#75af00">open&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">apply&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">this&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75af00">arguments&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">};&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">var&lt;/span> &lt;span style="color:#75af00">script&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">document&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">createElement&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;script&amp;#39;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">script&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">textContent&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#39;(&amp;#39;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#75af00">code&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#d88200">&amp;#39;)()&amp;#39;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">document&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">head&lt;/span>&lt;span style="color:#f92672">||&lt;/span>&lt;span style="color:#111">document&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">documentElement&lt;/span>&lt;span style="color:#111">).&lt;/span>&lt;span style="color:#75af00">appendChild&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">script&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">script&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">parentNode&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">removeChild&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">script&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="补环境">*补环境&lt;/h2>
+&lt;p>对js逆向来说最重要的内容之一了，一般涉及这些内容&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-js" data-lang="js">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">window&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">global&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">navigator&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">{}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>*待补充&lt;/p>
 &lt;h2 id="对js进行astjson转换">对js进行ast/json转换&lt;/h2>
 &lt;ul>
 &lt;li>js2ast: &lt;a href="https://astexplorer.net/">https://astexplorer.net/&lt;/a>&lt;/li>
@@ -5037,9 +5123,19 @@ exp.py
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">os&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">system&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;node json2js 1_left.json 1_left.js&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">os&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">system&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;node json2js 1_right.json 1_right.js&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="execjs库相关问题">execjs库相关问题&lt;/h2>
-&lt;p>如果遇到编码相关问题，请修改subprocess.py中&lt;code>__init__&lt;/code>方法中的encoding参数为&amp;rsquo;utf-8'&lt;/p>
+&lt;p>如果遇到编码相关问题，两种解决方式：&lt;/p>
+&lt;ul>
+&lt;li>修改subprocess.py中&lt;code>__init__&lt;/code>方法中的encoding参数为&amp;rsquo;utf-8'&lt;/li>
+&lt;/ul>
 &lt;p>！！！但之后记得改回来！以免影响到其他库的正常运行&lt;/p>
-&lt;h2 id="requests库tricks">requests库tricks&lt;/h2>
+&lt;ul>
+&lt;li>在引入execjs库之前加上这几行&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">subprocess&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> &lt;span style="color:#111">functools&lt;/span> &lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">partial&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">subprocess&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">Popen&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">partial&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">subprocess&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">Popen&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">encoding&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#39;utf-8&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="requests库tricks">requests库tricks&lt;/h2>
 &lt;h3 id="确保headers顺序不变">确保headers顺序不变&lt;/h3>
 &lt;p>用&lt;code>requests.Session()&lt;/code>对象，对这个session对象设置headers，还能减少后续继续赋值cookie的过程&lt;/p>
 &lt;h3 id="cookie转字典">cookie转字典&lt;/h3>
