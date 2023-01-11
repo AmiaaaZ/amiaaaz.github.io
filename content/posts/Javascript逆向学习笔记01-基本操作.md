@@ -12,7 +12,7 @@ toc: true
 
 ## 绕过反调试
 
-- 每xx ms执行一次debugger
+### 每xx ms执行一次debugger
 
 ```js
 setInterval(function () {
@@ -22,9 +22,10 @@ setInterval(function () {
 
 在debugger处右键 永不在此处暂停（或：添加条件断点 false）
 
-- 每xx ms打印一个值 干扰控制台输出
+### 每xx ms打印一个值 干扰控制台输出
 
-*单一js文件形态：
+- 单一js文件形态：
+
 
 ```js
 setInterval(function () {
@@ -48,7 +49,8 @@ setInterval(function () {
 
 控制台处定位到代码，源代码处右键 在网络面板中显示，找到对应条目右键 阻止请求URL
 
-*嵌入js中作为函数的形态：
+- 嵌入js中作为函数的形态：
+
 
 ```js
 function oo0O0(){
@@ -60,6 +62,20 @@ function oo0O0(){
 ```
 
 在该函数处下断点，让它在被调用之前就修改掉内部的赋值
+
+- 存在类似以下的函数
+
+```js
+var a = "deb"
+var b = "bugger"
+// 拼接执行
+```
+
+本地重写a和b，用ReRes插件替换
+
+### 禁止格式化代码（正则匹配）
+
+将代码压缩，或者注释掉正则部分的代码
 
 ## obfuscator特征&解混淆
 
@@ -274,11 +290,99 @@ print(res)
 })();
 ```
 
-
-
 ### 浏览器插件
 
+manifest.json
 
+```js
+{
+   "name": "Injection",
+    "version": "1.0",
+    "description": "RequestHeader钩子",
+    "manifest_version": 1,
+    "content_scripts": [
+        {
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                "inject.js"
+            ],
+            "all_frames": true,
+            "permissions": [
+                "tabs"
+            ],
+            "run_at": "document_start"
+        }
+    ]
+}
+```
+
+- header
+
+```js
+var code = function(){
+var org = window.XMLHttpRequest.prototype.setRequestHeader;
+window.XMLHttpRequest.prototype.setRequestHeader = function(key,value){
+    if(key=='Authorization'){
+        debugger;
+    }
+    return org.apply(this,arguments);
+}
+}
+var script = document.createElement('script');
+script.textContent = '(' + code + ')()';
+(document.head||document.documentElement).appendChild(script);
+script.parentNode.removeChild(script);
+```
+
+- cookie
+
+```js
+var code = function(){
+    var org = document.cookie.__lookupSetter__('cookie');
+    document.__defineSetter__("cookie",function(cookie){
+        if(cookie.indexOf('abcdefghijk')>-1){
+            debugger;
+        }
+        org = cookie;
+    });
+    document.__defineGetter__("cookie",function(){return org;});
+}
+var script = document.createElement('script');
+script.textContent = '(' + code + ')()';
+(document.head||document.documentElement).appendChild(script);
+script.parentNode.removeChild(script);
+```
+
+- url参数
+
+```js
+var code = function(){
+var open = window.XMLHttpRequest.prototype.open;
+window.XMLHttpRequest.prototype.open = function (method, url, async){
+    if (url.indexOf("AbCdE")>-1){
+        debugger;
+    }
+    return open.apply(this, arguments);
+};
+}
+var script = document.createElement('script');
+script.textContent = '(' + code + ')()';
+(document.head||document.documentElement).appendChild(script);
+script.parentNode.removeChild(script);
+```
+
+## *补环境
+
+对js逆向来说最重要的内容之一了，一般涉及这些内容
+
+```js
+window = global
+navigator = {}
+```
+
+*待补充
 
 ## 对js进行ast/json转换
 
@@ -363,9 +467,20 @@ os.system('node json2js 1_right.json 1_right.js')
 
 ## execjs库相关问题
 
-如果遇到编码相关问题，请修改subprocess.py中`__init__`方法中的encoding参数为'utf-8'
+如果遇到编码相关问题，两种解决方式：
+
+- 修改subprocess.py中`__init__`方法中的encoding参数为'utf-8'
 
 ！！！但之后记得改回来！以免影响到其他库的正常运行
+
+- 在引入execjs库之前加上这几行
+
+```python
+import subprocess
+from functools import partial
+
+subprocess.Popen = partial(subprocess.Popen, encoding='utf-8')
+```
 
 ## requests库tricks
 
@@ -378,4 +493,3 @@ os.system('node json2js 1_right.json 1_right.js')
 ```python
 cookie_dict = requests.utils.dict_from_cookiejar(response.cookies)
 ```
-

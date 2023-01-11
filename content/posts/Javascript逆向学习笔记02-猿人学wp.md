@@ -1783,7 +1783,7 @@ function getRM() {
 
 m参数由r()生成，把相关的函数都拖出来（也就是整个js文件），加上必要的`window={}`，结果执行一下返回的是false？调了一会儿不知道原因，查了wp发现问题在于有两段js fuck，我们直接把它们换成执行的结果，并且把`window={}`换成`window=global`
 
-{{% spoiler "exp.js" %}}
+{{% spoiler "exp.py" %}}
 
 ```python
 import time
@@ -4792,7 +4792,7 @@ function getResult(i) {
 
 有几个坑点要注意：上面的python代码中并没有和浏览器运行一样每点击一次就把之前的时间戳加上，因为这样的限制存在且仅存在于手动点击中，我们这样爬虫是不需要的；另一点是通过requests发包时直接在url里写参数会过不了风控，而单独加进params里就可以过了（虽然我还不知道是什么原理）
 
-最终要的是1，2，3等奖的金额之和，通过前端代码可以直到1等奖是3等奖的15倍，2等奖是3等奖的5倍，加起来就是api请求得到金额的24倍
+最终要的是1，2，3等奖的金额之和，通过前端代码可知1等奖是3等奖的15倍，2等奖是3等奖的5倍，加起来就是api请求得到金额的24倍
 
 ## 猿人学7 - 动态字体 随风漂移
 
@@ -4884,9 +4884,7 @@ print(sorted(lp.items(), key=lambda kv: (kv[1], kv[0]), reverse=True))
 
 抓包可知api请求返回的是这一整张验证码的图片，用`<div>`标签把整个图片划成了30*30的方格，点击时的坐标会作为m参数再发出请求，如果验证成功会有Set-Cookie，带上这个sessionid就可以得到想要的数字了
 
-我们一个个解决难点：
-
-首先是图片处理，鉴于我不是misc手（）这里的代码是摘自已有wp的，有两种处理方式，纯PIL或cv2+numpy
+唯一的难点就是图片处理了，鉴于我不是misc手（）这部分的代码是摘自已有wp的，有两种处理方式，纯PIL或cv2+numpy
 
 - 纯PIL
 
@@ -4993,6 +4991,8 @@ if __name__ == '__main__':
 
 {{% spoiler "以下是本文中涉及到的 和我学习时看过的所有文章的链接 每日感谢互联网的丰富资源（" %}}
 
+[爬虫逆向基础，理解 JavaScript 模块化编程 webpack](https://zhuanlan.zhihu.com/p/424103330)
+
 [某网站Web端爬虫攻防大赛题目交流](https://www.52pojie.cn/thread-1288315-1-1.html)
 
 [猿人学第二题,手撕OB混淆给你看(Step1-开篇)](https://juejin.cn/post/7073837033206054948)  |  [猿人学第二题,手撕OB混淆给你看(step2-字符串数字回填)](https://juejin.cn/post/7074076991422464036)  |  [猿人学第二题,手撕OB混淆给你看(step3-函数调用还原)](https://juejin.cn/post/7074397764108419102)  |  [猿人学第二题,手撕OB混淆给你看(step4-对象调用还原)](https://juejin.cn/post/7074768595825197092)  |  [猿人学第二题,手撕OB混淆给你看(step5-分支流程判断)](https://juejin.cn/post/7075165582949089287)  |  [猿人学第二题,手撕OB混淆给你看(step06-控制流平坦化)](https://juejin.cn/post/7075527384841060383)
@@ -5002,5 +5002,7 @@ if __name__ == '__main__':
 [Python反反爬之动态字体---随风漂移](https://syjun.vip/archives/283.html)
 
 [Python反反爬之图文点击---生僻字验证码](https://syjun.vip/archives/284.html)
+
+[【使用AST还原JS混淆代码应用】 猿人学爬虫攻防赛 第九题详解](https://www.52pojie.cn/thread-1340226-1-1.html)
 
 {{% /spoiler %}}
