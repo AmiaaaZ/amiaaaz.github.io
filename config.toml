@@ -73,7 +73,7 @@ weight = 5
 [[menu.main]]
 identifier = "Travelling"
 name = "Travelling"
-url = "https://travellings.link"
+url = "https://www.travellings.cn/go.html"
 weight = 5
 
 [taxonomies]
