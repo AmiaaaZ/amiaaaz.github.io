@@ -2,13 +2,23 @@
 title: "bass练习备忘"
 slug: "bass-practice-memo"
 description: "努力练琴！"
-date: 2023-01-08T18:12:08+08:00
+date: 2023-02-10T18:12:08+08:00
 categories: []
 series: []
 tags: []
 draft: false
 toc: true
 ---
+
+## 021023（金） - 60min+
+
+**30min** - 100bpm ♫ - 爬格子复建
+
+**10min** - 140~150bpm ♫ - 右手速度练习
+
+**20min** - cover《不知醉》
+
+锐意练琴中！
 
 ## 020523（日） - 35min
 
