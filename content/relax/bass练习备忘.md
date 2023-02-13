@@ -2,7 +2,7 @@
 title: "bass练习备忘"
 slug: "bass-practice-memo"
 description: "努力练琴！"
-date: 2023-02-12T18:12:08+08:00
+date: 2023-02-13T18:12:08+08:00
 categories: []
 series: []
 tags: []
@@ -10,13 +10,23 @@ draft: false
 toc: true
 ---
 
-## 021323（日） - 60mini
+## 021323（月） - 50min
 
-**20** - slap练习
+**20min** - slap练习
 
-**20** - 《丸之内》cover
+**20min** - 《丸之内》cover
 
-**20** - 100bpm ♫ - 爬格子（禅贝斯3/28）
+**10min** - 100bpm ♫ - 爬格子（禅贝斯3/28）
+
+slap 好耶！！！
+
+## 021223（日） - 60min
+
+**20min** - slap练习
+
+**20min** - 《丸之内》cover
+
+**20min** - 100bpm ♫ - 爬格子（禅贝斯3/28）
 
 slap初学中……
 
