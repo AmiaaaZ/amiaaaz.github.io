@@ -2,13 +2,23 @@
 title: "bass练习备忘"
 slug: "bass-practice-memo"
 description: "努力练琴！"
-date: 2023-02-13T18:12:08+08:00
+date: 2023-03-01T18:12:08+08:00
 categories: []
 series: []
 tags: []
 draft: false
 toc: true
 ---
+
+## 030123（水） - 50min
+
+**30min** - 100bpm ♫ - 爬格子（禅贝斯5/28）
+
+**10min** - 《丸之内》cover
+
+**10min** - 《不知醉》cover
+
+消失了这半个月的记录……真的不是在默默卷，而是前两周生活压力骤增，晚上几乎没心思抱琴；现在差不多恢复正常了，以后应该不会间断了（大概）（flag高高立起）
 
 ## 021423（火） - 20min
 
