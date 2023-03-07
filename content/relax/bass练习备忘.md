@@ -2,13 +2,29 @@
 title: "bass练习备忘"
 slug: "bass-practice-memo"
 description: "努力练琴！"
-date: 2023-03-01T18:12:08+08:00
+date: 2023-03-07T18:12:08+08:00
 categories: []
 series: []
 tags: []
 draft: false
 toc: true
 ---
+
+## 030723（火） - 15min
+
+**15min** - 100bpm ♫ - 爬格子
+
+## 030623（月） - 35min
+
+**10min** - 100bpm ♫ - 爬格子
+
+**10min** - 《丸之内》cover
+
+**15min** - C大调funk bassline练习
+
+这次flag是真的了！每天必练琴，如果太晚了就戴耳机练，如果别的项目没时间也一定会爬格子！
+
+冲！
 
 ## 030123（水） - 50min
 
