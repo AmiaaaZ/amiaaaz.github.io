@@ -2,13 +2,19 @@
 title: "bass练习备忘"
 slug: "bass-practice-memo"
 description: "努力练琴！"
-date: 2023-03-08T18:12:08+08:00
+date: 2023-03-09T18:12:08+08:00
 categories: []
 series: []
 tags: []
 draft: false
 toc: true
 ---
+
+## 030923（木） - 15min
+
+**15min** - 100bpm ♫ - 爬格子（禅贝斯7/28）
+
+今天实在挤不出来时间了……周末补上！
 
 ## 030823（水） - 35min
 
