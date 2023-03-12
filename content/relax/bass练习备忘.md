@@ -2,13 +2,25 @@
 title: "bass练习备忘"
 slug: "bass-practice-memo"
 description: "努力练琴！"
-date: 2023-03-09T18:12:08+08:00
+date: 2023-03-12T18:12:08+08:00
 categories: []
 series: []
 tags: []
 draft: false
 toc: true
 ---
+
+## 031223（日） - 80min
+
+**60min** - 100bpm - slap教材take 1（8/8）
+
+**10min** - 90bpm - slap教材take 2（3/6）
+
+**10min** - 《丸之内》cover
+
+之前都是直接照着伍爷的视频练丸之内，忽略了slap基本功的练习，今天补上感觉舒服多了（就是离原速还有很长的进步空间……sad 为什么我的右手就不能那么高速的击勾弦）
+
+不知醉基本能顺下来了，就是115bpm的16分音符还有点吃力……来回换把位也会有音按不实，左手还是不灵活
 
 ## 030923（木） - 15min
 
