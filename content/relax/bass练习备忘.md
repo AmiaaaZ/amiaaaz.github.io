@@ -2,13 +2,23 @@
 title: "bass练习备忘"
 slug: "bass-practice-memo"
 description: "努力练琴！"
-date: 2023-03-12T18:12:08+08:00
+date: 2023-03-13T18:12:08+08:00
 categories: []
 series: []
 tags: []
 draft: false
 toc: true
 ---
+
+## 031323（月） - 70min
+
+**20min** - 《丸之内》cover
+
+**35min** - 80bpm - 节奏练习（非反拍）
+
+**15min** - 115bpm - 《365》week5（2/7）
+
+练爽了，左手腕也酸了（） 还是要提高机能，另外节奏也要多练练
 
 ## 031223（日） - 80min
 
