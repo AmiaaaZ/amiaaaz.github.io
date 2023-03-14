@@ -3,7 +3,7 @@ title: "近期debug趣闻两则"
 slug: "smth-about-debug"
 description: "排错两小时，改错五分钟"
 date: 2023-03-14T12:38:49+08:00
-categories: []
+categories: ["环境配置"]
 series: []
 tags: []
 draft: false
@@ -99,3 +99,11 @@ hugo一直以渲染速度快跟hexo正面刚，始终不明白到底是哪里出
 但这个问题就很难解决了……那篇博客之所以大是因为有特别长的js代码，如果把代码都删了跟删掉整篇文章也没多大区别了
 
 诶？删掉整篇博客？好方略！
+
+![image-20230314134911388](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230314134911388.png)
+
+我的评价是：效果拔群
+
+不过认真写的文章是不可能真正删除啦，我只是把`draft: false`改成了true，这样虽然不会被渲染但md文件还是存在的，算是我能想到最折中的解决办法了QAQ
+
+*那有不懂事的就要问了：你为什么不把400kb的md拆成10个40kb的呢？ ~~给你个白眼自己体会~~
