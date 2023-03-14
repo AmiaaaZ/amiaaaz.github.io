@@ -1,4 +1,64 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>环境配置 on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/categories/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/</link><description>Recent content in 环境配置 on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 17 Mar 2022 10:58:56 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/categories/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/index.xml" rel="self" type="application/rss+xml"/><item><title>环境配置&amp;相关问题解决</title><link>https://amiaaaz.github.io/2022/03/17/maybe-help-someone/</link><pubDate>Thu, 17 Mar 2022 10:58:56 +0800</pubDate><guid>https://amiaaaz.github.io/2022/03/17/maybe-help-someone/</guid><description>&lt;details>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>环境配置 on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/categories/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/</link><description>Recent content in 环境配置 on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 14 Mar 2023 12:38:49 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/categories/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/index.xml" rel="self" type="application/rss+xml"/><item><title>近期debug趣闻两则</title><link>https://amiaaaz.github.io/2023/03/14/smth-about-debug/</link><pubDate>Tue, 14 Mar 2023 12:38:49 +0800</pubDate><guid>https://amiaaaz.github.io/2023/03/14/smth-about-debug/</guid><description>&lt;h2 id="代理失效">代理失效&lt;/h2>
+&lt;p>科学上网一直是永恒的话题，为了保证学习过程中能流畅地访问google，之前我的方案是 学习的时候clash（不开启System Proxy）+proxifier（msedge.exe进程的流量全部走127.0.0.1:7890），需要刷b站或大量浏览国内网站时在proxifier中切换为全部Direct的rule&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230314125208813.png" alt="image-20230314125208813">&lt;/p>
+&lt;p>这样的方式比较符合我的使用习惯，我也不希望clash污染我的系统代理&lt;/p>
+&lt;p>然而大概从上周开始情况有变，在这样的策略下：&lt;/p>
+&lt;ul>
+&lt;li>所有需要翻墙的网站全部无法打开、国内网站正常&lt;/li>
+&lt;li>proxifier内server check正常，connections中需要翻墙的网站全部是517bytes send, 0 bytes received，其余网站正常&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230314130544070.png" alt="image-20230314130544070">&lt;/p>
+&lt;ul>
+&lt;li>clash Request Logs正常，有proxifier过代理的记录&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230314130524562.png" alt="image-20230314130524562">&lt;/p>
+&lt;p>然后开始排错，首先犯罪嫌疑人就是DNS，怀疑是虽然挂了代理但域名解析仍旧用的本地服务或缓存&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230314130853400.png" alt="image-20230314130853400">&lt;/p>
+&lt;p>proxifier有单独的Name Resolution设置，默认就是上图的Detect DNS settings automatically，我手动切换Resolve hostnames through proxy结果反而出错了&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230314131107649.png" alt="image-20230314131107649">&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230314131128477.png" alt="image-20230314131128477">&lt;/p>
+&lt;p>在我疑惑是不是错怪DNS的时候，刚把它切换回去瞬间正常了……成功恢复正常代理的情况&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230314131240753.png" alt="image-20230314131240753">&lt;/p>
+&lt;h2 id="hugo渲染过慢">hugo渲染过慢&lt;/h2>
+&lt;p>差不多一两个月以前，我的博客每次push内容之后都build的特别特别慢，以前只要几十秒 现在成了动辄五六分钟&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230314131613672.png" alt="image-20230314131613672">&lt;/p>
+&lt;p>怎么会事呢？看看详情&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230314131734902.png" alt="image-20230314131734902">&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230314131815397.png" alt="image-20230314131815397">&lt;/p>
+&lt;p>开始排错……&lt;/p>
+&lt;ol>
+&lt;li>解决3个警告&lt;/li>
+&lt;/ol>
+&lt;p>警告的内容大致是要求从Node12升级到Node16，由于这个版本其实是actions执行时指定的，所以我们直接在actions的配置文件里升级对应的版本&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230314132404309.png" alt="image-20230314132404309">&lt;/p>
+&lt;p>还是很慢，继续找问题&lt;/p>
+&lt;ol start="2">
+&lt;li>更新主题&lt;/li>
+&lt;/ol>
+&lt;p>既然是渲染问题，我考虑可能是主题的html相关文件存在冗余/小bug，再一看主题对应的github仓库 果然更新了几次，那这下不得不更新了&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">cd&lt;/span> themes&lt;span style="color:#8045ff">\h&lt;/span>ugo-theme-tokiwa
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>git pull
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>emm，还是很慢&lt;/p>
+&lt;ol start="3">
+&lt;li>增加action cache&lt;/li>
+&lt;/ol>
+&lt;p>渲染，渲染，有没有缓存肯定影响很大，试图通过添加缓存来解决问题&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230314132830101.png" alt="image-20230314132830101">&lt;/p>
+&lt;p>（*注：这里也应该用@v3的最新版本）&lt;/p>
+&lt;p>emmmmmmmmm，还是很慢&lt;/p>
+&lt;ol start="4">
+&lt;li>罪魁祸首&lt;/li>
+&lt;/ol>
+&lt;p>hugo一直以渲染速度快跟hexo正面刚，始终不明白到底是哪里出错了，直到我看了一下生成静态文件的页面大小……&lt;/p>
+&lt;p>是我冒犯了，我其中一篇博客光md就接近400kb，渲染成html有接近3M……把这篇博客删掉，瞬间渲染完成&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230314134235268.png" alt="image-20230314134235268">&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230314134216556.png" alt="image-20230314134216556">&lt;/p>
+&lt;p>但这个问题就很难解决了……那篇博客之所以大是因为有特别长的js代码，如果把代码都删了跟删掉整篇文章也没多大区别了&lt;/p>
+&lt;p>诶？删掉整篇博客？好方略！&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230314134911388.png" alt="image-20230314134911388">&lt;/p>
+&lt;p>我的评价是：效果拔群&lt;/p>
+&lt;p>不过认真写的文章是不可能真正删除啦，我只是把&lt;code>draft: false&lt;/code>改成了true，这样虽然不会被渲染但md文件还是存在的，算是我能想到最折中的解决办法了QAQ&lt;/p>
+&lt;p>*那有不懂事的就要问了：你为什么不把400kb的md拆成10个40kb的呢？ &lt;del>给你个白眼自己体会&lt;/del>&lt;/p></description></item><item><title>环境配置&amp;相关问题解决</title><link>https://amiaaaz.github.io/2022/03/17/maybe-help-someone/</link><pubDate>Thu, 17 Mar 2022 10:58:56 +0800</pubDate><guid>https://amiaaaz.github.io/2022/03/17/maybe-help-someone/</guid><description>&lt;details>
 &lt;summary>
 &lt;h4 class="inline">
 本地搭建Visual Regexp
