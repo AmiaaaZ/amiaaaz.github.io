@@ -1,4 +1,82 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>CTF on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/categories/ctf/</link><description>Recent content in CTF on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Mon, 13 Mar 2023 11:13:20 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/categories/ctf/index.xml" rel="self" type="application/rss+xml"/><item><title>hxpCTF2022 Wp</title><link>https://amiaaaz.github.io/2023/03/13/hxpctf2021-wp/</link><pubDate>Mon, 13 Mar 2023 11:13:20 +0800</pubDate><guid>https://amiaaaz.github.io/2023/03/13/hxpctf2021-wp/</guid><description>&lt;p>上次打ctf，还是上次……有种物是人非的沧桑（）&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>CTF on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/categories/ctf/</link><description>Recent content in CTF on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Mon, 20 Mar 2023 23:55:05 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/categories/ctf/index.xml" rel="self" type="application/rss+xml"/><item><title>b01lersCTF2023 Wp</title><link>https://amiaaaz.github.io/2023/03/20/b01lersctf2023-wp/</link><pubDate>Mon, 20 Mar 2023 23:55:05 +0800</pubDate><guid>https://amiaaaz.github.io/2023/03/20/b01lersctf2023-wp/</guid><description>&lt;p>&lt;a href="https://ctf.b01lers.com/challenges?category=web">https://ctf.b01lers.com/challenges?category=web&lt;/a>&lt;/p>
+&lt;h2 id="warmup">warmup&lt;/h2>
+&lt;blockquote>
+&lt;p>My first flask app, I hope you like it
+&lt;a href="http://ctf.b01lers.com:5115/">http://ctf.b01lers.com:5115&lt;/a>
+Author: CygnusX&lt;/p>
+&lt;/blockquote>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> &lt;span style="color:#111">base64&lt;/span> &lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">b64decode&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">flask&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">app&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">flask&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">Flask&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">__name__&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">@app.route&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;/&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">index2&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">name&lt;/span>&lt;span style="color:#111">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">name&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">b64decode&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">name&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">validate&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">name&lt;/span>&lt;span style="color:#111">)):&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#d88200">&amp;#34;This file is blocked!&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">try&lt;/span>&lt;span style="color:#111">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">file&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">open&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">name&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;r&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">read&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">except&lt;/span>&lt;span style="color:#111">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#d88200">&amp;#34;File Not Found&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">file&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">@app.route&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;/&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">index&lt;/span>&lt;span style="color:#111">():&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">flask&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">redirect&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;/aW5kZXguaHRtbA==&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">validate&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">data&lt;/span>&lt;span style="color:#111">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">data&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#d88200">b&lt;/span>&lt;span style="color:#d88200">&amp;#39;flag.txt&amp;#39;&lt;/span>&lt;span style="color:#111">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#00a8c8">True&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#00a8c8">False&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">__name__&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#d88200">&amp;#39;__main__&amp;#39;&lt;/span>&lt;span style="color:#111">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">app&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">run&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>payload: &lt;a href="http://ctf.b01lers.com:5115/Li9mbGFnLnR4dA==">http://ctf.b01lers.com:5115/Li9mbGFnLnR4dA==&lt;/a>&lt;/p>
+&lt;p>&lt;code>bctf{h4d_fun_w1th_my_l4st_m1nut3_w4rmuP????!}&lt;/code>&lt;/p>
+&lt;h2 id="phpgalf">php.galf&lt;/h2>
+&lt;blockquote>
+&lt;p>found one of my old projects, but I can&amp;rsquo;t seem to figure out how it works&amp;hellip; tried to update it but that might have backfired :(
+note: this is using php 7.4
+&lt;a href="http://ctf.b01lers.com:5120/">http://ctf.b01lers.com:5120&lt;/a>
+Author: CygnusX&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230318224145644.png" alt="image-20230318224145644">&lt;/p>
+&lt;p>结合flag.php的存在，应该是需要我们读出源码，可以用readfile&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230318224316180.png" alt="image-20230318224316180">&lt;/p>
+&lt;p>功能上是一个parser，对输入进行运算，简单审一下 会发现sink点应该在这里&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230318230157875.png" alt="image-20230318230157875">&lt;/p>
+&lt;p>然后就要看怎么触发这个&lt;code>__toString&lt;/code>了。——但是吧，这个题只适合倒着从payload讲链子 &amp;gt;_&amp;lt;&lt;/p>
+&lt;pre tabindex="0">&lt;code>readfile(&amp;#39;flag.php&amp;#39;);
+noitpecxe-&amp;gt; __toString
+noitpecxe-&amp;gt; __consturct
+syntaxreader-&amp;gt; __construct
+orez_vid-&amp;gt; __invoke
+orez_vid-&amp;gt; __construct
+orez_dda-&amp;gt; __invoke
+orez_dda-&amp;gt; __construct
+&lt;/code>&lt;/pre>&lt;p>巧妙之处在于这个parser对于操作数和参数的处理近似于“递归”&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230320233055633.png" alt="image-20230320233055633">&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230320233015928.png" alt="image-20230320233015928">&lt;/p>
+&lt;p>每读到一个ohce都会&lt;code>new ohce()&lt;/code>实例并调用它的invoke，并在其中继续向后找一位参数，如果是&lt;code>orez_lum&lt;/code>或&lt;code>orez_dda&lt;/code>中的一个就继续&lt;code>new xxx()&lt;/code>并调用invoke，而这个orez_dda的invoke也是类似的操作&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230320233521553.png" alt="image-20230320233521553">&lt;/p>
+&lt;p>我们下一个调用的类用orez_vid，让它的下一个参数是syntaxreader&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230320233751504.png" alt="image-20230320233751504">&lt;/p>
+&lt;p>这样传入syntaxreader就会触发noitpecxe&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230320234050894.png" alt="image-20230320234050894">&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230320234131363.png" alt="image-20230320234131363">&lt;/p>
+&lt;p>给noitpecxe传进去的args有7个，但是construct只要4个，用这个缺口 我们把第1个和第4个参数分别设成flag.php和readfile，就自然会变成这里的message和error_func&lt;/p>
+&lt;p>之后就没什么可说的了，顺利调用readfile，getflag~&lt;/p>
+&lt;p>payload:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>curl &lt;span style="color:#d88200">&amp;#39;http://ctf.b01lers.com:5120/index.php&amp;#39;&lt;/span> -H &lt;span style="color:#d88200">&amp;#39;Content-Type: application/x-www-form-urlencoded&amp;#39;&lt;/span> -H &lt;span style="color:#d88200">&amp;#39;Cookie: DEBUG[]=0&amp;#39;&lt;/span> --data-raw &lt;span style="color:#d88200">&amp;#39;code=ohce+ohce+ohce+ohce+ohce&amp;amp;args=flag.php%2C+bbbbb%2C+ccccc%2C+readfile%2C+orez_dda%2C+orez_vid%2C+syntaxreader&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230320235216149.png" alt="image-20230320235216149">&lt;/p>
+&lt;p>*另：虽然我上面说的好像这个过程很简单，但我调了半天才理清楚……我tcl……&lt;/p>
+&lt;p>*另另：究极冷笑话之：ohce-&amp;gt; echo, noitpecxe-&amp;gt; exception, php.galf-&amp;gt; flag.php, orez_vid-&amp;gt; div_zero, orez_dda-&amp;gt; add_zero……太冷了 我已经到南极了&lt;/p></description></item><item><title>hxpCTF2022 Wp</title><link>https://amiaaaz.github.io/2023/03/13/hxpctf2021-wp/</link><pubDate>Mon, 13 Mar 2023 11:13:20 +0800</pubDate><guid>https://amiaaaz.github.io/2023/03/13/hxpctf2021-wp/</guid><description>&lt;p>上次打ctf，还是上次……有种物是人非的沧桑（）&lt;/p>
 &lt;p>好多知识已经不熟练了，要狠狠地学（）&lt;/p>
 &lt;hr>
 &lt;h2 id="webvalentine">web/valentine&lt;/h2>
