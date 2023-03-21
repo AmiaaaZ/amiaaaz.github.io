@@ -1,8 +1,8 @@
 ---
 title: "bass练习备忘"
 slug: "bass-practice-memo"
-description: "努力练琴中... #已练习34小时55分"
-date: 2023-03-18T18:12:08+08:00
+description: "努力练琴中... #已练习36小时15分"
+date: 2023-03-21T18:12:08+08:00
 categories: []
 series: []
 tags: []
@@ -10,7 +10,13 @@ draft: false
 toc: true
 ---
 
-## 032022（月） -30min
+## 032122（水） - 80min
+
+**55min** - slap教材take 1, 2回顾
+
+**25min** - 120bpm - 爬格子
+
+## 032022（月） - 30min
 
 **15min** - 140bpm - 《丸之内》cover
 
