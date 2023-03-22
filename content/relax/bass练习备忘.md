@@ -1,7 +1,7 @@
 ---
 title: "bass练习备忘"
 slug: "bass-practice-memo"
-description: "努力练琴中... #已练习36小时15分"
+description: "努力练琴中... #已练习37小时20分"
 date: 2023-03-21T18:12:08+08:00
 categories: []
 series: []
@@ -10,11 +10,23 @@ draft: false
 toc: true
 ---
 
-## 032122（水） - 80min
+## 032222（水） - 65min
+
+**20min** - 140bpm - 《丸之内》cover
+
+**20min** - slap教材take 1, 2回顾
+
+**15min** - slap教材take 3, 4回顾
+
+**10min** - 120bpm - 爬格子（禅贝斯3/28）
+
+最近练slap基本功多起来之后感觉手上确实分寸把握得好起来了，明显感觉击弦和勾弦都更自如了 手腕也没有那么僵硬了，开心~
+
+## 032122（火） - 80min
 
 **55min** - slap教材take 1, 2回顾
 
-**25min** - 120bpm - 爬格子
+**25min** - 120bpm - 爬格子（禅贝斯2/28）
 
 ## 032022（月） - 30min
 
