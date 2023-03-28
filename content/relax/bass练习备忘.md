@@ -10,7 +10,15 @@ draft: false
 toc: true
 ---
 
-## 032722（水） - 50min
+## 032722（火） - 60min
+
+**30min** - 140bpm - 《丸之内》cover
+
+**20min** - slap教材take 1, 2回顾
+
+**10min** - slap教材take 4回顾
+
+## 032722（月） - 50min
 
 **20min** - 140bpm - 《丸之内》cover
 
