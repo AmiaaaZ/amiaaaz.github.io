@@ -2,7 +2,7 @@
 title: "bass练习备忘"
 slug: "bass-practice-memo"
 description: "努力练琴中... #已练习37小时20分"
-date: 2023-03-27T18:12:08+08:00
+date: 2023-03-29T18:12:08+08:00
 categories: []
 series: []
 tags: []
@@ -10,7 +10,13 @@ draft: false
 toc: true
 ---
 
-## 032722（火） - 60min
+## 032922（水） - 10min
+
+**10min** - 120bpm - 爬格子
+
+没关系，10分钟也很厉害了（）
+
+## 032822（火） - 60min
 
 **30min** - 140bpm - 《丸之内》cover
 
