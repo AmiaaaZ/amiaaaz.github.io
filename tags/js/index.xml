@@ -1,4 +1,114 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>js on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/tags/js/</link><description>Recent content in js on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 05 Jan 2023 00:44:51 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/tags/js/index.xml" rel="self" type="application/rss+xml"/><item><title>Javascript逆向学习笔记Ⅰ</title><link>https://amiaaaz.github.io/2023/01/05/javascript-reverse-study-notes-01/</link><pubDate>Thu, 05 Jan 2023 00:44:51 +0800</pubDate><guid>https://amiaaaz.github.io/2023/01/05/javascript-reverse-study-notes-01/</guid><description>&lt;h2 id="绕过反调试">绕过反调试&lt;/h2>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>js on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/tags/js/</link><description>Recent content in js on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 30 Mar 2023 17:33:04 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/tags/js/index.xml" rel="self" type="application/rss+xml"/><item><title>前端加密下的渗透测试起手式</title><link>https://amiaaaz.github.io/2023/03/30/how-to-set-up-your-workflow-when-meeting-frontend-encrypt/</link><pubDate>Thu, 30 Mar 2023 17:33:04 +0800</pubDate><guid>https://amiaaaz.github.io/2023/03/30/how-to-set-up-your-workflow-when-meeting-frontend-encrypt/</guid><description>&lt;p>起因为实战中遇到的一个站点，请求参数使用js前端加密，即使加密过程很简单 但仍希望有一个中间hook能直接看到明文，如果能接入sqlmap直接测试（免去写tamper）的过程就更好了，于是有了本文&lt;/p>
+&lt;p>*均已脱敏，所以可能看起来比较简单？whatever&lt;/p>
+&lt;h2 id="前置">前置&lt;/h2>
+&lt;p>拾起远古js逆向技巧，f12大法伺候之下理清加密逻辑，从&lt;code>encrypt.js&lt;/code>中抠出可以单独执行的加密函数&lt;code>jscode&lt;/code>以便被execjs调用&lt;/p>
+&lt;p>把加密函数替换为空，其余不变另存一份&lt;code>encrypt2.js&lt;/code>&lt;/p>
+&lt;h2 id="yakit">yakit&lt;/h2>
+&lt;p>我们希望能在burpsuite中直接看到明文来方便调试，让我们用yakit来做到这一点：&lt;/p>
+&lt;ol>
+&lt;li>准备jscode&lt;/li>
+&lt;li>yakit脚本编写：劫持encrypt.js响应，让其返回的encrypt函数为明文（encrypt2.js）；劫持/xyz.action且带data的POST请求，将body明文参数的name和value分别用jscode做加密处理&lt;/li>
+&lt;li>配置burpsuite上游代理为yakit，yakit下游代理为最外层代理（可选）&lt;/li>
+&lt;/ol>
+&lt;p>yak脚本示例：&lt;/p>
+&lt;pre tabindex="0">&lt;code class="language-yak" data-lang="yak">func encrypt(name){
+jscode = `...function encrypt(){}...`
+encoded, _ = js.CallFunctionFromCode(jscode,&amp;#34;encrypt&amp;#34;,name)
+return encoded, _
+}
+hijackHTTPRequest = func(isHttps, url, req, forward /*func(modifiedRequest []byte)*/, drop /*func()*/) {
+urls := [&amp;#34;xyz&amp;#34;, &amp;#34;qwe&amp;#34;]
+if str.Contains(string(url), &amp;#34;.action&amp;#34;){
+sUrl := str.Split(str.Split(string(url),&amp;#34;.action&amp;#34;)[0],&amp;#34;/&amp;#34;)[-1]
+for url in urls{
+if str.Contains(sUrl,url){
+freq = fuzz.HTTPRequest(req)~
+tmp := &amp;#34;&amp;#34;
+for param in freq.GetPostQueryKeys(){
+value,_ := codec.UnescapeQueryUrl(freq.GetPostQueryValue(param))
+param,_ := codec.UnescapeQueryUrl(param)
+value0,_ = encrypt(value)
+param0,_ := encrypt(param)
+trmp := codec.EscapeQueryUrl(string(param0)) +&amp;#34;=&amp;#34;+ codec.EscapeQueryUrl(str.ReplaceAll(string(value0),&amp;#34;+&amp;#34;,&amp;#34; &amp;#34;))
+tmp = tmp+&amp;#34;&amp;amp;&amp;#34;+trmp
+}
+modifiedBytes := freq.FuzzPostRaw(str.TrimLeft(tmp,&amp;#34;&amp;amp;&amp;#34;)).FirstHTTPRequestBytes()
+forward(modifiedBytes)
+}
+}
+}
+}
+hijackHTTPResponse = func(isHttps, url, rsp, forward, drop) {
+a1 = b`...encrypt2.js...`
+if str.Contains(string(url), &amp;#34;encrypt.js&amp;#34;) {
+modified = poc.FixHTTPResponse(a1)
+forward(modified)
+}
+}
+&lt;/code>&lt;/pre>&lt;p>经过这样的劫持，请求包会呈现这样的流向：&lt;/p>
+&lt;ul>
+&lt;li>原本&lt;/li>
+&lt;/ul>
+&lt;pre tabindex="0">&lt;code>浏览器 POST /xyz.action 加密参数（由encrypt.js加密）
+-&amp;gt; burpsuite 拦截加密参数和请求
+-&amp;gt; 发送加密请求
+-&amp;gt; burpsuite得到响应 浏览器得到响应
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>修改后&lt;/li>
+&lt;/ul>
+&lt;pre tabindex="0">&lt;code>浏览器 POST /xyz.action 明文参数（由修改后的encrypt2.js返回明文）
+-&amp;gt; burpsuite 拦截明文参数和请求
+-&amp;gt; 发送给上游代理yakit
+-&amp;gt; yakit 拦截明文参数和请求 做加密处理
+-&amp;gt; 发送加密请求
+-&amp;gt; yakit得到响应 burpsuite得到响应 浏览器得到响应
+&lt;/code>&lt;/pre>&lt;p>这样burp中可以看到明文请求和正常响应，方便我们爆破和其他测试（比如接入burp, xray等等）&lt;/p>
+&lt;h2 id="mitmproxy">mitmproxy&lt;/h2>
+&lt;p>但话说回来，yakit本身是一个比较庞大的类burp软件，编写脚本还必须使用yaklang，我更倾向于使用mitmproxy来做相同的事情，毕竟用python写是再轻松不过了&lt;/p>
+&lt;p>mitmproxy为每一种连接方式（http, socks&amp;hellip;.）提供了5个生命周期（修改阶段），体现在代码里就是我们可声明的函数&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>requestheaders&lt;/code>：仅读取headers，此时body为空&lt;/li>
+&lt;li>&lt;code>request&lt;/code>：读取到request全文；注意如果streaming传输开启，劫持在stream之后发生&lt;/li>
+&lt;li>&lt;code>responseheaders&lt;/code>：仅读headers，body为空&lt;/li>
+&lt;li>&lt;code>response&lt;/code>：读取response全文；注意如果streaming传输开启，劫持在stream之后发生&lt;/li>
+&lt;li>&lt;code>error&lt;/code>：http error&lt;/li>
+&lt;li>&lt;code>http_connect&lt;/code>&lt;/li>
+&lt;li>&lt;code>http_connect_upstream&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;p>简单举例：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">execjs&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">encrypt&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">var&lt;/span>&lt;span style="color:#111">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">with&lt;/span> &lt;span style="color:#111">open&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;encrypt.js&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;r&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">encoding&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#39;utf-8&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#00a8c8">as&lt;/span> &lt;span style="color:#111">f&lt;/span>&lt;span style="color:#111">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">ctx&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">execjs&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">compile&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">f&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">read&lt;/span>&lt;span style="color:#111">())&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">encoded_var&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">ctx&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">call&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;encode&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">var&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">var&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">Modify&lt;/span>&lt;span style="color:#111">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">request&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">self&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">flow&lt;/span>&lt;span style="color:#111">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">flow&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">request&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">url&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">startswith&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;...&amp;#39;&lt;/span>&lt;span style="color:#111">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">flow&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">request&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">urlencoded_form&lt;/span>&lt;span style="color:#111">:&lt;/span> &lt;span style="color:#75715e"># 此处的urlencoded_form是[(name, value), (...)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">data&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">[]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">for&lt;/span> &lt;span style="color:#111">i&lt;/span> &lt;span style="color:#f92672">in&lt;/span> &lt;span style="color:#111">flow&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">request&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">urlencoded_form&lt;/span>&lt;span style="color:#111">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">data&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">append&lt;/span>&lt;span style="color:#111">((&lt;/span>&lt;span style="color:#111">encrypt&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">i&lt;/span>&lt;span style="color:#111">),&lt;/span> &lt;span style="color:#111">encrypt&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">flow&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">request&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">urlencoded_form&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#111">i&lt;/span>&lt;span style="color:#111">])))&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">flow&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">request&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">urlencoded_form&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">data&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">addons&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">Modify&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">]&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>使用：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>pip install mitmporxy
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># $env:all_proxy = &amp;#34;socks5://127.0.0.1:6005&amp;#34; # 可选&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>mitmdump -p &lt;span style="color:#ae81ff">8085&lt;/span> -s wingsoft.py &lt;span style="color:#75715e"># 8085给burp做上游代理&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>依旧效果拔群&lt;/p>
+&lt;h2 id="reres">ReRes&lt;/h2>
+&lt;p>为什么我在上面的mitmproxy中只举例了加密请求的部分，没有替换js的呢？因为这里另有一个浏览器插件肥肠合适：&lt;a href="https://github.com/annnhan/ReRes">ReRes&lt;/a>&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230330172133676.png" alt="image-20230330172133676">&lt;/p>
+&lt;p>只做hook响应的事，可以和其它软件组合使用，也没有负担&lt;/p>
+&lt;p>要说缺点的话就是如果同时几个人一起做渗透，要求大家都装个插件就不太优雅了，这种情况下还是建议整合进yakit或mitmproxy的脚本里，开放端口给大家一起用~&lt;/p></description></item><item><title>Javascript逆向学习笔记Ⅰ</title><link>https://amiaaaz.github.io/2023/01/05/javascript-reverse-study-notes-01/</link><pubDate>Thu, 05 Jan 2023 00:44:51 +0800</pubDate><guid>https://amiaaaz.github.io/2023/01/05/javascript-reverse-study-notes-01/</guid><description>&lt;h2 id="绕过反调试">绕过反调试&lt;/h2>
 &lt;h3 id="每xx-ms执行一次debugger">每xx ms执行一次debugger&lt;/h3>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-js" data-lang="js">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">setInterval&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">()&lt;/span> &lt;span style="color:#111">{&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">debugger&lt;/span>
