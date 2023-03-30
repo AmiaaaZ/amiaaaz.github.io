@@ -102,7 +102,7 @@ forward(modified)
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>使用：&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>pip install mitmporxy
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># $env:all_proxy = &amp;#34;socks5://127.0.0.1:6005&amp;#34; # 可选&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>mitmdump -p &lt;span style="color:#ae81ff">8085&lt;/span> -s wingsoft.py &lt;span style="color:#75715e"># 8085给burp做上游代理&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>mitmdump -p &lt;span style="color:#ae81ff">8085&lt;/span> -s addon.py &lt;span style="color:#75715e"># 8085给burp做上游代理&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>依旧效果拔群&lt;/p>
 &lt;h2 id="reres">ReRes&lt;/h2>
 &lt;p>为什么我在上面的mitmproxy中只举例了加密请求的部分，没有替换js的呢？因为这里另有一个浏览器插件肥肠合适：&lt;a href="https://github.com/annnhan/ReRes">ReRes&lt;/a>&lt;/p>
