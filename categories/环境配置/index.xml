@@ -1,4 +1,6 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>环境配置 on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/categories/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/</link><description>Recent content in 环境配置 on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 14 Mar 2023 12:38:49 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/categories/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/index.xml" rel="self" type="application/rss+xml"/><item><title>近期debug趣闻两则</title><link>https://amiaaaz.github.io/2023/03/14/smth-about-debug/</link><pubDate>Tue, 14 Mar 2023 12:38:49 +0800</pubDate><guid>https://amiaaaz.github.io/2023/03/14/smth-about-debug/</guid><description>&lt;h2 id="代理失效">代理失效&lt;/h2>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>环境配置 on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/categories/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/</link><description>Recent content in 环境配置 on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 14 Mar 2023 12:38:49 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/categories/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/index.xml" rel="self" type="application/rss+xml"/><item><title>近期debug趣闻两则</title><link>https://amiaaaz.github.io/2023/03/14/smth-about-debug/</link><pubDate>Tue, 14 Mar 2023 12:38:49 +0800</pubDate><guid>https://amiaaaz.github.io/2023/03/14/smth-about-debug/</guid><description>&lt;p>*0408补充近期github相关&lt;/p>
+&lt;hr>
+&lt;h2 id="代理失效">代理失效&lt;/h2>
 &lt;p>科学上网一直是永恒的话题，为了保证学习过程中能流畅地访问google，之前我的方案是 学习的时候clash（不开启System Proxy）+proxifier（msedge.exe进程的流量全部走127.0.0.1:7890），需要刷b站或大量浏览国内网站时在proxifier中切换为全部Direct的rule&lt;/p>
 &lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230314125208813.png" alt="image-20230314125208813">&lt;/p>
 &lt;p>这样的方式比较符合我的使用习惯，我也不希望clash污染我的系统代理&lt;/p>
@@ -58,7 +60,19 @@
 &lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230314134911388.png" alt="image-20230314134911388">&lt;/p>
 &lt;p>我的评价是：效果拔群&lt;/p>
 &lt;p>不过认真写的文章是不可能真正删除啦，我只是把&lt;code>draft: false&lt;/code>改成了true，这样虽然不会被渲染但md文件还是存在的，算是我能想到最折中的解决办法了QAQ&lt;/p>
-&lt;p>*那有不懂事的就要问了：你为什么不把400kb的md拆成10个40kb的呢？ &lt;del>给你个白眼自己体会&lt;/del>&lt;/p></description></item><item><title>环境配置&amp;相关问题解决</title><link>https://amiaaaz.github.io/2022/03/17/maybe-help-someone/</link><pubDate>Thu, 17 Mar 2022 10:58:56 +0800</pubDate><guid>https://amiaaaz.github.io/2022/03/17/maybe-help-someone/</guid><description>&lt;details>
+&lt;p>*那有不懂事的就要问了：你为什么不把400kb的md拆成10个40kb的呢？ &lt;del>给你个白眼自己体会&lt;/del>&lt;/p>
+&lt;h2 id="github的蜜汁更新">github的蜜汁更新&lt;/h2>
+&lt;p>由于github更新了ssh相关的key，所以本地必须进行修改来适配（以下举例均为windows）&lt;/p>
+&lt;p>主要就是&lt;code>~/.ssh/&lt;/code>文件夹了，新建config&lt;/p>
+&lt;pre tabindex="0">&lt;code>Host github.com
+User &amp;lt;your_email&amp;gt;
+Hostname ssh.github.com
+PreferredAuthentications publickey
+IdentityFile ~/.ssh/id_rsa
+Port 443
+&lt;/code>&lt;/pre>&lt;p>know_hosts中修改github.com的值&lt;/p>
+&lt;pre tabindex="0">&lt;code>github.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCj7ndNxQowgcQnjshcLrqPEiiphnt+VTTvDP6mHBL9j1aNUkY4Ue1gvwnGLVlOhGeYrnZaMgRK6+PKCUXaDbC7qtbW8gIkhL7aGCsOr/C56SJMy/BCZfxd1nWzAOxSDPgVsmerOBYfNqltV9/hWCqBywINIR+5dIg6JTJ72pcEpEjcYgXkE2YEFXV1JHnsKgbLWNlhScqb2UmyRkQyytRLtL+38TGxkxCflmO+5Z8CSSNY7GidjMIZ7Q4zMjA2n1nGrlTDkzwDCsw+wqFPGQA179cnfGWOWRVruj16z6XyvxvjJwbz0wQZ75XK5tKSb7FNyeIEs4TT4jk+S4dhPeAUC5y+bDYirYgM4GC7uEnztnZyaVWQ7B381AK4Qdrwt51ZqExKbQpTUNn+EjqoTwvqNj4kqx5QUCI0ThS/YkOxJCXmPUWZbhjpCg56i+2aB6CmK2JGhn57K5mj0MNdBXA4/WnwH6XoPWJzK5Nyu2zB3nAZp+S5hpQs+p1vN1/wsjk=
+&lt;/code>&lt;/pre></description></item><item><title>环境配置&amp;相关问题解决</title><link>https://amiaaaz.github.io/2022/03/17/maybe-help-someone/</link><pubDate>Thu, 17 Mar 2022 10:58:56 +0800</pubDate><guid>https://amiaaaz.github.io/2022/03/17/maybe-help-someone/</guid><description>&lt;details>
 &lt;summary>
 &lt;h4 class="inline">
 本地搭建Visual Regexp
