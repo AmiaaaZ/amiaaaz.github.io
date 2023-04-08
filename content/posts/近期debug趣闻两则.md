@@ -10,6 +10,10 @@ draft: false
 toc: true
 ---
 
+*0408补充近期github相关
+
+----
+
 ## 代理失效
 
 科学上网一直是永恒的话题，为了保证学习过程中能流畅地访问google，之前我的方案是 学习的时候clash（不开启System Proxy）+proxifier（msedge.exe进程的流量全部走127.0.0.1:7890），需要刷b站或大量浏览国内网站时在proxifier中切换为全部Direct的rule
@@ -107,3 +111,25 @@ hugo一直以渲染速度快跟hexo正面刚，始终不明白到底是哪里出
 不过认真写的文章是不可能真正删除啦，我只是把`draft: false`改成了true，这样虽然不会被渲染但md文件还是存在的，算是我能想到最折中的解决办法了QAQ
 
 *那有不懂事的就要问了：你为什么不把400kb的md拆成10个40kb的呢？ ~~给你个白眼自己体会~~
+
+## github的蜜汁更新
+
+由于github更新了ssh相关的key，所以本地必须进行修改来适配（以下举例均为windows）
+
+主要就是`~/.ssh/`文件夹了，新建config
+
+```
+Host github.com
+    User <your_email>
+    Hostname ssh.github.com
+    PreferredAuthentications publickey
+    IdentityFile ~/.ssh/id_rsa
+    Port 443
+```
+
+know_hosts中修改github.com的值
+
+```
+github.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCj7ndNxQowgcQnjshcLrqPEiiphnt+VTTvDP6mHBL9j1aNUkY4Ue1gvwnGLVlOhGeYrnZaMgRK6+PKCUXaDbC7qtbW8gIkhL7aGCsOr/C56SJMy/BCZfxd1nWzAOxSDPgVsmerOBYfNqltV9/hWCqBywINIR+5dIg6JTJ72pcEpEjcYgXkE2YEFXV1JHnsKgbLWNlhScqb2UmyRkQyytRLtL+38TGxkxCflmO+5Z8CSSNY7GidjMIZ7Q4zMjA2n1nGrlTDkzwDCsw+wqFPGQA179cnfGWOWRVruj16z6XyvxvjJwbz0wQZ75XK5tKSb7FNyeIEs4TT4jk+S4dhPeAUC5y+bDYirYgM4GC7uEnztnZyaVWQ7B381AK4Qdrwt51ZqExKbQpTUNn+EjqoTwvqNj4kqx5QUCI0ThS/YkOxJCXmPUWZbhjpCg56i+2aB6CmK2JGhn57K5mj0MNdBXA4/WnwH6XoPWJzK5Nyu2zB3nAZp+S5hpQs+p1vN1/wsjk=
+```
+
