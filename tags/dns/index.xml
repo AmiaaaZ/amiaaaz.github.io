@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DNS on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/tags/dns/</link><description>Recent content in DNS on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 11 Apr 2023 21:00:40 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/tags/dns/index.xml" rel="self" type="application/rss+xml"/><item><title>DNS相关的二三事·上</title><link>https://amiaaaz.github.io/2023/04/11/dns-study-notes-01/</link><pubDate>Tue, 11 Apr 2023 21:00:40 +0800</pubDate><guid>https://amiaaaz.github.io/2023/04/11/dns-study-notes-01/</guid><description>&lt;p>其实已经学了一段时间了……但还有几个二级/三级标题没有学完，先放个上篇（）&lt;/p>
 &lt;p>参考了很多师傅的博客，参考链接统一放在末尾w&lt;/p>
+&lt;p>如有错漏还烦请各位师傅指正……在此先提前磕一个了Orz&lt;/p>
 &lt;hr>
 &lt;h2 id="解析">解析&lt;/h2>
 &lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230309220434277.png" alt="image-20230309220434277">&lt;/p>
@@ -81,11 +82,7 @@ nameserver 192.168.1.1
 &lt;li>PTR：A记录的逆向记录，可用于ip反查域名&lt;/li>
 &lt;li>AXFR, IXFR：与域传送有关&lt;/li>
 &lt;/ul>
-&lt;h3 id="txt记录后渗透">*TXT记录&amp;amp;后渗透&lt;/h3>
-&lt;p>&lt;a href="https://sp4n9x.github.io/2019/04/11/OilRig%E6%96%B0%E5%9E%8BBondUpdater%E6%9C%A8%E9%A9%AC%E7%9A%84DNS%E9%9A%90%E8%94%BD%E9%9A%A7%E9%81%93%E9%80%9A%E4%BF%A1%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/">OilRig新型BondUpdater木马的DNS隐蔽隧道通信行为分析&lt;/a> | &lt;a href="https://www.hybrid-analysis.com/sample/7cbad6b3f505a199d6766a86b41ed23786bbb99dab9cae6c18936afdc2512f00?environmentId=100">Sample: 4CC2A632.doc&lt;/a>&lt;/p>
-&lt;p>&lt;a href="https://mp.weixin.qq.com/s/Z1zp7klk--uQ1OnzljNESw">远程下载的通用替代方案 ｜ 红队攻防&lt;/a>&lt;/p>
 &lt;h3 id="spf记录邮件伪造">SPF记录&amp;amp;邮件伪造&lt;/h3>
-&lt;p>&lt;a href="https://t.zsxq.com/0bGdEH0CD">https://t.zsxq.com/0bGdEH0CD&lt;/a>&lt;/p>
 &lt;p>SPF记录是TXT类的一种，用来过滤垃圾邮件，机制是这样的：收件服务器收到admin@example.com发来的邮件，会校验源ip是否在example.com的SPF记录范围内&lt;/p>
 &lt;p>这其实衍生了一个攻击面，即：通过域名的SPF记录划定资产的ip范围，不过现在很多都会选择163, foxmail等作为邮件服务，所以能用到这一攻击方式的场景不多&lt;/p>
 &lt;p>写个py来处理这个需求&lt;/p>
@@ -184,8 +181,7 @@ nameserver 192.168.1.1
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230315013115184.png" alt="image-20230315013115184">&lt;/p>
 &lt;p>……行，ChatGPT牛逼，我下岗了，是我冒犯了&lt;/p>
 &lt;h3 id="cname子域接管">CNAME&amp;amp;子域接管&lt;/h3>
-&lt;pre tabindex="0">&lt;code>代码update: uuid.uuid4().hex[0:random.randint(6, 32)]
-&lt;/code>&lt;/pre>&lt;p>直接举例：&lt;/p>
+&lt;p>直接举例：&lt;/p>
 &lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230315013828470.png" alt="image-20230315013828470">&lt;/p>
 &lt;p>当CNAME像这样是&lt;code>*&lt;/code>时会导致子域名接管，此时我们随便一个&lt;code>abcd.github.io&lt;/code>都可以设置自己的CNAME为&lt;code>abcd.sxxxxx.life&lt;/code>，并且可以正常访问&lt;/p>
 &lt;p>这是相当危险的漏洞，因为可以直接绕过诸多对于跨域、跨源的限制，甚至绕过一些限制域名的waf&lt;/p>
@@ -293,10 +289,6 @@ nameserver 192.168.1.1
 &lt;p>本地DNS服务看到这样的响应就会尝试建立TCP连接来重发&lt;/p>
 &lt;p>下面来说几个DNS发展过程中为了安全、可靠而多次引入的几个机制&lt;/p>
 &lt;h3 id="edns">EDNS&lt;/h3>
-&lt;p>&lt;a href="https://bind9.readthedocs.io/en/stable/reference.html#namedconf-statement-edns-udp-size">https://bind9.readthedocs.io/en/stable/reference.html#namedconf-statement-edns-udp-size&lt;/a>&lt;/p>
-&lt;p>&lt;a href="https://developers.google.com/speed/public-dns/docs/ecs?hl=zh-cn">https://developers.google.com/speed/public-dns/docs/ecs?hl=zh-cn&lt;/a>&lt;/p>
-&lt;p>&lt;a href="https://www.cnblogs.com/cobbliu/p/3188632.html">EDNS&lt;/a>&lt;/p>
-&lt;p>&lt;a href="https://xiazemin.github.io/MyBlog/golang/2020/05/25/edns.html">DNS support edns-client-subnet&lt;/a>&lt;/p>
 &lt;p>在2020的DNS Flag Day提出ENDS(Extension Mechanisms for DNS)，在遵循已有的DNS消息格式上增加字段来支持更多类型的DNS请求业务，提出的理由是这样的&lt;/p>
 &lt;ol>
 &lt;li>DNS协议头部的第二个16字节中都已经被用的差不多了，需要添加新的返回类型（RCODE）和标记（FLAGS）来支持其他需求&lt;/li>
