@@ -14,6 +14,8 @@ toc: true
 
 参考了很多师傅的博客，参考链接统一放在末尾w
 
+如有错漏还烦请各位师傅指正……在此先提前磕一个了Orz
+
 ------
 
 ## 解析
@@ -135,15 +137,7 @@ ipconfig /flushdns
 - PTR：A记录的逆向记录，可用于ip反查域名
 - AXFR, IXFR：与域传送有关
 
-### *TXT记录&后渗透
-
-[OilRig新型BondUpdater木马的DNS隐蔽隧道通信行为分析](https://sp4n9x.github.io/2019/04/11/OilRig%E6%96%B0%E5%9E%8BBondUpdater%E6%9C%A8%E9%A9%AC%E7%9A%84DNS%E9%9A%90%E8%94%BD%E9%9A%A7%E9%81%93%E9%80%9A%E4%BF%A1%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90/)  |  [Sample: 4CC2A632.doc](https://www.hybrid-analysis.com/sample/7cbad6b3f505a199d6766a86b41ed23786bbb99dab9cae6c18936afdc2512f00?environmentId=100)
-
-[远程下载的通用替代方案 ｜ 红队攻防](https://mp.weixin.qq.com/s/Z1zp7klk--uQ1OnzljNESw)
-
 ### SPF记录&邮件伪造
-
-https://t.zsxq.com/0bGdEH0CD
 
 SPF记录是TXT类的一种，用来过滤垃圾邮件，机制是这样的：收件服务器收到admin@example.com发来的邮件，会校验源ip是否在example.com的SPF记录范围内
 
@@ -256,10 +250,6 @@ if __name__ == '__main__':
 ……行，ChatGPT牛逼，我下岗了，是我冒犯了
 
 ### CNAME&子域接管
-
-```
-代码update: uuid.uuid4().hex[0:random.randint(6, 32)]
-```
 
 直接举例：
 
@@ -422,14 +412,6 @@ whois www.example.com
 下面来说几个DNS发展过程中为了安全、可靠而多次引入的几个机制
 
 ### EDNS
-
-https://bind9.readthedocs.io/en/stable/reference.html#namedconf-statement-edns-udp-size
-
-https://developers.google.com/speed/public-dns/docs/ecs?hl=zh-cn
-
-[EDNS](https://www.cnblogs.com/cobbliu/p/3188632.html)
-
-[DNS support edns-client-subnet](https://xiazemin.github.io/MyBlog/golang/2020/05/25/edns.html)
 
 在2020的DNS Flag Day提出ENDS(Extension Mechanisms for DNS)，在遵循已有的DNS消息格式上增加字段来支持更多类型的DNS请求业务，提出的理由是这样的
 
