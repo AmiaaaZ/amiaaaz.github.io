@@ -1,7 +1,7 @@
 ---
 title: "bass练习备忘"
 slug: "bass-practice-memo"
-description: "努力练琴中... #已练习37小时20分"
+description: "努力练琴中... #已练习41小时25分"
 date: 2023-04-11T18:12:08+08:00
 categories: []
 series: []
