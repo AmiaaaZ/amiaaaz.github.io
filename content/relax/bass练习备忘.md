@@ -1,7 +1,7 @@
 ---
 title: "bass练习备忘"
 slug: "bass-practice-memo"
-description: "努力练琴中... #已练习41小时25分"
+description: "努力练琴中... #已练习41小时45分"
 date: 2023-04-11T18:12:08+08:00
 categories: []
 series: []
@@ -9,6 +9,14 @@ tags: []
 draft: false
 toc: true
 ---
+
+## 041123（月） - 20min
+
+**5min** - 爬格子（禅贝斯8/28）
+
+**15min** - 《丸之内》cover
+
+跨线爬格子……手短真的玩不来啊啊啊
 
 ## 041123（月） - 20min
 
