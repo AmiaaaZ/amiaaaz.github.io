@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Rust学习笔记 on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/series/rust%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</link><description>Recent content in Rust学习笔记 on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Fri, 16 Jun 2023 10:09:26 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/series/rust%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/index.xml" rel="self" type="application/rss+xml"/><item><title>Rust学习笔记Ⅰ</title><link>https://amiaaaz.github.io/2023/06/16/rust-stduy-notes-01/</link><pubDate>Fri, 16 Jun 2023 10:09:26 +0800</pubDate><guid>https://amiaaaz.github.io/2023/06/16/rust-stduy-notes-01/</guid><description>&lt;p>Q: 为啥突然学Rust？&lt;/p>
+&lt;p>A: &lt;del>没有为啥，闲的&lt;/del> 一方面是入夏以来输入/输出都很少，不是好现象，另一方面是也在听南大的操作系统课，rust正好就是对标c/c++的系统级编程语言，不如拿来学学 跟上最新的语言特性和发展进程x&lt;/p>
+&lt;hr>
+&lt;h2 id="环境配置">环境配置&lt;/h2>
+&lt;p>*为了上手方便，暂时下文涉及到的都是windows环境（我懒）&lt;/p>
+&lt;ul>
+&lt;li>前提：Visual Studio及相关组件 &lt;a href="https://visualstudio.microsoft.com/zh-hans/downloads/">https://visualstudio.microsoft.com/zh-hans/downloads/&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>如果不安装这些组件会直接影响Rust的正常运行&lt;/p>
+&lt;p>如果直接用rustup-init.exe安装，会默认安装Windows 11 SDK，我是手动在Visual Studio Installer中选择了Windows 10 SDK&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230614154924534.png" alt="image-20230614154924534">&lt;/p>
+&lt;p>*也可以不用官方的installer、不安装Visual Studio，用独立出来的cpp build tools~&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230616101545543.png" alt="image-20230616101545543">&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>本体： &lt;a href="https://www.rust-lang.org/tools/install">https://www.rust-lang.org/tools/install&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>IDE：Intellij Rust插件&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p>曾经我也是重视的VS code信徒，但其实看似简单之下隐藏了很多繁琐的配置，而且内存占用其实并不小……还是入股Intellij了&lt;/p>
+&lt;ul>
+&lt;li>Hello, world!&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230614155344723.png" alt="image-20230614155344723">&lt;/p>
+&lt;p>Intellij Rust默认配置下会直接生成Cargo项目 方便管理&lt;/p>
+&lt;ul>
+&lt;li>卸载Rust&lt;/li>
+&lt;/ul>
+&lt;p>如果一个不小心安装有问题&amp;hellip;&lt;/p>
+&lt;pre tabindex="0">&lt;code>rustup self uninstall
+&lt;/code>&lt;/pre>&lt;h2 id="语言特色">语言特色&lt;/h2>
+&lt;p>这几年断断续续接触了很多语言（C, Python, PHP, Java, Javascript, Go&amp;hellip;.），逐渐感受到各个编程语言在“和而不同”之余 存在各自的“舒适区”，这个舒适区由语言特性等很多因素共同决定；如果硬把需求安排在一个不适合的语言，那真的是如鲠在喉&lt;/p>
+&lt;ul>
+&lt;li>优点：速度快，内存利用率高，性能好，生成的可执行文件为静态编译，跨平台&lt;/li>
+&lt;li>缺点：编译器严格、编译耗时长，学习曲线陡峭&lt;/li>
+&lt;li>与其他语言的对比：属于强类型，代码风格类似C/C++，会用项目的概念来组织代码文件（类似Java的Maven）&lt;/li>
+&lt;li>敏感肌也很喜欢：可以编写shellcode loader&lt;/li>
+&lt;/ul>
+&lt;h2 id="语法基础">语法基础&lt;/h2>
+&lt;p>use this book~ &lt;a href="https://rust-book.cs.brown.edu/">The Rust Programming Language&lt;/a>&lt;/p>
+&lt;h3 id="变量可变性">变量&amp;amp;可变性&lt;/h3>
+&lt;p>&lt;code>const&lt;/code>修饰的都是完全不可变的，必须指明数据类型，作用域为全局&lt;/p>
+&lt;p>&lt;code>let&lt;/code>修饰的不可变，&lt;code>let mut&lt;/code>修饰的可变，作用域为当前函数&lt;/p>
+&lt;p>shadowing的存在使我们可以使用同名变量，但只有可变的变量才可以被shadowing&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-rust" data-lang="rust">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">fn&lt;/span> &lt;span style="color:#75af00">main&lt;/span>&lt;span style="color:#111">()&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">const&lt;/span> &lt;span style="color:#00a8c8">SECRET_NUM&lt;/span>: &lt;span style="color:#00a8c8">u32&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">12&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">let&lt;/span> &lt;span style="color:#111">a&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#d88200">&amp;#34;a&amp;#34;&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// a = &amp;#34;b&amp;#34;; // will error, not mutable
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#00a8c8">let&lt;/span> &lt;span style="color:#00a8c8">mut&lt;/span> &lt;span style="color:#111">x&lt;/span>: &lt;span style="color:#00a8c8">u32&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">let&lt;/span> &lt;span style="color:#00a8c8">mut&lt;/span> &lt;span style="color:#111">x&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">x&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">x&lt;/span> &lt;span style="color:#f92672">+=&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span>&lt;span style="color:#111">;&lt;/span> &lt;span style="color:#75715e">// shadowing
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">println!&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#d88200">{x}&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span> &lt;span style="color:#75715e">// 3
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">println!&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#d88200">{SECRET_NUM}&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#75715e">// 12
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">println!&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#d88200">{x}&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span> &lt;span style="color:#75715e">// 1
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">println!&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#d88200">{SECRET_NUM}&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#75715e">// 12
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="数据类型">数据类型&lt;/h3>
+&lt;p>rust是statically typed language静态类型语言，写代码时没有显式声明的类型都会由编译器进行推断，如果发生错误会无法成功build&lt;/p>
+&lt;h4 id="标量">标量&lt;/h4>
+&lt;ul>
+&lt;li>整型：默认i32，isize/usize主要作为某些集合的索引，编译器会检测interger overflow&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230615035627186.png" alt="image-20230615035627186">&lt;/p>
+&lt;p>*debug模式编译下会检查integer overflow，release构建中则不会检查，如果出现此类错误 rust会进行two&amp;rsquo;s complement wrapping的操作（也就是u8下 256-&amp;gt;0, 257-&amp;gt;1），不会因此panic 但可能出现非预期情况，不鼓励这样做；如果确实需要这样的“优化”，可选用如下函数&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230615040141460.png" alt="image-20230615040141460">&lt;/p>
+&lt;p>*对这一特性我表示存疑，本机环境cargo 1.70.0 (ec8a8a0ca 2023-04-25)，并不会因为加上&lt;code>--release&lt;/code>就不检查溢出了，还是会在compile阶段报错退出&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230615040800001.png" alt="image-20230615040800001">&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>浮点型：默认f64（与f32速度几乎一样 但精度更高）&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>布尔型：true, false(fool)&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>字符型：单引号char代表一个unicode标量值&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h4 id="复合类型">复合类型&lt;/h4>
+&lt;ul>
+&lt;li>元组tuple 可包含不同类型数据, 数组array 必须每个元素类型相同&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-rust" data-lang="rust">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">fn&lt;/span> &lt;span style="color:#75af00">main&lt;/span>&lt;span style="color:#111">()&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">let&lt;/span> &lt;span style="color:#111">tup&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#ae81ff">500&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#ae81ff">3.14&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#ae81ff">42&lt;/span>&lt;span style="color:#111">);&lt;/span> &lt;span style="color:#75715e">// tup: (i32, f64, u8)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#00a8c8">let&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">x&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">y&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">z&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">tup&lt;/span>&lt;span style="color:#111">;&lt;/span> &lt;span style="color:#75715e">// destructuring
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">println!&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#d88200">{z}&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span> &lt;span style="color:#75715e">// 42
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">println!&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#d88200">{}&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">tup&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#75715e">// 3.14
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-rust" data-lang="rust">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">fn&lt;/span> &lt;span style="color:#75af00">main&lt;/span>&lt;span style="color:#111">(){&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">let&lt;/span> &lt;span style="color:#111">t&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">([&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">;&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span>&lt;span style="color:#111">],&lt;/span> &lt;span style="color:#111">[&lt;/span>&lt;span style="color:#ae81ff">3&lt;/span>&lt;span style="color:#111">;&lt;/span> &lt;span style="color:#ae81ff">4&lt;/span>&lt;span style="color:#111">]);&lt;/span> &lt;span style="color:#75715e">// t: ([i32; 3], [i32; 4])
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#00a8c8">let&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">a&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">_&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">t&lt;/span>&lt;span style="color:#111">;&lt;/span> &lt;span style="color:#75715e">// a = [1, 1], _ = [3, 3, 3]
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">println!&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#d88200">{}&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">a&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">]&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#111">t&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">]);&lt;/span> &lt;span style="color:#75715e">// 4
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>*当出现数组元素越界访问时不会出现编译错误，但会出现运行时错误而panic退出&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-rust" data-lang="rust">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">use&lt;/span> &lt;span style="color:#111">std&lt;/span>::&lt;span style="color:#111">io&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">fn&lt;/span> &lt;span style="color:#75af00">main&lt;/span>&lt;span style="color:#111">()&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">let&lt;/span> &lt;span style="color:#111">a&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">[&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#ae81ff">3&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#ae81ff">4&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#ae81ff">5&lt;/span>&lt;span style="color:#111">];&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">println!&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;Please enter an array index.&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">let&lt;/span> &lt;span style="color:#00a8c8">mut&lt;/span> &lt;span style="color:#111">index&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">String&lt;/span>::&lt;span style="color:#111">new&lt;/span>&lt;span style="color:#111">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">io&lt;/span>::&lt;span style="color:#111">stdin&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">.&lt;/span>&lt;span style="color:#111">read_line&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#00a8c8">mut&lt;/span> &lt;span style="color:#111">index&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">.&lt;/span>&lt;span style="color:#111">expect&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;Failed to read line&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">let&lt;/span> &lt;span style="color:#111">index&lt;/span>: &lt;span style="color:#00a8c8">usize&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">index&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">.&lt;/span>&lt;span style="color:#111">trim&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">.&lt;/span>&lt;span style="color:#111">parse&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">.&lt;/span>&lt;span style="color:#111">expect&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;Index entered was not a number&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">let&lt;/span> &lt;span style="color:#111">element&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">a&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#111">index&lt;/span>&lt;span style="color:#111">];&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">println!&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;The value of the element at index &lt;/span>&lt;span style="color:#d88200">{index}&lt;/span>&lt;span style="color:#d88200"> is: &lt;/span>&lt;span style="color:#d88200">{element}&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230615044316550.png" alt="image-20230615044316550">&lt;/p>
+&lt;h3 id="函数">函数&lt;/h3>
+&lt;p>函数和变量名均使用snake case规范（下划线分隔小写单词），被使用的函数可位于任何位置，&lt;code>main&lt;/code>为入口&lt;/p>
+&lt;p>函数声明必须带参数类型&lt;/p>
+&lt;p>可以用&lt;code>{}&lt;/code>创建新作用域（代码块），&lt;code>{}&lt;/code>是会计算并返回值的表达式，表达式的结尾没有分号，语句有分号、不返回值&lt;/p>
+&lt;p>函数的返回值无需命名，但需要声明类型&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-rust" data-lang="rust">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">fn&lt;/span> &lt;span style="color:#75af00">main&lt;/span>&lt;span style="color:#111">()&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">let&lt;/span> &lt;span style="color:#111">x&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">plus_one&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#ae81ff">5&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">println!&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;The value of x is: &lt;/span>&lt;span style="color:#d88200">{}&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">x&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">fn&lt;/span> &lt;span style="color:#75af00">plus_one&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">x&lt;/span>: &lt;span style="color:#00a8c8">i32&lt;/span>&lt;span style="color:#111">)&lt;/span> -&amp;gt; &lt;span style="color:#00a8c8">i32&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">x&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span> &lt;span style="color:#75715e">// `x + 1;` will error
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="控制流">控制流&lt;/h3>
+&lt;p>可以直接对变量使用if/else，但要小心由此可能产生的类型问题：变量必须只有一个类型&lt;/p>
+&lt;p>循环有loop/while/for，loop需要手动停止循环，可以通过设置label来停止嵌套loop（适用于多次重试）&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-rust" data-lang="rust">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">fn&lt;/span> &lt;span style="color:#75af00">main&lt;/span>&lt;span style="color:#111">()&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">let&lt;/span> &lt;span style="color:#00a8c8">mut&lt;/span> &lt;span style="color:#111">count&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">&amp;#39;counting_up&lt;/span>: &lt;span style="color:#75af00">loop&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">println!&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;count = &lt;/span>&lt;span style="color:#d88200">{count}&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">let&lt;/span> &lt;span style="color:#00a8c8">mut&lt;/span> &lt;span style="color:#111">remaining&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">10&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">loop&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">println!&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;remaining = &lt;/span>&lt;span style="color:#d88200">{remaining}&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">remaining&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#ae81ff">9&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">break&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">count&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">break&lt;/span> &lt;span style="color:#111">&amp;#39;counting_up&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">remaining&lt;/span> &lt;span style="color:#f92672">-=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">count&lt;/span> &lt;span style="color:#f92672">+=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">println!&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;End count = &lt;/span>&lt;span style="color:#d88200">{count}&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>for可以方便的遍历数组，方便程度不亚于python&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-rust" data-lang="rust">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">fn&lt;/span> &lt;span style="color:#75af00">main&lt;/span>&lt;span style="color:#111">()&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">let&lt;/span> &lt;span style="color:#111">a&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">[&lt;/span>&lt;span style="color:#ae81ff">10&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#ae81ff">20&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#ae81ff">30&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#ae81ff">40&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#ae81ff">50&lt;/span>&lt;span style="color:#111">];&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">for&lt;/span> &lt;span style="color:#111">element&lt;/span> &lt;span style="color:#00a8c8">in&lt;/span> &lt;span style="color:#111">a&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">println!&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;the value is: &lt;/span>&lt;span style="color:#d88200">{element}&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-rust" data-lang="rust">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">fn&lt;/span> &lt;span style="color:#75af00">main&lt;/span>&lt;span style="color:#111">()&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">for&lt;/span> &lt;span style="color:#111">number&lt;/span> &lt;span style="color:#00a8c8">in&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#f92672">..&lt;/span>&lt;span style="color:#ae81ff">4&lt;/span>&lt;span style="color:#111">).&lt;/span>&lt;span style="color:#111">rev&lt;/span>&lt;span style="color:#111">()&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">println!&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#d88200">{number}&lt;/span>&lt;span style="color:#d88200">!&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">println!&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;LIFTOFF!!!&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="所有权">所有权&lt;/h3>
+&lt;p>所有权ownership是rust的特性，正是它让rust做到内存安全和无需垃圾回收&lt;/p>
+&lt;p>这里的“安全”，在rust中意味着完全不容许&lt;a href="https://doc.rust-lang.org/reference/behavior-considered-undefined.html">undefined behavior&lt;/a>的存在（即使unsafe也不行），为了实现这一目标 rust将大量的功夫用在了compile-time而不是run-time，这样减少了潜在的运行时bug 也侧面提升了性能（减少运行的check），所有权则是这一理念下 内存安全方面的具体实践&lt;/p>
+&lt;h4 id="堆box">堆&amp;amp;Box&lt;/h4>
+&lt;p>rust中，和函数有关的参数等数据存于栈上，堆上的数据则可以不依赖函数独立分配，可以使用&lt;code>Box::new&lt;/code>来手动分配数据到堆，所有权会自动在“合适的时机”释放这块内存&lt;/p>
+&lt;p>&lt;strong>Box deallocation principle(fully correct):&lt;/strong> if a variable owns a box, when Rust deallocates the variable&amp;rsquo;s frame, the Rust deallocates the box&amp;rsquo;s heap memory.
+原则：当使用Box的变量在它的作用域内结束、被释放，那Box所在的堆内存也会被释放（也就是上面说的“合适的时机”，这一释放过程都被rust自动管理，无需手动控制）&lt;/p>
+&lt;p>很多数据结构内部都是用Box实现的，比如&lt;code>Vec&lt;/code>, &lt;code>String&lt;/code>, &lt;code>HashMap&lt;/code>&lt;/p>
+&lt;p>下面的栗子里，但执行到第四行时会报错，因为first已经不指向&lt;code>Ferris&lt;/code>了&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-rust" data-lang="rust">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">fn&lt;/span> &lt;span style="color:#75af00">main&lt;/span>&lt;span style="color:#111">()&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">let&lt;/span> &lt;span style="color:#111">first&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">String&lt;/span>::&lt;span style="color:#111">from&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;Ferris&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span> &lt;span style="color:#75715e">// L1
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#00a8c8">let&lt;/span> &lt;span style="color:#111">full&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">add_suffix&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">first&lt;/span>&lt;span style="color:#111">);&lt;/span> &lt;span style="color:#75715e">// L4
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">println!&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#d88200">{full}&lt;/span>&lt;span style="color:#d88200">, originally &lt;/span>&lt;span style="color:#d88200">{first}&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span> &lt;span style="color:#75715e">// L5 will error!!!
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">fn&lt;/span> &lt;span style="color:#75af00">add_suffix&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">mut&lt;/span> &lt;span style="color:#111">name&lt;/span>: &lt;span style="color:#111">String&lt;/span>&lt;span style="color:#111">)&lt;/span> -&amp;gt; &lt;span style="color:#111">String&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// L2
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">name&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#111">push_str&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34; Jr.&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span> &lt;span style="color:#75715e">// L3
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">name&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230615140242885.png" alt="image-20230615140242885">&lt;/p>
+&lt;p>实际过程则是这样的：&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230615135453255.png" alt="image-20230615135453255">&lt;/p>
+&lt;p>在L2阶段时发生指针复制，原有指针未消失，但我们不能再直接用原来的指针，也就是下面的规则：&lt;/p>
+&lt;p>&lt;strong>Moved heap data principle:&lt;/strong> if a variable x moves ownership of heap data to another variable y, then x cannot be used after move.&lt;/p>
+&lt;p>&lt;code>clone&lt;/code>方法可以在指针复制的同时不丢失所有权，“绕过”上面的规则&lt;/p>
+&lt;p>&lt;del>在同一作用域内、只在栈上拷贝的数据也不受上述规则的限制（废话了，毕竟是在栈上）&lt;/del>&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230615141118932.png" alt="image-20230615141118932">&lt;/p>
+&lt;p>*答错的一道quiz：选出下面会出现undefined behavior的选项&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230615141806059.png" alt="image-20230615141806059">&lt;/p>
+&lt;p>关键在于：在b被传入&lt;code>move_a_box&lt;/code>后、b才会被释放&lt;/p>
+&lt;h4 id="引用借用">引用&amp;amp;借用&lt;/h4>
+&lt;p>非常显然，如果严格按照上面所有权的规则进行 变量被moved之后再想找到原来的值就需要在函数上添加一个返回值，然而我们经常需要使用那个值！&lt;/p>
+&lt;p>引用reference就是解决这个问题的，它作为Non-owning pointer存在，允许使用堆上的值 但不直接指向堆&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-rust" data-lang="rust">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">fn&lt;/span> &lt;span style="color:#75af00">main&lt;/span>&lt;span style="color:#111">()&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">let&lt;/span> &lt;span style="color:#111">m1&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">String&lt;/span>::&lt;span style="color:#111">from&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;Hello&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">let&lt;/span> &lt;span style="color:#111">m2&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">String&lt;/span>::&lt;span style="color:#111">from&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;world&amp;#34;&lt;/span>&lt;span style="color:#111">);&lt;/span> &lt;span style="color:#75715e">// L1
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">greet&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#111">m1&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#111">m2&lt;/span>&lt;span style="color:#111">);&lt;/span> &lt;span style="color:#75715e">// L3
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#00a8c8">let&lt;/span> &lt;span style="color:#111">s&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">format!&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#d88200">{}&lt;/span>&lt;span style="color:#d88200"> &lt;/span>&lt;span style="color:#d88200">{}&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">m1&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">m2&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">fn&lt;/span> &lt;span style="color:#75af00">greet&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">g1&lt;/span>: &lt;span style="color:#00a8c8">&amp;amp;&lt;/span>&lt;span style="color:#111">String&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">g2&lt;/span>: &lt;span style="color:#00a8c8">&amp;amp;&lt;/span>&lt;span style="color:#111">String&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// L2
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">println!&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#d88200">{}&lt;/span>&lt;span style="color:#d88200"> &lt;/span>&lt;span style="color:#d88200">{}&lt;/span>&lt;span style="color:#d88200">!&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">g1&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">g2&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230615143339298.png" alt="image-20230615143339298">&lt;/p>
+&lt;p>&lt;code>&amp;amp;m1&lt;/code>作为m1的引用、再作为greet的参数，这一行为被称为借用borrowing&lt;/p>
+&lt;p>&lt;code>*&lt;/code>作为前缀表示解引用，可以读出具体数据，修改&lt;code>*x&lt;/code>的值就是修改&lt;code>x&lt;/code>指向堆内存的值&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230615151017338.png" alt="image-20230615151017338">&lt;/p>
+&lt;p>只有第一次的解引用&lt;code>*x&lt;/code>可以被修改值并同步堆内存的修改，二次解引用的&lt;code>**r1&lt;/code>只可以读值不可以修改&lt;/p></description></item></channel></rss>
