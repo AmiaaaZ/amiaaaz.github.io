@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Rust学习笔记 on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/series/rust%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</link><description>Recent content in Rust学习笔记 on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Fri, 16 Jun 2023 10:09:26 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/series/rust%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/index.xml" rel="self" type="application/rss+xml"/><item><title>Rust学习笔记Ⅰ</title><link>https://amiaaaz.github.io/2023/06/16/rust-stduy-notes-01/</link><pubDate>Fri, 16 Jun 2023 10:09:26 +0800</pubDate><guid>https://amiaaaz.github.io/2023/06/16/rust-stduy-notes-01/</guid><description>&lt;p>Q: 为啥突然学Rust？&lt;/p>
 &lt;p>A: &lt;del>没有为啥，闲的&lt;/del> 一方面是入夏以来输入/输出都很少，不是好现象，另一方面是也在听南大的操作系统课，rust正好就是对标c/c++的系统级编程语言，不如拿来学学 跟上最新的语言特性和发展进程x&lt;/p>
-&lt;hr>
 &lt;h2 id="环境配置">环境配置&lt;/h2>
 &lt;p>*为了上手方便，暂时下文涉及到的都是windows环境（我懒）&lt;/p>
 &lt;ul>
@@ -10,10 +9,10 @@
 &lt;p>如果直接用rustup-init.exe安装，会默认安装Windows 11 SDK，我是手动在Visual Studio Installer中选择了Windows 10 SDK&lt;/p>
 &lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230614154924534.png" alt="image-20230614154924534">&lt;/p>
 &lt;p>*也可以不用官方的installer、不安装Visual Studio，用独立出来的cpp build tools~&lt;/p>
-&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230616101545543.png" alt="image-20230616101545543">&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230616164819078.png" alt="image-20230616164819078">&lt;/p>
 &lt;ul>
 &lt;li>
-&lt;p>本体： &lt;a href="https://www.rust-lang.org/tools/install">https://www.rust-lang.org/tools/install&lt;/a>&lt;/p>
+&lt;p>本体：https://www.rust-lang.org/tools/install&lt;/p>
 &lt;/li>
 &lt;li>
 &lt;p>IDE：Intellij Rust插件&lt;/p>
@@ -196,13 +195,14 @@
 &lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230615135453255.png" alt="image-20230615135453255">&lt;/p>
 &lt;p>在L2阶段时发生指针复制，原有指针未消失，但我们不能再直接用原来的指针，也就是下面的规则：&lt;/p>
 &lt;p>&lt;strong>Moved heap data principle:&lt;/strong> if a variable x moves ownership of heap data to another variable y, then x cannot be used after move.&lt;/p>
-&lt;p>&lt;code>clone&lt;/code>方法可以在指针复制的同时不丢失所有权，“绕过”上面的规则&lt;/p>
+&lt;p>&lt;code>clone&lt;/code>方法可以在指针复制的同时不丢失原指针的所有权，“绕过”上面的规则&lt;/p>
 &lt;p>&lt;del>在同一作用域内、只在栈上拷贝的数据也不受上述规则的限制（废话了，毕竟是在栈上）&lt;/del>&lt;/p>
 &lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230615141118932.png" alt="image-20230615141118932">&lt;/p>
 &lt;p>*答错的一道quiz：选出下面会出现undefined behavior的选项&lt;/p>
 &lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230615141806059.png" alt="image-20230615141806059">&lt;/p>
 &lt;p>关键在于：在b被传入&lt;code>move_a_box&lt;/code>后、b才会被释放&lt;/p>
 &lt;h4 id="引用借用">引用&amp;amp;借用&lt;/h4>
+&lt;p>*这部分内容有C的基础会好理解一些&lt;/p>
 &lt;p>非常显然，如果严格按照上面所有权的规则进行 变量被moved之后再想找到原来的值就需要在函数上添加一个返回值，然而我们经常需要使用那个值！&lt;/p>
 &lt;p>引用reference就是解决这个问题的，它作为Non-owning pointer存在，允许使用堆上的值 但不直接指向堆&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-rust" data-lang="rust">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">fn&lt;/span> &lt;span style="color:#75af00">main&lt;/span>&lt;span style="color:#111">()&lt;/span> &lt;span style="color:#111">{&lt;/span>
@@ -220,4 +220,24 @@
 &lt;p>&lt;code>&amp;amp;m1&lt;/code>作为m1的引用、再作为greet的参数，这一行为被称为借用borrowing&lt;/p>
 &lt;p>&lt;code>*&lt;/code>作为前缀表示解引用，可以读出具体数据，修改&lt;code>*x&lt;/code>的值就是修改&lt;code>x&lt;/code>指向堆内存的值&lt;/p>
 &lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230615151017338.png" alt="image-20230615151017338">&lt;/p>
-&lt;p>只有第一次的解引用&lt;code>*x&lt;/code>可以被修改值并同步堆内存的修改，二次解引用的&lt;code>**r1&lt;/code>只可以读值不可以修改&lt;/p></description></item></channel></rss>
+&lt;p>只有第一次的解引用&lt;code>*x&lt;/code>可以被修改值并同步堆内存的修改，二次解引用的&lt;code>**&amp;amp;x&lt;/code>只可以读值不可以修改，而&lt;code>&amp;amp;*x&lt;/code>是直接指向值的引用指针、和&lt;code>*x&lt;/code>的数据类型并不一样&lt;/p>
+&lt;p>&lt;code>*x&lt;/code>, &lt;code>**&amp;amp;x&lt;/code>和&lt;code>*&amp;amp;*x&lt;/code>三者是完全等价的（数据类型、值），都可以直接读出堆内存指向的值，但只有&lt;code>*x&lt;/code>可被改值&lt;/p>
+&lt;p>&lt;strong>Pointer Safety Principle:&lt;/strong> data should never be aliased and mutated at the same time.&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230616143232706.png" alt="image-20230616143232706">&lt;/p>
+&lt;p>在上面的例子中，当&lt;code>vec.push(4)&lt;/code>被执行时，原&lt;code>vec&lt;/code>的cap和len都需要增大，为了满足新的cap和len的需求 很可能会重新分配在堆上的位置，所以&lt;code>num&lt;/code>是否还指向&lt;code>vec[2]&lt;/code>就是undefined behavior，很可能出现潜在的安全问题&lt;/p>
+&lt;p>回想所有权的定义，数据只可以被它的拥有者owner所拥有，而不是别名aliases；一言以蔽之：数据只可以有一个可变引用，可以有多个不可变引用，不可以同时拥有可变、不可变引用&lt;/p>
+&lt;p>让我们深入了解其中的read, write, own权限都发生了什么样的变化：&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230616145353540.png" alt="image-20230616145353540">&lt;/p>
+&lt;p>我们可以看到，在引用&lt;code>num&lt;/code>被借用期间，&lt;code>vec&lt;/code>是丢失write和owner权限的；而需要对应权限的操作，该权限会被使用到的&lt;code>path&lt;/code>可见，比如被借用的&lt;code>&amp;amp;vec[2]&lt;/code>，read权限对&lt;code>num&lt;/code>和&lt;code>*num&lt;/code>都可见、同样也对&lt;code>vec&lt;/code>可见&lt;/p>
+&lt;p>而上上张图（出现undefined behavior的反例）中则有这样的权限关系&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230616151045240.png" alt="image-20230616151045240">&lt;/p>
+&lt;p>编译时会在&lt;code>vec.push(4)&lt;/code>就报错 而不是第四行&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230616151300402.png" alt="image-20230616151300402">&lt;/p>
+&lt;p>浅层原因是borrow checker已经检测到 第三行的&lt;code>vec&lt;/code>只有read，而write权限被&lt;code>num&lt;/code>借走了，所以此时&lt;code>vec&lt;/code>不可变、报错，深层原因则是rust为了避免可能存在的安全问题 而设计了这样的borrow checker（先鸡后蛋）&lt;/p>
+&lt;p>上面所有提到的&lt;code>&amp;amp;&lt;/code>引用都是不可变引用immutable reference（也叫做shared references），它作为non-owning pointer 只作为不可变的别名；然而我们也可以让它暂时拥有write权限（仍然非owner），也就是&lt;code>&amp;amp;mut&lt;/code>，可变引用mutable reference（也叫做unique reference）&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230616152201799.png" alt="image-20230616152201799">&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230616154144385.png" alt="image-20230616154144385">&lt;/p>
+&lt;p>比较细致的讲解我直接截图了，权限关系也比较清楚&lt;/p>
+&lt;p>*两道比较复杂的题，有亿点让人头大&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230616161802457.png" alt="image-20230616161802457">&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230616162437517.png" alt="image-20230616162437517">&lt;/p></description></item></channel></rss>
