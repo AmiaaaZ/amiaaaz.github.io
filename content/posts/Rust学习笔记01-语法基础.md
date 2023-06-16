@@ -14,8 +14,6 @@ Q: 为啥突然学Rust？
 
 A: ~~没有为啥，闲的~~ 一方面是入夏以来输入/输出都很少，不是好现象，另一方面是也在听南大的操作系统课，rust正好就是对标c/c++的系统级编程语言，不如拿来学学 跟上最新的语言特性和发展进程x
 
-----
-
 ## 环境配置
 
 *为了上手方便，暂时下文涉及到的都是windows环境（我懒）
@@ -30,9 +28,9 @@ A: ~~没有为啥，闲的~~ 一方面是入夏以来输入/输出都很少，�
 
 *也可以不用官方的installer、不安装Visual Studio，用独立出来的cpp build tools~
 
-![image-20230616101545543](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230616101545543.png)
+![image-20230616164819078](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230616164819078.png)
 
-- 本体： https://www.rust-lang.org/tools/install
+- 本体：https://www.rust-lang.org/tools/install
 
 - IDE：Intellij Rust插件
 
@@ -277,7 +275,7 @@ fn add_suffix(mut name: String) -> String {
 
 **Moved heap data principle:** if a variable x moves ownership of heap data to another variable y, then x cannot be used after move.
 
-`clone`方法可以在指针复制的同时不丢失所有权，“绕过”上面的规则
+`clone`方法可以在指针复制的同时不丢失原指针的所有权，“绕过”上面的规则
 
 ~~在同一作用域内、只在栈上拷贝的数据也不受上述规则的限制（废话了，毕竟是在栈上）~~
 
@@ -290,6 +288,8 @@ fn add_suffix(mut name: String) -> String {
 关键在于：在b被传入`move_a_box`后、b才会被释放
 
 #### 引用&借用
+
+*这部分内容有C的基础会好理解一些
 
 非常显然，如果严格按照上面所有权的规则进行 变量被moved之后再想找到原来的值就需要在函数上添加一个返回值，然而我们经常需要使用那个值！
 
@@ -317,5 +317,44 @@ fn greet(g1: &String, g2: &String) {
 
 ![image-20230615151017338](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230615151017338.png)
 
-只有第一次的解引用`*x`可以被修改值并同步堆内存的修改，二次解引用的`**r1`只可以读值不可以修改
+只有第一次的解引用`*x`可以被修改值并同步堆内存的修改，二次解引用的`**&x`只可以读值不可以修改，而`&*x`是直接指向值的引用指针、和`*x`的数据类型并不一样
 
+`*x`, `**&x`和`*&*x`三者是完全等价的（数据类型、值），都可以直接读出堆内存指向的值，但只有`*x`可被改值
+
+**Pointer Safety Principle:** data should never be aliased and mutated at the same time.
+
+![image-20230616143232706](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230616143232706.png)
+
+在上面的例子中，当`vec.push(4)`被执行时，原`vec`的cap和len都需要增大，为了满足新的cap和len的需求 很可能会重新分配在堆上的位置，所以`num`是否还指向`vec[2]`就是undefined behavior，很可能出现潜在的安全问题
+
+回想所有权的定义，数据只可以被它的拥有者owner所拥有，而不是别名aliases；一言以蔽之：数据只可以有一个可变引用，可以有多个不可变引用，不可以同时拥有可变、不可变引用
+
+让我们深入了解其中的read, write, own权限都发生了什么样的变化：
+
+![image-20230616145353540](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230616145353540.png)
+
+我们可以看到，在引用`num`被借用期间，`vec`是丢失write和owner权限的；而需要对应权限的操作，该权限会被使用到的`path`可见，比如被借用的`&vec[2]`，read权限对`num`和`*num`都可见、同样也对`vec`可见
+
+而上上张图（出现undefined behavior的反例）中则有这样的权限关系
+
+![image-20230616151045240](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230616151045240.png)
+
+编译时会在`vec.push(4)`就报错 而不是第四行
+
+![image-20230616151300402](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230616151300402.png)
+
+浅层原因是borrow checker已经检测到 第三行的`vec`只有read，而write权限被`num`借走了，所以此时`vec`不可变、报错，深层原因则是rust为了避免可能存在的安全问题 而设计了这样的borrow checker（先鸡后蛋）
+
+上面所有提到的`&`引用都是不可变引用immutable reference（也叫做shared references），它作为non-owning pointer 只作为不可变的别名；然而我们也可以让它暂时拥有write权限（仍然非owner），也就是`&mut`，可变引用mutable reference（也叫做unique reference）
+
+![image-20230616152201799](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230616152201799.png)
+
+![image-20230616154144385](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230616154144385.png)
+
+比较细致的讲解我直接截图了，权限关系也比较清楚
+
+*两道比较复杂的题，有亿点让人头大
+
+![image-20230616161802457](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230616161802457.png)
+
+![image-20230616162437517](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230616162437517.png)
