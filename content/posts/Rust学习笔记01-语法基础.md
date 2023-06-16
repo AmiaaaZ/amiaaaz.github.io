@@ -2,7 +2,7 @@
 title: "Rust学习笔记Ⅰ"
 slug: "rust-stduy-notes-01"
 description: "锐意学习中:)"
-date: 2023-06-16T10:09:26+08:00
+date: 2023-06-16T23:00:26+08:00
 categories: ["NOTES&SUMMARY"]
 series: ["Rust学习笔记"]
 tags: ["Rust"]
