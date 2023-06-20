@@ -14,6 +14,8 @@ Q: 为啥突然学Rust？
 
 A: ~~没有为啥，闲的~~ 一方面是入夏以来输入/输出都很少，不是好现象，另一方面是也在听南大的操作系统课，rust正好就是对标c/c++的系统级编程语言，不如拿来学学 跟上最新的语言特性和发展进程x
 
+------
+
 ## 环境配置
 
 *为了上手方便，暂时下文涉及到的都是windows环境（我懒）
@@ -52,12 +54,13 @@ rustup self uninstall
 
 ## 语言特色
 
-这几年断断续续接触了很多语言（C, Python, PHP, Java, Javascript, Go....），逐渐感受到各个编程语言在“和而不同”之余 存在各自的“舒适区”，这个舒适区由语言特性等很多因素共同决定；如果硬把需求安排在一个不适合的语言，那真的是如鲠在喉
+这几年断断续续接触了很多语言（C, Python, PHP, Java, Javascript, Go....），逐渐感受到各个编程语言在“和而不同”之余 存在各自的“舒适区”，这个舒适区由语言特性等很多因素共同决定；如果硬把需求安排在一个不适合的语言，那真的是如鲠在喉，语言是工具 不是目的
 
 - 优点：速度快，内存利用率高，性能好，生成的可执行文件为静态编译，跨平台
 - 缺点：编译器严格、编译耗时长，学习曲线陡峭
 - 与其他语言的对比：属于强类型，代码风格类似C/C++，会用项目的概念来组织代码文件（类似Java的Maven）
 - 敏感肌也很喜欢：可以编写shellcode loader
+- 杀手级特性：让可能出现的安全问题、undefined behavior消失在编译前
 
 ## 语法基础
 
@@ -322,18 +325,23 @@ fn greet(g1: &String, g2: &String) {
 `*x`, `**&x`和`*&*x`三者是完全等价的（数据类型、值），都可以直接读出堆内存指向的值，但只有`*x`可被改值
 
 **Pointer Safety Principle:** data should never be aliased and mutated at the same time.
+数据不可以<u>同时</u> 既有别名（存在引用）、又本身可变
 
 ![image-20230616143232706](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230616143232706.png)
 
-在上面的例子中，当`vec.push(4)`被执行时，原`vec`的cap和len都需要增大，为了满足新的cap和len的需求 很可能会重新分配在堆上的位置，所以`num`是否还指向`vec[2]`就是undefined behavior，很可能出现潜在的安全问题
+在上面的例子中，当`vec.push(4)`被执行时，原`vec`的cap和len都需要增大，为了满足新的cap和len的需求 很可能会重新分配在堆上的位置，所以`num`是否还指向`vec[2]`就是undefined behavior，很可能出现潜在的安全问题，所以这一行为会被编译器阻止
 
-回想所有权的定义，数据只可以被它的拥有者owner所拥有，而不是别名aliases；一言以蔽之：数据只可以有一个可变引用，可以有多个不可变引用，不可以同时拥有可变、不可变引用
+borrow checker的核心原理是检查它们的权限
 
-让我们深入了解其中的read, write, own权限都发生了什么样的变化：
+- read: data can be copied to another location
+- write: data can be mutated in-place
+- own: data can be moved or dropped
+
+这些权限只存在于编译期用于编译器来进行检查，而引用/别名的出现会暂时对原有变量的权限做出改变；让我们深入了解在上面例子中 read, write, own权限都发生了什么样的变化：
 
 ![image-20230616145353540](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230616145353540.png)
 
-我们可以看到，在引用`num`被借用期间，`vec`是丢失write和owner权限的；而需要对应权限的操作，该权限会被使用到的`path`可见，比如被借用的`&vec[2]`，read权限对`num`和`*num`都可见、同样也对`vec`可见
+我们可以看到，在`vec`被`num`借用期间，`vec`会丢失write和owner权限，而对应的`num`如果可变则获取write和owner权限 不可变则只获得owner权限，`*num`的权限和被借用的`vec`保持一致；一旦存在引用就会使数据的权限发生变化（暂时变成read-only），当引用消失 权限就会立刻回收，把write+owner权限还给原数据
 
 而上上张图（出现undefined behavior的反例）中则有这样的权限关系
 
@@ -343,18 +351,171 @@ fn greet(g1: &String, g2: &String) {
 
 ![image-20230616151300402](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230616151300402.png)
 
-浅层原因是borrow checker已经检测到 第三行的`vec`只有read，而write权限被`num`借走了，所以此时`vec`不可变、报错，深层原因则是rust为了避免可能存在的安全问题 而设计了这样的borrow checker（先鸡后蛋）
+浅层原因（蛋）是borrow checker已经检测到 第三行的`vec`只有read，而write权限被`num`借走了，所以此时`vec`不可变 导致报错，深层原因（鸡）则是rust为了避免可能存在的安全问题 而设计了这样的borrow checker（先鸡后蛋）
 
 上面所有提到的`&`引用都是不可变引用immutable reference（也叫做shared references），它作为non-owning pointer 只作为不可变的别名；然而我们也可以让它暂时拥有write权限（仍然非owner），也就是`&mut`，可变引用mutable reference（也叫做unique reference）
 
-![image-20230616152201799](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230616152201799.png)
+![image-20230619144108851](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230619144108851.png)
 
-![image-20230616154144385](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230616154144385.png)
+对比前面的不可变引用`num`有这些区别：
 
-比较细致的讲解我直接截图了，权限关系也比较清楚
+- 不可变引用：原数据仍有read权限，`num`只读+owner，`*num`只读
+- 可变引用：原数据失去所有权限，`num`只读+owner，`*num`可读可写
+
+在可变引用存在时，实际是允许了可变而避免了别名——原数据失去read权限，而`*可变引用`可读可写，可以直接通过`*可变引用`操作原数据内容
+
+可变引用也可以降权为read-only的引用
+
+![image-20230619150722466](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230619150722466.png)
+
+这里的`num2`是对`*num`的引用，因此把`*num`的write和owner权限借走了，又因为是不可变引用，`*num2`只读 不可写
+
+上面讨论的都是在顺序执行流里 权限在引用存在时的流动关系，当if-else等控制流存在时 基本相同，不再赘述
 
 *两道比较复杂的题，有亿点让人头大
 
 ![image-20230616161802457](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230616161802457.png)
 
+当rust判断 数据存在引用时，就会失去原有的write权限，当引用结束了它的生命周期，write会被归还
+
 ![image-20230616162437517](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230616162437517.png)
+
+![image-20230619153804139](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230619153804139.png)
+
+这个题 其它几个选项的描述都是对的，但只有use after being free的解释是最根本的
+
+作为Pointer Safety Principle的一部分，borrow checker也会强制要求数据的生存时间必须大于它的任何引用，然鹅 当引用作为函数的输入或输出时，rust是无法确定这个引用的生存周期的，rust在这种情况下引入了F权限
+
+![image-20230619154721628](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230619154721628.png)
+
+![image-20230619155103418](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230619155103418.png)
+
+这个例子就不会被成功编译，因为只从函数声明来看无法确定输出的`&String`类型的对象是`strings`的引用还是`default`的引用；如果`default`进入了`first_or`的程序流、最后返回`default`，在经过drop之后就无法正确打印`s`了，因为`s`指向的`default`已经无了
+
+![image-20230619155304536](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230619155304536.png)
+
+这样的例子也是不安全的，因为当函数执行完毕后`&s`会消失
+
+#### 如何修复报错
+
+##### **Returning a reference to the stack**
+
+*核心：返回引用需要关心 引用指向的原数据能不能活到函数提供返回值，如果坚持返回引用 需要加生命周期的前缀，或者放弃返回引用 直接返回数据本身
+
+```rust
+fn return_a_string()-> &String{
+	let s = String::from("Hello, world");
+	&s
+}
+```
+
+这个例子中当需要返回`&s`时它已经寄了，不能保证`s`获得足够长
+
+有4种方式可以延长字符串的寿命
+
+1. 将返回类型由`&String`改为`String`
+
+```rust
+fn return_a_string() -> String {
+    let s = String::from("Hello world");
+    s
+}
+```
+
+2. 返回静态字符串（当我们无需涉及堆内存分配时
+
+```rust
+fn return_a_string() -> &'static str {
+    "Hello world"
+}
+```
+
+3. 显式调用gc，将borrow-checking挪到运行时
+
+```rust
+use std::rc::Rc;
+fn return_a_string() -> Rc<String> {
+    let s = Rc::new(String::from("Hello world"));
+    Rc::clone(&s)
+}
+```
+
+`Rc::clone`仅克隆指向`s`的指针 而不克隆数据，在运行时 Rc会检查最后一个指向数据的Rc何时删除 并在那之后释放数据
+
+4. 添加可变引用作为函数参数
+
+```rust
+fn return_a_string(output: &mut String) {
+    output.replace_range(.., "Hello world");
+}
+```
+
+由函数调用放负责为返回的字符串创建空间，但是如果运用得当这种做法时memory-efficient的
+
+##### Not enough permissions
+
+*当试图修改只读数据，或在存在引用时删除数据
+
+![image-20230619164157328](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230619164157328.png)
+
+这个例子的第二行就会报错，因为`name`本身是不可变引用 不存在write权限
+
+我们希望这样调用
+
+![image-20230619164821878](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230619164821878.png)
+
+`first`指向`name[0]`，`name.push()`重新分配了`name` 导致打印`first`会报错；也就是在存在`&name`时还试图修改`name`
+
+如何修改？如果只是简单粗暴的修改接收参数的类型（从不可变引用改为可变引用）是很不负责任的做法，因为传入的参数可被修改 这不是调用方所预期的行为
+
+另一个选择是将引用改为数据，确保传入的`name`一定拥有`name`的所有权——但这也不是好的解决方案，rust并不鼓励直接传入像Vec或String这样的数据类型
+
+那么传入的`&Vec<String>`类型和传出的`String`都不改变，只有修改函数体了
+
+1. 克隆传入参数
+
+```rust
+fn stringify_name_with_title(name: &Vec<String>) -> String {
+    let mut name_clone = name.clone();
+    name_clone.push(String::from("Esq."));
+    let full = name_clone.join(" ");
+    full
+}
+```
+
+通过克隆`name`，我们可以直接修改这个vector的副本 且不影响原参数
+
+2. 使用已存在的函数
+
+```rust
+fn stringify_name_with_title(name: &Vec<String>) -> String {
+    let mut full = name.join(" ");
+    full.push_str(" Esq.");
+    full
+}
+```
+
+3. 看情况会用到的方式
+
+```rust
+// before
+fn round_in_place(v: &Vec<f32>) {
+    for n in v {
+        *n = n.round();
+    }
+}
+// error[E0594]: cannot assign to `*n`, which is behind a `&` reference
+// --> test.rs:4:9
+```
+
+```rust
+// after
+fn round_in_place(v: &mut Vec<f32>) {
+    for n in v {
+        *n = n.round();
+    }
+}
+```
+
+在这个对小数取整的函数中，需要对传入的Vec一一修改，最好的方式是将参数改为可变引用 并直接用`*n`修改原数据
+
