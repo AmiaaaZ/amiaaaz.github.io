@@ -1,5 +1,7 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>js on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/tags/js/</link><description>Recent content in js on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 30 Mar 2023 17:33:04 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/tags/js/index.xml" rel="self" type="application/rss+xml"/><item><title>前端加密下的渗透测试起手式</title><link>https://amiaaaz.github.io/2023/03/30/how-to-set-up-your-workflow-when-meeting-frontend-encrypt/</link><pubDate>Thu, 30 Mar 2023 17:33:04 +0800</pubDate><guid>https://amiaaaz.github.io/2023/03/30/how-to-set-up-your-workflow-when-meeting-frontend-encrypt/</guid><description>&lt;p>起因为实战中遇到的一个站点，请求参数使用js前端加密，即使加密过程很简单 但仍希望有一个中间hook能直接看到明文，如果能接入sqlmap直接测试（免去写tamper）的过程就更好了，于是有了本文&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>js on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/tags/js/</link><description>Recent content in js on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 04 Jul 2023 23:33:04 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/tags/js/index.xml" rel="self" type="application/rss+xml"/><item><title>前端加密下的渗透测试起手式</title><link>https://amiaaaz.github.io/2023/07/04/how-to-set-up-your-workflow-when-meeting-frontend-encrypt/</link><pubDate>Tue, 04 Jul 2023 23:33:04 +0800</pubDate><guid>https://amiaaaz.github.io/2023/07/04/how-to-set-up-your-workflow-when-meeting-frontend-encrypt/</guid><description>&lt;p>起因为实战中遇到的一个站点，请求参数使用js前端加密，即使加密过程很简单 但仍希望有一个中间hook能直接看到明文，如果能接入sqlmap直接测试（免去写tamper）的过程就更好了，于是有了本文&lt;/p>
 &lt;p>*均已脱敏，所以可能看起来比较简单？whatever&lt;/p>
+&lt;p>*060923（金）：增加部分内容&lt;/p>
+&lt;p>*070423（火）：过于铸币，今天才想起来要push&lt;/p>
 &lt;h2 id="前置">前置&lt;/h2>
 &lt;p>拾起远古js逆向技巧，f12大法伺候之下理清加密逻辑，从&lt;code>encrypt.js&lt;/code>中抠出可以单独执行的加密函数&lt;code>jscode&lt;/code>以便被execjs调用&lt;/p>
 &lt;p>把加密函数替换为空，其余不变另存一份&lt;code>encrypt2.js&lt;/code>&lt;/p>
@@ -64,7 +66,7 @@ forward(modified)
 -&amp;gt; yakit得到响应 burpsuite得到响应 浏览器得到响应
 &lt;/code>&lt;/pre>&lt;p>这样burp中可以看到明文请求和正常响应，方便我们爆破和其他测试（比如接入burp, xray等等）&lt;/p>
 &lt;h2 id="mitmproxy">mitmproxy&lt;/h2>
-&lt;p>但话说回来，yakit本身是一个比较庞大的类burp软件，编写脚本还必须使用yaklang，我更倾向于使用mitmproxy来做相同的事情，毕竟用python写是再轻松不过了&lt;/p>
+&lt;p>但话说回来，yakit本身是一个比较庞大的类burp软件，编写脚本还必须使用yaklang，我更倾向于使用mitmproxy来做相同的事情，毕竟用python写是再轻松不过了~&lt;/p>
 &lt;p>mitmproxy为每一种连接方式（http, socks&amp;hellip;.）提供了5个生命周期（修改阶段），体现在代码里就是我们可声明的函数&lt;/p>
 &lt;ul>
 &lt;li>&lt;code>requestheaders&lt;/code>：仅读取headers，此时body为空&lt;/li>
@@ -103,12 +105,17 @@ forward(modified)
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>pip install mitmporxy
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># $env:all_proxy = &amp;#34;socks5://127.0.0.1:6005&amp;#34; # 可选&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>mitmdump -p &lt;span style="color:#ae81ff">8085&lt;/span> -s addon.py &lt;span style="color:#75715e"># 8085给burp做上游代理&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>依旧效果拔群&lt;/p>
-&lt;h2 id="reres">ReRes&lt;/h2>
-&lt;p>为什么我在上面的mitmproxy中只举例了加密请求的部分，没有替换js的呢？因为这里另有一个浏览器插件肥肠合适：&lt;a href="https://github.com/annnhan/ReRes">ReRes&lt;/a>&lt;/p>
-&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230330172133676.png" alt="image-20230330172133676">&lt;/p>
-&lt;p>只做hook响应的事，可以和其它软件组合使用，也没有负担&lt;/p>
-&lt;p>要说缺点的话就是如果同时几个人一起做渗透，要求大家都装个插件就不太优雅了，这种情况下还是建议整合进yakit或mitmproxy的脚本里，开放端口给大家一起用~&lt;/p></description></item><item><title>Javascript逆向学习笔记Ⅰ</title><link>https://amiaaaz.github.io/2023/01/05/javascript-reverse-study-notes-01/</link><pubDate>Thu, 05 Jan 2023 00:44:51 +0800</pubDate><guid>https://amiaaaz.github.io/2023/01/05/javascript-reverse-study-notes-01/</guid><description>&lt;h2 id="绕过反调试">绕过反调试&lt;/h2>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>然而实际编写符合要求的脚本时就陷入了困难——官方文档简直是****，让人不忍卒读&amp;hellip;&amp;hellip;这里推荐这份文档：&lt;a href="https://github.com/mochazi/mitmproxy-doc-cn/tree/master">Mitmproxy-Document&lt;/a>，对每一个接口、参数如何设置都写的很详细，五星好评&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230609174248050.png" alt="image-20230609174248050">&lt;/p>
+&lt;p>实测mimt可以为xray做上游代理进行正常测试，但是会比直接挂xray速度会慢一些 始终有pending的部分（但谁让mimt操作简单呢，我单方面宣布与这一缺点和解！&lt;/p>
+&lt;h2 id="实例">实例&lt;/h2>
+&lt;p>日常测站遇到的实例，参数被写死的key进行AES加密，返回内容也可用固定的key解密，直接抠出来替换（加密过程非常非常简单）&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230609175026087.png" alt="image-20230609175026087">&lt;/p>
+&lt;p>这里遇到了第一个坑点：jsencrypt库是针对前端环境的，支持一种很奇怪的AES Public Key格式（126位），无法b64解码 也不含&lt;code>-----PUBLIC&lt;/code>这种标配的头，但是可以被正常使用，然而nodejs-jsencrypt库却不支持这种格式！！！！！所以需要单独为jsencrypt补上运行环境（见最上两行代码）&lt;/p>
+&lt;p>之后就是把网页加载的 含有加密部分的代码换为空，让其返回明文，再编写mimt脚本&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230609175636518.png" alt="image-20230609175636518">&lt;/p>
+&lt;p>第二个小坑点是mimt修改query参数竟然会自动进行urlencode&amp;hellip;&amp;hellip;我还改了半天，结果删掉&lt;code>quote()&lt;/code>就好了（是我自作多情了）&lt;/p>
+&lt;p>然后就可以用burp 愉快的测站啦qwq&lt;/p></description></item><item><title>Javascript逆向学习笔记Ⅰ</title><link>https://amiaaaz.github.io/2023/01/05/javascript-reverse-study-notes-01/</link><pubDate>Thu, 05 Jan 2023 00:44:51 +0800</pubDate><guid>https://amiaaaz.github.io/2023/01/05/javascript-reverse-study-notes-01/</guid><description>&lt;h2 id="绕过反调试">绕过反调试&lt;/h2>
 &lt;h3 id="每xx-ms执行一次debugger">每xx ms执行一次debugger&lt;/h3>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-js" data-lang="js">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">setInterval&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">()&lt;/span> &lt;span style="color:#111">{&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">debugger&lt;/span>
