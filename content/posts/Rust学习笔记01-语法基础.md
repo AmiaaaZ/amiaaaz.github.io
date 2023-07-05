@@ -2,7 +2,7 @@
 title: "Rust学习笔记Ⅰ"
 slug: "rust-stduy-notes-01"
 description: "锐意学习中:)"
-date: 2023-06-16T23:00:26+08:00
+date: 2023-07-06T01:23:26+08:00
 categories: ["NOTES&SUMMARY"]
 series: ["Rust学习笔记"]
 tags: ["Rust"]
@@ -450,7 +450,7 @@ fn return_a_string(output: &mut String) {
 }
 ```
 
-由函数调用放负责为返回的字符串创建空间，但是如果运用得当这种做法时memory-efficient的
+由函数调用放负责为返回的字符串创建空间，但是如果运用得当 这种做法是memory-efficient的
 
 ##### Not enough permissions
 
@@ -518,4 +518,188 @@ fn round_in_place(v: &mut Vec<f32>) {
 ```
 
 在这个对小数取整的函数中，需要对传入的Vec一一修改，最好的方式是将参数改为可变引用 并直接用`*n`修改原数据
+
+##### Aliasing and mutating a data structure
+
+*指的是一个引用指向的堆数据被其它的别名解引用
+
+举例
+
+```rust
+fn add_big_strings(dst: &mut Vec<String>, src: &[String]){
+    let largest: &String = dst.iter().max_by_key(|s| s.len()).unwrap();
+    for s in src{
+        if s.len()>largest.len(){
+            dst.push(s.clone());
+        }
+    }
+}
+```
+
+第二行largest会把dst的write权限借走 直到倒数第四行`push`时仍没有归还，但此时dst是需要write权限的，就会引起编译器报错——因为`dst.push()`可能会影响dst的数据，导致largest的引用失效
+
+为了解决这个问题 我们缩短largest的生存周期
+
+1. 对largest克隆
+
+```rust
+fn add_big_strings(dst: &mut Vec<String>, src: &[String]) {
+    let largest: String = dst.iter().max_by_key(|s| s.len()).unwrap().clone();
+    for s in src {
+        if s.len() > largest.len() {
+            dst.push(s.clone());
+        }
+    }
+}
+```
+
+但可能会影响性能
+
+2. 将比较和push分开执行
+
+```rust
+fn add_big_strings(dst: &mut Vec<String>, src: &[String]) {
+    let largest: String = dst.iter().max_by_key(|s| s.len()).unwrap().clone();
+    for s in src {
+        if s.len() > largest.len() {
+            dst.push(s.clone());
+        }
+    }
+}
+```
+
+*修复核心：缩短借出去的时间，保证本体在需要对应权限（如write）的时候不出问题
+
+##### Copying vs moving out of a collection
+
+从vector中复制数据有可能对新手造成困扰
+
+![image-20230706002622348](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230706002622348.png)
+
+在上图的例子中，第二行对`v[0]`引用 全场无write，到第三行对`n_ref`解引用后`n`顺利读出来值，但如果vector内的组成元素不是i32而是String则会有点问题
+
+![image-20230706002900121](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230706002900121.png)
+
+除了第一行以外其它都一样 但会报错
+
+原因是，`s`、`v`和`s_ref`实际都指向字符串，一旦之后这三个有一个被dropped，关联的变量也会dropped，就会发生double-free
+
+然而这种undefined behavior并不会发生在含有i32的vector中！区别就是复制String实际是会复制一个指向heap data的指针，而复制i32不会；在Rust的官方解释中说：i32有Copy trait，String没有
+
+*总之，当一个值不用上堆，那它可以随意复制，比如i32和&String，而String在堆上 拥有heap data，就不能直接复制
+
+*特例：对`mut`类型数据有特殊操作，比如`&mut i32`也是不能复制的，如：
+
+```rust
+let mut n = 0;
+let a = &mut n;
+let b = a;	// wrong
+```
+
+这时为了避免两个可变引用指向同一个数据
+
+那应该如何正确复制呢？
+
+1. 避免对String切换所有权，只是使用不可变引用本身
+
+```rust
+let v: Vec<String> = vec![String::from("Hello, World")];
+let s_ref: &String = &v[0];
+println("{s_ref}");
+```
+
+2. 用无敌的克隆，获得String的所有权
+
+```rust
+let v: Vec<String> = Vec![String::from("Hello, world")];
+let mut s: String = v[0].clone();
+s.push('!')
+println("{s}");
+```
+
+3. 用内置方法`Vec::remove`将String拿出来
+
+```rust
+let mut v: Vec<String> = vec![String::from("hello world")];
+let mut s: String = v.remove(0);
+s.push('!');
+println("{s}");
+assert!(v.len() == 0);
+```
+
+##### Mutating Different Tuple Fields(safe)
+
+以上的报错都来自于潜在的安全性问题，但完全没有安全性问题的程序也可能会报错，因为Rust采用了细粒度的权限分级，然而Rust也可能会把不同的path合并为同一path
+
+举例1：从tuple中拿一个元素给另一个tuple
+
+```rust
+fn main() {
+    let mut name = (
+        String::from("Ferris"),
+        String::from("Rustacean")
+    );
+    let first = &name.0;
+    name.1.push_str(", Esq.");
+    println!("{first} {}", name.1);
+}
+```
+
+`first`借走了`name.0`的String，两者都不拥有write和own权限，但`name.1`仍有write 我们可以自由的使用`name.1.push_str()`
+
+举例2：换成函数的写法
+
+```rust
+fn get_first(name: &(String, String)) -> &String {
+    &name.0
+}
+
+fn main() {
+    let mut name = (
+        String::from("Ferris"),
+        String::from("Rustacean")
+    );
+    let first = get_first(&name);
+    name.1.push_str(", Esq.");
+    println!("{first} {}", name.1);
+}
+```
+
+这里是对`&name`整体传参，所以`name.1`的write权限也无了
+
+由此可见，Rust不关心具体的函数实现，只关心传入传出的参数类型
+
+*可恶！正确的函数也会被误伤
+
+##### Mutating different array elements(safe)
+
+类似的，对array也会有一样的效果——恶意中伤！
+
+我们可以用内置函数来避免
+
+```rust
+let mut a = [0, 1, 2, 3];
+let (x, rest) = a.split_first_mut().unwrap();
+let y = &rest[0];
+*x += *y;
+```
+
+或者unsafe!
+
+```rust
+let mut a = [0, 1, 2, 3];
+let x = &mut a[0] as *mut i32;
+let y = &a[1] as *const i32;
+unsafe { *x += *y; } // DO NOT DO THIS unless you know what you're doing!
+```
+
+unsafe blocks允许使用裸指针，也不会被borrow checker检查安全性（好耶
+
+*这一章的几个题还挺难的 在这里记录一下
+
+![image-20230706012106722](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230706012106722.png)
+
+![image-20230706012120596](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230706012120596.png)
+
+![image-20230706012151836](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230706012151836.png)
 
