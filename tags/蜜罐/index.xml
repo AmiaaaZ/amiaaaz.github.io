@@ -273,9 +273,26 @@
 &lt;p>没找到环境，看wp云一下&lt;/p>
 &lt;p>部署好agent.py之后用bettercap，读/root/.mysql_history拿flag一波带走&lt;/p>
 &lt;p>参考：&lt;a href="https://yelo.cc/2019/04/18/ddctf-2019-writeups-web-7.html">wp&lt;/a>&lt;/p>
-&lt;h2 id="一个中等好的蜜罐">一个中等好的蜜罐&lt;/h2>
-&lt;p>之所以说中等好，是因为它受制于对应数据库的版本和配置情况，所以并不够通用，可以参考以下两个栗子：&lt;/p>
+&lt;h2 id="适用场景">适用场景&lt;/h2>
+&lt;h3 id="一个中等好的蜜罐">一个中等好的蜜罐&lt;/h3>
+&lt;p>之所以说中等好，是因为它受制于对应数据库的版本和配置情况，并不是所有mysql客户端都支持&lt;code>LOAD DATA LOCAL&lt;/code>的 更多情况下是只接受greeting包就断开了（尽职尽责 好评） ，所以并不够通用，可以参考以下两个栗子：&lt;/p>
 &lt;p>参考：&lt;a href="https://mp.weixin.qq.com/s/m4I_YDn98K_A2yGAhv67Gg">MySQL蜜罐获取攻击者微信ID&lt;/a> | &lt;a href="https://mp.weixin.qq.com/s/rQ9BpavBeMnS6xUOidZ5OA">溯源反制之MySQL蜜罐研究&lt;/a>&lt;/p>
+&lt;p>微步有已经做好的蜜罐可以开箱即用&lt;/p>
+&lt;h2 id="修复">修复&lt;/h2>
+&lt;p>load file local本身是不影响mysql正常工作的语句，对于客户端来说可以自行关闭（文档-&amp;gt; &lt;a href="https://dev.mysql.com/doc/refman/8.0/en/load-data-local.html">https://dev.mysql.com/doc/refman/8.0/en/load-data-local.html&lt;/a>&lt;/p>
+&lt;p>这是本身mysql的feature，无法通过mysql或协议的层级进行修复，只有客户端关闭这个配置才能避免影响&lt;/p>
+&lt;h3 id="php">php&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>可以通过php.ini设置&lt;code>mysqli.allow_local_infile=off&lt;/code>来关闭，php7.3.4及之后该项默认关闭&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>代码中可以通过&lt;code>mysqli_opt_local_infile&lt;/code>来选择禁用该语句（文档-&amp;gt; &lt;a href="http://php.net/manual/zh/mysqli.options.php">http://php.net/manual/zh/mysqli.options.php&lt;/a>&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="java">java&lt;/h3>
+&lt;p>jdbc中这个配置是&lt;code>allowLoadLocalInfile&lt;/code>（文档-&amp;gt; &lt;a href="https://dev.mysql.com/doc/connector-j/5.1/en/connector-j-reference-configuration-properties.html">https://dev.mysql.com/doc/connector-j/5.1/en/connector-j-reference-configuration-properties.html&lt;/a>&lt;/p>
+&lt;p>java中可以结合jdbc结合反序列化，加深利用&lt;/p>
 &lt;hr>
 &lt;p>唔，是7月做题的时候碰到的点，今天做题又碰到了，于是拿出来鞭个尸，比之前的理解要深刻一些了&lt;/p>
 &lt;p>最近在看js原型污染的相关问题，结果考了个四级之后之前写的代码都不认得了😅小丑竟是我自己&lt;/p>

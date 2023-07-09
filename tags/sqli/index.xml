@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>SQLi on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/tags/sqli/</link><description>Recent content in SQLi on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sat, 08 Jul 2023 21:22:07 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/tags/sqli/index.xml" rel="self" type="application/rss+xml"/><item><title>SQL注入在实战中的Tips合集</title><link>https://amiaaaz.github.io/2023/07/08/sqli-tricks-in-pentest/</link><pubDate>Sat, 08 Jul 2023 21:22:07 +0800</pubDate><guid>https://amiaaaz.github.io/2023/07/08/sqli-tricks-in-pentest/</guid><description>&lt;p>从实战中总结的一些小技巧，希望能帮助到一些人www&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>SQLi on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/tags/sqli/</link><description>Recent content in SQLi on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Mon, 10 Jul 2023 01:26:07 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/tags/sqli/index.xml" rel="self" type="application/rss+xml"/><item><title>SQL注入在实战中的Tips合集</title><link>https://amiaaaz.github.io/2023/07/10/sqli-tricks-in-pentest/</link><pubDate>Mon, 10 Jul 2023 01:26:07 +0800</pubDate><guid>https://amiaaaz.github.io/2023/07/10/sqli-tricks-in-pentest/</guid><description>&lt;p>从实战中总结的一些小技巧，希望能帮助到一些人www&lt;/p>
 &lt;hr>
 &lt;h2 id="order-by注入">order by注入&lt;/h2>
 &lt;p>老生常谈，参数中出现可能为字段或表名、或出现排序有关的（比如desc, asc）就会被怀疑是sql注入点，但不是所有这种“疑似能注入”的地方都能被注——或者说重点关注什么样的字段是有说法的，这一点结合sql注入防御会更好理解&lt;/p>
@@ -78,4 +78,23 @@ select sys_context(&amp;#39;userenv&amp;#39;,&amp;#39;ip_address&amp;#39;) from 
 &lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230707150640501.png" alt="image-20230707150640501">&lt;/p>
 &lt;p>拿到敏感数据就可以轻松愉快的写报告了，几百分轻松get~&lt;/p>
 &lt;p>当然了，如果站点做了详细的鉴权 那么所有的查询都是需要token的，没有token的我们只能到此为止了QAQ&lt;/p>
-&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230707150842841.png" alt="image-20230707150842841">&lt;/p></description></item></channel></rss>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230707150842841.png" alt="image-20230707150842841">&lt;/p>
+&lt;h2 id="伪服务端进行任意文件读">伪服务端进行任意文件读&lt;/h2>
+&lt;p>原理不再赘述（可参见之前写过的博客-&amp;gt; &lt;a href="https://amiaaaz.github.io/2021/12/19/mysql-pseudo-server/">MySQL 伪服务端读客户端任意文件&lt;/a>），存在以下应用场景&lt;/p>
+&lt;ul>
+&lt;li>读配置文件&lt;/li>
+&lt;/ul>
+&lt;p>如后台可设置连接其它数据库，通过伪服务端读敏感信息（工具一把梭-&amp;gt; &lt;a href="https://github.com/4ra1n/mysql-fake-server">mysql-fake-server&lt;/a>&lt;/p>
+&lt;ul>
+&lt;li>(php)与phar反序列化、文件上传的结合&lt;/li>
+&lt;/ul>
+&lt;p>mysqli中的读文件会调用&lt;code>php_stream_open_wrapper_ex&lt;/code>函数，也就是说 如果任意读的文件是phar 就可以反序列化&lt;/p>
+&lt;p>可以先通过反序列化链子构造phar（甚至不需要有链子，只要支持反序列化 比如最简单的sopaclient等等内置类反序列化），结合文件上传，再用mysql连接读这个phar 触发反序列化&lt;/p>
+&lt;ul>
+&lt;li>(java)jdbc反序列化&lt;/li>
+&lt;/ul>
+&lt;p>工具同上&lt;/p>
+&lt;ul>
+&lt;li>（防守）做蜜罐&lt;/li>
+&lt;/ul>
+&lt;p>微步有成型的蜜罐可开箱即用&lt;/p></description></item></channel></rss>
