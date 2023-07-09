@@ -357,11 +357,33 @@ namespace {
 
 参考：[wp](https://yelo.cc/2019/04/18/ddctf-2019-writeups-web-7.html)
 
-## 一个中等好的蜜罐
+## 适用场景
 
-之所以说中等好，是因为它受制于对应数据库的版本和配置情况，所以并不够通用，可以参考以下两个栗子：
+### 一个中等好的蜜罐
+
+之所以说中等好，是因为它受制于对应数据库的版本和配置情况，并不是所有mysql客户端都支持`LOAD DATA LOCAL`的 更多情况下是只接受greeting包就断开了（尽职尽责 好评） ，所以并不够通用，可以参考以下两个栗子：
 
 参考：[MySQL蜜罐获取攻击者微信ID](https://mp.weixin.qq.com/s/m4I_YDn98K_A2yGAhv67Gg)  |  [溯源反制之MySQL蜜罐研究](https://mp.weixin.qq.com/s/rQ9BpavBeMnS6xUOidZ5OA)
+
+微步有已经做好的蜜罐可以开箱即用
+
+## 修复
+
+load file local本身是不影响mysql正常工作的语句，对于客户端来说可以自行关闭（文档-> https://dev.mysql.com/doc/refman/8.0/en/load-data-local.html
+
+这是本身mysql的feature，无法通过mysql或协议的层级进行修复，只有客户端关闭这个配置才能避免影响
+
+### php
+
+- 可以通过php.ini设置`mysqli.allow_local_infile=off`来关闭，php7.3.4及之后该项默认关闭
+
+- 代码中可以通过`mysqli_opt_local_infile`来选择禁用该语句（文档-> http://php.net/manual/zh/mysqli.options.php
+
+### java
+
+jdbc中这个配置是`allowLoadLocalInfile`（文档-> https://dev.mysql.com/doc/connector-j/5.1/en/connector-j-reference-configuration-properties.html
+
+java中可以结合jdbc结合反序列化，加深利用
 
 ------
 

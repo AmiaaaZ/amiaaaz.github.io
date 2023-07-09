@@ -2,7 +2,7 @@
 title: "SQL注入在实战中的Tips合集"
 slug: "sqli-tricks-in-pentest"
 description: "已经...要....变成脚本小子的模样了!!!"
-date: 2023-07-08T21:22:07+08:00
+date: 2023-07-10T01:26:07+08:00
 categories: ["NOTES&SUMMARY"]
 series: []
 tags: ["PENTEST", "SQLi"]
@@ -131,3 +131,25 @@ https://example.com/graphql?query=xxxxx
 当然了，如果站点做了详细的鉴权 那么所有的查询都是需要token的，没有token的我们只能到此为止了QAQ
 
 ![image-20230707150842841](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230707150842841.png)
+
+## 伪服务端进行任意文件读
+
+原理不再赘述（可参见之前写过的博客-> [MySQL 伪服务端读客户端任意文件](https://amiaaaz.github.io/2021/12/19/mysql-pseudo-server/)），存在以下应用场景
+
+- 读配置文件
+
+如后台可设置连接其它数据库，通过伪服务端读敏感信息（工具一把梭-> [mysql-fake-server](https://github.com/4ra1n/mysql-fake-server)
+
+- (php)与phar反序列化、文件上传的结合
+
+mysqli中的读文件会调用`php_stream_open_wrapper_ex`函数，也就是说 如果任意读的文件是phar 就可以反序列化
+
+可以先通过反序列化链子构造phar（甚至不需要有链子，只要支持反序列化 比如最简单的sopaclient等等内置类反序列化），结合文件上传，再用mysql连接读这个phar 触发反序列化
+
+- (java)jdbc反序列化
+
+工具同上
+
+- （防守）做蜜罐
+
+微步有成型的蜜罐可开箱即用
