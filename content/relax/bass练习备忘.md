@@ -1,7 +1,7 @@
 ---
 title: "bass练习备忘"
 slug: "bass-practice-memo"
-description: "努力练琴中... #已练习45小时40分"
+description: "努力练琴中... #已练习45小时50分"
 date: 2023-07-10T21:29:08+08:00
 categories: []
 series: []
@@ -10,7 +10,11 @@ draft: false
 toc: true
 ---
 
-## 070823（土） - 30min
+## 070923（火） - 10min
+
+**律动、机能训练**
+
+## 070823（月） - 30min
 
 **律动、爬格子、音阶爬格子、机能训练**
 
