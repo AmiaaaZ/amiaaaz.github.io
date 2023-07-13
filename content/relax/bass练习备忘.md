@@ -1,7 +1,7 @@
 ---
 title: "bass练习备忘"
 slug: "bass-practice-memo"
-description: "努力练琴中... #已练习46小时35分"
+description: "努力练琴中... #已练习47小时05分"
 date: 2023-07-12T21:29:08+08:00
 categories: []
 series: []
@@ -9,6 +9,14 @@ tags: []
 draft: false
 toc: true
 ---
+
+## 071323（木） - 30min
+
+**律动、机能训练**
+
+**slap圣经** - part1·track3
+
+北京连着下雨屋里面又潮潮的……琴颈你受苦了 我已经安排空调来救你了 别急
 
 ## 071223（水） - 45min
 
