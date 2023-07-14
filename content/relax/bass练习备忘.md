@@ -1,14 +1,22 @@
 ---
 title: "bass练习备忘"
 slug: "bass-practice-memo"
-description: "努力练琴中... #已练习47小时05分"
-date: 2023-07-12T21:29:08+08:00
+description: "努力练琴中... #已练习48小时25分"
+date: 2023-07-14T23:31:08+08:00
 categories: []
 series: []
 tags: []
 draft: false
 toc: true
 ---
+
+## 071423（金） - 80min
+
+**机能训练**  - 可以弹100bpm的十六分音符了
+
+**slap圣经** - part1·track3,6,7（休止符细碎的排在十六分的拍子里 不好练）
+
+**地狱bass/基础新训** - 竹之卷11（主乐句滑音苦手）
 
 ## 071323（木） - 30min
 
