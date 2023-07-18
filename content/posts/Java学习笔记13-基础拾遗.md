@@ -2,12 +2,13 @@
 title: "Java学习笔记ⅩⅢ"
 slug: "java-study-notes-13"
 description: "基础拾遗，查漏补缺"
-date: 2023-07-14T23:31:58+08:00
+date: 2023-07-18T23:31:58+08:00
 categories: ["NOTES&SUMMARY"]
 series: ["Java学习笔记"]
 tags: ["Java"]
 draft: false
 toc: true
+
 ---
 
 太久不看java，已经忘得一干二净 手感全无了，最近重新拾起来复建发现了一些从未发现的盲点或一些当时没有彻底理解透彻的地方，遂整理一篇；内容相当基础，新手友好
@@ -39,10 +40,14 @@ Map m2 = TransformedMap.decorate(m1, null, transformerChain);
 - `InvokerTransformer`：可传入待执行的方法名、参数类型列表、参数列表，transform方法中对传入参数进行反射调用（rce的关键）
 - `ChainedTransformer`：组合多个transformer形成链式调用，最前的transform执行结果作为下一个transformer的参数
 
-## CC1的LazyMap
+## 动态代理
 
-- **Map版CC1**：AnnotationInvocationHandler#readObject-> memberValue.setValue(Map)-> rce
-- **LazyMap版CC1**：AnnotationInvocationHandler#readObject-> memberValue.setValue(Map)-> AnnotationInvocationHandler#invoke(proxy)-> LazyMap#get-> rce
+*我认为我对这块代理对象的理解是正确的
+
+### CC1的LazyMap
+
+- **Map版CC1**：AnnotationInvocationHandler#readObject-> memberValue.setValue(Map)-> RCE
+- **LazyMap版CC1**：AnnotationInvocationHandler#readObject-> memberValue.setValue(Map)-> AnnotationInvocationHandler#invoke(proxy)-> LazyMap#get-> RCE
 
 这里反驳一下p牛在java安全漫谈11中的这两段话
 
@@ -55,14 +60,24 @@ Map m2 = TransformedMap.decorate(m1, null, transformerChain);
 最直观的判别方法：被代理的对象是谁，`Proxy.newProxyInstance`就会被强制转型成谁，传入的参数也会是与被代理对象强相关，这里是
 
 ```java
-Map proxyMap = (Map)Proxy.newProxyInstance(Map.class.getClassLoader(), new Class[] {Map.class},handler)
+Map proxyMap = (Map)Proxy.newProxyInstance(Map.class.getClassLoader(), new Class[] {Map.class}, handler)
 ```
 
 2. LazyMap的触发与setValue有关
 
 Map被代理后需要有调用Map.xxx的地方才会触发`AnnotationInvocationHandler#invoke`，调用Map.xxx的地方就在`AnnotationInvocationHandler#readObject`中，也就是Map版CC1的触发点
 
-## 语法基础
+### JDK7u21的Templates
+
+理由同上，p牛在Java安全漫谈18中的表述我认为也是存在错误的
+
+![image-20230718180825094](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230718180825094.png)
+
+这里并不是对`AnnotationInvocationHandler`做代理，而是对`Templates`做代理；整个**链子思路**应该是这样的（顺序）：
+
+HashSet插入TemplatesImpl对象（含恶意字节码）和被代理的Templates对象（handler为AnnotationInvocationHandler）-> 对HashSet反序列化-> HashSet#readObject会对其中的对象进行哈希值比较，当两个不同对象的哈希值相等时进行比较 Obj2.equals(Obj1)-> 被代理的Templates对象被调用equals会被AnnotationInvocationHandler拦截-> AnnotationInvocationHandler#invoke-> AnnotationInvocationHandler#equlasImpl-> equalsImpl中遍历this.type类中的所有方法并执行，因为this.type是TemplatesImpl，所以调用到newTransformer或getOutputProperties-> RCE
+
+## 语法相关
 
 ### 引用类型的传递
 
