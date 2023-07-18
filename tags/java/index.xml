@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Java on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/tags/java/</link><description>Recent content in Java on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Fri, 14 Jul 2023 23:31:58 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/tags/java/index.xml" rel="self" type="application/rss+xml"/><item><title>Java学习笔记ⅩⅢ</title><link>https://amiaaaz.github.io/2023/07/14/java-study-notes-13/</link><pubDate>Fri, 14 Jul 2023 23:31:58 +0800</pubDate><guid>https://amiaaaz.github.io/2023/07/14/java-study-notes-13/</guid><description>&lt;p>太久不看java，已经忘得一干二净 手感全无了，最近重新拾起来复建发现了一些从未发现的盲点或一些当时没有彻底理解透彻的地方，遂整理一篇；内容相当基础，新手友好&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Java on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/tags/java/</link><description>Recent content in Java on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 18 Jul 2023 23:31:58 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/tags/java/index.xml" rel="self" type="application/rss+xml"/><item><title>Java学习笔记ⅩⅢ</title><link>https://amiaaaz.github.io/2023/07/18/java-study-notes-13/</link><pubDate>Tue, 18 Jul 2023 23:31:58 +0800</pubDate><guid>https://amiaaaz.github.io/2023/07/18/java-study-notes-13/</guid><description>&lt;p>太久不看java，已经忘得一干二净 手感全无了，最近重新拾起来复建发现了一些从未发现的盲点或一些当时没有彻底理解透彻的地方，遂整理一篇；内容相当基础，新手友好&lt;/p>
 &lt;hr>
 &lt;h2 id="关于transformedmap">关于TransformedMap&lt;/h2>
 &lt;p>*LazyMap也可以用类似的&lt;code>LazyMap.decorate&lt;/code>&lt;/p>
@@ -19,10 +19,12 @@
 &lt;li>&lt;code>InvokerTransformer&lt;/code>：可传入待执行的方法名、参数类型列表、参数列表，transform方法中对传入参数进行反射调用（rce的关键）&lt;/li>
 &lt;li>&lt;code>ChainedTransformer&lt;/code>：组合多个transformer形成链式调用，最前的transform执行结果作为下一个transformer的参数&lt;/li>
 &lt;/ul>
-&lt;h2 id="cc1的lazymap">CC1的LazyMap&lt;/h2>
+&lt;h2 id="动态代理">动态代理&lt;/h2>
+&lt;p>*我认为我对这块代理对象的理解是正确的&lt;/p>
+&lt;h3 id="cc1的lazymap">CC1的LazyMap&lt;/h3>
 &lt;ul>
-&lt;li>&lt;strong>Map版CC1&lt;/strong>：AnnotationInvocationHandler#readObject-&amp;gt; memberValue.setValue(Map)-&amp;gt; rce&lt;/li>
-&lt;li>&lt;strong>LazyMap版CC1&lt;/strong>：AnnotationInvocationHandler#readObject-&amp;gt; memberValue.setValue(Map)-&amp;gt; AnnotationInvocationHandler#invoke(proxy)-&amp;gt; LazyMap#get-&amp;gt; rce&lt;/li>
+&lt;li>&lt;strong>Map版CC1&lt;/strong>：AnnotationInvocationHandler#readObject-&amp;gt; memberValue.setValue(Map)-&amp;gt; RCE&lt;/li>
+&lt;li>&lt;strong>LazyMap版CC1&lt;/strong>：AnnotationInvocationHandler#readObject-&amp;gt; memberValue.setValue(Map)-&amp;gt; AnnotationInvocationHandler#invoke(proxy)-&amp;gt; LazyMap#get-&amp;gt; RCE&lt;/li>
 &lt;/ul>
 &lt;p>这里反驳一下p牛在java安全漫谈11中的这两段话&lt;/p>
 &lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230713235555818.png" alt="image-20230713235555818">&lt;/p>
@@ -31,12 +33,17 @@
 &lt;li>被代理的对象是&lt;code>Map&lt;/code> 并不是&lt;code>AnnotationInvocationHandler&lt;/code>&lt;/li>
 &lt;/ol>
 &lt;p>最直观的判别方法：被代理的对象是谁，&lt;code>Proxy.newProxyInstance&lt;/code>就会被强制转型成谁，传入的参数也会是与被代理对象强相关，这里是&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">Map&lt;/span> &lt;span style="color:#111">proxyMap&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#f92672">(&lt;/span>&lt;span style="color:#111">Map&lt;/span>&lt;span style="color:#f92672">)&lt;/span>&lt;span style="color:#111">Proxy&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#75af00">newProxyInstance&lt;/span>&lt;span style="color:#f92672">(&lt;/span>&lt;span style="color:#111">Map&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#75af00">class&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#75af00">getClassLoader&lt;/span>&lt;span style="color:#f92672">(),&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#111">Class&lt;/span>&lt;span style="color:#f92672">[]&lt;/span> &lt;span style="color:#f92672">{&lt;/span>&lt;span style="color:#111">Map&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#75af00">class&lt;/span>&lt;span style="color:#f92672">},&lt;/span>&lt;span style="color:#111">handler&lt;/span>&lt;span style="color:#f92672">)&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">Map&lt;/span> &lt;span style="color:#111">proxyMap&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#f92672">(&lt;/span>&lt;span style="color:#111">Map&lt;/span>&lt;span style="color:#f92672">)&lt;/span>&lt;span style="color:#111">Proxy&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#75af00">newProxyInstance&lt;/span>&lt;span style="color:#f92672">(&lt;/span>&lt;span style="color:#111">Map&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#75af00">class&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#75af00">getClassLoader&lt;/span>&lt;span style="color:#f92672">(),&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#111">Class&lt;/span>&lt;span style="color:#f92672">[]&lt;/span> &lt;span style="color:#f92672">{&lt;/span>&lt;span style="color:#111">Map&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#75af00">class&lt;/span>&lt;span style="color:#f92672">},&lt;/span> &lt;span style="color:#111">handler&lt;/span>&lt;span style="color:#f92672">)&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="2">
 &lt;li>LazyMap的触发与setValue有关&lt;/li>
 &lt;/ol>
 &lt;p>Map被代理后需要有调用Map.xxx的地方才会触发&lt;code>AnnotationInvocationHandler#invoke&lt;/code>，调用Map.xxx的地方就在&lt;code>AnnotationInvocationHandler#readObject&lt;/code>中，也就是Map版CC1的触发点&lt;/p>
-&lt;h2 id="语法基础">语法基础&lt;/h2>
+&lt;h3 id="jdk7u21的templates">JDK7u21的Templates&lt;/h3>
+&lt;p>理由同上，p牛在Java安全漫谈18中的表述我认为也是存在错误的&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230718180825094.png" alt="image-20230718180825094">&lt;/p>
+&lt;p>这里并不是对&lt;code>AnnotationInvocationHandler&lt;/code>做代理，而是对&lt;code>Templates&lt;/code>做代理；整个&lt;strong>链子思路&lt;/strong>应该是这样的（顺序）：&lt;/p>
+&lt;p>HashSet插入TemplatesImpl对象（含恶意字节码）和被代理的Templates对象（handler为AnnotationInvocationHandler）-&amp;gt; 对HashSet反序列化-&amp;gt; HashSet#readObject会对其中的对象进行哈希值比较，当两个不同对象的哈希值相等时进行比较 Obj2.equals(Obj1)-&amp;gt; 被代理的Templates对象被调用equals会被AnnotationInvocationHandler拦截-&amp;gt; AnnotationInvocationHandler#invoke-&amp;gt; AnnotationInvocationHandler#equlasImpl-&amp;gt; equalsImpl中遍历this.type类中的所有方法并执行，因为this.type是TemplatesImpl，所以调用到newTransformer或getOutputProperties-&amp;gt; RCE&lt;/p>
+&lt;h2 id="语法相关">语法相关&lt;/h2>
 &lt;h3 id="引用类型的传递">引用类型的传递&lt;/h3>
 &lt;p>&lt;code>String&lt;/code>和&lt;code>String[]&lt;/code>都是引用类型 存储对象引用，但&lt;code>String&lt;/code>类型的对象是不可变的，当它们作为参数传递时会有不同的表现&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">public&lt;/span> &lt;span style="color:#00a8c8">class&lt;/span> &lt;span style="color:#75af00">main&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
