@@ -1,14 +1,28 @@
 ---
 title: "bass练习备忘"
 slug: "bass-practice-memo"
-description: "努力练琴中... #已练习52小时50分"
-date: 2023-07-18T21:32:08+08:00
+description: "努力练琴中... #已练习54小时05分"
+date: 2023-07-19T21:32:08+08:00
 categories: []
 series: []
 tags: []
 draft: false
 toc: true
 ---
+
+## 071923（水） - 75min
+
+**机能训练** - 100bpm 16beat
+
+**律动训练** - 80bpm 16beat
+
+**不知醉cover** - 练细节
+
+**slap圣经** - part1·track6,7
+
+**あのバンド** - 尝试cover
+
+尝试cover了《那个乐队》，这bpm要升天了（）明天应该会接着扒《52》的谱子，去年扒了一半鸽了，这次绝不烂尾！
 
 ## 071823（火） - 45min
 

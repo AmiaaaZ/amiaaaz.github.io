@@ -1,7 +1,7 @@
 ---
 title: "Java学习笔记ⅩⅢ"
 slug: "java-study-notes-13"
-description: "基础拾遗，查漏补缺"
+description: "对于易混淆点的纠正"
 date: 2023-07-18T23:31:58+08:00
 categories: ["NOTES&SUMMARY"]
 series: ["Java学习笔记"]
@@ -15,34 +15,9 @@ toc: true
 
 ----
 
-## 关于TransformedMap
-
-*LazyMap也可以用类似的`LazyMap.decorate`
-
-```java
-Transformer[] transformers = new Transformer[]{
-       new ConstantTransformer(Runtime.class),
-       new InvokerTransformer("getMethod", new Class[]{String.class, Class[].class}, new Object[]{"getRuntime", new Class[0]}),
-       new InvokerTransformer("invoke", new Class[]{Object.class, Object[].class}, new Object[]{null, new Object[0]}),
-       new InvokerTransformer("exec", new Class[]{String.class}, new String[]{"calc.exe"})
-};
-Transformer[] fake = new Transformer[]{new ConstantTransformer(1)};
-Transformer transformerChain = new ChainedTransformer(fake);
-Map m1 = new HashMap();
-Map m2 = TransformedMap.decorate(m1, null, transformerChain);
-```
-
-`TransformedMap.decorate`是对`Map`对象的修饰，可传入`keyTransformer`和`valueTransformer`两个transformer对Map的key和value进行处理，调用transform
-
-这里的transformer都是实现Transformer接口（实现transform方法）的类，常见的有
-
-- `ConstantTransformer`：返回transform传入的参数本身
-- `InvokerTransformer`：可传入待执行的方法名、参数类型列表、参数列表，transform方法中对传入参数进行反射调用（rce的关键）
-- `ChainedTransformer`：组合多个transformer形成链式调用，最前的transform执行结果作为下一个transformer的参数
-
 ## 动态代理
 
-*我认为我对这块代理对象的理解是正确的
+在学习他人文章、跟着一步步复现时我们经常会不自觉地把大脑交给所看的文章来接管，还会自动略过文章中未详细说明的细节，这样不求甚解很容易造成偏听则暗的后果，此处动态代理就是一例
 
 ### CC1的LazyMap
 
@@ -55,15 +30,27 @@ Map m2 = TransformedMap.decorate(m1, null, transformerChain);
 
 ![image-20230713235613928](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230713235613928.png)
 
-1. 被代理的对象是`Map` 并不是`AnnotationInvocationHandler`
+1. 被代理的不是“对象”而是“接口”
 
-最直观的判别方法：被代理的对象是谁，`Proxy.newProxyInstance`就会被强制转型成谁，传入的参数也会是与被代理对象强相关，这里是
+动态代理指的是利用反射在运行时创建一个实现某些给定接口的新类（即动态代理类）及其实例，举例：
+
+```java
+Foo f = (Foo)Proxy.newProxyInstance(Foo.class.getClassLoader(), new Class[]{Foo.class}, handler);
+```
+
+这里我们对`Foo`接口进行代理，同时在没有实现类的情况下动态创建了一个接口对象`f`，当调用`f.func("abc")`时会移交给`handler.invoke()`进行处理
+
+2. 被代理的是`Map` 并不是`AnnotationInvocationHandler`
+
+最直观的判别方法：被代理的接口是谁，创建的接口实例就会被强制转型成谁，传入的参数也会是与被代理对象强相关，这里是
 
 ```java
 Map proxyMap = (Map)Proxy.newProxyInstance(Map.class.getClassLoader(), new Class[] {Map.class}, handler)
 ```
 
-2. LazyMap的触发与setValue有关
+毫无疑问是对`Map`接口进行代理
+
+3. LazyMap的触发与setValue有关
 
 Map被代理后需要有调用Map.xxx的地方才会触发`AnnotationInvocationHandler#invoke`，调用Map.xxx的地方就在`AnnotationInvocationHandler#readObject`中，也就是Map版CC1的触发点
 
@@ -73,9 +60,11 @@ Map被代理后需要有调用Map.xxx的地方才会触发`AnnotationInvocationH
 
 ![image-20230718180825094](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230718180825094.png)
 
-这里并不是对`AnnotationInvocationHandler`做代理，而是对`Templates`做代理；整个**链子思路**应该是这样的（顺序）：
+这里并不是对`AnnotationInvocationHandler`做代理，而是对`Templates`做代理
 
-HashSet插入TemplatesImpl对象（含恶意字节码）和被代理的Templates对象（handler为AnnotationInvocationHandler）-> 对HashSet反序列化-> HashSet#readObject会对其中的对象进行哈希值比较，当两个不同对象的哈希值相等时进行比较 Obj2.equals(Obj1)-> 被代理的Templates对象被调用equals会被AnnotationInvocationHandler拦截-> AnnotationInvocationHandler#invoke-> AnnotationInvocationHandler#equlasImpl-> equalsImpl中遍历this.type类中的所有方法并执行，因为this.type是TemplatesImpl，所以调用到newTransformer或getOutputProperties-> RCE
+**实际反序列化执行顺序**是这样的：
+
+LinkedHashSet被反序列化-> 其中包含的TemplatesImpl对象和被代理的Templates对象分别被反序列化，AnnotationInvocationHandler也被反序列化并初始化基本信息-> Templates类型代理对象被反序列化后，加入LinkedHashSet内部的LinkedHashMap时会进行比较`key.eqauls(k)`，其中key为代理对象、k为含payload的TemplatesImpl对象-> 该equals方法也交由AnnotationInvocationHandler#equalsImpl进行实现，中间会执行Templates.getOutputProperties().invoke(TemplatesImpl)，最终rce
 
 ## 语法相关
 
