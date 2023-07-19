@@ -2,7 +2,7 @@
 title: "Java学习笔记ⅩⅢ"
 slug: "java-study-notes-13"
 description: "对于易混淆点的纠正"
-date: 2023-07-18T23:31:58+08:00
+date: 2023-07-20T01:47:58+08:00
 categories: ["NOTES&SUMMARY"]
 series: ["Java学习笔记"]
 tags: ["Java"]
@@ -42,7 +42,7 @@ Foo f = (Foo)Proxy.newProxyInstance(Foo.class.getClassLoader(), new Class[]{Foo.
 
 2. 被代理的是`Map` 并不是`AnnotationInvocationHandler`
 
-最直观的判别方法：被代理的接口是谁，创建的接口实例就会被强制转型成谁，传入的参数也会是与被代理对象强相关，这里是
+最直观的判别方法：被代理的接口是谁，创建的接口实例就会被强制转型成谁，传入的参数也会是与被代理接口强相关，这里是
 
 ```java
 Map proxyMap = (Map)Proxy.newProxyInstance(Map.class.getClassLoader(), new Class[] {Map.class}, handler)
