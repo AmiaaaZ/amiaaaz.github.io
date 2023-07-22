@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>自动化代审 on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/series/%E8%87%AA%E5%8A%A8%E5%8C%96%E4%BB%A3%E5%AE%A1/</link><description>Recent content in 自动化代审 on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 23 Jul 2023 02:12:17 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/series/%E8%87%AA%E5%8A%A8%E5%8C%96%E4%BB%A3%E5%AE%A1/index.xml" rel="self" type="application/rss+xml"/><item><title>Joern学习笔记</title><link>https://amiaaaz.github.io/2023/07/23/joern-study-notes/</link><pubDate>Sun, 23 Jul 2023 02:12:17 +0800</pubDate><guid>https://amiaaaz.github.io/2023/07/23/joern-study-notes/</guid><description>&lt;p>*更新中，博客存在更新延迟&lt;/p>
+&lt;hr>
+&lt;p>Joern和CodeQL类似，都是静态代码分析类的工具 支持多种语言，但Joern不需要在执行查询前对项目进行编译，语法基于Scala 不会有CodeQL那么难懂的谓词，更特色的是Joern在分析代码时使用的是CPG(Code Property Graph)，看起来不错的样子 于是正式入坑Joern！&lt;/p></description></item><item><title>CodeQL学习笔记</title><link>https://amiaaaz.github.io/2023/07/23/codeql-study-notes/</link><pubDate>Sun, 23 Jul 2023 02:08:39 +0800</pubDate><guid>https://amiaaaz.github.io/2023/07/23/codeql-study-notes/</guid><description>&lt;p>*更新中，博客存在更新延迟&lt;/p>
+&lt;hr>
+&lt;h2 id="环境配置">环境配置&lt;/h2>
+&lt;ul>
+&lt;li>本体&lt;/li>
+&lt;/ul>
+&lt;p>Visual Studio Code安装CodeQL插件&lt;/p>
+&lt;p>&lt;a href="https://github.com/github/codeql/tags">https://github.com/github/codeql/tags&lt;/a>下载规则库&lt;/p>
+&lt;ul>
+&lt;li>创建项目&lt;/li>
+&lt;/ul>
+&lt;p>Github项目支持直接url导入，其它的也可以指定文件夹&lt;/p>
+&lt;p>*哈哈 忍不住开骂了，nmd傻逼vscode就是脑残。这个垃圾插件做的，没有一次是导入一次数据库就可以成功的 一定要导入两次 然后工作区就会多两个文件夹，如果我删除一个 插件页面就会丢失数据库 还需要重新导入，我测死你的🐎&lt;/p>
+&lt;ul>
+&lt;li>执行查询&lt;/li>
+&lt;/ul>
+&lt;p>运行&lt;code>*.ql&lt;/code>文件时需要当前工作区里存在&lt;code>qlpack.yml&lt;/code>文件，但那个语法我真的望而生畏（codeql你也司马了）我选择直接打开&lt;code>codeql-codeql-cli-&amp;lt;version&amp;gt;/&amp;lt;language&amp;gt;/ql&lt;/code>目录，然后在test目录下默默写查询规则&lt;/p></description></item></channel></rss>
