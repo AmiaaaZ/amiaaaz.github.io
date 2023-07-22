@@ -1,14 +1,28 @@
 ---
 title: "bass练习备忘"
 slug: "bass-practice-memo"
-description: "努力练琴中... #已练习55小时50分"
-date: 2023-07-21T22:54:08+08:00
+description: "努力练琴中... #已练习56小时25分"
+date: 2023-07-22T19:19:00+08:00
 categories: []
 series: []
 tags: []
 draft: false
 toc: true
 ---
+
+## 072223（土） - 35min+
+
+**机能训练** - 100bpm 16beat（估计还要练个一段时间 不够稳）
+
+**律动训练** - 80bpm 16beat
+
+**不知醉cover** - 练细节（基本拿下）
+
+**52 cover** - intro+第一段主歌
+
+去年刚学贝斯第10天的时候就扒了《52》，但是因为种种不可抗力没有继续 现在重新拾起来扒谱，还是比较简单的，intro+第一段主歌拿下了 基本80%的曲子也就拿下了，明天再细化一下
+
+![image-20230722192858410](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230722192858410.png)
 
 ## 072123（金） - 60min
 
