@@ -2,7 +2,7 @@
 title: "Java学习笔记ⅩⅢ"
 slug: "java-study-notes-13"
 description: "对于易混淆点的纠正"
-date: 2023-07-20T01:47:58+08:00
+date: 2023-07-25T00:19:58+08:00
 categories: ["NOTES&SUMMARY"]
 series: ["Java学习笔记"]
 tags: ["Java"]
@@ -146,3 +146,98 @@ class Person {
 类中可以嵌套静态内部类`static class Inner{}`，有访问类中`private`字段/方法的权限，但因为是完全独立的类 也无法引用`Outer.this`
 
 类中可以有静态代码块`static{}`，在类的实例化（调用构造函数）或类的初始化（反射`forName`）时均会被调用
+
+## 配置相关
+
+### jar的内容替换
+
+- win
+
+WinRAR直接打开xxx.jar 包，然后把想添加的文件压进去，压缩方式选择存储
+
+- linux
+
+解压：jar -xvf cxf-0.0.1-SNAPSHOT.jar BOOT-INF/classes/application.properties
+压入：jar -uvf cxf-0.0.1-SNAPSHOT.jar BOOT-INF/classes/application.properties
+
+### 内嵌tomcat
+
+内嵌tomcat服务便于调试
+
+- pom.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.example.test</groupId>
+    <artifactId>web-servlet-embedded</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>war</packaging>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <java.version>8</java.version>
+        <tomcat.version>9.0.56</tomcat.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-core</artifactId>
+            <version>${tomcat.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-jasper</artifactId>
+            <version>${tomcat.version}</version>
+        </dependency>
+    </dependencies>
+</project>
+```
+
+- src/main/java/main.java
+
+```java
+import org.apache.catalina.Context;
+import org.apache.catalina.WebResourceRoot;
+import org.apache.catalina.startup.Tomcat;
+import org.apache.catalina.webresources.DirResourceSet;
+import org.apache.catalina.webresources.StandardRoot;
+
+import java.io.File;
+
+public class main {
+    public static void main(String[] args) throws Exception{
+        Tomcat tomcat = new Tomcat();
+        tomcat.setPort(Integer.getInteger("port", 8080));
+        tomcat.getConnector();
+        Context ctx = tomcat.addWebapp("", new File("src/main/webapp").getAbsolutePath());
+        WebResourceRoot resources = new StandardRoot(ctx);
+        resources.addPreResources(
+                new DirResourceSet(resources, "/WEB-INF/classes", new File("target/classes").getAbsolutePath(), "/")
+        );
+        ctx.setResources(resources);
+        tomcat.start();
+        tomcat.getServer().await();
+    }
+}
+```
+
+- src/main/webapp/目录下放希望被加载的jsp，如果是war包 可以解压后整个目录放到webapp下 并修改代码中`addWebapp`和`DirResourceSet`的配置
+
+```java
+Context ctx = tomcat.addWebapp("", new File("src/main/webapp/ROOT").getAbsolutePath());
+WebResourceRoot resources = new StandardRoot(ctx);
+resources.addPreResources(
+        new DirResourceSet(resources, "/WEB-INF/classes", new File("src/main/webapp/ROOT/WEB-INF/classes").getAbsolutePath(), "/")
+);
+```
+
+![image-20230724212037451](https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230724212037451.png)
