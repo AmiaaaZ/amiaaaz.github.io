@@ -1,14 +1,24 @@
 ---
 title: "bass练习备忘"
 slug: "bass-practice-memo"
-description: "努力练琴中... #已练习57小时25分"
-date: 2023-07-24T19:19:00+08:00
+description: "努力练琴中... #已练习58小时30分"
+date: 2023-07-25T22:00:00+08:00
 categories: []
 series: []
 tags: []
 draft: false
 toc: true
 ---
+
+## 072523（火） - 65min
+
+**机能训练** - 100bpm 16beat
+
+**slap圣经** - part1·track9,10,11（难 这16beat节奏真难 左手勾弦更难）
+
+**地狱bass/基础新训** - 竹之卷14（难 这16beat节奏真难）
+
+**52 cover** - intro+第一段主歌+副歌
 
 ## 072423（月） - 30min
 
