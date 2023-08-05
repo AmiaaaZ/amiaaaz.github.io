@@ -10,5 +10,6 @@
 &lt;h2 id="使用例">使用例&lt;/h2>
 &lt;h3 id="进程通信">进程通信&lt;/h3>
 &lt;h2 id="安全相关的flag">安全相关的flag&lt;/h2>
-&lt;h2 id="历史bug">历史Bug&lt;/h2>
+&lt;h3 id="ni1-sbx0-ciso0">NI1, SBX0, CISO0&lt;/h3>
+&lt;h3 id="cve-2021-43908">CVE-2021-43908&lt;/h3>
 &lt;h2 id="electron-shellcode-loader">Electron Shellcode Loader&lt;/h2></description></item></channel></rss>

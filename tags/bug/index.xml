@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>bug on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/tags/bug/</link><description>Recent content in bug on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 26 Jul 2023 22:41:33 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/tags/bug/index.xml" rel="self" type="application/rss+xml"/><item><title>关于burpsuite难以解决的bug</title><link>https://amiaaaz.github.io/2023/07/26/a-hard-to-detect-bug-in-burpsuite/</link><pubDate>Wed, 26 Jul 2023 22:41:33 +0800</pubDate><guid>https://amiaaaz.github.io/2023/07/26/a-hard-to-detect-bug-in-burpsuite/</guid><description>&lt;p>*虽然但是，由于懒癌又犯了、本文只写了60%左右，剩下的本周内补完&amp;gt;_&amp;lt;&lt;/p>
+&lt;p>*提前声明：该bug为偶发性bug，虽然有不太优雅的解决办法，但我只能猜测它的成因、无法准确定位，如有了解的大佬还烦请指正&lt;/p>
+&lt;hr>
+&lt;h2 id="解决bug的过程">解决bug的过程&lt;/h2>
+&lt;blockquote>
+&lt;p>Burp Suite Professional v2023.6.2&lt;/p>
+&lt;p>Proxifier v4.11&lt;/p>
+&lt;/blockquote>
+&lt;p>某PC软件在登录页面可以设置代理，心想这不万事大吉了？直接上burp！结果遇到了如此让人心惊的错误&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230725101421466.png" alt="image-20230725101421466">&lt;/p>
+&lt;p>同时软件内报错“服务器连接失败”&lt;/p>
+&lt;h3 id="proxifierburp-fail">proxifier+burp (fail)&lt;/h3>
+&lt;p>怀疑可能是软件-&amp;gt; burp中间的代理存在故障，于是尝试用proxifier做中间层 直接对.exe配置burp的HTTPS代理&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230725104341972.png" alt="image-20230725104341972">&lt;/p>
+&lt;p>结果还是出现相同的错误，proxifier显示对登录时请求的站点无发送数据、无接收数据&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230725102333715.png" alt="image-20230725102333715">&lt;/p>
+&lt;p>多请求几次变为无发送数据、有固定量接收数据&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230725102901360.png" alt="image-20230725102901360">&lt;/p>
+&lt;p>很难不让人好奇这1.47kB是什么，wireshark抓包可以看到整个过程都是TLS1.3的，传输的数据有部分是HTTP over TLS 部分是普通的Application Data，虽然我们没有密钥 但还是可以知道连接是经过了TLS握手的，但是仅两三个包之后就被RESET&lt;/p>
+&lt;h3 id="修改burp配置项-fail">修改burp配置项 (fail)&lt;/h3>
+&lt;p>于是开始研究burp内置的TLS选项，这个TLS pass through有点意思 指定的host:port的TLS连接不会经过burp代理&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230725152712874.png" alt="image-20230725152712874">&lt;/p>
+&lt;p>添加Proxifier里出错的host:port，果然没有先前的报错，但副作用是流量也监听不到了，后续的请求依然bad_certificate……显然这也不是好的解决办法&lt;/p>
+&lt;p>burp中Network/TLS页面的设置也均无法消去报错，我尝试手动删除对TLS1.3的支持 强制走TLS1.2，无果；看到Client TLS certificates这一配置项我开始意识到 可能是软件内部对证书进行了某种绑定或限制（如SSL Pinning或双向认证），虽然该软件官网为www.example.com，客户端软件请求的网址为qweasd.example.com，主域名相同 但也许在SSL的配置上下了功夫——有什么抓包工具可以解决这一问题？&lt;/p>
+&lt;h3 id="charles-success">Charles (success)&lt;/h3>
+&lt;p>嘶 会不会是HTTP代理的问题？因为HTTP的某种请求封装格式 对TLS的传输产生了影响？Fiddler和Burp都是HTTP类代理软件，Charles则可以做Socks5监听&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230725161558881.png" alt="image-20230725161558881">&lt;/p>
+&lt;p>效果拔群，Charles确实成功监听并捕捉到了流量，同时Charles的HTTP代理也可以正常捕捉到流量——所以为什么同为HTTP代理的burp不可以？&lt;/p>
+&lt;h2 id="https的运行逻辑">HTTPS的运行逻辑&lt;/h2>
+&lt;p>没有&lt;code>s&lt;/code>的http是明文传输，在tcp握手后客户端和服务端之间便可以进行通信，虽然效率很高、速度很快，但没有任何加密措施 导致明文传输的http报文相当不安全，容易被窃听、篡改、冒充，于是SSL/TLS应运而生 希望能做到加密传输（无法窃听）、存在校验机制（无法篡改）、有身份证书（防止被冒充）&lt;/p>
+&lt;p>SSL/TLS基于非对称加密，也就是说客户端先向服务端索要公钥，客户端发送信息时用公钥加密、服务端收到后用私钥解密，但新的问题又产生了：&lt;/p>
+&lt;ol>
+&lt;li>如何保证公钥不被篡改？&lt;/li>
+&lt;/ol>
+&lt;p>使用数字证书（见下）&lt;/p>
+&lt;ol start="2">
+&lt;li>若每一次对话信息都被加密则非常耗时，如何减少耗用的时间？&lt;/li>
+&lt;/ol>
+&lt;p>每一个session中，客户端和服务端都生成一个session key（对话密钥），用对话密钥来加密信息 而这一加密过程是对称加密，服务器公钥只用于加密session key本身，减少计算消耗的时间&lt;/p>
+&lt;h3 id="握手阶段">握手阶段&lt;/h3>
+&lt;p>&amp;hellip;&lt;/p>
+&lt;h3 id="数字签名与证书">数字签名与证书&lt;/h3>
+&lt;p>对于非对称加密，公私钥成对生成，信息分发者将信息公钥加密后发出，接收者使用私钥解密；公钥人人都可以有 但私钥一旦泄露将不再保密&lt;/p>
+&lt;p>数字签名可以确保信息的完整性，发信人先生成信息的摘要 再使用私钥对摘要进行加密，以此作为数字签名，收信人可以用公钥解密摘要得到发件时信件应有的哈希值（可解密说明发件人无误），并与生成收到信件的哈希值进行比较，即可验证信件是否被篡改；如果收信人原本掌握的公钥被伪造/篡改，则对应的私钥也将改变，持有该私钥的恶意发件人就可以冒充原发件人&lt;/p>
+&lt;p>为了确保公钥的正确性可以使用数字证书，由证书中心对公钥和其它信息统一做加密 以此作为数字证书，数字证书的私钥由发信人持有，收信人可持有公钥；此后在发信时同时附上数字签名+数字证书，收信人先用CA的公钥处理数字证书 得到正确的公钥，再用公钥验证信息的完整性，即可确保真的是发信人在发件、信息也未被篡改&lt;/p>
+&lt;h3 id="ca">CA&lt;/h3>
+&lt;p>https正是使用了数字证书，服务端将网页信息用CA私钥加密后附带数字证书一起发给客户端，客户端本地的“受信任的根证书颁发机构”内置了无数保真的CA公钥，用它来检查解开该网站的CA公钥是否在列表里，如果证书内记载的网址和正在浏览的网址不一致 会报错“该网站的安全证书有问题”，如果证书的颁发者不在本地的“收信人的根证书颁发机构”列表里，会报另一种错误“您与该站点交换的信息不会被其他人查看或篡改，但该站点的安全证书有问题”；如果数字证书可靠（或用户手动信任该网站），客户端就可以根据CA中的公钥对信息加密后传给服务器&lt;/p>
+&lt;h2 id="抓包原理">抓包原理&lt;/h2>
+&lt;p>&amp;hellip;&lt;/p>
+&lt;h2 id="对抗抓包的常见措施">对抗抓包的常见措施&lt;/h2>
+&lt;h3 id="ssl-pinning">SSL Pinning&lt;/h3>
+&lt;p>&amp;hellip;&lt;/p>
+&lt;h3 id="双向认证">双向认证&lt;/h3>
+&lt;p>&amp;hellip;&lt;/p>
+&lt;h3 id="对抓包软件行为的检测">对抓包软件行为的检测&lt;/h3>
+&lt;p>&amp;hellip;&lt;/p>
+&lt;h2 id="对该bug的猜测">对该bug的猜测&lt;/h2>
+&lt;p>&amp;hellip;&lt;/p></description></item></channel></rss>
