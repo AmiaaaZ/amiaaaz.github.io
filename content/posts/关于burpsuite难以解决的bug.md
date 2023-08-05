@@ -5,7 +5,7 @@ description: "sorry, bad certificate!"
 date: 2023-07-26T22:41:33+08:00
 categories: []
 series: []
-tags: []
+tags: ["bug", "TLS/SSL", "抓包"]
 draft: false
 toc: true
 ---
