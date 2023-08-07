@@ -10,9 +10,9 @@ draft: false
 toc: true
 ---
 
-正在学习中 先占坑
+正在学习中....
 
-*1/3内容已写好，等全部写完再一起同步过来吧x
+因为学的时候比较发散，不是所有开了的标题下都写完了，就先把标题放上来占坑了！
 
 ---
 
@@ -32,12 +32,36 @@ toc: true
 
 ## 使用例
 
-### 进程通信
+### Hello Electron
+
+### IPC通信
 
 ## 安全相关的flag
 
-### NI1, SBX0, CISO0
+### 攻击思路
+
+## NI1, SBX0, CISO0
 
 ### CVE-2021-43908
+
+## SBX0, CISO0 (prototype pollution)
+
+### attack preload.js
+
+### attack Electron internal code
+
+### Discord RCE 1
+
+#### 原型污染
+
+#### XSS (iframe)
+
+#### Navigation restriction bypass (CVE-2020-15174)
+
+## NI0, SBX0, CISO1
+
+### Discord RCE 2
+
+## NI0, SBX1, CISO0
 
 ## Electron Shellcode Loader
