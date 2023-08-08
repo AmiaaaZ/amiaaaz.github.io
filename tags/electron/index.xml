@@ -1,28 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Electron on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/tags/electron/</link><description>Recent content in Electron on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sat, 05 Aug 2023 21:49:47 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/tags/electron/index.xml" rel="self" type="application/rss+xml"/><item><title>Electron安全学习笔记</title><link>https://amiaaaz.github.io/2023/08/05/electron-study-notes/</link><pubDate>Sat, 05 Aug 2023 21:49:47 +0800</pubDate><guid>https://amiaaaz.github.io/2023/08/05/electron-study-notes/</guid><description>&lt;p>正在学习中&amp;hellip;.&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Electron on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/tags/electron/</link><description>Recent content in Electron on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 09 Aug 2023 00:37:47 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/tags/electron/index.xml" rel="self" type="application/rss+xml"/><item><title>Electron安全学习笔记</title><link>https://amiaaaz.github.io/2023/08/09/electron-study-notes/</link><pubDate>Wed, 09 Aug 2023 00:37:47 +0800</pubDate><guid>https://amiaaaz.github.io/2023/08/09/electron-study-notes/</guid><description>&lt;p>正在学习中&amp;hellip;.&lt;/p>
 &lt;p>因为学的时候比较发散，不是所有开了的标题下都写完了，就先把标题放上来占坑了！&lt;/p>
 &lt;hr>
-&lt;h2 id="什么是electron">什么是Electron&lt;/h2>
-&lt;h3 id="electron-runtime的设想">Electron Runtime的设想&lt;/h3>
-&lt;h2 id="调试">调试&lt;/h2>
-&lt;h3 id="开启调试">开启调试&lt;/h3>
-&lt;h3 id="源码">源码&lt;/h3>
-&lt;h3 id="源码加密">源码加密&lt;/h3>
-&lt;h2 id="electron的架构">Electron的架构&lt;/h2>
-&lt;h2 id="使用例">使用例&lt;/h2>
-&lt;h3 id="hello-electron">Hello Electron&lt;/h3>
-&lt;h3 id="ipc通信">IPC通信&lt;/h3>
-&lt;h2 id="安全相关的flag">安全相关的flag&lt;/h2>
-&lt;h3 id="攻击思路">攻击思路&lt;/h3>
-&lt;h2 id="ni1-sbx0-ciso0">NI1, SBX0, CISO0&lt;/h2>
-&lt;h3 id="cve-2021-43908">CVE-2021-43908&lt;/h3>
-&lt;h2 id="sbx0-ciso0-prototype-pollution">SBX0, CISO0 (prototype pollution)&lt;/h2>
-&lt;h3 id="attack-preloadjs">attack preload.js&lt;/h3>
-&lt;h3 id="attack-electron-internal-code">attack Electron internal code&lt;/h3>
-&lt;h3 id="discord-rce-1">Discord RCE 1&lt;/h3>
-&lt;h4 id="原型污染">原型污染&lt;/h4>
-&lt;h4 id="xss-iframe">XSS (iframe)&lt;/h4>
-&lt;h4 id="navigation-restriction-bypass-cve-2020-15174">Navigation restriction bypass (CVE-2020-15174)&lt;/h4>
-&lt;h2 id="ni0-sbx0-ciso1">NI0, SBX0, CISO1&lt;/h2>
-&lt;h3 id="discord-rce-2">Discord RCE 2&lt;/h3>
-&lt;h2 id="ni0-sbx1-ciso0">NI0, SBX1, CISO0&lt;/h2>
-&lt;h2 id="electron-shellcode-loader">Electron Shellcode Loader&lt;/h2></description></item></channel></rss>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230809003635827.png" alt="image-20230809003635827">&lt;/p></description></item></channel></rss>
