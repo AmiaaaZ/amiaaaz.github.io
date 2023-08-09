@@ -1,7 +1,7 @@
 ---
 title: "bass练习备忘"
 slug: "bass-practice-memo"
-description: "努力练琴中... #已练习67小时15分"
+description: "努力练琴中... #已练习68小时40分"
 date: 2023-08-09T21:34:00+08:00
 categories: []
 series: []
@@ -9,6 +9,14 @@ tags: []
 draft: false
 toc: true
 ---
+
+## 080823（水） - 85min
+
+**机能训练** - 100bpm 16beat（稳多了 但感觉轮指音色不够统一）
+
+**地狱bass/基础新训** - 竹之卷15
+
+**瞎练**
 
 ## 080823（火） - 80min
 
