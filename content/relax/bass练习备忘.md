@@ -1,8 +1,8 @@
 ---
 title: "bass练习备忘"
 slug: "bass-practice-memo"
-description: "努力练琴中... #已练习69小时10分"
-date: 2023-08-10T21:34:00+08:00
+description: "努力练琴中... #已练习69小时45分"
+date: 2023-08-12T21:34:00+08:00
 categories: []
 series: []
 tags: []
@@ -10,7 +10,15 @@ draft: false
 toc: true
 ---
 
-## 081023（水） - 30min
+## 081223（土） - 35min
+
+**瞎练**
+
+**slap瞎练**
+
+每次练slap都十分担心扰民问题 难受死了
+
+## 081023（木） - 30min
 
 **瞎练**
 
