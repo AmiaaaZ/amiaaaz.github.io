@@ -1,4 +1,284 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Electron on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/tags/electron/</link><description>Recent content in Electron on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 10 Aug 2023 01:01:47 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/tags/electron/index.xml" rel="self" type="application/rss+xml"/><item><title>Electron安全学习笔记</title><link>https://amiaaaz.github.io/2023/08/10/electron-study-notes/</link><pubDate>Thu, 10 Aug 2023 01:01:47 +0800</pubDate><guid>https://amiaaaz.github.io/2023/08/10/electron-study-notes/</guid><description>&lt;p>正在学习中&amp;hellip;.&lt;/p>
-&lt;p>因为学的时候比较发散，不是所有开了的标题下都写完了，就先把标题放上来占坑了！&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Electron on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/tags/electron/</link><description>Recent content in Electron on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sat, 12 Aug 2023 23:29:47 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/tags/electron/index.xml" rel="self" type="application/rss+xml"/><item><title>Electron安全学习笔记·上</title><link>https://amiaaaz.github.io/2023/08/12/electron-study-notes-01/</link><pubDate>Sat, 12 Aug 2023 23:29:47 +0800</pubDate><guid>https://amiaaaz.github.io/2023/08/12/electron-study-notes-01/</guid><description>&lt;h2 id="什么是electron">什么是Electron&lt;/h2>
+&lt;blockquote>
+&lt;p>Chromium+NodeJS≈Electron!&lt;/p>
+&lt;/blockquote>
+&lt;p>简单来说，就是用web前端开发的技术栈来写跨平台的桌面端应用，运行环境是Chromium，NodeJS负责调用系统API、与操作系统底层进行交互，实现了仅靠前端无法实现的功能&lt;/p>
+&lt;p>虽然降低了开发门槛 很好上手，但缺点也很明显——体积很大、占用很大，每一个Electron应用就带了一个Chromium内核，代码几十k 引擎几百M，还会释放用户的数据到AppData，一旦进程启动&amp;hellip;. 想想浏览器恐怖的内存占用吧&lt;/p>
+&lt;p>有同样理念的还有tauri，使用的是Rust+原生webview，但Rust做后端就能明显看出二者的差距了，tauri是向传统后端项目中添加webview做GUI，而Electron则是Javascript走天下&lt;/p>
+&lt;p>*讲正事之前，来点前端开发的笑话&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230805165307463.png" alt="image-20230805165307463">&lt;/p>
+&lt;h3 id="electrun-runtime的设想">Electrun Runtime的设想&lt;/h3>
+&lt;p>既然每一个Electron应用都需要Chromium和NodeJS 那为什么不把这两个打包成类似JDK的Electron Runtime呢？&lt;/p>
+&lt;p>我们先讨论为什么不行；Electron和Node的版本滚动更新都很勤快，更别提依赖的前端库更是一个版本更新过后就要担心是否会造成冲突/报错，因此如果一个版本对应一个运行时 可能最终效果和现行方案是一样的&lt;/p>
+&lt;p>但这不耽误我们设想 如果真要做成Runtime，开发流程和使用环境会做出怎样的改变；以Runtime开发者的角度来说，我们需要为Runtime使用者（也就是Electron应用开发者）提供 &lt;strong>打包工具&lt;/strong>，Runtime使用者可以使用打包工具将js等静态文件和 &lt;strong>执行程序&lt;/strong>、 &lt;strong>卸载程序&lt;/strong>一起打包为资源文件，这个资源文件会被封装到安装程序中，在修改图标、签名、文件名等资源信息后就得到了 &lt;strong>安装程序&lt;/strong>&lt;/p>
+&lt;p>这个安装程序在用户电脑上运行时会自动检测是否安装了Electron Runtime，如果未安装会自动下载发行版 并记录到注册表上，之后在用户指定的安装目录下释放资源文件，向注册表中写下 &lt;strong>卸载程序&lt;/strong>的位置（使用户可以通过控制面板卸载程序），按用户需求创建开始菜单等等，这样程序就安装完成了&lt;/p>
+&lt;p>&lt;strong>执行程序&lt;/strong>在运行时会检测用户的注册表，找到Electron Runtime的位置，并把当前入口程序作为参数传给Runtime&lt;/p>
+&lt;p>&lt;strong>卸载程序&lt;/strong>会删除安装目录下的文件、删除注册表的信息&lt;/p>
+&lt;h2 id="调试">调试&lt;/h2>
+&lt;h3 id="开启调试">开启调试&lt;/h3>
+&lt;p>我们可以在以Chromium为内核的任意浏览器中直接调试Electron应用，比如纯净的Chromium内核&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230804173904739.png" alt="image-20230804173904739">&lt;/p>
+&lt;p>或混沌中立的edge&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230804173951759.png" alt="image-20230804173951759">&lt;/p>
+&lt;p>一般情况下可以在运行程序时加上这样的参数来开启debug&lt;/p>
+&lt;pre tabindex="0">&lt;code>--remote-debugging-port=9222
+&lt;/code>&lt;/pre>&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230805145641055.png" alt="image-20230805145641055">&lt;/p>
+&lt;p>但很显然这个flag非常醒目，很多开发者会在初始化阶段对其进行检测 并终止程序运行&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230804174325497.png" alt="image-20230804174325497">&lt;/p>
+&lt;p>虽然但是 家贼难防啊——NodeJS可以仍可开启动态调试，直接锁定PID开启调试&lt;/p>
+&lt;pre tabindex="0">&lt;code>kill -SIGUSR [pid]
+&lt;/code>&lt;/pre>&lt;p>windows可以在NodeJS中调用&lt;code>_debugProcess&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-js" data-lang="js">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">process&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">_debugProcess&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">pid&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230804175313142.png" alt="image-20230804175313142">&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230810124339767.png" alt="image-20230810124339767">&lt;/p>
+&lt;p>一旦允许调试 那就意味着打开了潘多拉的魔盒，debugger对于NodeJS的执行环境有完全的权限（没有什么上下文隔离之类的阻拦），如果这一调试功能被滥用 就可直接导致RCE（详情见后）&lt;/p>
+&lt;h3 id="源码">源码&lt;/h3>
+&lt;p>Electron应用的js源码一般就位于程序目录的resources文件夹内，会有一份.asar格式的打包文件，我们可以用&lt;a href="https://github.com/electron/asar">asar&lt;/a>这个官方工具进行解压&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>asar extract app.asar asar/
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230804181019523.png" alt="image-20230804181019523">&lt;/p>
+&lt;p>可以发现.asar的内容实际是JSON+自定义编码，非常容易从中得到源码&lt;/p>
+&lt;p>*因此审计Electron项目约等于白盒审计x&lt;/p>
+&lt;h3 id="源码加密">源码加密&lt;/h3>
+&lt;p>由于Electron官方没有在源码保护方面给出很好的解决办法，出现了开源的加密方案-&amp;gt; &lt;a href="https://github.com/toyobayashi/electron-asar-encrypt-demo">electron-asar-encrypt-demo&lt;/a>&lt;/p>
+&lt;h2 id="electron的架构">Electron的架构&lt;/h2>
+&lt;p>可能由于Electron和Chromium深度绑定的原因，Electron也仿照了Chromium的多进程模式，即：主进程Main Process作为核心进程，一个窗口一个独立的渲染进程Renderer Process；主进程和渲染进程之间采取IPC通信&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230809164606231.png" alt="image-20230809164606231">&lt;/p>
+&lt;p>以Typora举例，打开一个Typora窗口会启动4个进程（所有Electron应用的表现都一样），用flag区分不同进程的职责&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230808170518545.png" alt="image-20230808170518545">&lt;/p>
+&lt;ul>
+&lt;li>无flag：主进程&lt;/li>
+&lt;li>type=utility：效率进程，可用于托管不受信的服务、CPU密集型服务或容易崩溃的组件，可以通过MessagePorts与渲染进程建立通信，当需要从主进程派生新的子进程时 Electron会优先选择效率进程API而不是NodeJS child_process.fork API&lt;/li>
+&lt;li>type=renderer：渲染进程，再打开第二个Typora窗口会新增一个type=renderer的进程，其余进程不变；第三个进程&lt;/li>
+&lt;/ul>
+&lt;h3 id="主进程渲染进程">主进程&amp;amp;渲染进程&lt;/h3>
+&lt;p>主进程的主要是使用&lt;code>BrowserWindow&lt;/code>模块创建和管理窗口，一个实例对应一个app窗口，使用单独的渲染进程加载其中的网页，在主进程中可以用window的&lt;code>webContents&lt;/code>对象与网页内容进行交互；由于&lt;code>BrowserWindow&lt;/code>模块是一个&lt;code>EventEmitter&lt;/code>，所以我们也可以处理程序的执行流、控制app的生命周期，当一个&lt;code>BrowserWindow&lt;/code>实例被销毁时 对应的渲染器进程也会终止&lt;/p>
+&lt;p>如果想在&lt;code>BrowserWindow&lt;/code>中集成第三方web内容（web-embeds），可以用&lt;code>&amp;lt;iframe&amp;gt;&lt;/code>, &lt;code>&amp;lt;webview&amp;gt;&lt;/code>（不建议）, &lt;code>BrowserViews&lt;/code>；此外，渲染进程也会为web-embeds对象而&lt;u>单独服务&lt;/u>&lt;/p>
+&lt;p>默认情况下&lt;strong>nodeIntegration&lt;/strong>关闭，渲染器无权访问直接NodeJS的API，我们编写的用于交互的页面需要遵守一般网页开发的规范，使用npm包需要用和web开发时一样的打包工具（比如webpack或parcel）&lt;/p>
+&lt;h3 id="preloadjs">preload.js&lt;/h3>
+&lt;p>预加载脚本会在渲染进程中会被优先于网页内容加载，虽然处于渲染进程中 但可以访问部分Polyfill形式实现的NodeJS API，只能载入部分模块和对象&lt;/p>
+&lt;p>从Electron12之后 默认情况下&lt;strong>contextIsolation&lt;/strong>开启，preload.js和renderer process、Electron内部代码和renderer process之间都存在隔离，即使preload.js和浏览器/渲染进程共享全局的&lt;code>window&lt;/code>对象，但在preload.js中对&lt;code>window&lt;/code>对象做出的改动无法附加到真正的页面上&lt;/p>
+&lt;p>为安全考虑我们必须使用&lt;code>contextBridge&lt;/code>以及IPC模块来进行交互，在preload中暴露API、在页面中调用API&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-js" data-lang="js">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// preload.js
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#00a8c8">const&lt;/span> &lt;span style="color:#111">{&lt;/span>&lt;span style="color:#75af00">contextBridge&lt;/span>&lt;span style="color:#111">}&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">require&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;electron&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">contextBridge&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">exposeInMainWorld&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;myAPI&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">doAThing&lt;/span>&lt;span style="color:#f92672">:&lt;/span>&lt;span style="color:#111">()=&amp;gt;&lt;/span> &lt;span style="color:#111">{}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">})&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-js" data-lang="js">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// render.js in index.html (in renderer process)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#111">window&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">myAPI&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">doAThing&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="sandbox">sandbox&lt;/h3>
+&lt;p>从Electron20开始 渲染进程默认启用&lt;strong>sandbox&lt;/strong>，沙盒化的渲染器不会有NodeJS环境&lt;/p>
+&lt;ul>
+&lt;li>当nodeIntegration启用时沙盒会被禁用&lt;/li>
+&lt;li>在&lt;code>app.whenReady&lt;/code>前可以调用&lt;code>app.enableSandbox()&lt;/code>强制沙盒化所有渲染器&lt;/li>
+&lt;li>可以用&lt;code>--no-sandbox&lt;/code>来完全禁用Chromium沙盒&lt;/li>
+&lt;/ul>
+&lt;h3 id="ipc通信">IPC通信&lt;/h3>
+&lt;p>主进程使用&lt;code>ipcMain&lt;/code>，渲染进程使用&lt;code>ipcRender&lt;/code>，preload.js通过&lt;code>contextBridge.exposeInMainWorld()&lt;/code>向渲染进程暴露相关API&lt;/p>
+&lt;p>出于安全考虑，我们不会在preload.js中暴露整个&lt;code>ipcRenderer.send&lt;/code>，而是有约束、限定功能&lt;/p>
+&lt;ul>
+&lt;li>以渲染进程-&amp;gt; 主进程的通信举例代码：&lt;/li>
+&lt;/ul>
+&lt;p>ipcMain.on, ipcRenderer.send&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-js" data-lang="js">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// main.js
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#00a8c8">const&lt;/span> &lt;span style="color:#111">{&lt;/span> &lt;span style="color:#75af00">app&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75af00">BrowserWindow&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75af00">ipcMain&lt;/span> &lt;span style="color:#111">}&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">require&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;electron&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">const&lt;/span> &lt;span style="color:#75af00">path&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">require&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;path&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#75af00">createWindow&lt;/span> &lt;span style="color:#111">()&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">const&lt;/span> &lt;span style="color:#75af00">mainWindow&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">BrowserWindow&lt;/span>&lt;span style="color:#111">({&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">webPreferences&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">preload&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#75af00">path&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">join&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">__dirname&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;preload.js&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">})&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">ipcMain&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">on&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;set-title&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">event&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75af00">title&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">=&amp;gt;&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">const&lt;/span> &lt;span style="color:#75af00">webContents&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">event&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">sender&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">const&lt;/span> &lt;span style="color:#75af00">win&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">BrowserWindow&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">fromWebContents&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">webContents&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">win&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">setTitle&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">title&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">})&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">mainWindow&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">loadFile&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;index.html&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">app&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">whenReady&lt;/span>&lt;span style="color:#111">().&lt;/span>&lt;span style="color:#75af00">then&lt;/span>&lt;span style="color:#111">(()&lt;/span> &lt;span style="color:#111">=&amp;gt;&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">createWindow&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">app&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">on&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;activate&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">()&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">BrowserWindow&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">getAllWindows&lt;/span>&lt;span style="color:#111">().&lt;/span>&lt;span style="color:#75af00">length&lt;/span> &lt;span style="color:#f92672">===&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#75af00">createWindow&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">})&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">})&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">app&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">on&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;window-all-closed&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#00a8c8">function&lt;/span> &lt;span style="color:#111">()&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">process&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">platform&lt;/span> &lt;span style="color:#f92672">!==&lt;/span> &lt;span style="color:#d88200">&amp;#39;darwin&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#75af00">app&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">quit&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">})&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-js" data-lang="js">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// preload.js
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#00a8c8">const&lt;/span> &lt;span style="color:#111">{&lt;/span> &lt;span style="color:#75af00">contextBridge&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75af00">ipcRenderer&lt;/span> &lt;span style="color:#111">}&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">require&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;electron&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">contextBridge&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">exposeInMainWorld&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;electronAPI&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">setTitle&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">title&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">=&amp;gt;&lt;/span> &lt;span style="color:#75af00">ipcRenderer&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">send&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;set-title&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75af00">title&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">})&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-html" data-lang="html">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&amp;lt;!--index.html--&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&amp;lt;!DOCTYPE html&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#f92672">html&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#f92672">head&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#f92672">meta&lt;/span> &lt;span style="color:#75af00">charset&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;UTF-8&amp;#34;&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">&amp;lt;!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP --&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#f92672">meta&lt;/span> &lt;span style="color:#75af00">http-equiv&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;Content-Security-Policy&amp;#34;&lt;/span> &lt;span style="color:#75af00">content&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;default-src &amp;#39;self&amp;#39;; script-src &amp;#39;self&amp;#39;&amp;#34;&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#f92672">title&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>Hello World!&lt;span style="color:#111">&amp;lt;/&lt;/span>&lt;span style="color:#f92672">title&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">&amp;lt;/&lt;/span>&lt;span style="color:#f92672">head&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#f92672">body&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Title: &lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#f92672">input&lt;/span> &lt;span style="color:#75af00">id&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;title&amp;#34;&lt;/span>&lt;span style="color:#111">/&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#f92672">button&lt;/span> &lt;span style="color:#75af00">id&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;btn&amp;#34;&lt;/span> &lt;span style="color:#75af00">type&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;button&amp;#34;&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>Set&lt;span style="color:#111">&amp;lt;/&lt;/span>&lt;span style="color:#f92672">button&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#f92672">script&lt;/span> &lt;span style="color:#75af00">src&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;./renderer.js&amp;#34;&lt;/span>&lt;span style="color:#111">&amp;gt;&amp;lt;/&lt;/span>&lt;span style="color:#f92672">script&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">&amp;lt;/&lt;/span>&lt;span style="color:#f92672">body&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">&amp;lt;/&lt;/span>&lt;span style="color:#f92672">html&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-js" data-lang="js">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// renderer.js
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#00a8c8">const&lt;/span> &lt;span style="color:#75af00">setButton&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">document&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">getElementById&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;btn&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">const&lt;/span> &lt;span style="color:#75af00">titleInput&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">document&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">getElementById&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;title&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">setButton&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">addEventListener&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;click&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">()&lt;/span> &lt;span style="color:#111">=&amp;gt;&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">const&lt;/span> &lt;span style="color:#75af00">title&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">titleInput&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">value&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">window&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">electronAPI&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">setTitle&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">title&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">})&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>渲染器和主进程可以双向通信，使用ipcMain.handle和ipcRenderer.invoke&lt;/li>
+&lt;li>主进程到渲染进程单向通信可以使用webContents.send发送消息，preload.js用ipcRenderer.on处理消息&lt;/li>
+&lt;li>不同渲染进程间的通信使用类似postMessgae的MessagePorts&lt;/li>
+&lt;/ul>
+&lt;h2 id="使用例">使用例&lt;/h2>
+&lt;ol>
+&lt;li>创建项目&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>npm init &lt;span style="color:#75715e"># entry-point应为main.js(做为主进程), author和description为必填项&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">$env&lt;/span>:ELECTRON_MIRROR&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;https://npm.taobao.org/mirrors/electron/&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>npm install --save-dev electron
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>会自动生成项目的package.json文件，可在&lt;code>scripts&lt;/code>字段中添加&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#d88200">&amp;#34;scripts&amp;#34;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;start&amp;#34;&lt;/span>&lt;span style="color:#111">:&lt;/span> &lt;span style="color:#d88200">&amp;#34;electron .&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="2">
+&lt;li>编写main.js&lt;/li>
+&lt;/ol>
+&lt;p>main.js即为程序的主进程，可以创建浏览窗口、加载html、设置preload.js，也将处理Electron初始化、窗口事件等，可以把所有主进程都写在这里 也可以拆分成几个文件 然后用require导入&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-js" data-lang="js">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// main.js
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#00a8c8">const&lt;/span> &lt;span style="color:#111">{&lt;/span>&lt;span style="color:#75af00">app&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75af00">BrowserWindow&lt;/span>&lt;span style="color:#111">}&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">require&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;electron&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">const&lt;/span> &lt;span style="color:#75af00">path&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">require&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;path&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">const&lt;/span> &lt;span style="color:#75af00">createWindow&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">()&lt;/span> &lt;span style="color:#111">=&amp;gt;&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">const&lt;/span> &lt;span style="color:#75af00">mainWindow&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#00a8c8">new&lt;/span> &lt;span style="color:#75af00">BrowserWindow&lt;/span>&lt;span style="color:#111">({&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">width&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#ae81ff">800&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">height&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#ae81ff">600&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">webPreferences&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">preload&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#75af00">path&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">join&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">__dirname&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;preload.js&amp;#39;&lt;/span>&lt;span style="color:#111">),&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">sandbox&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#00a8c8">false&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">nodeIntegration&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#00a8c8">true&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">contextIsolation&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#00a8c8">false&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">})&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// 创建渲染进程
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75af00">mainWindow&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">loadFile&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;index.html&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// 打开开发工具
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// mainWindow.webContents.openDevTools()
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// 管理窗口的生命周期
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#75af00">app&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">whenReady&lt;/span>&lt;span style="color:#111">().&lt;/span>&lt;span style="color:#75af00">then&lt;/span>&lt;span style="color:#111">(()&lt;/span> &lt;span style="color:#111">=&amp;gt;&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">createWindow&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">app&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">on&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;activate&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">()&lt;/span> &lt;span style="color:#111">=&amp;gt;&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// 对macOS 如果没有可用窗口 打开新窗口
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">BrowserWindow&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">getAllWindows&lt;/span>&lt;span style="color:#111">().&lt;/span>&lt;span style="color:#75af00">length&lt;/span> &lt;span style="color:#f92672">===&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#75af00">createWindow&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">})&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">})&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// 除macOS外，当所有窗口都被关闭的时候退出程序
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#75af00">app&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">on&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;window-all-closed&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">()&lt;/span> &lt;span style="color:#111">=&amp;gt;&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">process&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">platform&lt;/span> &lt;span style="color:#f92672">!==&lt;/span> &lt;span style="color:#d88200">&amp;#39;darwin&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#75af00">app&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">quit&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">})&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="3">
+&lt;li>编写preload.js&lt;/li>
+&lt;/ol>
+&lt;p>在主进程通过Node的全局&lt;code>process&lt;/code>对象访问进程相关信息很简单，但我们不能直接在主进程中编写DOM，因为它和渲染进程是不同的上下文，这时就需要preload.js，它会在渲染进程加载之前加载，并有权访问两个渲染器全局（window和document）和NodeJS的API&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-js" data-lang="js">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// preload.js
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#111">window&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">addEventListener&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;DOMContentLoaded&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">()&lt;/span> &lt;span style="color:#111">=&amp;gt;&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">const&lt;/span> &lt;span style="color:#75af00">replaceText&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">selector&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75af00">text&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">=&amp;gt;&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">const&lt;/span> &lt;span style="color:#75af00">element&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">document&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">getElementById&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">selector&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">element&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#75af00">element&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">innerText&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">text&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">for&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">const&lt;/span> &lt;span style="color:#75af00">type&lt;/span> &lt;span style="color:#00a8c8">of&lt;/span> &lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;chrome&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;node&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#d88200">&amp;#39;electron&amp;#39;&lt;/span>&lt;span style="color:#111">])&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">replaceText&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">`&lt;/span>&lt;span style="color:#d88200">${&lt;/span>&lt;span style="color:#75af00">type&lt;/span>&lt;span style="color:#d88200">}&lt;/span>&lt;span style="color:#d88200">-version`&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75af00">process&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">versions&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#75af00">type&lt;/span>&lt;span style="color:#111">])&lt;/span> &lt;span style="color:#75715e">// 访问NodeJS的process对象
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">})&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="4">
+&lt;li>编写网页（HTML）&lt;/li>
+&lt;/ol>
+&lt;p>可以正常使用任何前端常用的技巧——包括meta标签的CSP设置&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-html" data-lang="html">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&amp;lt;!--index.html--&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&amp;lt;!DOCTYPE html&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#f92672">html&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#f92672">head&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#f92672">meta&lt;/span> &lt;span style="color:#75af00">charset&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;UTF-8&amp;#34;&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">&amp;lt;!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP --&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#f92672">meta&lt;/span> &lt;span style="color:#75af00">http-equiv&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;Content-Security-Policy&amp;#34;&lt;/span> &lt;span style="color:#75af00">content&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;default-src &amp;#39;self&amp;#39;; script-src &amp;#39;self&amp;#39;&amp;#34;&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#f92672">title&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>你好!&lt;span style="color:#111">&amp;lt;/&lt;/span>&lt;span style="color:#f92672">title&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">&amp;lt;/&lt;/span>&lt;span style="color:#f92672">head&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#f92672">body&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#f92672">h1&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>Hello Electron!&lt;span style="color:#111">&amp;lt;/&lt;/span>&lt;span style="color:#f92672">h1&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> 正在使用 Node.js &lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#f92672">span&lt;/span> &lt;span style="color:#75af00">id&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;node-version&amp;#34;&lt;/span>&lt;span style="color:#111">&amp;gt;&amp;lt;/&lt;/span>&lt;span style="color:#f92672">span&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Chromium &lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#f92672">span&lt;/span> &lt;span style="color:#75af00">id&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;chrome-version&amp;#34;&lt;/span>&lt;span style="color:#111">&amp;gt;&amp;lt;/&lt;/span>&lt;span style="color:#f92672">span&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> 和 Electron &lt;span style="color:#111">&amp;lt;&lt;/span>&lt;span style="color:#f92672">span&lt;/span> &lt;span style="color:#75af00">id&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;electron-version&amp;#34;&lt;/span>&lt;span style="color:#111">&amp;gt;&amp;lt;/&lt;/span>&lt;span style="color:#f92672">span&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">&amp;lt;/&lt;/span>&lt;span style="color:#f92672">body&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">&amp;lt;/&lt;/span>&lt;span style="color:#f92672">html&lt;/span>&lt;span style="color:#111">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="5">
+&lt;li>运行&lt;/li>
+&lt;/ol>
+&lt;p>因为前面已经在package.json中添加了运行命令，直接用&lt;code>npm start&lt;/code>即可执行&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230807123403980.png" alt="image-20230807123403980">&lt;/p>
+&lt;ol start="6">
+&lt;li>打包分发&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>npm install --save-dev @electron-forge/cli
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>npx electron-forge import
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>npm run make
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>在./out/下可以看到打包好的二进制文件&lt;/p>
+&lt;h2 id="electron-inspect-abusing">Electron inspect abusing&lt;/h2>
+&lt;p>前面开了个小头，这里来详细说说调试这一功能存在的安全隐患&lt;/p>
+&lt;p>任意Electron应用都可以开启调试，期间会有类似这样的socket通信&lt;/p>
+&lt;pre tabindex="0">&lt;code>DevTools listening on ws://127.0.0.1:9222/devtools/browser/80cd01d9-9426-4c79-a9ee-8dea8987c336
+&lt;/code>&lt;/pre>&lt;p>而这样的websocket连接我们自己就可以做到&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230810123554023.png" alt="image-20230810123554023">&lt;/p>
+&lt;p>2019年就有大佬完成了实现debug通讯协议的工具-&amp;gt; &lt;a href="https://github.com/taviso/cefdebug">cefdebug&lt;/a>，可以自动查找当前开启debug的Electron应用并像DevTools窗口一样执行命令&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230810151209672.png" alt="image-20230810151209672">&lt;/p>
+&lt;p>设想这样的攻击场景：受害者本地Electron应用开启调试，通过钓鱼手段让受害者运行cefdebug应用并自动连接ws，达成RCE，同时让js开启新的socket连接做到回显&lt;/p>
+&lt;p>但&amp;hellip;. 我们怎么能保证受害者本地的Electron应用能开启调试呢？正常的开发者都不会在启动时留下这样的flag&lt;/p>
+&lt;p>我们考虑直接pkg打包一个带Node环境的恶意文件，在其中用&lt;code>process._debugProcess&lt;/code>开启Electron应用的调试，再接上前面的设想，达成RCE&lt;/p>
+&lt;h3 id="electron_shell">Electron_shell&lt;/h3>
+&lt;p>新鲜热乎的利用工具-&amp;gt; &lt;a href="https://github.com/djerryz/electron_shell">Electron_shell&lt;/a>&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230810112949105.png" alt="image-20230810112949105">&lt;/p>
+&lt;h4 id="源码分析">源码分析&lt;/h4>
+&lt;p>主要文件是_inspect.js, _inspect_repl.js和_inspect_clients.js，其实这三个代码就是从Node源码中摘出来的&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230810165543995.png" alt="image-20230810165543995">&lt;/p>
+&lt;p>作者在_inspect.js的&lt;code>startInspect&lt;/code>函数中加入了寻找pid的逻辑，并把原来从命令行读入的debug参数改为了手动指定pid&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230810170126380.png" alt="image-20230810170126380">&lt;/p>
+&lt;p>其中的&lt;code>writeTofile&lt;/code>函数是向系统临时目录中写入RCE和回显的js payload&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230810170659210.png" alt="image-20230810170659210">&lt;/p>
+&lt;p>而执行payload被放在了inspect_repl.js中&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230810170758498.png" alt="image-20230810170758498">&lt;/p>
+&lt;p>最终以inspect.js的&lt;code>startInspect&lt;/code>作为入口，用pkg打包NodeJS运行环境&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>pkg.cmd -t node16-win-x64 cli.js
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>经过分析我们发现，cli.exe实际就是把node-cli内置的和inspect有关的部分拆了出来，并加入恶意的部分组合打包而成的&lt;/p>
 &lt;hr>
-&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230810010102488.png" alt="image-20230810010102488">&lt;/p></description></item></channel></rss>
+&lt;details>
+&lt;summary>
+&lt;h4 class="inline">
+以下是本文中涉及到的 和我学习时看过的所有文章的链接 每日感谢互联网的丰富资源（
+&lt;/h4>
+&lt;/summary>
+&lt;p>&lt;a href="https://www.zhihu.com/question/52761908/answer/2779839142">如何评价 Electron？&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://www.zhihu.com/question/505356140/answer/2268992442">为什么 electron 不做成独立的 runtime？ - liulun的回答 - 知乎&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://mp.weixin.qq.com/s/faYOXbn_4fNotEa8gs0CVw">注入任意代码到运行中的 Electron 应用&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://mp.weixin.qq.com/s/Ggx34AqhzsbBLkecv5RNJw">向Typora学习electron安全攻防&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://zhuanlan.zhihu.com/p/604169213">深入理解Electron（一）Electron架构介绍&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://www.electronjs.org/zh/docs/latest/tutorial/quick-start">quick-start&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://github.com/taviso/cefdebug">cefdebug&lt;/a> | &lt;a href="https://github.com/djerryz/electron_shell">Electron_shell&lt;/a>&lt;/p>
+&lt;/details></description></item></channel></rss>
