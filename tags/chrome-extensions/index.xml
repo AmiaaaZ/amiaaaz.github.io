@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>chrome-extensions on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/tags/chrome-extensions/</link><description>Recent content in chrome-extensions on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Mon, 28 Aug 2023 21:46:56 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/tags/chrome-extensions/index.xml" rel="self" type="application/rss+xml"/><item><title>对于chrome-read-later的小改进</title><link>https://amiaaaz.github.io/2023/08/28/improvements-to-chrome-read-later/</link><pubDate>Mon, 28 Aug 2023 21:46:56 +0800</pubDate><guid>https://amiaaaz.github.io/2023/08/28/improvements-to-chrome-read-later/</guid><description>&lt;h2 id="起因">起因&lt;/h2>
+&lt;p>在我的日常工作流中，read-later-list是必备项，一直以来 我都是用Notion Page来记录和同步每天待看的文章&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230828215240130.png" alt="image-20230828215240130">&lt;/p>
+&lt;p>&lt;del>（有很多的未读）（但是不重要）&lt;/del>&lt;/p>
+&lt;p>由于标记了日期，也在回溯文章时有迹可循&lt;/p>
+&lt;p>可能就会有人问：那你为什么不用收藏夹or集锦？答案是删除时费工夫、不能根据时间检索、不能多端同步，同时 过于独立的页面也很难让人有想打开看的欲望，久而久之积攒的更多了&lt;/p>
+&lt;p>错误范例：&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230828215845182.png" alt="image-20230828215845182">&lt;/p>
+&lt;p>&lt;del>（更多 更多的未读）&lt;/del>&lt;/p>
+&lt;p>所以Notion Page姑且成为了最佳选择，它被我固定到标签栏最上边（我是用竖栏标签页的），闲着没事就会进去消灭几个未读&lt;/p>
+&lt;p>然而时间长了另一个痛点逐渐涌现：把文章作为超链接加到Page中真的好麻烦！我需要复制标题、复制网页链接、进入Notion Page、添加To do list block、添加超链接内容，在我经历这一过程1年多以后心态逐渐崩溃（不是），我开始寻找有没有更简单的方式——哪怕，哪怕只有一个前端简陋的dashboard page，只要能够显示类似Notion Page的内容就可以——于是有了下面的探索&lt;/p>
+&lt;h2 id="前置">前置&lt;/h2>
+&lt;h3 id="read-later扩展的痛点">read-later扩展的痛点&lt;/h3>
+&lt;p>无意中搜到了&lt;a href="https://github.com/willbchang/chrome-read-later">read-later&lt;/a>这个浏览器扩展，安装后可以在当前页面右键（或超链接右键）将网页加入待读，在扩展的popup页面即可显示&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230828220655472.png" alt="image-20230828220655472">&lt;/p>
+&lt;p>对一个网页可以显示favicon、标题、阅读进度（部分），还可以方便的删除&amp;amp;同步（利用扩展的同步性），看似已经是完美符合我的需求，但实际体验一段时间后我发现了这样几个通点&lt;/p>
+&lt;ul>
+&lt;li>无法在更多端进行同步：比如我的ipad mini6，比如我的firefox&lt;/li>
+&lt;li>popup页面和收藏夹、集锦一样，侵入性太强&lt;/li>
+&lt;li>不能根据时间做分类&lt;/li>
+&lt;li>不能自定义添加网页的标题&lt;/li>
+&lt;/ul>
+&lt;p>于是开始了改造之路&lt;/p>
+&lt;h3 id="read-later的程序逻辑">read-later的程序逻辑&lt;/h3>
+&lt;p>让我们先对这个扩展进行简易的代码分析，核心的代码其实只有background文件夹中的4个js&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230828221530088.png" alt="image-20230828221530088">&lt;/p>
+&lt;p>下面简单说一下每个js的主要功能：&lt;/p>
+&lt;ol>
+&lt;li>actions.js&lt;/li>
+&lt;/ol>
+&lt;p>包含添加页面、删除页面、更新storage的函数&lt;/p>
+&lt;ol start="2">
+&lt;li>background.js&lt;/li>
+&lt;/ol>
+&lt;p>注册contextMenus，监听鼠标右键操作 并把需要的信息交给action.js中处理，也监听runtime的消息（更新、安装）&lt;/p>
+&lt;ol start="3">
+&lt;li>pageInfo.js&lt;/li>
+&lt;/ol>
+&lt;p>定义了PageInfo, PositionInfo和SelectionInfo（后两个均基于PageInfo），分别表示页面信息、当前浏览的位置信息、超链接的选择信息，向外导出initPageInfo和completeInfo用于添加页面到storage&lt;/p>
+&lt;ol start="4">
+&lt;li>request.js&lt;/li>
+&lt;/ol>
+&lt;p>主要是针对超链接文章，用于获取未实际访问的超链接的标题&lt;/p>
+&lt;h2 id="改造">改造&lt;/h2>
+&lt;h3 id="自定义添加网页的标题">自定义添加网页的标题&lt;/h3>
+&lt;p>*私信认为这是个相当必需的需求，但不知为何作者并未做到这一点？&lt;/p>
+&lt;p>background.js原本的监听是这样做的&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-js" data-lang="js">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">contextMenus&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">onClicked&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">async&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">selection&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75af00">tab&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">=&amp;gt;&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75af00">selection&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">linkUrl&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">?&lt;/span> &lt;span style="color:#00a8c8">await&lt;/span> &lt;span style="color:#75af00">action&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">saveSelection&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">tab&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75af00">selection&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#00a8c8">await&lt;/span> &lt;span style="color:#75af00">action&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">savePage&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">})&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>对点击区域按是否存在selection.linkUrl来区分即将添加的是超链接还是当前网页，如果是超链接 会默认不存在标题、交给request.js获取&lt;code>&amp;lt;title&amp;gt;&lt;/code>中的内容作为标题；如果是网页，直接从tab.title获取&lt;/p>
+&lt;p>——怎么看都没有我们插手的地方，我选择首先把saveXXX的判断改掉&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-js" data-lang="js">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">contextMenus&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">onClicked&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">async&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">selection&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75af00">tab&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#111">=&amp;gt;&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#00a8c8">typeof&lt;/span> &lt;span style="color:#75af00">selection&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">linkUrl&lt;/span> &lt;span style="color:#f92672">===&lt;/span> &lt;span style="color:#d88200">&amp;#34;undefined&amp;#34;&lt;/span> &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#00a8c8">typeof&lt;/span> &lt;span style="color:#75af00">selection&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">selectionText&lt;/span> &lt;span style="color:#f92672">===&lt;/span> &lt;span style="color:#d88200">&amp;#34;undefined&amp;#34;&lt;/span>&lt;span style="color:#111">){&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">await&lt;/span> &lt;span style="color:#75af00">action&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">savePage&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span> &lt;span style="color:#00a8c8">else&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">await&lt;/span> &lt;span style="color:#75af00">action&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">saveSelection&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#75af00">tab&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#75af00">selection&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#75715e">// use selectionText as page.title
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">})&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>当右键划动选中文字区域时，虽然没有selection.linkUrl，但是selection.selectionText仍然存在，依靠二者共同判断是添加Page还是Selection&lt;/p>
+&lt;p>之后修改SelectionInfo类的方法&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230828223713035.png" alt="image-20230828223713035">&lt;/p>
+&lt;p>我们把“在选中内容处右键”作为添加Page的一种方式 但仍然归类到SelectionInfo中，最小限度的修改代码、实现需求&lt;/p>
+&lt;h3 id="修改done浮现的条件">修改&amp;quot;done&amp;quot;浮现的条件&lt;/h3>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230828224113911.png" alt="image-20230828224113911">&lt;/p>
+&lt;p>添加成功就会浮现这个Badge，但并不是所有添加都会浮现！强迫症不服&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230828224231991.png" alt="image-20230828224231991">&lt;/p>
+&lt;p>同时我也删去了很奇葩的一个设置：将当前页面添加read-list后自动关闭当前页面，很智障，很让人窒息&lt;/p>
+&lt;h3 id="对接后端server">对接后端server&lt;/h3>
+&lt;p>因为涉及到了数据展示和更新，本想用我最喜欢的streamlit，但streamlit不能像正常的后端一样接收api请求，无奈选用了Flask；因为之前CTF接触了太多的Flask，代码部分倒是不难（还有chatgpt强力驱动）&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">sqlite3&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> &lt;span style="color:#111">flask&lt;/span> &lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">Flask&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">render_template&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">request&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">redirect&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">jsonify&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">abort&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> &lt;span style="color:#111">datetime&lt;/span> &lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">datetime&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#111">os&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">app&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">Flask&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">__name__&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">@app.before_request&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">auth&lt;/span>&lt;span style="color:#111">():&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">request&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">headers&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">get&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;Authorization&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#111">os&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">getenv&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;seckey&amp;#39;&lt;/span>&lt;span style="color:#111">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#00a8c8">None&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">else&lt;/span>&lt;span style="color:#111">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">abort&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#ae81ff">403&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">@app.route&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;/api/add&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">methods&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;POST&amp;#39;&lt;/span>&lt;span style="color:#111">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">add&lt;/span>&lt;span style="color:#111">():&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">data&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">request&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">get_json&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># print(data)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">conn&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">sqlite3&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">connect&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;data.db&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">c&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">conn&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">cursor&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">c&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">execute&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;INSERT INTO reading_list (title, url) VALUES (?, ?)&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">data&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;title&amp;#39;&lt;/span>&lt;span style="color:#111">],&lt;/span> &lt;span style="color:#111">data&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;url&amp;#39;&lt;/span>&lt;span style="color:#111">]))&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">conn&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">commit&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">conn&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">close&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">jsonify&lt;/span>&lt;span style="color:#111">({&lt;/span>&lt;span style="color:#d88200">&amp;#39;message&amp;#39;&lt;/span>&lt;span style="color:#111">:&lt;/span> &lt;span style="color:#d88200">&amp;#39;Data added successfully&amp;#39;&lt;/span>&lt;span style="color:#111">})&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">@app.route&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;/dashboard&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">dashboard&lt;/span>&lt;span style="color:#111">():&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">conn&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">sqlite3&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">connect&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;data.db&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">cursor&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">conn&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">cursor&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">cursor&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">execute&lt;/span>&lt;span style="color:#111">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#34;SELECT id, title, url, strftime(&amp;#39;%Y-%m-&lt;/span>&lt;span style="color:#d88200">%d&lt;/span>&lt;span style="color:#d88200"> %H:%M:%S&amp;#39;, create_time, &amp;#39;+8 hour&amp;#39;), status FROM reading_list ORDER BY create_time DESC&amp;#34;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">rows&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">cursor&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">fetchall&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">conn&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">close&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">data&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">{}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">for&lt;/span> &lt;span style="color:#111">row&lt;/span> &lt;span style="color:#f92672">in&lt;/span> &lt;span style="color:#111">rows&lt;/span>&lt;span style="color:#111">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">record&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#39;id&amp;#39;&lt;/span>&lt;span style="color:#111">:&lt;/span> &lt;span style="color:#111">row&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#111">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#39;status&amp;#39;&lt;/span>&lt;span style="color:#111">:&lt;/span> &lt;span style="color:#111">row&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#ae81ff">4&lt;/span>&lt;span style="color:#111">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#39;title&amp;#39;&lt;/span>&lt;span style="color:#111">:&lt;/span> &lt;span style="color:#111">row&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#111">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#39;url&amp;#39;&lt;/span>&lt;span style="color:#111">:&lt;/span> &lt;span style="color:#111">row&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#ae81ff">2&lt;/span>&lt;span style="color:#111">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#39;create_time&amp;#39;&lt;/span>&lt;span style="color:#111">:&lt;/span> &lt;span style="color:#111">datetime&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">strptime&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">row&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#ae81ff">3&lt;/span>&lt;span style="color:#111">],&lt;/span> &lt;span style="color:#d88200">&amp;#34;%Y-%m-&lt;/span>&lt;span style="color:#d88200">%d&lt;/span>&lt;span style="color:#d88200"> %H:%M:%S&amp;#34;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">create_time&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">record&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#39;create_time&amp;#39;&lt;/span>&lt;span style="color:#111">]&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">strftime&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;%m&lt;/span>&lt;span style="color:#d88200">%d&lt;/span>&lt;span style="color:#d88200">&amp;#34;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">create_time&lt;/span> &lt;span style="color:#f92672">not&lt;/span> &lt;span style="color:#f92672">in&lt;/span> &lt;span style="color:#111">data&lt;/span>&lt;span style="color:#111">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">data&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#111">create_time&lt;/span>&lt;span style="color:#111">]&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">[]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">data&lt;/span>&lt;span style="color:#111">[&lt;/span>&lt;span style="color:#111">create_time&lt;/span>&lt;span style="color:#111">]&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">append&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">record&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># print(data)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">render_template&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;dashboard.html&amp;#39;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">data&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#111">data&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">seckey&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#111">request&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">headers&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">get&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;Authorization&amp;#39;&lt;/span>&lt;span style="color:#111">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">@app.route&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;/sync/&amp;lt;int:id&amp;gt;/&amp;lt;int:status&amp;gt;&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">sync_status&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">id&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">status&lt;/span>&lt;span style="color:#111">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">conn&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">sqlite3&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">connect&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;data.db&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">cursor&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">conn&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">cursor&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">cursor&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">execute&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;UPDATE reading_list SET status=? WHERE id=?&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">status&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">id&lt;/span>&lt;span style="color:#111">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">conn&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">commit&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">conn&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">close&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">redirect&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;/dashboard&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">@app.route&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;/delete/&amp;lt;int:id&amp;gt;&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">def&lt;/span> &lt;span style="color:#75af00">delete_record&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">id&lt;/span>&lt;span style="color:#111">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">conn&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">sqlite3&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">connect&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;data.db&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">cursor&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#111">conn&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">cursor&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">cursor&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">execute&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#34;DELETE FROM reading_list WHERE id=?&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">id&lt;/span>&lt;span style="color:#111">,))&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">conn&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">commit&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">conn&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">close&lt;/span>&lt;span style="color:#111">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#111">redirect&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#d88200">&amp;#39;/dashboard&amp;#39;&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">if&lt;/span> &lt;span style="color:#111">__name__&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#d88200">&amp;#39;__main__&amp;#39;&lt;/span>&lt;span style="color:#111">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">app&lt;/span>&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#111">run&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">host&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#d88200">&amp;#34;0.0.0.0&amp;#34;&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">port&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">10393&lt;/span>&lt;span style="color:#111">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>模板渲染部分，用jinja2真的非常丝滑&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230828224746021.png" alt="image-20230828224746021">&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230828224829221.png" alt="image-20230828224829221">&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230828224841198.png" alt="image-20230828224841198">&lt;/p>
+&lt;p>经过前面的修改，现在页面右键、对超链接右键、选择内容右键都可以在原扩展的基础上请求自己搭建的server，并存到data.db数据库中，访问/dashboard会有类似这样的显示效果&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230828225025036.png" alt="image-20230828225025036">&lt;/p>
+&lt;p>checkbox和代表delete的×都可以点击，联动后端的存储&lt;/p>
+&lt;p>虽然一看是让前端er闻者落泪的显示效果……但这已经是我和chatgpt大战了500个回合+自己修改了N次的结果了（）能用就行嗯嗯嗯&lt;/p>
+&lt;p>可能细心的师傅已经注意到代码中频繁出现的&lt;code>seckey&lt;/code>了，惭愧的承认 这时另一个较为失败的地方，在脑内思考了多种鉴权、认证方式后，选择了代码最少的方式——Flask自带的装饰器&lt;code>@app.before_request&lt;/code>，服务端通过设置环境变量seckey，整个app靠Authorization头来做一刀切的鉴权；不过纵使有种种缺点，它最大的有点还是代码少，之后会进行修改的（迫真）&lt;/p>
+&lt;h2 id="仍存在的问题">仍存在的问题&lt;/h2>
+&lt;ul>
+&lt;li>过于简陋的前端&lt;/li>
+&lt;li>需要在前端加入随便写的便签功能&lt;/li>
+&lt;li>修改认证/鉴权逻辑，做到多端丝滑访问&lt;/li>
+&lt;li>适当修改readme &lt;del>（虽然根本不会有第二个人用就是了）&lt;/del>&lt;/li>
+&lt;/ul></description></item></channel></rss>
