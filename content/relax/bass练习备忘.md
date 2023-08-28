@@ -2,13 +2,15 @@
 title: "bass练习备忘"
 slug: "bass-practice-memo"
 description: "努力练琴中... #已练习71小时25分"
-date: 2023-08-13T21:34:00+08:00
+date: 2023-08-26T21:34:00+08:00
 categories: []
 series: []
 tags: []
 draft: false
 toc: true
 ---
+
+**仍在每日练习中，由于一些不可抗力，不再每日同步练习日记**
 
 ## 081323（日） - 100min
 
