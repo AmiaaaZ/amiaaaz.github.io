@@ -86,10 +86,8 @@ github = "https://github.com/AmiaaaZ"
 mail = "vickyckyky@foxmail.com"
 weibo = "https://weibo.com/u/7562434112"
 zhihu = "https://www.zhihu.com/people/lan-shan-86-69"
-bilibili = "V2VkIDI3IEFwcmlsIDIwMjIgMTE6MzM6MTUgVVRD"
 netease-cloud-music = "TW9uJTIwMTglMjBGZWJydWFyeSUyMDE5ODAlMjAyMTowMjo1NSUyMFVUQw=="
 qq = "2517834528"
-wechat = "Vmlja3lja3lreQ=="
 
 [outputs]
 home = ["HTML", "RSS", "JSON"]
