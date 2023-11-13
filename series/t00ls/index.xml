@@ -1,4 +1,74 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>t00ls on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/series/t00ls/</link><description>Recent content in t00ls on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Mon, 28 Aug 2023 21:46:56 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/series/t00ls/index.xml" rel="self" type="application/rss+xml"/><item><title>对于chrome-read-later的小改进</title><link>https://amiaaaz.github.io/2023/08/28/improvements-to-chrome-read-later/</link><pubDate>Mon, 28 Aug 2023 21:46:56 +0800</pubDate><guid>https://amiaaaz.github.io/2023/08/28/improvements-to-chrome-read-later/</guid><description>&lt;h2 id="起因">起因&lt;/h2>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>t00ls on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/series/t00ls/</link><description>Recent content in t00ls on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Mon, 13 Nov 2023 21:22:23 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/series/t00ls/index.xml" rel="self" type="application/rss+xml"/><item><title>对于chrome-read-later的小改进Ⅱ</title><link>https://amiaaaz.github.io/2023/11/13/improvements-to-chrome-read-later-02/</link><pubDate>Mon, 13 Nov 2023 21:22:23 +0800</pubDate><guid>https://amiaaaz.github.io/2023/11/13/improvements-to-chrome-read-later-02/</guid><description>&lt;h2 id="前置">前置&lt;/h2>
+&lt;p>毫无疑问，read-later已经成为我装机必备的浏览器插件了，虽然最后真正被阅读的文章只占很少的比例，但这极大的缓解了我的文章囤积症！原项目很好，但有一些定制化的需求还是要自己实现&lt;/p>
+&lt;p>废话就不多说了，&lt;a href="https://amiaaaz.github.io/2023/08/28/improvements-to-chrome-read-later/">上一篇文章&lt;/a>中对原项目改进了以下三点：&lt;/p>
+&lt;ul>
+&lt;li>支持selectionText作为待读文章的标题&lt;/li>
+&lt;li>添加成功后浮现&amp;quot;done&amp;quot;&lt;/li>
+&lt;li>对接后端server，有独立dashboard页面进行管理&lt;/li>
+&lt;/ul>
+&lt;p>使用了两个月后又发现了一些新问题，于是再次进行改进（同时也学了不少chrome插件开发的技巧www&lt;/p>
+&lt;h2 id="修正favicon">修正favicon&lt;/h2>
+&lt;p>chrome插件对于v3版本提供了内置的favicon获取方式-&amp;gt; &lt;a href="https://developer.chrome.com/docs/extensions/mv3/favicon/">doc&lt;/a>&lt;/p>
+&lt;ol>
+&lt;li>在manifest文件中添加permission和web_accessible_resources&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-js" data-lang="js">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// omit
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#d88200">&amp;#34;permissions&amp;#34;&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#34;favicon&amp;#34;&lt;/span>&lt;span style="color:#111">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#34;web_accessible_resources&amp;#34;&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#111">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#34;resources&amp;#34;&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#34;_favicon/*&amp;#34;&lt;/span>&lt;span style="color:#111">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#34;matches&amp;#34;&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#34;&amp;lt;all_urls&amp;gt;&amp;#34;&lt;/span>&lt;span style="color:#111">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#d88200">&amp;#34;extension_ids&amp;#34;&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#111">[&lt;/span>&lt;span style="color:#d88200">&amp;#34;*&amp;#34;&lt;/span>&lt;span style="color:#111">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#111">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="2">
+&lt;li>在new page时加入favicon&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-js" data-lang="js">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75af00">get&lt;/span> &lt;span style="color:#75af00">favIconUrl&lt;/span> &lt;span style="color:#111">()&lt;/span> &lt;span style="color:#111">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#00a8c8">return&lt;/span> &lt;span style="color:#d88200">`chrome-extension://&lt;/span>&lt;span style="color:#d88200">${&lt;/span>&lt;span style="color:#75af00">chrome&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">runtime&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">id&lt;/span>&lt;span style="color:#d88200">}&lt;/span>&lt;span style="color:#d88200">/_favicon/?pageUrl=&lt;/span>&lt;span style="color:#d88200">${&lt;/span>&lt;span style="color:#00a8c8">this&lt;/span>&lt;span style="color:#111">.&lt;/span>&lt;span style="color:#75af00">url&lt;/span>&lt;span style="color:#d88200">}&lt;/span>&lt;span style="color:#d88200">&amp;amp;size=32`&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#111">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>但需要注意这个API并不是百分百返回favicon，有一定概率仍然返回不了，此问题目前无解（搜了关键词，也没有很好的解决方案，猜测问题成因和同源策略和缓存有关&lt;/p>
+&lt;p>原项目中也使用了这样的获取方式，但&lt;code>${this.url}&lt;/code>的部分是手动获取了url的origin、manifest也没有设置全面，实测不如直接用url的效果好、获取不到favicon的概率更大&lt;/p>
+&lt;h2 id="优化popup页面">优化popup页面&lt;/h2>
+&lt;p>原项目中，popup默认reading list页面是对sync storage的展示，文章被点击后会有进程记录阅读情况，同时被默认列表和sync storage删除，历史reading list则是对local storage的展示，不会删除点击过的文章&lt;/p>
+&lt;p>&amp;hellip;.emmmm 是不是有哪里逻辑不对？为什么点一下列表内的文章就要被视作已读呢？断断续续几次才能看完也是很常见的情况，我们希望添加手动标记已读的功能，不要点击就删 &lt;del>（什么赛博版阅后即焚&lt;/del>&lt;/p>
+&lt;h3 id="删去progress">删去progress&lt;/h3>
+&lt;p>略，删去所有相关代码&lt;/p>
+&lt;h3 id="添加手动已读">添加手动已读&lt;/h3>
+&lt;p>这算是个小难点，因为涉及到了chrome插件开发中的通信问题&lt;/p>
+&lt;p>chrome插件中，popup页面（点击扩展图标会显示的页面）、background（后台工作的服务进程 可以发起网络请求）、content（和前台访问的页面同级）是无法直接互相通信的，需要借助chrome API&lt;/p>
+&lt;p>原项目中针对popup页面中open page是这样的：&lt;/p>
+&lt;ul>
+&lt;li>popup/action.js#open：向background发起&lt;code>sendMessage&lt;/code>&lt;/li>
+&lt;li>background/action.js#openPage：监听上面的消息，当tab加载完毕时向content发起&lt;code>sendMessage&lt;/code>&lt;/li>
+&lt;li>content/content.js：监听上面的消息，对点击过的文章更新位置信息用作progress显示&lt;/li>
+&lt;/ul>
+&lt;p>我们已经无需progress、但仍可以保留&lt;code>onMessage.addListener&lt;/code>，将原本内容替换为针对web页面注入checkbox的js脚本，使用&lt;code>sendResponse&lt;/code>处理checkbox被勾选后的情况，同时修改local storage中文章的状态，删去sync storage中对应的条目；修改如下：&lt;/p>
+&lt;ul>
+&lt;li>background/pageInfo.js&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20231113225457916.png" alt="image-20231113225457916">&lt;/p>
+&lt;ul>
+&lt;li>background/action.js&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20231113224914869.png" alt="image-20231113224914869">&lt;/p>
+&lt;ul>
+&lt;li>content/content.js&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20231113225315866.png" alt="image-20231113225315866">&lt;/p>
+&lt;p>在background中我复用了原项目中的异常处理代码，因为在background与content通信过程中，关于add checkbox的信息一定被发送，但read over的response不一定发送，如果此时再刷新页面，就会报no receive response的错误，而这其实是预期内的行为&lt;/p>
+&lt;p>“赛博阅后即焚”则很好处理，直接删去下面的判断即可&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20231113225935004.png" alt="image-20231113225935004">&lt;/p>
+&lt;h2 id="未完待续">未完待续&lt;/h2>
+&lt;p>经过以上修改，现在popup默认列表点击文章后会在新开的页面右上角添加checkbox用于更新阅读状态，mark之后默认列表将删除该条记录，历史列表中则仍然存在&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20231113230237755.png" alt="image-20231113230237755">&lt;/p>
+&lt;p>之后的改进计划：&lt;/p>
+&lt;ul>
+&lt;li>支持云端存储（后端server的data.db）和本地进行同步，新装插件也可以拉取远端的所有记录&lt;/li>
+&lt;li>优化dashboard的ui，现在还是太简陋了&lt;/li>
+&lt;/ul></description></item><item><title>对于chrome-read-later的小改进</title><link>https://amiaaaz.github.io/2023/08/28/improvements-to-chrome-read-later/</link><pubDate>Mon, 28 Aug 2023 21:46:56 +0800</pubDate><guid>https://amiaaaz.github.io/2023/08/28/improvements-to-chrome-read-later/</guid><description>&lt;h2 id="起因">起因&lt;/h2>
 &lt;p>在我的日常工作流中，read-later-list是必备项，一直以来 我都是用Notion Page来记录和同步每天待看的文章&lt;/p>
 &lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20230828215240130.png" alt="image-20230828215240130">&lt;/p>
 &lt;p>&lt;del>（有很多的未读）（但是不重要）&lt;/del>&lt;/p>
