@@ -1,7 +1,7 @@
 ---
 title: "对于chrome-read-later的小改进"
 slug: "improvements-to-chrome-read-later"
-description: ""
+description: "_(:_|∠)_"
 date: 2023-08-28T21:46:56+08:00
 categories: ["NOTES&SUMMARY"]
 series: ["t00ls"]
