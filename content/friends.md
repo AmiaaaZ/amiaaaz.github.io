@@ -24,6 +24,7 @@ draft: false
 - [Pysnow](https://pysnow.cn/) - V&N - web - 卑微web狗
 - [Boogipop](https://boogipop.com/) - V&N - web
 - [an4er](http://blog.an4er.top/) - web
+- [Aecous](https://aecous.github.io/) - V&N - web
 
 ----
 
