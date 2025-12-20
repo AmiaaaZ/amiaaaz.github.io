@@ -1,6 +1,6 @@
 ---
 title: "ブログ０５"
-slug: "blog05-nihonnbashi-122025"
+slug: "blog05-nihonbashi-122025"
 description: "日本橋"
 date: 2025-12-20T23:11:22+09:00
 categories: []
